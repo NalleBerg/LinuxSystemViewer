@@ -27,6 +27,8 @@
 #include <QPixmap>
 #include <QVariant>
 #include <QColor>
+#include <QBrush>
+#include <QFont>
 
 // Version constant for the application
 const QString VERSION = "0.1.0";
@@ -422,6 +424,15 @@ private:
     void createHardwareTables()
     {
         summaryTable = createTable({"Property", "Value"});
+        
+        // Customize Summary table appearance
+        summaryTable->verticalHeader()->setVisible(false); // Remove line numbers
+        summaryTable->setStyleSheet(
+            "QTableWidget { font-size: 8pt; gridline-color: #E0E0E0; }"
+            "QHeaderView::section { font-size: 8pt; font-weight: bold; padding: 2px; }"
+            "QTableWidget::item:nth-child(1) { font-weight: bold; }" // Property column bold
+        );
+        
         tabWidget->addTab(summaryTable, "Summary");
         
         osTable = createTable({"Property", "Value"});
@@ -1210,8 +1221,23 @@ private:
         
         int row = table->rowCount();
         table->insertRow(row);
-        table->setItem(row, 0, new QTableWidgetItem(property));
-        table->setItem(row, 1, new QTableWidgetItem(value));
+        
+        QTableWidgetItem *propertyItem = new QTableWidgetItem(property);
+        QTableWidgetItem *valueItem = new QTableWidgetItem(value);
+        
+        // Apply special styling for Summary table
+        if (table == summaryTable) {
+            // Make property column bold
+            QFont boldFont = propertyItem->font();
+            boldFont.setBold(true);
+            propertyItem->setFont(boldFont);
+            
+            // Make value column dark blue
+            valueItem->setForeground(QBrush(QColor(0, 0, 139))); // Dark blue color
+        }
+        
+        table->setItem(row, 0, propertyItem);
+        table->setItem(row, 1, valueItem);
     }
     
     QString formatSize(double bytes)
