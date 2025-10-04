@@ -69,6 +69,7 @@ private slots:
         statusLabel->setText("Loading system information...");
         progressBar->setVisible(true);
         clearTables();
+        loadSummaryInformation();
         loadOSInformation();
         
         QProcess *process = new QProcess(this);
@@ -175,7 +176,7 @@ private slots:
         
         // Get the target table
         QTableWidget *targetTable = nullptr;
-        QList<QTableWidget*> tables = {osTable, systemTable, cpuTable, memoryTable, storageTable, networkTable};
+        QList<QTableWidget*> tables = {summaryTable, osTable, systemTable, cpuTable, memoryTable, storageTable, networkTable};
         if (resultData.tabIndex >= 0 && resultData.tabIndex < tables.size()) {
             targetTable = tables[resultData.tabIndex];
         }
@@ -193,7 +194,7 @@ private slots:
     void clearAllHighlighting()
     {
         // Clear highlighting from all tables
-        QList<QTableWidget*> tables = {osTable, systemTable, cpuTable, memoryTable, storageTable, networkTable};
+        QList<QTableWidget*> tables = {summaryTable, osTable, systemTable, cpuTable, memoryTable, storageTable, networkTable};
         for (QTableWidget *table : tables) {
             for (int row = 0; row < table->rowCount(); ++row) {
                 for (int col = 0; col < table->columnCount(); ++col) {
@@ -239,8 +240,8 @@ private slots:
         }
         
         // Collect search results from all tabs
-        QStringList tabNames = {"Operating System", "System", "CPU", "Memory", "Storage", "Network"};
-        QList<QTableWidget*> tables = {osTable, systemTable, cpuTable, memoryTable, storageTable, networkTable};
+        QStringList tabNames = {"Summary", "Operating System", "System", "CPU", "Memory", "Storage", "Network"};
+        QList<QTableWidget*> tables = {summaryTable, osTable, systemTable, cpuTable, memoryTable, storageTable, networkTable};
         
         int totalResults = 0;
         
@@ -332,7 +333,7 @@ private slots:
     void refreshNetworkTab()
     {
         // Only refresh if the Network tab is currently visible to save resources
-        if (tabWidget->currentIndex() == 5) { // Network tab is at index 5
+        if (tabWidget->currentIndex() == 6) { // Network tab is at index 6
             // Refresh local network interfaces without external IP lookup
             refreshLocalNetworkInfo();
         }
@@ -420,6 +421,9 @@ private:
     
     void createHardwareTables()
     {
+        summaryTable = createTable({"Property", "Value"});
+        tabWidget->addTab(summaryTable, "Summary");
+        
         osTable = createTable({"Property", "Value"});
         tabWidget->addTab(osTable, "Operating System");
         
@@ -483,6 +487,7 @@ private:
     
     void clearTables()
     {
+        summaryTable->setRowCount(0);
         osTable->setRowCount(0);
         systemTable->setRowCount(0);
         cpuTable->setRowCount(0);
@@ -1113,6 +1118,92 @@ private:
         }
     }
     
+    void loadSummaryInformation()
+    {
+        summaryTable->setRowCount(0);
+        
+        // Create a concise OS/Distro summary line
+        QString osInfo = QSysInfo::prettyProductName();
+        QString arch = QSysInfo::currentCpuArchitecture();
+        QString kernel = QSysInfo::kernelVersion();
+        QString hostname = QSysInfo::machineHostName();
+        
+        // Get distribution info from /etc/os-release
+        QString distroName;
+        QString distroVersion;
+        QFile releaseFile("/etc/os-release");
+        if (releaseFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QTextStream stream(&releaseFile);
+            while (!stream.atEnd()) {
+                QString line = stream.readLine();
+                if (line.contains('=')) {
+                    QStringList parts = line.split('=', Qt::SkipEmptyParts);
+                    if (parts.size() >= 2) {
+                        QString key = parts[0];
+                        QString value = parts[1].remove('"');
+                        
+                        if (key == "NAME") {
+                            distroName = value;
+                        } else if (key == "VERSION") {
+                            distroVersion = value;
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Construct the OS summary line
+        QString osSummary = QString("%1 %2 (%3, Kernel %4)")
+                          .arg(distroName.isEmpty() ? osInfo : distroName)
+                          .arg(distroVersion)
+                          .arg(arch)
+                          .arg(kernel);
+        
+        addPropertyToTable(summaryTable, "Operating System", osSummary);
+        addPropertyToTable(summaryTable, "Hostname", hostname);
+        
+        // Add uptime
+        QFile uptimeFile("/proc/uptime");
+        if (uptimeFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QString uptimeStr = uptimeFile.readAll().split(' ')[0];
+            double uptimeSeconds = uptimeStr.toDouble();
+            int days = uptimeSeconds / 86400;
+            int hours = (int(uptimeSeconds) % 86400) / 3600;
+            int minutes = (int(uptimeSeconds) % 3600) / 60;
+            
+            QString formattedUptime = QString("%1d %2h %3m")
+                                     .arg(days).arg(hours).arg(minutes);
+            addPropertyToTable(summaryTable, "Uptime", formattedUptime);
+        }
+        
+        // Add total memory
+        QFile memFile("/proc/meminfo");
+        if (memFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QTextStream stream(&memFile);
+            while (!stream.atEnd()) {
+                QString line = stream.readLine();
+                if (line.startsWith("MemTotal:")) {
+                    QString memStr = line.split(QRegularExpression("\\s+"))[1];
+                    double memKB = memStr.toDouble();
+                    QString memFormatted = formatSize(memKB * 1024);
+                    addPropertyToTable(summaryTable, "Total Memory", memFormatted);
+                    break;
+                }
+            }
+        }
+        
+        // Add current user and desktop environment
+        QString user = qgetenv("USER");
+        if (user.isEmpty()) user = qgetenv("USERNAME");
+        addPropertyToTable(summaryTable, "User", user);
+        
+        QString desktop = qgetenv("XDG_CURRENT_DESKTOP");
+        if (desktop.isEmpty()) desktop = qgetenv("DESKTOP_SESSION");
+        if (!desktop.isEmpty()) {
+            addPropertyToTable(summaryTable, "Desktop", desktop);
+        }
+    }
+    
     void addPropertyToTable(QTableWidget *table, const QString &property, const QString &value)
     {
         if (value.isEmpty()) return;
@@ -1136,6 +1227,7 @@ private:
     QString externalIPv6;
     
     QTabWidget *tabWidget;
+    QTableWidget *summaryTable;
     QTableWidget *osTable;
     QTableWidget *systemTable;
     QTableWidget *cpuTable;
