@@ -997,7 +997,7 @@ private:
             if (parts.size() >= 3) {
                 QString device = parts[0];
                 QString className = parts[1];
-    LiniNFOgui            QString description = parts.mid(2).join(" ");
+                QString description = parts.mid(2).join(" ");
                 
                 // Note: Short format parsing - detailed categorization not available
             }

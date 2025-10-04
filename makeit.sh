@@ -88,12 +88,43 @@ if ls build/LinInfoGUI-*.AppImage 1> /dev/null 2>&1; then
     cp "$APPIMAGE_CREATED" build/LinInfoGUI/
     APPIMAGE_NAME=$(basename "$APPIMAGE_CREATED")
     ORGANIZED_APPIMAGE="build/LinInfoGUI/$APPIMAGE_NAME"
+    
+    # Clean up all build artifacts except the LinInfoGUI directory
+    echo "Cleaning up build artifacts..."
+    cd build
+    rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake LinInfoGUI_AppDir LinInfoGUI_autogen LinInfoGUI.desktop LinInfoGUI.png LinInfoGUI-*.AppImage linuxdeploy-plugin-qt-x86_64.AppImage linuxdeploy-x86_64.AppImage Makefile .qt
+    cd ..
 fi
 
 if [ -f "build/LinInfoGUI_dist/LinInfoGUI" ]; then
     REGULAR_EXECUTABLE="build/LinInfoGUI_dist/LinInfoGUI"
     echo "✅ Regular executable: $REGULAR_EXECUTABLE"
 fi
+
+# Always clean up build artifacts and organize the LinInfoGUI directory
+echo "Cleaning up build artifacts..."
+cd build
+
+# If we have an AppImage, organize it properly
+if [ -n "$APPIMAGE_CREATED" ]; then
+    # AppImage already organized above, just clean up artifacts
+    rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake LinInfoGUI_AppDir LinInfoGUI_autogen LinInfoGUI.desktop LinInfoGUI.png LinInfoGUI-*.AppImage linuxdeploy-plugin-qt-x86_64.AppImage linuxdeploy-x86_64.AppImage Makefile .qt
+else
+    # No AppImage created, organize the regular executable instead
+    if [ -f "LinInfoGUI" ]; then
+        TEMP_EXEC=$(mktemp)
+        cp LinInfoGUI "$TEMP_EXEC"  # Backup the executable
+        rm -rf LinInfoGUI  # Remove any existing LinInfoGUI file/directory
+        mkdir -p LinInfoGUI
+        mv "$TEMP_EXEC" LinInfoGUI/LinInfoGUI
+        chmod +x LinInfoGUI/LinInfoGUI
+        echo "✅ Organized executable: build/LinInfoGUI/LinInfoGUI"
+    fi
+    # Clean up all build artifacts
+    rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake LinInfoGUI_AppDir LinInfoGUI_autogen LinInfoGUI.desktop LinInfoGUI.png linuxdeploy-plugin-qt-x86_64.AppImage linuxdeploy-x86_64.AppImage Makefile .qt LinInfoGUI_dist
+fi
+
+cd ..
 
 # Optionally run the application
 if [ "$1" != "norun" ]; then
@@ -102,6 +133,8 @@ if [ "$1" != "norun" ]; then
         ./"$ORGANIZED_APPIMAGE"
     elif [ -n "$APPIMAGE_CREATED" ]; then
         ./"$APPIMAGE_CREATED"
+    elif [ -f "build/LinInfoGUI/LinInfoGUI" ]; then
+        ./build/LinInfoGUI/LinInfoGUI
     elif [ -n "$REGULAR_EXECUTABLE" ]; then
         ./"$REGULAR_EXECUTABLE"
     else
@@ -114,6 +147,8 @@ else
         echo "  ./$ORGANIZED_APPIMAGE (Portable AppImage - works on any Linux!)"
     elif [ -n "$APPIMAGE_CREATED" ]; then
         echo "  ./$APPIMAGE_CREATED (Portable AppImage - works on any Linux!)"
+    elif [ -f "build/LinInfoGUI/LinInfoGUI" ]; then
+        echo "  ./build/LinInfoGUI/LinInfoGUI (Regular executable)"
     fi
     [ -n "$REGULAR_EXECUTABLE" ] && echo "  ./$REGULAR_EXECUTABLE (Regular executable)"
 fi
