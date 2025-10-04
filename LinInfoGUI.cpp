@@ -28,7 +28,7 @@
 #include <QVariant>
 #include <QColor>
 
-// Version constant
+// Version constant for the application
 const QString VERSION = "0.1.0";
 
 // Search result navigation data
@@ -997,7 +997,7 @@ private:
             if (parts.size() >= 3) {
                 QString device = parts[0];
                 QString className = parts[1];
-                QString description = parts.mid(2).join(" ");
+    LiniNFOgui            QString description = parts.mid(2).join(" ");
                 
                 // Note: Short format parsing - detailed categorization not available
             }
