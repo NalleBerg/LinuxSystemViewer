@@ -86,6 +86,11 @@ if ls build/LinInfoGUI-*.AppImage 1> /dev/null 2>&1; then
     rm -rf build/LinInfoGUI
     mkdir -p build/LinInfoGUI
     cp "$APPIMAGE_CREATED" build/LinInfoGUI/
+    # Copy icon to final directory for AppImage version too
+    if [ -f "build/LinInfoGUI.png" ]; then
+        cp build/LinInfoGUI.png build/LinInfoGUI/LinInfoGUI.png
+        echo "✅ Icon copied to AppImage directory"
+    fi
     APPIMAGE_NAME=$(basename "$APPIMAGE_CREATED")
     ORGANIZED_APPIMAGE="build/LinInfoGUI/$APPIMAGE_NAME"
     
@@ -118,9 +123,14 @@ else
         mkdir -p LinInfoGUI
         mv "$TEMP_EXEC" LinInfoGUI/LinInfoGUI
         chmod +x LinInfoGUI/LinInfoGUI
+        # Copy icon to final directory
+        if [ -f "LinInfoGUI.png" ]; then
+            cp LinInfoGUI.png LinInfoGUI/LinInfoGUI.png
+            echo "✅ Icon copied to final directory"
+        fi
         echo "✅ Organized executable: build/LinInfoGUI/LinInfoGUI"
     fi
-    # Clean up all build artifacts
+    # Clean up all build artifacts (but preserve icon in LinInfoGUI directory)
     rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake LinInfoGUI_AppDir LinInfoGUI_autogen LinInfoGUI.desktop LinInfoGUI.png linuxdeploy-plugin-qt-x86_64.AppImage linuxdeploy-x86_64.AppImage Makefile .qt LinInfoGUI_dist
 fi
 

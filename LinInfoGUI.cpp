@@ -361,12 +361,33 @@ private:
         setMinimumSize(800, 500);  // Reduced minimum size
         
         // Set application icon for window and taskbar
-        QIcon appIcon("LinInfoGUI.png");
-        if (!appIcon.isNull()) {
+        QIcon appIcon;
+        
+        // Try multiple icon paths for better compatibility
+        QStringList iconPaths = {
+            "LinInfoGUI.png",
+            "./LinInfoGUI.png",
+            QApplication::applicationDirPath() + "/LinInfoGUI.png",
+            QApplication::applicationDirPath() + "/../LinInfoGUI.png"
+        };
+        
+        bool iconLoaded = false;
+        for (const QString &iconPath : iconPaths) {
+            if (QFile::exists(iconPath)) {
+                appIcon = QIcon(iconPath);
+                if (!appIcon.isNull()) {
+                    iconLoaded = true;
+                    qDebug() << "Icon loaded from:" << iconPath;
+                    break;
+                }
+            }
+        }
+        
+        if (iconLoaded) {
             setWindowIcon(appIcon);
             QApplication::setWindowIcon(appIcon);
         } else {
-            qDebug() << "Warning: Could not load LinInfoGUI.png icon";
+            qDebug() << "Warning: Could not load LinInfoGUI.png icon from any location";
         }
         
         // Set compact font for the entire application
@@ -1273,6 +1294,32 @@ private:
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    
+    // Set application properties for better system integration
+    app.setApplicationName("LinInfoGUI");
+    app.setApplicationDisplayName("Linux System Viewer");
+    app.setApplicationVersion(VERSION);
+    app.setOrganizationName("NalleBerg");
+    app.setOrganizationDomain("nalle.no");
+    
+    // Set application icon globally for file handlers
+    QStringList iconPaths = {
+        "LinInfoGUI.png",
+        "./LinInfoGUI.png",
+        QApplication::applicationDirPath() + "/LinInfoGUI.png",
+        QApplication::applicationDirPath() + "/../LinInfoGUI.png"
+    };
+    
+    for (const QString &iconPath : iconPaths) {
+        if (QFile::exists(iconPath)) {
+            QIcon appIcon(iconPath);
+            if (!appIcon.isNull()) {
+                app.setWindowIcon(appIcon);
+                qDebug() << "Global icon set from:" << iconPath;
+                break;
+            }
+        }
+    }
     
     LinInfoGUI window;
     window.show();
