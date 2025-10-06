@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource>
+        <file>LinInfoGUI.png</file>
+        <file>LinInfoGUI.svg</file>
+    </qresource>
+</RCC>
