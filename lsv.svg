@@ -56,5 +56,5 @@
   <rect x="97" y="101" width="8" height="1" fill="#2E3440"/>
   
   <!-- Title text -->
-  <text x="64" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#ECEFF4">LinInfo</text>
+  <text x="64" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#ECEFF4">LSV</text>
 </svg>

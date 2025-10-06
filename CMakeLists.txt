@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(LinInfoGUI LANGUAGES CXX)
+project(LSV LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -11,8 +11,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-# Create executable (using LinInfoGUI.cpp file and embedded resources)
-add_executable(LinInfoGUI LinInfoGUI.cpp memory.cpp resources.qrc)
+# Create executable (using lsv.cpp file and embedded resources)
+add_executable(LSV lsv.cpp memory.cpp resources.qrc)
 
 # Link Qt libraries
-target_link_libraries(LinInfoGUI PRIVATE Qt6::Widgets Qt6::Core Qt6::Network)
+target_link_libraries(LSV PRIVATE Qt6::Widgets Qt6::Core Qt6::Network)

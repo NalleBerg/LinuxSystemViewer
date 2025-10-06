@@ -22,10 +22,13 @@
 #include <QStatusBar>
 #include <QKeyEvent>
 #include <QCloseEvent>
+#include <QShowEvent>
 #include <QDialog>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QStyle>
+#include <QWindow>
+#include <QPixmap>
 
 // Include our modular headers
 #include "gui_helpers.h"
@@ -34,7 +37,7 @@
 #include "memory.h"
 #include "network.h"
 
-#define VERSION "0.3.0"
+#define VERSION "0.3.5"
 
 class LinInfoGUI : public QMainWindow
 {
@@ -63,6 +66,7 @@ private slots:
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void closeEvent(QCloseEvent *event) override;
+    void showEvent(QShowEvent *event) override;
 
 private:
     void setupUI();
@@ -123,15 +127,41 @@ LinInfoGUI::~LinInfoGUI()
 
 void LinInfoGUI::setupUI()
 {
-    setWindowTitle(QString("Linux System Viewer - V. %1").arg(VERSION));
+    setWindowTitle(QString("🖥️ Linux System Viewer (LSV) - V. %1").arg(VERSION));
     setMinimumSize(800, 500);
     
+    // Force window to show icon in title bar with multiple window flags
+    setWindowFlags(windowFlags() | Qt::Window);
+    
     // Set application icon for window and taskbar from embedded resource
-    QIcon appIcon(":LinInfoGUI.png");
+    QIcon appIcon;
+    appIcon.addFile(":lsv.png", QSize(16, 16));   // Small size for title bar
+    appIcon.addFile(":lsv.png", QSize(24, 24));   // Small-medium size
+    appIcon.addFile(":lsv.png", QSize(32, 32));   // Medium size for taskbar
+    appIcon.addFile(":lsv.png", QSize(48, 48));   // Large size for alt-tab
+    appIcon.addFile(":lsv.png", QSize(64, 64));   // Extra large
+    appIcon.addFile(":lsv.svg");                  // SVG for scalability
+    
     if (!appIcon.isNull()) {
+        // Set icon for this specific window - try multiple times
         setWindowIcon(appIcon);
+        setWindowIcon(appIcon);  // Set twice for stubborn WMs
+        
+        // Set icon for all application windows
         QApplication::setWindowIcon(appIcon);
-        qDebug() << "Icon loaded from embedded resource";
+        
+        // Force window icon attribute
+        setAttribute(Qt::WA_SetWindowIcon, true);
+        
+        // Try setting icon as pixmap too
+        QPixmap iconPixmap = appIcon.pixmap(32, 32);
+        if (!iconPixmap.isNull()) {
+            setWindowIcon(QIcon(iconPixmap));
+        }
+        
+        qDebug() << "Icon loaded from embedded resource with multiple sizes";
+        qDebug() << "Available icon sizes:" << appIcon.availableSizes();
+        qDebug() << "Window flags:" << windowFlags();
     } else {
         qDebug() << "Warning: Could not load embedded icon resource";
     }
@@ -468,6 +498,46 @@ void LinInfoGUI::keyPressEvent(QKeyEvent *event)
     QMainWindow::keyPressEvent(event);
 }
 
+void LinInfoGUI::showEvent(QShowEvent *event)
+{
+    QMainWindow::showEvent(event);
+    
+    // Force refresh window icon after show event with multiple approaches
+    QIcon appIcon;
+    appIcon.addFile(":lsv.png", QSize(16, 16));
+    appIcon.addFile(":lsv.png", QSize(24, 24));
+    appIcon.addFile(":lsv.png", QSize(32, 32));
+    appIcon.addFile(":lsv.svg");
+    
+    if (!appIcon.isNull()) {
+        // Set icon using multiple methods
+        setWindowIcon(appIcon);
+        
+        // Force window decoration update
+        setAttribute(Qt::WA_SetWindowIcon, true);
+        
+        // Try to set icon on the native window handle
+        if (windowHandle()) {
+            windowHandle()->setIcon(appIcon);
+        }
+        
+        // Force window update
+        update();
+        repaint();
+        
+        // Use QTimer to retry icon setting after window is fully shown
+        QTimer::singleShot(100, this, [this, appIcon]() {
+            setWindowIcon(appIcon);
+            if (windowHandle()) {
+                windowHandle()->setIcon(appIcon);
+            }
+            qDebug() << "Window icon re-applied with timer";
+        });
+        
+        qDebug() << "Window icon refreshed in showEvent with multiple methods";
+    }
+}
+
 void LinInfoGUI::closeEvent(QCloseEvent *event)
 {
     // Create custom quit confirmation dialog
@@ -515,21 +585,54 @@ void LinInfoGUI::closeEvent(QCloseEvent *event)
     quitDialog->deleteLater();
 }
 
-// Required for QObject with Q_OBJECT macro
-#include "LinInfoGUI.moc"
-
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     
     // Set application properties for better system integration
-    app.setApplicationName("LinInfoGUI");
+    app.setApplicationName("LSV");
     app.setApplicationVersion(VERSION);
     app.setOrganizationName("NalleBerg");
     app.setOrganizationDomain("nalle.no");
+    
+    // Set application icon globally for better desktop integration
+    QIcon appIcon;
+    appIcon.addFile(":lsv.png", QSize(16, 16));
+    appIcon.addFile(":lsv.png", QSize(24, 24));
+    appIcon.addFile(":lsv.png", QSize(32, 32));
+    appIcon.addFile(":lsv.png", QSize(48, 48));
+    appIcon.addFile(":lsv.png", QSize(64, 64));
+    appIcon.addFile(":lsv.svg");
+    
+    if (!appIcon.isNull()) {
+        app.setWindowIcon(appIcon);
+        qDebug() << "Global application icon set successfully";
+        qDebug() << "Desktop environment:" << qgetenv("XDG_CURRENT_DESKTOP");
+        qDebug() << "Window manager:" << qgetenv("XDG_SESSION_TYPE");
+        
+        // Auto-configure desktop environment for optimal icon display
+        QString desktop = qgetenv("XDG_CURRENT_DESKTOP");
+        if (desktop.contains("Cinnamon", Qt::CaseInsensitive)) {
+            qDebug() << "Cinnamon detected - Window menu enabled for icon display";
+        } else if (desktop.contains("GNOME", Qt::CaseInsensitive)) {
+            qDebug() << "GNOME detected - Icon should appear in top bar and alt-tab";
+        } else if (desktop.contains("KDE", Qt::CaseInsensitive) || desktop.contains("Plasma", Qt::CaseInsensitive)) {
+            qDebug() << "KDE/Plasma detected - Icon should appear in title bar";
+        } else if (desktop.contains("XFCE", Qt::CaseInsensitive)) {
+            qDebug() << "XFCE detected - Icon should appear in title bar";
+        } else if (desktop.contains("MATE", Qt::CaseInsensitive)) {
+            qDebug() << "MATE detected - Icon should appear in title bar";
+        } else {
+            qDebug() << "Unknown desktop environment - Using default icon behavior";
+        }
+    } else {
+        qDebug() << "Failed to load application icon";
+    }
     
     LinInfoGUI window;
     window.show();
     
     return app.exec();
 }
+
+#include "lsv.moc"
