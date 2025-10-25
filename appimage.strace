@@ -1,0 +1,2 @@
+execve("./tools/appimagetool-x86_64.AppImage", ["./tools/appimagetool-x86_64.AppI"..., "AppDir"], 0x7ffdc5c882d8 /* 47 vars */) = -1 ENOEXEC (Exec format error)
++++ exited with 1 +++

@@ -1,368 +1,275 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#include <QString>
-#include <QStringList>
 #include <QTableWidget>
 #include <QTableWidgetItem>
-#include <QFile>
-#include <QDir>
-#include <QIODevice>
-#include <QRegularExpression>
-#include <QProcess>
 #include <QJsonObject>
-#include <QJsonArray>
-#include <QMap>
+#include <QFile>
+#include <QTextStream>
+#include <QRegularExpression>
+#include <QStringList>
+#include <QDebug>
+#include <QDir>
+#include <QProcess>
 #include <QNetworkInterface>
 #include <QHostAddress>
-#include <QDebug>
-#include <QtGlobal>
-#include <QFileInfo>
-#include <QScrollBar>
+#include <QtEndian>  // For qFromBigEndian
+#include "gui_helpers.h"
 
-// Network interface information structure
-struct NetworkInfo {
-    QString ipv4Address;
-    QString ipv6Address;
-    QString subnet;
-    QString product;
-    QString vendor;
-    QString driver;
-    bool isActive;
-};
+// Forward declaration of formatBytes
+QString formatBytes(long long bytes);
 
-// Network utility functions
-QMap<QString, NetworkInfo> getNetworkInterfaces();
-QString prefixLengthToSubnetMask(int prefixLength);
-QString getExternalIPv4();
-QString getExternalIPv6();
+// Network information functions
+void loadNetworkInformation(QTableWidget* table, const QJsonObject& data);
+void styleNetworkTable(QTableWidget* table);
+QString getNetworkInfo();
 
-// Network information loading functions
-void loadNetworkInformation(QTableWidget* networkTable, const QJsonObject &networkData);
-void loadLiveNetworkInformation(QTableWidget* networkTable);
-void addLiveNetworkToSummary(QTableWidget* summaryTable);
-void refreshNetworkInfo(QTableWidget* networkTable);
-
-// Helper functions
-void addRowToTable(QTableWidget* table, const QStringList& data);
-
-// Inline implementations
-
-inline QString prefixLengthToSubnetMask(int prefixLength)
+// Network Table Styling
+void styleNetworkTable(QTableWidget* table)
 {
-    if (prefixLength < 0 || prefixLength > 32) return "Invalid";
+    // Set column widths
+    table->setColumnWidth(0, 200);  // Property
+    table->setColumnWidth(1, 300);  // Value
+    table->setColumnWidth(2, 80);   // Unit
+    table->setColumnWidth(3, 120);  // Type
     
-    quint32 mask = (0xFFFFFFFF << (32 - prefixLength)) & 0xFFFFFFFF;
-    
-    return QString("%1.%2.%3.%4")
-        .arg((mask >> 24) & 0xFF)
-        .arg((mask >> 16) & 0xFF)
-        .arg((mask >> 8) & 0xFF)
-        .arg(mask & 0xFF);
+    // Style headers
+    table->horizontalHeader()->setStyleSheet(
+        "QHeaderView::section { "
+        "background-color: #2c3e50; "
+        "color: white; "
+        "padding: 8px; "
+        "border: none; "
+        "font-weight: bold; "
+        "}"
+    );
 }
 
-inline QString getExternalIPv4()
+// Helper function to format bytes - moved to top
+QString formatBytes(long long bytes)
 {
-    // Try multiple methods and services for better reliability
-    QStringList methods = {
-        // Method 1: Try wget if curl fails
-        "wget -qO- --timeout=5 --tries=1 ifconfig.me 2>/dev/null",
-        "wget -qO- --timeout=5 --tries=1 ipecho.net/plain 2>/dev/null",
-        "wget -qO- --timeout=5 --tries=1 icanhazip.com 2>/dev/null",
-        
-        // Method 2: Try curl with different options
-        "curl -s --max-time 5 --connect-timeout 3 ifconfig.me 2>/dev/null",
-        "curl -s --max-time 5 --connect-timeout 3 ipecho.net/plain 2>/dev/null", 
-        "curl -s --max-time 5 --connect-timeout 3 icanhazip.com 2>/dev/null",
-        "curl -s --max-time 5 --connect-timeout 3 checkip.amazonaws.com 2>/dev/null",
-        
-        // Method 3: Try dig method (DNS-based)
-        "dig +short myip.opendns.com @resolver1.opendns.com 2>/dev/null",
-        "dig +short txt ch whoami.cloudflare @1.0.0.1 2>/dev/null | tr -d '\"'",
-        
-        // Method 4: Use ip route to find default gateway and try local detection
-        "ip route get 8.8.8.8 2>/dev/null | grep -oP 'src \\K[0-9.]+'"
-    };
+    const QStringList units = {"B", "KB", "MB", "GB", "TB"};
+    int unitIndex = 0;
+    double size = bytes;
     
-    for (const QString &method : methods) {
-        QProcess process;
-        process.start("bash", QStringList() << "-c" << method);
-        process.waitForFinished(6000);
+    while (size >= 1024.0 && unitIndex < units.size() - 1) {
+        size /= 1024.0;
+        unitIndex++;
+    }
+    
+    return QString("%1 %2").arg(QString::number(size, 'f', 2)).arg(units[unitIndex]);
+}
+
+// Load Network Information
+void loadNetworkInformation(QTableWidget* table, const QJsonObject& data)
+{
+    Q_UNUSED(data); // Use direct system calls instead of JSON data
+    
+    table->setRowCount(0);
+    
+    // Get network interfaces using Qt
+    QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
+    
+    for (const QNetworkInterface& interface : interfaces) {
+        QString interfaceName = interface.name();
+        QString displayName = interface.humanReadableName();
         
-        if (process.exitCode() == 0) {
-            QString result = process.readAllStandardOutput().trimmed();
-            // Basic IPv4 validation - more precise regex
-            QRegularExpression ipv4Regex(R"(^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$)");
-            if (ipv4Regex.match(result).hasMatch()) {
-                // Additional validation - exclude private/local ranges
-                QStringList parts = result.split('.');
-                if (parts.size() == 4) {
-                    int first = parts[0].toInt();
-                    int second = parts[1].toInt();
-                    
-                    // Exclude private ranges: 10.x.x.x, 172.16-31.x.x, 192.168.x.x, 127.x.x.x
-                    if (!(first == 10 || 
-                          (first == 172 && second >= 16 && second <= 31) ||
-                          (first == 192 && second == 168) ||
-                          first == 127 ||
-                          first == 0 ||
-                          first >= 224)) { // Exclude multicast and reserved
-                        return result;
-                    }
+        // Skip loopback if it's just "lo"
+        if (interfaceName == "lo") continue;
+        
+        addRowToTable(table, QStringList() << QString("Interface: %1").arg(interfaceName) << displayName << "" << "Network");
+        
+        // Interface flags
+        QNetworkInterface::InterfaceFlags flags = interface.flags();
+        QStringList flagsList;
+        if (flags & QNetworkInterface::IsUp) flagsList << "UP";
+        if (flags & QNetworkInterface::IsRunning) flagsList << "RUNNING";
+        if (flags & QNetworkInterface::CanBroadcast) flagsList << "BROADCAST";
+        if (flags & QNetworkInterface::IsLoopBack) flagsList << "LOOPBACK";
+        if (flags & QNetworkInterface::IsPointToPoint) flagsList << "POINTOPOINT";
+        if (flags & QNetworkInterface::CanMulticast) flagsList << "MULTICAST";
+        
+        if (!flagsList.isEmpty()) {
+            addRowToTable(table, QStringList() << QString("  %1 Flags").arg(interfaceName) << flagsList.join(", ") << "" << "Network");
+        }
+        
+        // MAC Address
+        QString macAddress = interface.hardwareAddress();
+        if (!macAddress.isEmpty()) {
+            addRowToTable(table, QStringList() << QString("  %1 MAC").arg(interfaceName) << macAddress << "" << "Network");
+        }
+        
+        // IP Addresses
+        QList<QNetworkAddressEntry> addresses = interface.addressEntries();
+        for (const QNetworkAddressEntry& entry : addresses) {
+            QHostAddress ip = entry.ip();
+            if (ip.protocol() == QAbstractSocket::IPv4Protocol) {
+                addRowToTable(table, QStringList() << QString("  %1 IPv4").arg(interfaceName) << ip.toString() << "" << "Network");
+                
+                QHostAddress netmask = entry.netmask();
+                if (!netmask.isNull()) {
+                    addRowToTable(table, QStringList() << QString("  %1 Netmask").arg(interfaceName) << netmask.toString() << "" << "Network");
+                }
+                
+                QHostAddress broadcast = entry.broadcast();
+                if (!broadcast.isNull()) {
+                    addRowToTable(table, QStringList() << QString("  %1 Broadcast").arg(interfaceName) << broadcast.toString() << "" << "Network");
+                }
+            } else if (ip.protocol() == QAbstractSocket::IPv6Protocol) {
+                addRowToTable(table, QStringList() << QString("  %1 IPv6").arg(interfaceName) << ip.toString() << "" << "Network");
+            }
+        }
+        
+        // MTU
+        int mtu = interface.maximumTransmissionUnit();
+        if (mtu > 0) {
+            addRowToTable(table, QStringList() << QString("  %1 MTU").arg(interfaceName) << QString::number(mtu) << "bytes" << "Network");
+        }
+    }
+    
+    // Read network statistics from /proc/net/dev
+    QFile netDevFile("/proc/net/dev");
+    if (netDevFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream stream(&netDevFile);
+        QStringList lines = stream.readAll().split('\n');
+        netDevFile.close();
+        
+        // Skip header lines
+        for (int i = 2; i < lines.size(); ++i) {
+            QString line = lines[i].trimmed();
+            if (line.isEmpty()) continue;
+            
+            QStringList parts = line.split(QRegularExpression("\\s+"));
+            if (parts.size() >= 17) {
+                QString interfaceName = parts[0];
+                interfaceName.chop(1); // Remove trailing ':'
+                
+                if (interfaceName == "lo") continue; // Skip loopback
+                
+                // Received bytes, packets, errors, dropped
+                long long rxBytes = parts[1].toLongLong();
+                long long rxPackets = parts[2].toLongLong();
+                long long rxErrors = parts[3].toLongLong();
+                long long rxDropped = parts[4].toLongLong();
+                
+                // Transmitted bytes, packets, errors, dropped  
+                long long txBytes = parts[9].toLongLong();
+                long long txPackets = parts[10].toLongLong();
+                long long txErrors = parts[11].toLongLong();
+                long long txDropped = parts[12].toLongLong();
+                
+                // Convert bytes to human readable format
+                QString rxBytesStr = formatBytes(rxBytes);
+                QString txBytesStr = formatBytes(txBytes);
+                
+                addRowToTable(table, QStringList() << QString("  %1 RX Bytes").arg(interfaceName) << rxBytesStr << "" << "Network");
+                addRowToTable(table, QStringList() << QString("  %1 RX Packets").arg(interfaceName) << QString::number(rxPackets) << "" << "Network");
+                if (rxErrors > 0) {
+                    addRowToTable(table, QStringList() << QString("  %1 RX Errors").arg(interfaceName) << QString::number(rxErrors) << "" << "Network");
+                }
+                if (rxDropped > 0) {
+                    addRowToTable(table, QStringList() << QString("  %1 RX Dropped").arg(interfaceName) << QString::number(rxDropped) << "" << "Network");
+                }
+                
+                addRowToTable(table, QStringList() << QString("  %1 TX Bytes").arg(interfaceName) << txBytesStr << "" << "Network");
+                addRowToTable(table, QStringList() << QString("  %1 TX Packets").arg(interfaceName) << QString::number(txPackets) << "" << "Network");
+                if (txErrors > 0) {
+                    addRowToTable(table, QStringList() << QString("  %1 TX Errors").arg(interfaceName) << QString::number(txErrors) << "" << "Network");
+                }
+                if (txDropped > 0) {
+                    addRowToTable(table, QStringList() << QString("  %1 TX Dropped").arg(interfaceName) << QString::number(txDropped) << "" << "Network");
                 }
             }
         }
     }
     
-    return "Not available";
-}
-
-inline QString getExternalIPv6()
-{
-    QStringList services = {
-        "curl -s --max-time 5 -6 ifconfig.co",
-        "curl -s --max-time 5 -6 icanhazip.com"
-    };
-    
-    for (const QString &service : services) {
-        QProcess process;
-        process.start("bash", QStringList() << "-c" << service);
-        process.waitForFinished(6000);
+    // Get default route information
+    QFile routeFile("/proc/net/route");
+    if (routeFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream stream(&routeFile);
+        QStringList lines = stream.readAll().split('\n');
+        routeFile.close();
         
-        if (process.exitCode() == 0) {
-            QString result = process.readAllStandardOutput().trimmed();
-            // Basic IPv6 validation (simplified)
-            if (result.contains(":") && result.length() > 7) {
-                return result;
+        for (int i = 1; i < lines.size(); ++i) { // Skip header
+            QString line = lines[i].trimmed();
+            if (line.isEmpty()) continue;
+            
+            QStringList parts = line.split('\t');
+            if (parts.size() >= 8) {
+                QString iface = parts[0];
+                QString destination = parts[1];
+                QString gateway = parts[2];
+                QString flags = parts[3];
+                
+                // Check if this is the default route (destination 00000000)
+                if (destination == "00000000") {
+                    // Convert gateway from hex to IP
+                    bool ok;
+                    quint32 gwHex = gateway.toUInt(&ok, 16);
+                    if (ok) {
+                        QHostAddress gwAddr(qFromLittleEndian(gwHex));
+                        addRowToTable(table, QStringList() << "Default Gateway" << gwAddr.toString() << "" << "Network");
+                        addRowToTable(table, QStringList() << "Default Interface" << iface << "" << "Network");
+                    }
+                    break;
+                }
             }
         }
     }
     
-    return "Unknown";
-}
-
-inline QMap<QString, NetworkInfo> getNetworkInterfaces()
-{
-    QMap<QString, NetworkInfo> interfaces;
-    
-    // Get all network interfaces from /sys/class/net
-    QDir netDir("/sys/class/net");
-    QStringList interfaceNames = netDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-    
-    for (const QString &interfaceName : interfaceNames) {
-        if (interfaceName == "lo") continue; // Skip loopback
+    // Get DNS servers from /etc/resolv.conf
+    QFile resolvFile("/etc/resolv.conf");
+    if (resolvFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream stream(&resolvFile);
+        QStringList lines = stream.readAll().split('\n');
+        resolvFile.close();
         
-        NetworkInfo info;
-        
-        // Check if interface is up
-        QFile operState(QString("/sys/class/net/%1/operstate").arg(interfaceName));
-        if (operState.open(QIODevice::ReadOnly)) {
-            QString state = operState.readAll().trimmed();
-            info.isActive = (state == "up");
-        }
-        
-        // Get IP addresses using ip command
-        QProcess ipProcess;
-        ipProcess.start("ip", QStringList() << "addr" << "show" << interfaceName);
-        ipProcess.waitForFinished(2000);
-        
-        if (ipProcess.exitCode() == 0) {
-            QString output = ipProcess.readAllStandardOutput();
-            
-            // IPv4 pattern
-            QRegularExpression ipv4Regex(R"(inet (\d+\.\d+\.\d+\.\d+)/(\d+))");
-            QRegularExpressionMatch ipv4Match = ipv4Regex.match(output);
-            
-            if (ipv4Match.hasMatch()) {
-                info.ipv4Address = ipv4Match.captured(1);
-                int prefixLength = ipv4Match.captured(2).toInt();
-                info.subnet = prefixLengthToSubnetMask(prefixLength);
-            }
-            
-            // IPv6 pattern (global unicast addresses)
-            QRegularExpression ipv6Regex(R"(inet6 ([0-9a-fA-F:]+)/(\d+) scope global)");
-            QRegularExpressionMatch ipv6Match = ipv6Regex.match(output);
-            
-            if (ipv6Match.hasMatch()) {
-                info.ipv6Address = ipv6Match.captured(1);
+        QStringList dnsServers;
+        for (const QString& line : lines) {
+            if (line.startsWith("nameserver ")) {
+                QString dns = line.mid(11).trimmed();
+                dnsServers << dns;
             }
         }
         
-        // Get driver information
-        QString driverPath = QString("/sys/class/net/%1/device/driver").arg(interfaceName);
-        QFile driverFile(driverPath);
-        if (driverFile.exists()) {
-            QFileInfo driverInfo(driverFile.symLinkTarget());
-            info.driver = driverInfo.baseName();
+        if (!dnsServers.isEmpty()) {
+            addRowToTable(table, QStringList() << "DNS Servers" << dnsServers.join(", ") << "" << "Network");
         }
+    }
+    
+    // Get hostname
+    QFile hostnameFile("/proc/sys/kernel/hostname");
+    if (hostnameFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream stream(&hostnameFile);
+        QString hostname = stream.readLine().trimmed();
+        hostnameFile.close();
         
-        // Get vendor and product info from uevent
-        QFile ueventFile(QString("/sys/class/net/%1/device/uevent").arg(interfaceName));
-        if (ueventFile.open(QIODevice::ReadOnly)) {
-            QString ueventContent = ueventFile.readAll();
+        if (!hostname.isEmpty()) {
+            addRowToTable(table, QStringList() << "Hostname" << hostname << "" << "Network");
+        }
+    }
+}
+
+// Get basic network info string
+QString getNetworkInfo()
+{
+    QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
+    
+    for (const QNetworkInterface& interface : interfaces) {
+        if (interface.flags() & QNetworkInterface::IsUp && 
+            interface.flags() & QNetworkInterface::IsRunning &&
+            !(interface.flags() & QNetworkInterface::IsLoopBack)) {
             
-            QRegularExpression vendorRegex(R"(PCI_ID=([0-9A-Fa-f]{4}):([0-9A-Fa-f]{4}))");
-            QRegularExpressionMatch vendorMatch = vendorRegex.match(ueventContent);
-            
-            if (vendorMatch.hasMatch()) {
-                info.vendor = vendorMatch.captured(1);
-                info.product = vendorMatch.captured(2);
-            }
-        }
-        
-        interfaces[interfaceName] = info;
-    }
-    
-    return interfaces;
-}
-
-inline void loadNetworkInformation(QTableWidget* networkTable, const QJsonObject &networkData)
-{
-    if (!networkTable) return;
-    
-    QString type = networkData["class"].toString();
-    if (type != "network") return;
-    
-    QString logicalName = networkData["logicalname"].toString();
-    QString product = networkData["product"].toString();
-    QString vendor = networkData["vendor"].toString();
-    QString busInfo = networkData["businfo"].toString();
-    
-    // Get live network information for this interface
-    QMap<QString, NetworkInfo> liveInterfaces = getNetworkInterfaces();
-    
-    QString ipv4 = "Not assigned";
-    QString status = "Down";
-    
-    if (liveInterfaces.contains(logicalName)) {
-        const NetworkInfo &info = liveInterfaces[logicalName];
-        if (!info.ipv4Address.isEmpty()) {
-            ipv4 = info.ipv4Address;
-        }
-        status = info.isActive ? "Up" : "Down";
-    }
-    
-    addRowToTable(networkTable, {
-        logicalName,
-        product,
-        vendor,
-        ipv4,
-        status,
-        busInfo
-    });
-}
-
-inline void loadLiveNetworkInformation(QTableWidget* networkTable)
-{
-    if (!networkTable) return;
-    
-    networkTable->setRowCount(0);
-    
-    QMap<QString, NetworkInfo> interfaces = getNetworkInterfaces();
-    
-    for (auto it = interfaces.begin(); it != interfaces.end(); ++it) {
-        const QString &interfaceName = it.key();
-        const NetworkInfo &info = it.value();
-        
-        QString status = info.isActive ? "Up" : "Down";
-        QString ipv4 = info.ipv4Address.isEmpty() ? "Not assigned" : info.ipv4Address;
-        QString ipv6 = info.ipv6Address.isEmpty() ? "Not assigned" : info.ipv6Address;
-        
-        addRowToTable(networkTable, {
-            interfaceName,
-            info.product.isEmpty() ? "Unknown" : info.product,
-            info.vendor.isEmpty() ? "Unknown" : info.vendor,
-            ipv4,
-            status,
-            info.driver.isEmpty() ? "Unknown" : info.driver
-        });
-    }
-    
-    // Add external IP information
-    if (!interfaces.isEmpty()) {
-        // Add separator
-        addRowToTable(networkTable, {"", "", "", "", "", ""});
-        
-        // Add external IPs
-        QString extIPv4 = getExternalIPv4();
-        QString extIPv6 = getExternalIPv6();
-        
-        addRowToTable(networkTable, {
-            "External IPv4",
-            "",
-            "",
-            extIPv4,
-            extIPv4 != "Not available" ? "Available" : "Not available",
-            ""
-        });
-        
-        addRowToTable(networkTable, {
-            "External IPv6",
-            "",
-            "",
-            extIPv6,
-            extIPv6 != "Unknown" ? "Available" : "Not available",
-            ""
-        });
-    }
-}
-
-inline void addLiveNetworkToSummary(QTableWidget* summaryTable)
-{
-    if (!summaryTable) return;
-    
-    QMap<QString, NetworkInfo> interfaces = getNetworkInterfaces();
-    
-    // Count active interfaces
-    int activeInterfaces = 0;
-    QString primaryIP = "None";
-    
-    for (auto it = interfaces.begin(); it != interfaces.end(); ++it) {
-        const NetworkInfo &info = it.value();
-        if (info.isActive) {
-            activeInterfaces++;
-            if (primaryIP == "None" && !info.ipv4Address.isEmpty()) {
-                primaryIP = info.ipv4Address;
+            QList<QNetworkAddressEntry> addresses = interface.addressEntries();
+            for (const QNetworkAddressEntry& entry : addresses) {
+                if (entry.ip().protocol() == QAbstractSocket::IPv4Protocol) {
+                    return QString("%1: %2").arg(interface.name(), entry.ip().toString());
+                }
             }
         }
     }
     
-    QString networkSummary;
-    if (activeInterfaces > 0) {
-        networkSummary = QString("%1 active interface%2, Primary IP: %3")
-                        .arg(activeInterfaces)
-                        .arg(activeInterfaces > 1 ? "s" : "")
-                        .arg(primaryIP);
-    } else {
-        networkSummary = "No active network interfaces";
-    }
-    
-    addRowToTable(summaryTable, {"Network", networkSummary});
-}
-
-inline void refreshNetworkInfo(QTableWidget* networkTable)
-{
-    if (!networkTable) return;
-    
-    // Only refresh if table is visible and has been populated
-    if (!networkTable->isVisible() || networkTable->rowCount() == 0) {
-        return;
-    }
-    
-    // Store current scroll position to maintain user experience
-    int currentRow = networkTable->currentRow();
-    int scrollValue = networkTable->verticalScrollBar() ? networkTable->verticalScrollBar()->value() : 0;
-    
-    // Get live network information to detect new USB WiFi adapters, etc.
-    loadLiveNetworkInformation(networkTable);
-    
-    // Restore scroll position
-    if (networkTable->verticalScrollBar()) {
-        networkTable->verticalScrollBar()->setValue(scrollValue);
-    }
-    if (currentRow >= 0 && currentRow < networkTable->rowCount()) {
-        networkTable->setCurrentCell(currentRow, 0);
-    }
+    return "No active network interfaces";
 }
 
 #endif // NETWORK_H

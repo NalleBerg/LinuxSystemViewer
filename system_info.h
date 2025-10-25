@@ -1,250 +1,160 @@
 #ifndef SYSTEM_INFO_H
 #define SYSTEM_INFO_H
 
-#include <QString>
-#include <QStringList>
 #include <QTableWidget>
 #include <QTableWidgetItem>
-#include <QFile>
-#include <QDir>
-#include <QIODevice>
-#include <QRegularExpression>
-#include <QProcess>
 #include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonDocument>
+#include <QFile>
+#include <QTextStream>
+#include <QRegularExpression>
+#include <QStringList>
 #include <QDebug>
-#include <QtGlobal>
-#include "memory.h"
-
-// Forward declarations
-class QTableWidget;
+#include <QDir>
+#include <QProcess>
+#include <QHostInfo>
+#include <QSysInfo>
+#include <QDateTime>
+#include "gui_helpers.h"
 
 // System information functions
-void loadOSInformation(QTableWidget* osTable, const QJsonObject &systemData);
-void loadCPUInformation(QTableWidget* cpuTable, const QJsonObject &cpuData);
-void loadSystemInformation(QTableWidget* systemTable, const QJsonObject &systemData);
-void loadSummaryInformation(QTableWidget* summaryTable);
+void loadSystemInformation(QTableWidget* table, const QJsonObject& data);
+void styleSystemTable(QTableWidget* table);
+QString getSystemInfo();
 
-// Helper functions for system info
-QString getCPUInfo();
-QString getOSInfo();
-QString getSystemUptime();
-QString getKernelInfo();
-QString getSystemLoad();
-
-// Table utility functions
-void addRowToTable(QTableWidget* table, const QStringList& data);
-
-// Inline implementations
-
-inline QString getCPUInfo()
+// System Table Styling
+void styleSystemTable(QTableWidget* table)
 {
-    QFile cpuInfoFile("/proc/cpuinfo");
-    if (!cpuInfoFile.open(QIODevice::ReadOnly)) {
-        return "Unknown";
-    }
+    // Set column widths
+    table->setColumnWidth(0, 200);  // Property
+    table->setColumnWidth(1, 300);  // Value
+    table->setColumnWidth(2, 80);   // Unit
+    table->setColumnWidth(3, 120);  // Type
     
-    QString content = cpuInfoFile.readAll();
-    cpuInfoFile.close();
-    
-    // Extract model name
-    QRegularExpression modelRegex(R"(model name\s*:\s*(.+))");
-    QRegularExpressionMatch match = modelRegex.match(content);
-    if (match.hasMatch()) {
-        return match.captured(1).trimmed();
-    }
-    
-    return "Unknown";
+    // Style headers
+    table->horizontalHeader()->setStyleSheet(
+        "QHeaderView::section { "
+        "background-color: #2c3e50; "
+        "color: white; "
+        "padding: 8px; "
+        "border: none; "
+        "font-weight: bold; "
+        "}"
+    );
 }
 
-inline QString getOSInfo()
+// Load System Information
+void loadSystemInformation(QTableWidget* table, const QJsonObject& data)
 {
-    QFile osReleaseFile("/etc/os-release");
-    if (!osReleaseFile.open(QIODevice::ReadOnly)) {
-        // Try alternative location
-        osReleaseFile.setFileName("/usr/lib/os-release");
-        if (!osReleaseFile.open(QIODevice::ReadOnly)) {
-            return "Unknown Linux Distribution";
-        }
+    Q_UNUSED(data); // Use direct system calls instead of JSON data
+    
+    table->setRowCount(0);
+    
+    // Basic system information
+    addRowToTable(table, QStringList() << "Hostname" << QHostInfo::localHostName() << "" << "System");
+    addRowToTable(table, QStringList() << "Kernel Name" << QSysInfo::kernelType() << "" << "System");
+    addRowToTable(table, QStringList() << "Kernel Version" << QSysInfo::kernelVersion() << "" << "System");
+    addRowToTable(table, QStringList() << "Architecture" << QSysInfo::currentCpuArchitecture() << "" << "System");
+    addRowToTable(table, QStringList() << "Product Name" << QSysInfo::prettyProductName() << "" << "System");
+    addRowToTable(table, QStringList() << "Product Type" << QSysInfo::productType() << "" << "System");
+    addRowToTable(table, QStringList() << "Product Version" << QSysInfo::productVersion() << "" << "System");
+    
+    // Read additional system information from /proc/version
+    QFile versionFile("/proc/version");
+    if (versionFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream stream(&versionFile);
+        QString version = stream.readLine();
+        versionFile.close();
+        addRowToTable(table, QStringList() << "Kernel Info" << version << "" << "System");
     }
     
-    QString content = osReleaseFile.readAll();
-    osReleaseFile.close();
-    
-    // Extract PRETTY_NAME
-    QRegularExpression nameRegex("PRETTY_NAME=\"?([^\"\\n]+)\"?");
-    QRegularExpressionMatch match = nameRegex.match(content);
-    if (match.hasMatch()) {
-        return match.captured(1).trimmed();
-    }
-    
-    return "Unknown Linux Distribution";
-}
-
-inline QString getSystemUptime()
-{
+    // Read uptime
     QFile uptimeFile("/proc/uptime");
-    if (!uptimeFile.open(QIODevice::ReadOnly)) {
-        return "Unknown";
-    }
-    
-    QString content = uptimeFile.readAll().trimmed();
-    uptimeFile.close();
-    
-    QStringList parts = content.split(' ');
-    if (parts.size() >= 1) {
-        double uptimeSeconds = parts[0].toDouble();
-        int days = int(uptimeSeconds) / (24 * 3600);
-        int hours = (int(uptimeSeconds) % (24 * 3600)) / 3600;
-        int minutes = (int(uptimeSeconds) % 3600) / 60;
+    if (uptimeFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream stream(&uptimeFile);
+        QString uptimeStr = stream.readLine();
+        uptimeFile.close();
         
-        if (days > 0) {
-            return QString("%1 days, %2:%3").arg(days).arg(hours, 2, 10, QChar('0')).arg(minutes, 2, 10, QChar('0'));
-        } else {
-            return QString("%1:%2").arg(hours, 2, 10, QChar('0')).arg(minutes, 2, 10, QChar('0'));
+        QStringList parts = uptimeStr.split(' ');
+        if (!parts.isEmpty()) {
+            double uptimeSeconds = parts[0].toDouble();
+            int days = static_cast<int>(uptimeSeconds / 86400);
+            int hours = static_cast<int>((uptimeSeconds - days * 86400) / 3600);
+            int minutes = static_cast<int>((uptimeSeconds - days * 86400 - hours * 3600) / 60);
+            
+            QString uptimeFormatted = QString("%1 days, %2 hours, %3 minutes")
+                .arg(days).arg(hours).arg(minutes);
+            addRowToTable(table, QStringList() << "Uptime" << uptimeFormatted << "" << "System");
         }
     }
     
-    return "Unknown";
-}
-
-inline QString getKernelInfo()
-{
-    QProcess unameProcess;
-    unameProcess.start("uname", QStringList() << "-r");
-    unameProcess.waitForFinished(2000);
-    
-    if (unameProcess.exitCode() == 0) {
-        return unameProcess.readAllStandardOutput().trimmed();
+    // Read load average
+    QFile loadAvgFile("/proc/loadavg");
+    if (loadAvgFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream stream(&loadAvgFile);
+        QString loadLine = stream.readLine();
+        loadAvgFile.close();
+        
+        QStringList loadParts = loadLine.split(' ');
+        if (loadParts.size() >= 3) {
+            addRowToTable(table, QStringList() << "Load Average" << QString("%1, %2, %3").arg(loadParts[0], loadParts[1], loadParts[2]) << "" << "System");
+        }
     }
     
-    return "Unknown";
-}
-
-inline QString getSystemLoad()
-{
-    QFile loadavgFile("/proc/loadavg");
-    if (!loadavgFile.open(QIODevice::ReadOnly)) {
-        return "Unknown";
+    // Read number of processes
+    QDir procDir("/proc");
+    QStringList procEntries = procDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    int processCount = 0;
+    for (const QString& entry : procEntries) {
+        bool ok;
+        entry.toInt(&ok);
+        if (ok) processCount++;
+    }
+    addRowToTable(table, QStringList() << "Running Processes" << QString::number(processCount) << "" << "System");
+    
+    // Read distribution information
+    QFile osReleaseFile("/etc/os-release");
+    if (osReleaseFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream stream(&osReleaseFile);
+        while (!stream.atEnd()) {
+            QString line = stream.readLine();
+            if (line.startsWith("NAME=")) {
+                QString distroName = line.mid(5).replace("\"", "");
+                addRowToTable(table, QStringList() << "Distribution" << distroName << "" << "System");
+            } else if (line.startsWith("VERSION=")) {
+                QString version = line.mid(8).replace("\"", "");
+                addRowToTable(table, QStringList() << "Distribution Version" << version << "" << "System");
+            } else if (line.startsWith("ID=")) {
+                QString id = line.mid(3).replace("\"", "");
+                addRowToTable(table, QStringList() << "Distribution ID" << id << "" << "System");
+            }
+        }
+        osReleaseFile.close();
     }
     
-    QString content = loadavgFile.readAll().trimmed();
-    loadavgFile.close();
-    
-    QStringList parts = content.split(' ');
-    if (parts.size() >= 3) {
-        return QString("%1, %2, %3").arg(parts[0]).arg(parts[1]).arg(parts[2]);
+    // Read timezone information
+    QFile timezoneFile("/etc/timezone");
+    if (timezoneFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream stream(&timezoneFile);
+        QString timezone = stream.readLine().trimmed();
+        timezoneFile.close();
+        addRowToTable(table, QStringList() << "Timezone" << timezone << "" << "System");
     }
     
-    return "Unknown";
-}
-
-inline void loadOSInformation(QTableWidget* osTable, const QJsonObject &systemData)
-{
-    if (!osTable) return;
+    // Get current date and time
+    QDateTime currentDateTime = QDateTime::currentDateTime();
+    addRowToTable(table, QStringList() << "Current Time" << currentDateTime.toString("yyyy-MM-dd hh:mm:ss") << "" << "System");
     
-    osTable->setRowCount(0);
-    
-    // Get OS information from multiple sources
-    addRowToTable(osTable, {"Distribution", getOSInfo()});
-    addRowToTable(osTable, {"Kernel", getKernelInfo()});
-    addRowToTable(osTable, {"Uptime", getSystemUptime()});
-    addRowToTable(osTable, {"Load Average", getSystemLoad()});
-    
-    // Add lshw data if available
-    if (systemData.contains("product")) {
-        addRowToTable(osTable, {"System", systemData["product"].toString()});
-    }
-    if (systemData.contains("vendor")) {
-        addRowToTable(osTable, {"Vendor", systemData["vendor"].toString()});
-    }
-    if (systemData.contains("version")) {
-        addRowToTable(osTable, {"Version", systemData["version"].toString()});
-    }
-}
-
-inline void loadCPUInformation(QTableWidget* cpuTable, const QJsonObject &cpuData)
-{
-    if (!cpuTable) return;
-    
-    cpuTable->setRowCount(0);
-    
-    // Get CPU information from /proc/cpuinfo
-    addRowToTable(cpuTable, {"Model", getCPUInfo()});
-    
-    // Count CPU cores
-    QFile cpuInfoFile("/proc/cpuinfo");
-    if (cpuInfoFile.open(QIODevice::ReadOnly)) {
-        QString content = cpuInfoFile.readAll();
-        int coreCount = content.count("processor\t:");
-        addRowToTable(cpuTable, {"Cores", QString::number(coreCount)});
-        cpuInfoFile.close();
-    }
-    
-    // Add lshw CPU data if available
-    if (cpuData.contains("product")) {
-        addRowToTable(cpuTable, {"Product", cpuData["product"].toString()});
-    }
-    if (cpuData.contains("vendor")) {
-        addRowToTable(cpuTable, {"Vendor", cpuData["vendor"].toString()});
-    }
-    if (cpuData.contains("size")) {
-        double mhz = cpuData["size"].toDouble() / 1000000.0; // Convert Hz to MHz
-        addRowToTable(cpuTable, {"Frequency", QString::number(mhz, 'f', 0) + " MHz"});
-    }
-    if (cpuData.contains("width")) {
-        addRowToTable(cpuTable, {"Architecture", QString::number(cpuData["width"].toInt()) + "-bit"});
+    // Read locale information
+    QString locale = qgetenv("LANG");
+    if (!locale.isEmpty()) {
+        addRowToTable(table, QStringList() << "Locale" << locale << "" << "System");
     }
 }
 
-inline void loadSystemInformation(QTableWidget* systemTable, const QJsonObject &systemData)
+// Get basic system info string
+QString getSystemInfo()
 {
-    if (!systemTable) return;
-    
-    systemTable->setRowCount(0);
-    
-    // Add system information from lshw
-    if (systemData.contains("product")) {
-        addRowToTable(systemTable, {"Product", systemData["product"].toString()});
-    }
-    if (systemData.contains("vendor")) {
-        addRowToTable(systemTable, {"Vendor", systemData["vendor"].toString()});
-    }
-    if (systemData.contains("version")) {
-        addRowToTable(systemTable, {"Version", systemData["version"].toString()});
-    }
-    if (systemData.contains("serial")) {
-        addRowToTable(systemTable, {"Serial", systemData["serial"].toString()});
-    }
-    if (systemData.contains("width")) {
-        addRowToTable(systemTable, {"Architecture", QString::number(systemData["width"].toInt()) + "-bit"});
-    }
-    
-    // Add additional system information
-    addRowToTable(systemTable, {"Hostname", QProcess::systemEnvironment().filter("HOSTNAME=").value(0).split("=").value(1, "Unknown")});
-    
-    // Get desktop environment
-    QString desktop = QProcess::systemEnvironment().filter("XDG_CURRENT_DESKTOP=").value(0).split("=").value(1, "Unknown");
-    if (desktop == "Unknown") {
-        desktop = QProcess::systemEnvironment().filter("DESKTOP_SESSION=").value(0).split("=").value(1, "Unknown");
-    }
-    addRowToTable(systemTable, {"Desktop Environment", desktop});
-}
-
-inline void loadSummaryInformation(QTableWidget* summaryTable)
-{
-    if (!summaryTable) return;
-    
-    summaryTable->setRowCount(0);
-    
-    // Add key system information to summary
-    addRowToTable(summaryTable, {"OS", getOSInfo()});
-    addRowToTable(summaryTable, {"Kernel", getKernelInfo()});
-    addRowToTable(summaryTable, {"CPU", getCPUInfo()});
-    addRowToTable(summaryTable, {"Memory", getMemoryInfo()});
-    addRowToTable(summaryTable, {"Uptime", getSystemUptime()});
-    addRowToTable(summaryTable, {"Load", getSystemLoad()});
+    return QSysInfo::prettyProductName() + " - " + QSysInfo::kernelVersion();
 }
 
 #endif // SYSTEM_INFO_H

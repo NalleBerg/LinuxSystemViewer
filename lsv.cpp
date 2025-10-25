@@ -1,637 +1,738 @@
-// Modular LinInfoGUI - Linux System Information Viewer
-// Enhanced with modular headers and comprehensive physical disk information
-
+#include <QtWidgets>
 #include <QApplication>
 #include <QMainWindow>
-#include <QTabWidget>
-#include <QTableWidget>
 #include <QVBoxLayout>
+#include <sys/stat.h>
 #include <QHBoxLayout>
-#include <QHeaderView>
-#include <QProcess>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QMessageBox>
-#include <QTimer>
-#include <QLineEdit>
 #include <QPushButton>
-#include <QCheckBox>
 #include <QLabel>
-#include <QProgressBar>
-#include <QStatusBar>
-#include <QKeyEvent>
-#include <QCloseEvent>
-#include <QShowEvent>
-#include <QDialog>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QDebug>
+#include <QTimer>
+#include <QScreen>
+#include <QIcon>
+#include <QFile>
 #include <QStyle>
-#include <QWindow>
-#include <QPixmap>
+#include <unistd.h> // For geteuid()
+#include <QProcess>
+#include <QStandardPaths>
+#include <QDir>
+#include <QDateTime>
+#include <QStringList>
+#include <QFileInfo>
 
-// Include our modular headers
-#include "gui_helpers.h"
-#include "storage.h"
-#include "system_info.h" 
-#include "memory.h"
-#include "network.h"
+// Forward-declare appendLog from log_helper.h
+#include "log_helper.h"
 
-#define VERSION "0.3.5"
+static bool polkitAgentRunning()
+{
+    // Look for common polkit GUI auth agent process names
+    QProcess p;
+    p.start("ps", QStringList() << "-eo" << "cmd");
+    if (!p.waitForFinished(1000)) return false;
+    QString out = QString::fromLocal8Bit(p.readAllStandardOutput());
+    QStringList agents = {"polkit-gnome-authentication-agent-1", "polkit-mate-authentication-agent-1", "polkit-kde-authentication-agent-1", "polkit-gnome"};
+    for (const QString &a : agents) {
+        if (out.contains(a)) return true;
+    }
+    return false;
+}
 
-class LinInfoGUI : public QMainWindow
+static QString detectDistroInstallCmds()
+{
+    QFile f("/etc/os-release");
+    if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) return QString();
+    QString s = QString::fromLocal8Bit(f.readAll());
+    f.close();
+    QString id;
+    for (const QString &line : s.split('\n')) {
+        if (line.startsWith("ID=", Qt::CaseInsensitive)) {
+            id = line.mid(3).trimmed();
+            if (id.startsWith('"') && id.endsWith('"') && id.length() >= 2) id = id.mid(1, id.length()-2);
+            id = id.toLower();
+            break;
+        }
+    }
+    if (id.isEmpty()) return QString();
+    if (id.contains("ubuntu") || id.contains("debian")) {
+        return QString("sudo apt update && sudo apt install policykit-1-gnome\n# then log out and back in (or run: /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &)");
+    } else if (id.contains("fedora") || id.contains("rhel") || id.contains("centos")) {
+        return QString("sudo dnf install polkit-gnome -y\n# then log out and back in (or run: /usr/libexec/polkit-gnome-authentication-agent-1 &)");
+    } else if (id.contains("arch")) {
+        return QString("sudo pacman -S polkit-gnome\n# then log out and back in (or run: /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &)");
+    }
+    return QString("Please install a polkit authentication agent for your desktop (policykit-1-gnome, mate-polkit, polkit-kde) and log out/in.");
+}
+
+// Qt message handler: route Qt debug/info/warning messages into the
+// appendLog file instead of printing to the console.
+static void lsvQtMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    Q_UNUSED(context);
+    QString prefix;
+    switch (type) {
+        case QtDebugMsg: prefix = "DEBUG: "; break;
+        case QtInfoMsg: prefix = "INFO: "; break;
+        case QtWarningMsg: prefix = "WARNING: "; break;
+        case QtCriticalMsg: prefix = "CRITICAL: "; break;
+        case QtFatalMsg: prefix = "FATAL: "; break;
+        default: prefix = "LOG: "; break;
+    }
+    appendLog(prefix + msg);
+    if (type == QtFatalMsg) {
+        abort();
+    }
+}
+
+#include "multitabs.h"
+#include "ctrlw.h"
+#include "tab_widget_base.h"
+#include "summary_tab.h"
+#include "generic_tab.h"
+#include "os_tab.h"
+#include "audio_tab.h"
+#include "windowing_tab.h"
+#include "graphics_tab.h"
+#include "screen_tab.h"
+#include "ports_tab.h"
+#include "peripherals_tab.h"
+#include "motherboard_tab.h"
+#include "storage_tab.h"
+#include "about_tab.h"
+#include "cpu_tab.h"
+#include "tabs_config.h"
+#include "pc_tab.h"
+#include "memory_tab.h"
+#include "log_helper.h"
+
+class TabManager : public QObject
 {
     Q_OBJECT
 
 public:
-    LinInfoGUI(QWidget *parent = nullptr);
-    ~LinInfoGUI();
+    explicit TabManager(QObject* parent = nullptr) : QObject(parent) {}
+
+    void createAllTabs()
+    {
+        for (int i = 0; i < TAB_CONFIGS.size(); ++i) {
+            const TabConfig& config = TAB_CONFIGS[i];
+            qDebug() << "TabManager: Creating tab" << i << ":" << config.name;
+            appendLog(QString("TabManager: Creating tab %1 : %2 (command: %3)").arg(QString::number(i), config.name, config.command));
+            
+            QWidget* tabWidget = createTab(config);
+            if (tabWidget) {
+                m_tabWidget->addTab(tabWidget, config.name);
+                qDebug() << "TabManager: Successfully added tab:" << config.name;
+            } else {
+                qDebug() << "TabManager: Failed to create tab:" << config.name;
+            }
+        }
+    }
+
+    void setTabWidget(MultiRowTabWidget* tabWidget)
+    {
+        m_tabWidget = tabWidget;
+    }
+
+signals:
+    void tabLoadingStarted(const QString& tabName);
+    void tabLoadingFinished(const QString& tabName);
 
 private slots:
-    void onRefreshClicked() { loadInitialData(); }
-    
-    void onSearchResultClicked(int row, int column);
-    void performSearchAction();
-    void closeSearchTab();
-    void onTabCloseRequested(int index);
-    void onTabChanged(int index);
-    
-    // Live refresh functions
-    void refreshStorageTab();
-    void refreshSummaryTab();
-    void refreshMemoryTab();
-    void refreshNetworkTab();
-    void confirmQuit();
+    void onTabLoadingStarted()
+    {
+        TabWidgetBase* tab = qobject_cast<TabWidgetBase*>(sender());
+        if (tab) {
+            emit tabLoadingStarted(tab->getTabName());
+        }
+    }
 
-protected:
-    void keyPressEvent(QKeyEvent *event) override;
-    void closeEvent(QCloseEvent *event) override;
-    void showEvent(QShowEvent *event) override;
+    void onTabLoadingFinished()
+    {
+        TabWidgetBase* tab = qobject_cast<TabWidgetBase*>(sender());
+        if (tab) {
+            emit tabLoadingFinished(tab->getTabName());
+        }
+    }
 
 private:
-    void setupUI();
-    void loadInitialData();
-    void updateSearchResults();
-    void clearAllHighlighting();
-    void highlightMatchedText(QTableWidget *table, int row, int col, const QString &searchTerm, bool useRegex = false);
-    
-    // UI Components
-    QTabWidget *tabWidget;
-    QTableWidget *summaryTable;
-    QTableWidget *osTable;
-    QTableWidget *systemTable;
-    QTableWidget *cpuTable;
-    QTableWidget *memoryTable;
-    QTableWidget *storageTable;
-    QTableWidget *networkTable;
-    QTableWidget *searchTable;
-    QPushButton *refreshButton;
-    QLineEdit *searchField;
-    QPushButton *searchButton;
-    QCheckBox *regexCheckBox;
-    QLabel *statusLabel;
-    QProgressBar *progressBar;
-    
-    // Data processing
-    QTimer *refreshTimer;
-    MemoryMonitor *memoryMonitor;
-    QString searchTerm;
-    int searchTabIndex; // Track search tab index for dynamic visibility
+    QWidget* createTab(const TabConfig& config)
+    {
+        QWidget* tabWidget = nullptr;
+        
+        if (config.name == "Summary") {
+            SummaryTab* summaryTab = new SummaryTab();
+            connect(summaryTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
+            connect(summaryTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+            tabWidget = summaryTab;
+        }
+        else if (config.name == "Memory") {
+            tabWidget = new MemoryTab();
+        }
+        else if (config.name == "CPU") {
+            CPUTab* cpuTab = new CPUTab();
+            tabWidget = cpuTab;
+        }
+        else if (config.name == "OS") {
+            appendLog(QString("TabManager: Instantiating OSTab with command: %1").arg(config.command));
+            OSTab* osTab = new OSTab("OS", "lsb_release -a", true, "", nullptr);
+            appendLog("TabManager: OSTab constructed");
+            connect(osTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
+            connect(osTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+            tabWidget = osTab;
+        }
+        else if (config.name == "Audio") {
+            AudioTab* audioTab = new AudioTab();
+            connect(audioTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
+            connect(audioTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+            tabWidget = audioTab;
+        }
+        else if (config.name == "Desktop") {
+            WindowingTab* windowingTab = new WindowingTab();
+            connect(windowingTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
+            connect(windowingTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+            tabWidget = windowingTab;
+        }
+        else if (config.name == "Graphics gard") {
+            GraphicsTab* graphicsTab = new GraphicsTab();
+            connect(graphicsTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
+            connect(graphicsTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+            tabWidget = graphicsTab;
+        }
+        else if (config.name == "Screen") {
+            ScreenTab* screenTab = new ScreenTab();
+            connect(screenTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
+            connect(screenTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+            tabWidget = screenTab;
+        }
+        else if (config.name == "Ports") {
+            PortsTab* portsTab = new PortsTab();
+            connect(portsTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
+            connect(portsTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+            tabWidget = portsTab;
+        }
+        else if (config.name == "Peripherals") {
+            PeripheralsTab* peripheralsTab = new PeripheralsTab();
+            connect(peripheralsTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
+            connect(peripheralsTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+            tabWidget = peripheralsTab;
+        }
+        else if (config.name == "Motherboard") {
+            MotherboardTab* motherboardTab = new MotherboardTab();
+            connect(motherboardTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
+            connect(motherboardTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+            tabWidget = motherboardTab;
+        }
+        else if (config.name == "Disk") {
+            StorageTab* storageTab = new StorageTab();
+            connect(storageTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
+            connect(storageTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+            tabWidget = storageTab;
+        }
+        else if (config.name == "PC Info") {
+            PCTab* pcTab = new PCTab();
+            connect(pcTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
+            connect(pcTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+            tabWidget = pcTab;
+        }
+        else if (config.name == "About") {
+            AboutTab* aboutTab = new AboutTab();
+            connect(aboutTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
+            connect(aboutTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+            tabWidget = aboutTab;
+        }
+        else {
+            GenericTab* genericTab = new GenericTab(config.name, config.command, true, config.command);
+            connect(genericTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
+            connect(genericTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+            tabWidget = genericTab;
+        }
+        
+        return tabWidget;
+    }
+
+    MultiRowTabWidget* m_tabWidget = nullptr;
 };
-
-LinInfoGUI::LinInfoGUI(QWidget *parent)
-    : QMainWindow(parent)
-    , refreshTimer(new QTimer(this))
-    , memoryMonitor(nullptr)
-{
-    setupUI();
-    
-    // Initialize memory monitor
-    memoryMonitor = new MemoryMonitor(memoryTable, this);
-    
-    // Setup refresh timer for live updates (every 1 second)
-    connect(refreshTimer, &QTimer::timeout, this, &LinInfoGUI::refreshStorageTab);
-    connect(refreshTimer, &QTimer::timeout, this, &LinInfoGUI::refreshSummaryTab);
-    connect(refreshTimer, &QTimer::timeout, this, &LinInfoGUI::refreshMemoryTab);
-    connect(refreshTimer, &QTimer::timeout, this, &LinInfoGUI::refreshNetworkTab);
-    refreshTimer->start(1000); // 1 second interval
-    
-    // Load initial data directly from system
-    loadInitialData();
-}
-
-LinInfoGUI::~LinInfoGUI()
-{
-    // Clean destructor - timer cleanup handled automatically by Qt
-}
-
-void LinInfoGUI::setupUI()
-{
-    setWindowTitle(QString("🖥️ Linux System Viewer (LSV) - V. %1").arg(VERSION));
-    setMinimumSize(800, 500);
-    
-    // Force window to show icon in title bar with multiple window flags
-    setWindowFlags(windowFlags() | Qt::Window);
-    
-    // Set application icon for window and taskbar from embedded resource
-    QIcon appIcon;
-    appIcon.addFile(":lsv.png", QSize(16, 16));   // Small size for title bar
-    appIcon.addFile(":lsv.png", QSize(24, 24));   // Small-medium size
-    appIcon.addFile(":lsv.png", QSize(32, 32));   // Medium size for taskbar
-    appIcon.addFile(":lsv.png", QSize(48, 48));   // Large size for alt-tab
-    appIcon.addFile(":lsv.png", QSize(64, 64));   // Extra large
-    appIcon.addFile(":lsv.svg");                  // SVG for scalability
-    
-    if (!appIcon.isNull()) {
-        // Set icon for this specific window - try multiple times
-        setWindowIcon(appIcon);
-        setWindowIcon(appIcon);  // Set twice for stubborn WMs
-        
-        // Set icon for all application windows
-        QApplication::setWindowIcon(appIcon);
-        
-        // Force window icon attribute
-        setAttribute(Qt::WA_SetWindowIcon, true);
-        
-        // Try setting icon as pixmap too
-        QPixmap iconPixmap = appIcon.pixmap(32, 32);
-        if (!iconPixmap.isNull()) {
-            setWindowIcon(QIcon(iconPixmap));
-        }
-        
-        qDebug() << "Icon loaded from embedded resource with multiple sizes";
-        qDebug() << "Available icon sizes:" << appIcon.availableSizes();
-        qDebug() << "Window flags:" << windowFlags();
-    } else {
-        qDebug() << "Warning: Could not load embedded icon resource";
-    }
-    
-    // Set compact font for the entire application
-    QFont compactFont("Helvetica", 8);
-    QApplication::setFont(compactFont);
-    
-    // Apply selective dark purple text color styling (not to table items)
-    QString globalStyle = 
-        "QLabel { color: #382a7e; }"
-        "QPushButton { color: #382a7e; }"
-        "QLineEdit { color: #382a7e; }"
-        "QCheckBox { color: #382a7e; }"
-        "QTabWidget::pane { color: #382a7e; }"
-        "QTabBar::tab { color: #382a7e; }"
-        "QMessageBox { color: #382a7e; }"
-        "QMessageBox QLabel { color: #382a7e; }"
-        "QMessageBox QPushButton { color: #382a7e; }"
-        "QProgressBar { color: #382a7e; }"
-        "QHeaderView::section { color: black; font-weight: bold; }";
-    this->setStyleSheet(globalStyle);
-    
-    QWidget *centralWidget = new QWidget(this);
-    setCentralWidget(centralWidget);
-    
-    QVBoxLayout *mainLayout = new QVBoxLayout(centralWidget);
-    QHBoxLayout *toolbarLayout = new QHBoxLayout();
-    
-    // Toolbar
-    refreshButton = new QPushButton("Refresh", this);
-    refreshButton->setMaximumWidth(80);
-    connect(refreshButton, &QPushButton::clicked, this, &LinInfoGUI::onRefreshClicked);
-    // Initially hide refresh button since Summary tab (index 0) has auto-update
-    refreshButton->setVisible(false);
-    
-    searchField = new QLineEdit(this);
-    searchField->setPlaceholderText("Search system information...");
-    searchField->setMaximumWidth(300);
-    connect(searchField, &QLineEdit::returnPressed, this, &LinInfoGUI::performSearchAction);
-    
-    // Create search button
-    searchButton = new QPushButton("Search", this);
-    searchButton->setMaximumWidth(80);
-    connect(searchButton, &QPushButton::clicked, this, &LinInfoGUI::performSearchAction);
-    
-    regexCheckBox = new QCheckBox("Regex", this);
-    regexCheckBox->setToolTip("Enable regular expression search");
-    
-    statusLabel = new QLabel("Ready", this);
-    
-    progressBar = new QProgressBar(this);
-    progressBar->setMaximumWidth(150);
-    progressBar->hide();
-    
-    toolbarLayout->addWidget(refreshButton);
-    toolbarLayout->addWidget(searchField);
-    toolbarLayout->addWidget(searchButton);
-    toolbarLayout->addWidget(regexCheckBox);
-    toolbarLayout->addStretch();
-    toolbarLayout->addWidget(statusLabel);
-    toolbarLayout->addWidget(progressBar);
-    
-    // Tab widget
-    tabWidget = new QTabWidget(this);
-    tabWidget->setTabsClosable(true);
-    connect(tabWidget, &QTabWidget::currentChanged, this, &LinInfoGUI::onTabChanged);
-    connect(tabWidget, &QTabWidget::tabCloseRequested, this, &LinInfoGUI::onTabCloseRequested);
-    
-    // Initialize all tables using our modular UI helpers
-    summaryTable = new QTableWidget(this);
-    initializeSummaryTable(summaryTable);
-    
-    osTable = new QTableWidget(this);
-    initializeOSTable(osTable);
-    
-    systemTable = new QTableWidget(this);
-    initializeSystemTable(systemTable);
-    
-    cpuTable = new QTableWidget(this);
-    initializeCPUTable(cpuTable);
-    
-    memoryTable = new QTableWidget(this);
-    initializeMemoryTable(memoryTable);
-    
-    storageTable = new QTableWidget(this);
-    initializeStorageTable(storageTable);
-    
-    networkTable = new QTableWidget(this);
-    initializeNetworkTable(networkTable);
-    
-    searchTable = new QTableWidget(this);
-    initializeSearchTable(searchTable);
-    connect(searchTable, &QTableWidget::cellClicked, this, &LinInfoGUI::onSearchResultClicked);
-    searchTable->hide(); // Hide search table initially - it's only shown when added to tabs
-    
-    // Add tabs (search tab will be added dynamically when needed)
-    tabWidget->addTab(summaryTable, "Summary");
-    tabWidget->addTab(osTable, "OS");
-    tabWidget->addTab(systemTable, "System");
-    tabWidget->addTab(cpuTable, "CPU");
-    tabWidget->addTab(memoryTable, "Memory");
-    tabWidget->addTab(storageTable, "Storage");
-    tabWidget->addTab(networkTable, "Network");
-    
-    // Initialize search tab index as -1 (not present)
-    searchTabIndex = -1;
-    
-    // Make core tabs non-closeable
-    for (int i = 0; i < tabWidget->count(); ++i) {
-        tabWidget->tabBar()->setTabButton(i, QTabBar::RightSide, nullptr);
-        tabWidget->tabBar()->setTabButton(i, QTabBar::LeftSide, nullptr);
-    }
-    
-    mainLayout->addLayout(toolbarLayout);
-    mainLayout->addWidget(tabWidget);
-}
-
-void LinInfoGUI::loadInitialData()
-{
-    // Load all tabs with live system data (no lshw dependency)
-    loadSummaryInformation(summaryTable);
-    loadOSInformation(osTable, QJsonObject());           // Empty JSON, uses system calls
-    loadSystemInformation(systemTable, QJsonObject());   // Empty JSON, uses system calls  
-    loadCPUInformation(cpuTable, QJsonObject());         // Empty JSON, uses system calls
-    loadMemoryInformation(memoryTable, QJsonObject());   // Empty JSON, uses system calls
-    loadLiveStorageInformation(storageTable);            // Direct storage detection
-    loadLiveNetworkInformation(networkTable);            // Direct network detection
-    
-    // Add live data to summary
-    addLiveStorageToSummary(summaryTable);
-    addLiveNetworkToSummary(summaryTable);
-    
-    statusLabel->setText("System information loaded");
-}
-
-void LinInfoGUI::performSearchAction()
-{
-    if (searchTerm.isEmpty()) {
-        searchTerm = searchField->text();
-    }
-    
-    if (searchTerm.length() < 2) {
-        QMessageBox::information(this, "Search", "Please enter at least 2 characters to search.");
-        return;
-    }
-    
-    // Clear previous highlighting
-    clearAllHighlighting();
-    
-    // Perform search using our modular search function
-    QList<QTableWidget*> tables = {summaryTable, osTable, systemTable, cpuTable, memoryTable, storageTable, networkTable};
-    QStringList tabNames = {"Summary", "OS", "System", "CPU", "Memory", "Storage", "Network"};
-    
-    bool useRegex = regexCheckBox->isChecked();
-    QList<SearchResult> results = performSearch(searchTerm, tables, tabNames, useRegex);
-    
-    if (results.isEmpty()) {
-        QMessageBox::information(this, "Search", "No results found for: " + searchTerm);
-        return;
-    }
-    
-    // Display results and show search tab
-    displaySearchResults(searchTable, results);
-    
-    // Add search tab if not already present
-    if (searchTabIndex == -1) {
-        searchTabIndex = tabWidget->addTab(searchTable, "Search Results");
-        // Make search tab closeable but others not
-        QPushButton* closeButton = new QPushButton("×");
-        closeButton->setFixedSize(20, 20);
-        closeButton->setToolTip("Close search results");
-        connect(closeButton, &QPushButton::clicked, this, &LinInfoGUI::closeSearchTab);
-        tabWidget->tabBar()->setTabButton(searchTabIndex, QTabBar::RightSide, closeButton);
-    }
-    
-    // Switch to search tab
-    tabWidget->setCurrentIndex(searchTabIndex);
-    
-    // Highlight matches in all tables
-    for (int i = 0; i < tables.size(); ++i) {
-        QTableWidget* table = tables[i];
-        for (int row = 0; row < table->rowCount(); ++row) {
-            for (int col = 0; col < table->columnCount(); ++col) {
-                highlightMatchedText(table, row, col, searchTerm, useRegex);
-            }
-        }
-    }
-}
-
-void LinInfoGUI::closeSearchTab()
-{
-    if (searchTabIndex != -1) {
-        tabWidget->removeTab(searchTabIndex);
-        searchTabIndex = -1;
-        searchTable->setRowCount(0);
-        clearAllHighlighting();
-        searchField->clear();
-        searchTerm.clear();
-    }
-}
-
-void LinInfoGUI::onTabCloseRequested(int index)
-{
-    if (index == searchTabIndex) {
-        closeSearchTab();
-    }
-}
-
-void LinInfoGUI::onSearchResultClicked(int row, int column)
-{
-    Q_UNUSED(column);
-    
-    QTableWidgetItem* item = searchTable->item(row, 0);
-    if (!item) return;
-    
-    SearchResult result = item->data(Qt::UserRole).value<SearchResult>();
-    
-    QList<QTableWidget*> tables = {summaryTable, osTable, systemTable, cpuTable, memoryTable, storageTable, networkTable};
-    navigateToSearchResult(tabWidget, tables, result);
-}
-
-void LinInfoGUI::clearAllHighlighting()
-{
-    QList<QTableWidget*> tables = {summaryTable, osTable, systemTable, cpuTable, memoryTable, storageTable, networkTable};
-    ::clearAllHighlighting(tables);
-}
-
-void LinInfoGUI::highlightMatchedText(QTableWidget *table, int row, int col, const QString &searchTerm, bool useRegex)
-{
-    ::highlightMatchedText(table, row, col, searchTerm, useRegex);
-}
-
-void LinInfoGUI::onTabChanged(int index)
-{
-    // Control refresh button visibility based on auto-update status
-    // Summary (index 0), Memory (index 4), Storage (index 5), and Network (index 6) have auto-update
-    bool hasAutoUpdate = (index == 0 || index == 4 || index == 5 || index == 6); // Summary, Memory, Storage, or Network
-    refreshButton->setVisible(!hasAutoUpdate);
-    
-    // Force refresh of current tab's live data if needed
-    refreshStorageTab();
-    refreshSummaryTab();
-    refreshMemoryTab();
-    refreshNetworkTab();
-}
-
-void LinInfoGUI::refreshStorageTab()
-{
-    // Only refresh if the Storage tab is currently visible to save resources
-    if (tabWidget->currentIndex() == 5) { // Storage tab is at index 5
-        refreshStorageInfo(storageTable);
-    }
-}
-
-void LinInfoGUI::refreshSummaryTab()
-{
-    // Only refresh if the Summary tab is currently visible to save resources
-    if (tabWidget->currentIndex() == 0) { // Summary tab is at index 0
-        loadSummaryInformation(summaryTable);
-        addLiveStorageToSummary(summaryTable);
-        addLiveNetworkToSummary(summaryTable);
-    }
-}
-
-void LinInfoGUI::refreshMemoryTab()
-{
-    // Only refresh if the Memory tab is currently visible to save resources
-    if (tabWidget->currentIndex() == 4) { // Memory tab is at index 4
-        if (memoryMonitor && !memoryMonitor->isMonitoring()) {
-            memoryMonitor->startMonitoring();
-        }
-    } else {
-        // Stop monitoring when not on memory tab to save resources
-        if (memoryMonitor && memoryMonitor->isMonitoring()) {
-            memoryMonitor->stopMonitoring();
-        }
-    }
-}
-
-void LinInfoGUI::refreshNetworkTab()
-{
-    // Only refresh if the Network tab is currently visible to save resources
-    if (tabWidget->currentIndex() == 6) { // Network tab is at index 6
-        refreshNetworkInfo(networkTable);
-    }
-}
-
-void LinInfoGUI::confirmQuit()
-{
-    // Create a custom dialog to avoid QMessageBox text issues
-    QDialog dialog(this);
-    dialog.setWindowTitle("Quit?");
-    dialog.setModal(true);
-    dialog.setFixedSize(200, 120);
-    
-    QVBoxLayout* layout = new QVBoxLayout(&dialog);
-    
-    // Add question mark icon
-    QLabel* iconLabel = new QLabel();
-    iconLabel->setPixmap(style()->standardIcon(QStyle::SP_MessageBoxQuestion).pixmap(48, 48));
-    iconLabel->setAlignment(Qt::AlignCenter);
-    layout->addWidget(iconLabel);
-    
-    // Add buttons
-    QHBoxLayout* buttonLayout = new QHBoxLayout();
-    QPushButton* yesButton = new QPushButton("Yes");
-    QPushButton* noButton = new QPushButton("No");
-    
-    yesButton->setDefault(true);
-    buttonLayout->addWidget(yesButton);
-    buttonLayout->addWidget(noButton);
-    layout->addLayout(buttonLayout);
-    
-    connect(yesButton, &QPushButton::clicked, &dialog, &QDialog::accept);
-    connect(noButton, &QPushButton::clicked, &dialog, &QDialog::reject);
-    
-    // Center dialog on parent
-    dialog.move(this->geometry().center() - dialog.rect().center());
-    
-    if (dialog.exec() == QDialog::Accepted) {
-        close();
-    }
-}
-
-void LinInfoGUI::keyPressEvent(QKeyEvent *event)
-{
-    if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_W) {
-        confirmQuit();
-        event->accept();
-        return;
-    }
-    
-    QMainWindow::keyPressEvent(event);
-}
-
-void LinInfoGUI::showEvent(QShowEvent *event)
-{
-    QMainWindow::showEvent(event);
-    
-    // Force refresh window icon after show event with multiple approaches
-    QIcon appIcon;
-    appIcon.addFile(":lsv.png", QSize(16, 16));
-    appIcon.addFile(":lsv.png", QSize(24, 24));
-    appIcon.addFile(":lsv.png", QSize(32, 32));
-    appIcon.addFile(":lsv.svg");
-    
-    if (!appIcon.isNull()) {
-        // Set icon using multiple methods
-        setWindowIcon(appIcon);
-        
-        // Force window decoration update
-        setAttribute(Qt::WA_SetWindowIcon, true);
-        
-        // Try to set icon on the native window handle
-        if (windowHandle()) {
-            windowHandle()->setIcon(appIcon);
-        }
-        
-        // Force window update
-        update();
-        repaint();
-        
-        // Use QTimer to retry icon setting after window is fully shown
-        QTimer::singleShot(100, this, [this, appIcon]() {
-            setWindowIcon(appIcon);
-            if (windowHandle()) {
-                windowHandle()->setIcon(appIcon);
-            }
-            qDebug() << "Window icon re-applied with timer";
-        });
-        
-        qDebug() << "Window icon refreshed in showEvent with multiple methods";
-    }
-}
-
-void LinInfoGUI::closeEvent(QCloseEvent *event)
-{
-    // Create custom quit confirmation dialog
-    QDialog* quitDialog = new QDialog(this);
-    quitDialog->setWindowTitle("Quit?");
-    quitDialog->setFixedSize(200, 120);
-    quitDialog->setModal(true);
-    
-    QVBoxLayout* layout = new QVBoxLayout(quitDialog);
-    
-    // Add question mark icon only (no text)
-    QLabel* iconLabel = new QLabel();
-    QPixmap icon = quitDialog->style()->standardIcon(QStyle::SP_MessageBoxQuestion).pixmap(48, 48);
-    iconLabel->setPixmap(icon);
-    iconLabel->setAlignment(Qt::AlignCenter);
-    layout->addWidget(iconLabel);
-    
-    // Add buttons
-    QHBoxLayout* buttonLayout = new QHBoxLayout();
-    QPushButton* yesButton = new QPushButton("Yes");
-    QPushButton* noButton = new QPushButton("No");
-    
-    yesButton->setDefault(true);
-    buttonLayout->addWidget(yesButton);
-    buttonLayout->addWidget(noButton);
-    layout->addLayout(buttonLayout);
-    
-    // Connect buttons
-    connect(yesButton, &QPushButton::clicked, quitDialog, &QDialog::accept);
-    connect(noButton, &QPushButton::clicked, quitDialog, &QDialog::reject);
-    
-    // Show dialog and handle result
-    int result = quitDialog->exec();
-    
-    if (result == QDialog::Accepted) {
-        // Clean shutdown - stop timers
-        if (refreshTimer) {
-            refreshTimer->stop();
-        }
-        event->accept();
-    } else {
-        event->ignore();
-    }
-    
-    quitDialog->deleteLater();
-}
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    
-    // Set application properties for better system integration
-    app.setApplicationName("LSV");
-    app.setApplicationVersion(VERSION);
-    app.setOrganizationName("NalleBerg");
-    app.setOrganizationDomain("nalle.no");
-    
-    // Set application icon globally for better desktop integration
-    QIcon appIcon;
-    appIcon.addFile(":lsv.png", QSize(16, 16));
-    appIcon.addFile(":lsv.png", QSize(24, 24));
-    appIcon.addFile(":lsv.png", QSize(32, 32));
-    appIcon.addFile(":lsv.png", QSize(48, 48));
-    appIcon.addFile(":lsv.png", QSize(64, 64));
-    appIcon.addFile(":lsv.svg");
-    
-    if (!appIcon.isNull()) {
-        app.setWindowIcon(appIcon);
-        qDebug() << "Global application icon set successfully";
-        qDebug() << "Desktop environment:" << qgetenv("XDG_CURRENT_DESKTOP");
-        qDebug() << "Window manager:" << qgetenv("XDG_SESSION_TYPE");
-        
-        // Auto-configure desktop environment for optimal icon display
-        QString desktop = qgetenv("XDG_CURRENT_DESKTOP");
-        if (desktop.contains("Cinnamon", Qt::CaseInsensitive)) {
-            qDebug() << "Cinnamon detected - Window menu enabled for icon display";
-        } else if (desktop.contains("GNOME", Qt::CaseInsensitive)) {
-            qDebug() << "GNOME detected - Icon should appear in top bar and alt-tab";
-        } else if (desktop.contains("KDE", Qt::CaseInsensitive) || desktop.contains("Plasma", Qt::CaseInsensitive)) {
-            qDebug() << "KDE/Plasma detected - Icon should appear in title bar";
-        } else if (desktop.contains("XFCE", Qt::CaseInsensitive)) {
-            qDebug() << "XFCE detected - Icon should appear in title bar";
-        } else if (desktop.contains("MATE", Qt::CaseInsensitive)) {
-            qDebug() << "MATE detected - Icon should appear in title bar";
-        } else {
-            qDebug() << "Unknown desktop environment - Using default icon behavior";
+
+    // Set application properties
+    app.setApplicationName("Linux System Viewer");
+    app.setApplicationVersion("0.6.0");
+    app.setOrganizationName("LSV");
+
+    // Set application icon from resource
+    QIcon appIcon(":/lsv.png");
+    app.setWindowIcon(appIcon);
+
+    // Install Qt message handler so all qDebug/qWarning/etc go to the
+    // appendLog file instead of printing to the console.
+    qInstallMessageHandler(lsvQtMessageHandler);
+
+    qDebug() << "Application starting..."; // will be routed to appendLog
+    appendLog(QString("Application starting. CWD: %1, log-file: %2").arg(QDir::currentPath(), QDir::currentPath()+"/lsv-cli.log"));
+
+    // Auto-elevation: if not running as root, try to relaunch via pkexec using
+    // a temporary wrapper script that preserves necessary environment
+    // variables (DISPLAY, XAUTHORITY, DBUS, XDG_RUNTIME_DIR). This keeps the
+    // app portable (no install) while still prompting for password.
+    if (geteuid() != 0 && qgetenv("LSV_ELEVATED").isEmpty()) {
+        // Cleanup old temp files to avoid clutter. Remove lsv-elevated-*
+        // and lsv-relaunch-* files older than an hour.
+        QDir tmpDir(QDir::tempPath());
+        QDateTime now = QDateTime::currentDateTime();
+        const int MAX_AGE_SECS = 60 * 60; // 1 hour
+        QStringList stalePatterns = {"lsv-elevated-*", "lsv-relaunch-*.sh", "lsv-relaunch-*.log"};
+        for (const QString &pat : stalePatterns) {
+            QFileInfoList entries = tmpDir.entryInfoList(QStringList(pat), QDir::Files);
+            for (const QFileInfo &fi : entries) {
+                if (fi.lastModified().secsTo(now) > MAX_AGE_SECS) {
+                    QFile::remove(fi.absoluteFilePath());
+                }
+            }
         }
-    } else {
-        qDebug() << "Failed to load application icon";
+        QString pkexecPath = QStandardPaths::findExecutable("pkexec");
+        QString exe = QCoreApplication::applicationFilePath();
+        QString tmpScript = QDir::tempPath() + QDir::separator() + QString("lsv-relaunch-%1.sh").arg(getpid());
+        // If running from an AppImage mount, copy the executable now (as the
+        // current user) into /tmp so the elevated pkexec child can execute it
+        // even if the AppImage mount is removed when this process exits.
+        QString preCopiedExe;
+        if (exe.contains("/tmp/.mount_")) {
+            preCopiedExe = QDir::tempPath() + QDir::separator() + QString("lsv-elevated-%1").arg(QCoreApplication::applicationPid());
+            QFile::remove(preCopiedExe);
+            // First try a direct copy of the mounted path. If that fails
+            // (common on some FUSE-mounted AppImage setups where root cannot
+            // access the user's mount), fall back to copying the running
+            // process image via /proc/self/exe which the current user can
+            // read.
+            bool copied = QFile::copy(exe, preCopiedExe);
+            // Diagnostic: record whether the source exe is visible to the
+            // unprivileged process and its size. This helps debug cases
+            // where the FUSE-mounted path isn't readable to either the
+            // unprivileged or the elevated process.
+            QFileInfo srcInfo(exe);
+            if (srcInfo.exists()) {
+                appendLog(QString("Auto-elevation: source exe exists: %1 size=%2").arg(exe).arg(QString::number(srcInfo.size())));
+            } else {
+                appendLog(QString("Auto-elevation: source exe does NOT exist (from user's view): %1").arg(exe));
+            }
+            if (!copied) {
+                appendLog(QString("Auto-elevation: direct copy failed, trying /proc/self/exe fallback"));
+                QFile in("/proc/self/exe");
+                if (in.open(QIODevice::ReadOnly)) {
+                    QFile out(preCopiedExe);
+                    if (out.open(QIODevice::WriteOnly)) {
+                        const qint64 bufSize = 32768;
+                        QByteArray buf;
+                        while (!in.atEnd()) {
+                            buf = in.read(bufSize);
+                            out.write(buf);
+                        }
+                        out.close();
+                        copied = true;
+                    }
+                    in.close();
+                } else {
+                    appendLog(QString("Auto-elevation: failed to open /proc/self/exe for fallback copy"));
+                }
+            }
+            
+            // If fallback read also failed, try a shell-level copy using cat
+            // which sometimes behaves better for special files.
+            if (!copied) {
+                appendLog(QString("Auto-elevation: attempting shell-level copy via cat"));
+                QProcess cpProc;
+                QString cmd = QString("sh -c 'cat /proc/self/exe > %1 && chmod 0755 %1'").arg(preCopiedExe);
+                cpProc.start("sh", QStringList() << "-c" << QString("cat /proc/self/exe > '%1' && chmod 0755 '%1'").arg(preCopiedExe));
+                bool started = cpProc.waitForStarted(2000);
+                if (started) {
+                    cpProc.waitForFinished(5000);
+                    if (QFile::exists(preCopiedExe) && QFile(preCopiedExe).size() > 0) {
+                        copied = true;
+                        appendLog(QString("Auto-elevation: shell-level copy succeeded to %1").arg(preCopiedExe));
+                    } else {
+                        appendLog(QString("Auto-elevation: shell-level copy failed"));
+                    }
+                } else {
+                    appendLog(QString("Auto-elevation: could not start shell copy process"));
+                }
+            }
+            if (copied) {
+                QFile::setPermissions(preCopiedExe, QFile::ExeOwner | QFile::ReadOwner | QFile::WriteOwner
+                                                   | QFile::ExeGroup | QFile::ReadGroup
+                                                   | QFile::ExeOther | QFile::ReadOther);
+                appendLog(QString("Auto-elevation: Copied mounted exe to %1").arg(preCopiedExe));
+                    // Report the size of the pre-copied file for debugging.
+                    QFileInfo preInfo(preCopiedExe);
+                    appendLog(QString("Auto-elevation: pre-copied file size: %1").arg(QString::number(preInfo.size())));
+            } else {
+                appendLog(QString("Auto-elevation: Failed to copy mounted exe %1 -> %2").arg(exe, preCopiedExe));
+                preCopiedExe.clear();
+            }
+        }
+        // If an installed setuid helper is available, prefer it because
+        // it avoids relying on polkit agents and can be more reliable
+        // when launched from a file manager. The helper must be installed
+        // by a system administrator (chown root:root && chmod 4755).
+        QString helperExec = QStandardPaths::findExecutable("lsv-elevate");
+        if (!helperExec.isEmpty()) {
+            appendLog(QString("Auto-elevation: found helper %1, launching helper").arg(helperExec));
+            // If we pre-copied the exe, prefer that path so helper doesn't
+            // need to access the FUSE-mounted AppImage path.
+            QString helperTarget = preCopiedExe.isEmpty() ? exe : preCopiedExe;
+            bool okh = QProcess::startDetached(helperExec, QStringList() << helperTarget);
+            if (okh) {
+                appendLog("Auto-elevation: Relaunched with lsv-elevate helper");
+                QObject::connect(&app, &QCoreApplication::aboutToQuit, [tmpScript, preCopiedExe]() {
+                    if (!tmpScript.isEmpty()) QFile::remove(tmpScript);
+                    if (!preCopiedExe.isEmpty()) QFile::remove(preCopiedExe);
+                });
+
+                // Start the same watchdog as below to detect elevated instance
+                QString watchExe = preCopiedExe.isEmpty() ? exe : preCopiedExe;
+                QTimer* watchTimer = new QTimer();
+                watchTimer->setInterval(500);
+                int maxChecks = 20;
+                int* checks = new int(0);
+                QObject::connect(watchTimer, &QTimer::timeout, [watchTimer, watchExe, checks, maxChecks]() {
+                    (*checks)++;
+                    QProcess p; p.start("ps", QStringList() << "-eo" << "pid,user,cmd"); p.waitForFinished(1000);
+                    QString out = QString::fromLocal8Bit(p.readAllStandardOutput());
+                    bool found = false;
+                    QString watchBase = QFileInfo(watchExe).fileName();
+                    for (const QString& line : out.split('\n')) {
+                        if (line.isEmpty()) continue;
+                        if (line.contains(" root ") && (line.contains(watchExe) || (!watchBase.isEmpty() && line.contains(watchBase)))) {
+                            found = true; break;
+                        }
+                    }
+                    if (found || *checks >= maxChecks) {
+                        watchTimer->stop(); watchTimer->deleteLater(); delete checks;
+                        if (found) qApp->quit();
+                    }
+                });
+                watchTimer->start();
+                // We initiated elevation via helper; don't fall through to pkexec.
+            } else {
+                appendLog("Auto-elevation: failed to start lsv-elevate helper, falling back to pkexec if available");
+            }
+        }
+
+        if (!pkexecPath.isEmpty()) {
+            QFile f(tmpScript);
+            if (f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+                QTextStream ts(&f);
+                ts << "#!/bin/sh\n";
+                // Export the elevation marker so child won't re-run this branch
+                ts << "export LSV_ELEVATED=1\n";
+                QByteArray display = qgetenv("DISPLAY");
+                if (!display.isEmpty()) ts << "export DISPLAY='" << QString::fromLocal8Bit(display).replace('\'' , "'" "'" "'") << "'\n";
+                QByteArray xauth = qgetenv("XAUTHORITY");
+                if (!xauth.isEmpty()) ts << "export XAUTHORITY='" << QString::fromLocal8Bit(xauth).replace('\'' , "'" "'" "'") << "'\n";
+                QByteArray dbus = qgetenv("DBUS_SESSION_BUS_ADDRESS");
+                if (!dbus.isEmpty()) ts << "export DBUS_SESSION_BUS_ADDRESS='" << QString::fromLocal8Bit(dbus).replace('\'' , "'" "'" "'") << "'\n";
+                QByteArray xdg = qgetenv("XDG_RUNTIME_DIR");
+                if (!xdg.isEmpty()) ts << "export XDG_RUNTIME_DIR='" << QString::fromLocal8Bit(xdg).replace('\'' , "'" "'" "'") << "'\n";
+                // If the application is running from an AppImage-mounted location
+                // (path contains "/tmp/.mount_"), pkexec running as root may be
+                // unable to execute the mounted binary directly. Prefer to use
+                // a pre-copied executable (copied earlier as the unprivileged
+                // user) if available; otherwise copy via mktemp in the wrapper
+                // and exec that copy.
+                if (exe.contains("/tmp/.mount_")) {
+                    if (!preCopiedExe.isEmpty()) {
+                        QString preEsc = preCopiedExe;
+                        preEsc.replace('\'', "'" "'" "'");
+                        ts << "LOG=/tmp/lsv-relaunch-" << getpid() << ".log\n";
+                        ts << "echo \"=== lsv-relaunch wrapper start $(date) PID=$$\" > \"$LOG\"\n";
+                        ts << "echo \"Using pre-copied exec: '" << preEsc << "'\" >> \"$LOG\"\n";
+                        ts << "ls -l '" << preEsc << "' >> \"$LOG\" 2>&1 || true\n";
+                        ts << "exec '" << preEsc << "' >> \"$LOG\" 2>&1 || true\n";
+                    } else {
+                        // Use mktemp to create a unique temporary filename for the
+                        // elevated copy. This avoids permission problems when a
+                        // deterministically-named file already exists and is not
+                        // writable by the calling user.
+                        QString exeEsc = exe;
+                        exeEsc.replace('\'', "'" "'" "'");
+                        // More verbose wrapper: log steps to /tmp/lsv-relaunch-<pid>.log
+                        ts << "LOG=/tmp/lsv-relaunch-" << getpid() << ".log\n";
+                        ts << "echo \"=== lsv-relaunch wrapper start $(date) PID=$$\" > \"$LOG\"\n";
+                        ts << "echo \"exe: '" << exeEsc << "'\" >> \"$LOG\"\n";
+                        ts << "ls -l '" << exeEsc << "' >> \"$LOG\" 2>&1 || true\n";
+                        ts << "stat '" << exeEsc << "' >> \"$LOG\" 2>&1 || true\n";
+                        // Create a unique temporary filename under /tmp
+                        ts << "TMPEXEC=$(mktemp /tmp/lsv-elevated-XXXXXX)\n";
+                        ts << "echo \"Using temp exec: $TMPEXEC\" >> \"$LOG\" 2>&1 || true\n";
+                        // Try cp, fall back to cat if cp fails (some fused mounts behave oddly)
+                        ts << "cp '" << exeEsc << "' \"$TMPEXEC\" >> \"$LOG\" 2>&1 || (cat '" << exeEsc << "' > \"$TMPEXEC\" 2>> \"$LOG\" || true)\n";
+                        ts << "chmod 0755 \"$TMPEXEC\" >> \"$LOG\" 2>&1 || true\n";
+                        ts << "echo \"After copy: \" >> \"$LOG\"; ls -l \"$TMPEXEC\" >> \"$LOG\" 2>&1 || true\n";
+                        ts << "exec \"$TMPEXEC\" >> \"$LOG\" 2>&1 || (echo \"exec $TMPEXEC failed, trying original\" >> \"$LOG\"; exec '" << exeEsc << "')\n";
+                    }
+                } else {
+                    ts << "exec '" << exe.replace('\'' , "'" "'" "'") << "'\n";
+                }
+                f.close();
+                QFile::setPermissions(tmpScript, QFile::ExeOwner | QFile::ReadOwner | QFile::WriteOwner);
+
+                bool launched = false;
+                // Prefer pkexec when a polkit GUI agent is present. If no GUI
+                // agent is detected, fall back to launching a terminal emulator
+                // that runs sudo so the user can authenticate in a terminal.
+                if (polkitAgentRunning()) {
+                    bool ok = QProcess::startDetached(pkexecPath, QStringList() << "/bin/sh" << tmpScript);
+                    if (ok) {
+                        appendLog("Auto-elevation: Relaunched with pkexec");
+                        launched = true;
+                    } else {
+                        appendLog("Auto-elevation: pkexec startDetached failed");
+                    }
+                } else {
+                    appendLog("Auto-elevation: no polkit GUI agent detected, attempting terminal sudo fallback");
+                    // Search for a terminal emulator to run the sudo fallback
+                    QStringList terms = {"x-terminal-emulator", "gnome-terminal", "konsole", "xfce4-terminal", "mate-terminal", "lxterminal", "xterm", "alacritty", "terminator"};
+                    QString termPath;
+                    for (const QString &t : terms) {
+                        QString p = QStandardPaths::findExecutable(t);
+                        if (!p.isEmpty()) { termPath = p; break; }
+                    }
+                    if (!termPath.isEmpty()) {
+                        QStringList args;
+                        // Run the relaunch script via sudo; do NOT wait for an
+                        // extra keypress so the terminal closes as soon as the
+                        // command finishes (user requested immediate close).
+                        QString cmd = QString("sudo -E /bin/sh '%1'").arg(tmpScript);
+                        if (termPath.endsWith("gnome-terminal") || termPath.endsWith("gnome-terminal.real")) {
+                            args << "--" << "bash" << "-c" << cmd;
+                        } else if (termPath.endsWith("konsole")) {
+                            args << "-e" << "bash" << "-c" << cmd;
+                        } else {
+                            // Most terminals accept -e
+                            args << "-e" << QString("sh -c \"%1\"").arg(cmd);
+                        }
+                        bool okTerm = QProcess::startDetached(termPath, args);
+                        if (okTerm) {
+                            appendLog(QString("Auto-elevation: Launched terminal '%1' for sudo fallback").arg(termPath));
+                            launched = true;
+                        } else {
+                            appendLog(QString("Auto-elevation: Failed to launch terminal '%1' for sudo fallback").arg(termPath));
+                        }
+                    } else {
+                        appendLog("Auto-elevation: No terminal emulator found for sudo fallback");
+                    }
+                }
+                if (launched) {
+                    // Schedule cleanup of the temporary script and any pre-copied exe on exit.
+                    QObject::connect(&app, &QCoreApplication::aboutToQuit, [tmpScript, preCopiedExe]() {
+                        if (!tmpScript.isEmpty()) QFile::remove(tmpScript);
+                        if (!preCopiedExe.isEmpty()) QFile::remove(preCopiedExe);
+                    });
+
+                    // Start a short watchdog: if an elevated LSV process appears
+                    // (owned by root and matching the expected executable path),
+                    // quit the non-elevated instance so the elevated GUI becomes
+                    // the only window.
+                    QString watchExe = preCopiedExe.isEmpty() ? exe : preCopiedExe;
+                    QTimer* watchTimer = new QTimer();
+                    watchTimer->setInterval(500); // check twice per second
+                    int maxChecks = 20; // 10 seconds
+                    int* checks = new int(0);
+                    QObject::connect(watchTimer, &QTimer::timeout, [watchTimer, watchExe, checks, maxChecks, pkexecPath, tmpScript, preCopiedExe]() {
+                        (*checks)++;
+                        // run ps to find root-owned process running watchExe
+                        QProcess p;
+                        p.start("ps", QStringList() << "-eo" << "pid,user,cmd");
+                        p.waitForFinished(1000);
+                        QString out = QString::fromLocal8Bit(p.readAllStandardOutput());
+                        bool found = false;
+                        QString watchBase = QFileInfo(watchExe).fileName();
+                        for (const QString& line : out.split('\n')) {
+                            if (line.isEmpty()) continue;
+                            // Match either the full path or the executable basename
+                            if (line.contains(" root ") && (line.contains(watchExe) || (!watchBase.isEmpty() && line.contains(watchBase)))) {
+                                // Write to the wrapper log so the user can see detection
+                                QFile logf(QString("/tmp/lsv-relaunch-%1.log").arg(getpid()));
+                                if (logf.open(QIODevice::Append | QIODevice::Text)) {
+                                    QTextStream lts(&logf);
+                                    lts << "Detected elevated process line: " << line << "\n";
+                                    logf.close();
+                                }
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (found || *checks >= maxChecks) {
+                            watchTimer->stop();
+                            watchTimer->deleteLater();
+                            delete checks;
+                            if (found) {
+                                // Elevated instance started; quit non-elevated app.
+                                qApp->quit();
+                            } else {
+                                // Watchdog timed out. Inform the user and offer actions.
+                                appendLog("Auto-elevation: watchdog timeout, elevated instance not detected");
+                                QString logPath = QString("/tmp/lsv-relaunch-%1.log").arg(getpid());
+                                QMessageBox msg;
+                                msg.setWindowTitle("Elevation failed");
+                                msg.setText("Elevation did not complete. The application will continue in unprivileged mode.\n\nChoose an action:");
+                                QPushButton *retryBtn = msg.addButton("Retry Elevation", QMessageBox::AcceptRole);
+                                QPushButton *helperBtn = msg.addButton("Use installed helper (lsv-elevate)", QMessageBox::ActionRole);
+                                QPushButton *showLogBtn = msg.addButton("Show elevation log", QMessageBox::ActionRole);
+                                QPushButton *cancelBtn = msg.addButton(QMessageBox::Cancel);
+                                msg.exec();
+                                if (msg.clickedButton() == retryBtn) {
+                                    // Retry pkexec
+                                    if (!pkexecPath.isEmpty()) {
+                                        bool ok = QProcess::startDetached(pkexecPath, QStringList() << "/bin/sh" << tmpScript);
+                                        if (ok) {
+                                            appendLog("Auto-elevation: Retry requested - relaunched with pkexec");
+                                            // Recreate watchdog: start a new timer and continue monitoring
+                                            int* newChecks = new int(0);
+                                            QTimer* newWatch = new QTimer();
+                                            newWatch->setInterval(500);
+                                            QObject::connect(newWatch, &QTimer::timeout, [newWatch, watchExe, newChecks, maxChecks, pkexecPath, tmpScript, preCopiedExe]() {
+                                                (*newChecks)++;
+                                                QProcess p2; p2.start("ps", QStringList() << "-eo" << "pid,user,cmd"); p2.waitForFinished(1000);
+                                                QString out2 = QString::fromLocal8Bit(p2.readAllStandardOutput());
+                                                QString watchBase2 = QFileInfo(watchExe).fileName();
+                                                bool found2 = false;
+                                                for (const QString& line2 : out2.split('\n')) {
+                                                    if (line2.isEmpty()) continue;
+                                                    if (line2.contains(" root ") && (line2.contains(watchExe) || (!watchBase2.isEmpty() && line2.contains(watchBase2)))) {
+                                                        found2 = true; break;
+                                                    }
+                                                }
+                                                if (found2 || *newChecks >= maxChecks) {
+                                                    newWatch->stop(); newWatch->deleteLater(); delete newChecks;
+                                                    if (found2) qApp->quit();
+                                                }
+                                            });
+                                            newWatch->start();
+                                        } else {
+                                            appendLog("Auto-elevation: Retry pkexec startDetached failed");
+                                        }
+                                    }
+                                } else if (msg.clickedButton() == helperBtn) {
+                                    QString helper = QStandardPaths::findExecutable("lsv-elevate");
+                                    if (!helper.isEmpty()) {
+                                        bool ok = QProcess::startDetached(helper, QStringList() << QCoreApplication::applicationFilePath());
+                                        if (ok) appendLog("Auto-elevation: launched lsv-elevate helper");
+                                        else appendLog("Auto-elevation: failed to start lsv-elevate helper");
+                                    } else {
+                                        QMessageBox::information(nullptr, "Helper not found", "The lsv-elevate helper was not found. To enable one-click elevation from file manager, install the helper as root:\n\nsudo chown root:root /usr/local/bin/lsv-elevate && sudo chmod 4755 /usr/local/bin/lsv-elevate");
+                                    }
+                                } else if (msg.clickedButton() == showLogBtn) {
+                                    if (!QProcess::startDetached("xdg-open", QStringList() << logPath)) {
+                                        appendLog(QString("Auto-elevation: failed to open log %1").arg(logPath));
+                                    }
+                                } else {
+                                    appendLog("Auto-elevation: user cancelled elevation options");
+                                }
+                            }
+                        }
+                    });
+                    watchTimer->start();
+                } else {
+                    appendLog("Auto-elevation: pkexec startDetached failed");
+                }
+            } else {
+                appendLog("Auto-elevation: failed to write temporary relaunch script");
+            }
+        } else {
+            appendLog("Auto-elevation: pkexec not found, trying sudo fallback");
+            QString sudoPath = QStandardPaths::findExecutable("sudo");
+            if (!sudoPath.isEmpty()) {
+                bool ok2 = QProcess::startDetached(sudoPath, QStringList() << "-E" << "/bin/sh" << tmpScript);
+                if (ok2) {
+                    appendLog("Auto-elevation: Relaunched with sudo -E");
+                    QObject::connect(&app, &QCoreApplication::aboutToQuit, [tmpScript, preCopiedExe]() {
+                        if (!tmpScript.isEmpty()) QFile::remove(tmpScript);
+                        if (!preCopiedExe.isEmpty()) QFile::remove(preCopiedExe);
+                    });
+                } else {
+                    appendLog("Auto-elevation: sudo startDetached failed");
+                }
+            } else {
+                appendLog("Auto-elevation: sudo not found either");
+            }
+        }
     }
+
+    // Create main window
+    QMainWindow mainWindow;
+    mainWindow.setWindowTitle("Linux System Viewer (LSV) v0.6.0");
+    mainWindow.setWindowIcon(appIcon);
+
+    // Set fixed initial size (850x480) regardless of DPI
+    const int INITIAL_WIDTH = 850;
+    const int INITIAL_HEIGHT = 480;
     
-    LinInfoGUI window;
-    window.show();
-    
+    mainWindow.resize(INITIAL_WIDTH, INITIAL_HEIGHT);
+    mainWindow.setMinimumSize(600, 300);
+
+    qDebug() << "Window size set to:" << INITIAL_WIDTH << "x" << INITIAL_HEIGHT;
+
+    // Create central widget
+    QWidget* centralWidget = new QWidget();
+    mainWindow.setCentralWidget(centralWidget);
+
+    QVBoxLayout* mainLayout = new QVBoxLayout(centralWidget);
+    mainLayout->setContentsMargins(10, 10, 10, 10);
+    mainLayout->setSpacing(10);
+
+    // Create elevation status label (admin shield)
+    QHBoxLayout* titleLayout = new QHBoxLayout();
+    QLabel* titleLabel = new QLabel("Linux System Viewer (LSV) v0.6.0");
+    QFont titleFont = titleLabel->font();
+    titleFont.setBold(true);
+    titleFont.setPointSize(12);
+    titleLabel->setFont(titleFont);
+
+    QLabel* adminLabel = new QLabel;
+    if (geteuid() == 0) {
+        // Use a less-conflicting icon than the red 'X' used by SP_MessageBoxCritical.
+        // SP_DialogApplyButton is a check/approve icon which better indicates admin mode.
+        QPixmap adminPixmap = app.style()->standardPixmap(QStyle::SP_DialogApplyButton);
+        adminLabel->setPixmap(adminPixmap.scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        adminLabel->setToolTip("Admin mode");
+    }
+    titleLayout->addWidget(titleLabel);
+    titleLayout->addStretch();
+    titleLayout->addWidget(adminLabel);
+    mainLayout->addLayout(titleLayout);
+
+    // Create tab widget
+    MultiRowTabWidget* tabWidget = new MultiRowTabWidget();
+    mainLayout->addWidget(tabWidget);
+
+    // Create tab manager and populate tabs
+    TabManager tabManager;
+    tabManager.setTabWidget(tabWidget);
+
+    // Status connections
+    QObject::connect(&tabManager, &TabManager::tabLoadingStarted, [](const QString& tabName) {
+        qDebug() << "Loading started for tab:" << tabName;
+    });
+
+    QObject::connect(&tabManager, &TabManager::tabLoadingFinished, [](const QString& tabName) {
+        qDebug() << "Loading finished for tab:" << tabName;
+    });
+
+    // Show main window first so the UI appears even if tab construction takes time.
+    mainWindow.show();
+    qDebug() << "Application window shown, scheduling tab creation...";
+
+    // Defer heavy tab creation to the event loop so the window can render immediately.
+    QTimer::singleShot(0, [&tabManager]() {
+        qDebug() << "Creating tabs...";
+        tabManager.createAllTabs();
+        qDebug() << "All tabs created successfully";
+    });
+
+    qDebug() << "Entering event loop...";
     return app.exec();
 }
 

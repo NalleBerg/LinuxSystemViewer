@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=LSV
+Comment=Linux System Viewer - A comprehensive system information tool
+Icon=lsv
+Categories=System;Monitor;
+Keywords=system;info;hardware;monitoring;lshw;
+StartupNotify=true
+Exec=lsv-x86_64.AppImage
+Terminal=false

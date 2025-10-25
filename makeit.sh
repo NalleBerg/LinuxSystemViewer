@@ -1,111 +1,221 @@
 #!/bin/bash
+set -e
 
-# Clean previous build
-rm -rf build
+# Format seconds to MM:SS
+format_time() {
+    local total_seconds=$1
+    local minutes=$(echo "$total_seconds / 60" | bc)
+    local seconds=$(echo "$total_seconds % 60" | bc)
+    printf "%d:%02.0f" $minutes $seconds
+}
 
-# Create build directory and configure with cmake
-cmake -S . -B build
+clear
+rm -rf build AppDir *.AppImage LSV
 
-# Build the project
-cmake --build build --verbose
+echo "📁 Tools cached in: ./tools/"
+echo ""
 
-# Create LSV directory for AppImage
-mkdir -p build/LSV
+COMPILE_START=$(date +%s.%N)
 
-# Download AppImage tools if not present
-if [ ! -f "build/linuxdeploy-x86_64.AppImage" ]; then
-    echo "Downloading linuxdeploy..."
-    wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage -O build/linuxdeploy-x86_64.AppImage
-    chmod +x build/linuxdeploy-x86_64.AppImage
-fi
+echo "🔨 Starting build process..."
+echo "⏰ Build started at: $(date '+%H:%M:%S')"
+echo ""
 
-if [ ! -f "build/linuxdeploy-plugin-qt-x86_64.AppImage" ]; then
-    echo "Downloading linuxdeploy Qt plugin..."
-    wget -q https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage -O build/linuxdeploy-plugin-qt-x86_64.AppImage
-    chmod +x build/linuxdeploy-plugin-qt-x86_64.AppImage
-fi
+mkdir build
+cd build
 
-# Create desktop file
-cat > build/lsv.desktop << EOF
+echo "🔧 Configuring with CMake..."
+cmake .. || { echo "❌ CMake configuration failed"; exit 1; }
+
+echo "🔨 Building LSV..."
+make -j$(nproc) || { echo "❌ Build failed"; exit 1; }
+
+COMPILE_END=$(date +%s.%N)
+COMPILE_TIME=$(echo "$COMPILE_END - $COMPILE_START" | bc -l)
+
+echo ""
+echo "✅ Build completed successfully!"
+echo "⏱️  Compile time: $(format_time $COMPILE_TIME)"
+echo ""
+
+ls -la ./
+echo ""
+
+if [ -f "./LSV" ]; then
+    echo "🎯 LSV executable found"
+    ls -la ./LSV
+    ldd ./LSV 2>/dev/null || echo "   ldd failed - static binary or missing libraries"
+    file ./LSV
+    echo ""
+    
+    echo "🧪 Testing LSV executable..."
+    echo "⏰ Test started at: $(date '+%H:%M:%S')"
+    echo "================================================"
+    export DISPLAY=${DISPLAY:-:0}
+    echo "🖥️  Display: $DISPLAY"
+    echo "🚀 Running ./LSV with 1 second timeout..."
+    if timeout 1s ./LSV 2>&1; then
+        echo "✅ LSV ran successfully"
+    else
+        EXIT_CODE=$?
+        echo "⚠️  LSV exited with code: $EXIT_CODE"
+        if [ $EXIT_CODE -eq 124 ]; then
+            echo "   (Timeout - this is expected for GUI apps)"
+        elif [ $EXIT_CODE -eq 127 ]; then
+            echo "   (Command not found - executable may be corrupted)"
+        else
+            echo "   (Runtime error - check dependencies)"
+        fi
+    fi
+    echo ""
+    echo "================================================"
+    echo "⏰ Test finished at: $(date '+%H:%M:%S')"
+    
+    PACKAGE_START=$(date +%s.%N)
+    echo "📦 Preparing AppImage creation..."
+    cd ..
+    mkdir -p LSV
+
+    # Rebuild AppDir from scratch
+    rm -rf AppDir
+    mkdir -p AppDir/usr/bin
+    mkdir -p AppDir/usr/lib
+    mkdir -p AppDir/usr/plugins
+
+    # Copy main binary and helper files
+    cp build/LSV AppDir/usr/bin/
+    chmod +x AppDir/usr/bin/LSV
+    
+
+    # Copy all shared libraries needed by LSV into AppDir/usr/lib
+    echo "🔍 Copying all shared libraries required by LSV..."
+    ldd AppDir/usr/bin/LSV | awk '{print $3}' | grep '^/' | while read lib; do
+        cp --preserve=links "$lib" AppDir/usr/lib/
+    done
+
+    # Desktop file and icon
+    mkdir -p AppDir/usr/share/applications
+    if [ ! -f "lsv.desktop" ]; then
+        echo "⚠️  Warning: lsv.desktop not found, creating basic one..."
+        cat > lsv.desktop << EOF
 [Desktop Entry]
 Type=Application
 Name=LSV
 Comment=Linux System Viewer
 Exec=LSV
 Icon=lsv
-Categories=System;Utility;
+Categories=System;Monitor;
+StartupNotify=true
+EOF
+        echo "✅ Created lsv.desktop"
+    fi
+    cp lsv.desktop AppDir/lsv.desktop
+    cp lsv.desktop AppDir/usr/share/applications/lsv.desktop
+
+    # Icon
+    if [ ! -f "lsv.png" ]; then
+        echo "⚠️  Warning: lsv.png not found, creating placeholder..."
+        if command -v convert >/dev/null 2>&1; then
+            convert -size 64x64 xc:blue -fill white -gravity center -pointsize 24 -annotate 0 "LSV" lsv.png 2>/dev/null && {
+                echo "✅ Created placeholder icon with ImageMagick"
+            } || {
+                echo "⚠️  ImageMagick convert failed, trying alternative..."
+                echo "LSV" > lsv.png
+            }
+        else
+            echo "⚠️  ImageMagick not available, creating text placeholder..."
+            echo "LSV" > lsv.png
+        fi
+    fi
+    cp lsv.png AppDir/
+    mkdir -p AppDir/usr/share/icons
+    cp lsv.png AppDir/usr/share/icons/lsv.png
+    mkdir -p AppDir/usr/share/icons/hicolor/128x128/apps
+    cp lsv.png AppDir/usr/share/icons/hicolor/128x128/apps/lsv.png
+
+    # Copy only Qt 6 plugins (platforms, imageformats, etc.)
+    QT6_PLATFORMS="/usr/lib/x86_64-linux-gnu/qt6/plugins/platforms"
+    QT6_IMAGEFORMATS="/usr/lib/x86_64-linux-gnu/qt6/plugins/imageformats"
+
+    if [ -d "$QT6_PLATFORMS" ]; then
+        mkdir -p AppDir/usr/plugins/platforms
+        cp "$QT6_PLATFORMS"/* AppDir/usr/plugins/platforms/
+    fi
+    if [ -d "$QT6_IMAGEFORMATS" ]; then
+        mkdir -p AppDir/usr/plugins/imageformats
+        cp "$QT6_IMAGEFORMATS"/* AppDir/usr/plugins/imageformats/
+    fi
+
+    # Create qt.conf to help Qt find plugins
+    cat > AppDir/usr/bin/qt.conf << EOF
+[Paths]
+Plugins = ../plugins
 EOF
 
-# Ensure we have the icon file
-echo "Preparing icon for AppImage..."
-cp lsv.png build/lsv.png
-
-echo "Creating AppImage..."
-cd build
-
-# Create AppImage using linuxdeploy with verbose output
-echo "Running linuxdeploy to create AppImage..."
-export APPIMAGE_EXTRACT_AND_RUN=1
-./linuxdeploy-x86_64.AppImage --appdir LSV_AppDir --executable LSV --desktop-file lsv.desktop --icon-file lsv.png --plugin qt --output appimage 2>&1
-
-# Check if AppImage was created successfully
-if ls LSV-*.AppImage 1> /dev/null 2>&1; then
-    APPIMAGE_FILE=$(ls LSV-*.AppImage | head -1)
-    chmod +x "$APPIMAGE_FILE"
-    echo "✅ AppImage created successfully: $APPIMAGE_FILE"
-    echo "AppImage details:"
-    ls -lh "$APPIMAGE_FILE"
-    
-    # Move AppImage to final location and clean up everything else
-    rm -rf LSV  # Remove any existing directory first
-    mkdir -p LSV
-    mv "$APPIMAGE_FILE" LSV/lsv-0.3.5.AppImage
-    
-    # Clean up all build artifacts - keep only the AppImage
-    rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake LSV_AppDir LSV_autogen lsv.desktop lsv.png linuxdeploy-plugin-qt-x86_64.AppImage linuxdeploy-x86_64.AppImage Makefile .qt LSV_dist
-    
-    cd ..
-    echo "🎉 Single portable AppImage ready: build/LSV/lsv-0.3.5.AppImage"
-    echo "This is your ONE file that does it all!"
-    
-    # Play completion beep (using beep command)
-    echo "Build completed successfully!"
-    # Use beep command for clear audio notification
-    beep -f 800 -l 200 && printf "\n✅ BUILD COMPLETE!\n"
-    
-    # Optionally run the AppImage
-    if [ "$1" != "norun" ]; then
-        echo "Running AppImage..."
-        ./build/LSV/lsv-0.3.5.AppImage
-    else
-        echo ""
-        echo "To run: ./build/LSV/lsv-0.3.5.AppImage"
+    # Download appimagetool if not present
+    if [ ! -f "./tools/appimagetool-x86_64.AppImage" ]; then
+        wget -O ./tools/appimagetool-x86_64.AppImage \
+            "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+        chmod +x ./tools/appimagetool-x86_64.AppImage
     fi
-    exit 0
+
+    chmod +x ./tools/appimagetool-x86_64.AppImage
+
+    # Apprun needed
+    ln -sf usr/bin/LSV AppDir/AppRun
+    chmod +x AppDir/AppRun
+
+    # Enable AppImage debug output
+    export APPIMAGE_DEBUG=1
+
+    # Create AppImage
+    ./tools/appimagetool-x86_64.AppImage AppDir
+
+    # Move the resulting AppImage to ./LSV/
+    APPIMAGE_FILE=$(find . -maxdepth 1 -name "*.AppImage" -type f | head -1)
+    if [ -n "$APPIMAGE_FILE" ]; then
+        mv "$APPIMAGE_FILE" LSV/lsv-x86_64.AppImage
+        chmod +x LSV/lsv-x86_64.AppImage
+        echo "🚀 AppImage moved to: ./LSV/lsv-x86_64.AppImage"
+        echo "📊 AppImage file info:"
+        ls -la LSV/lsv-x86_64.AppImage
+    else
+        echo "❌ AppImage creation failed. Check appimagetool output for errors."
+        exit 1
+    fi
+
+    cp build/LSV LSV/
+    echo "✅ LSV executable also copied to ./LSV/ directory"
+
 else
-    echo "⚠️  AppImage creation failed, creating fallback executable with embedded icons..."
-    # Fallback: create regular executable with embedded icon
-    mkdir -p LSV
-    cp build/LSV LSV/LSV
-    chmod +x LSV/LSV
-    
-    # Clean up build artifacts but keep the executable
-    rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake LSV_AppDir LSV_autogen lsv.desktop lsv.png linuxdeploy-plugin-qt-x86_64.AppImage linuxdeploy-x86_64.AppImage Makefile .qt LSV_dist
-    
-    cd ..
-    echo "✅ Fallback executable ready: build/LSV/LSV (has embedded icons)"
-    
-    # Play completion beep (using beep command)
-    echo "Build completed successfully!"
-    # Use beep command for clear audio notification
-    beep -f 800 -l 200 && printf "\n✅ BUILD COMPLETE!\n"
-    
-    # Optionally run the executable  
-    if [ "$1" != "norun" ]; then
-        echo "Running executable..."
-        ./build/LSV/LSV
-    else
-        echo ""
-        echo "DONE!"
-    fi
+    echo "❌ Build failed - LSV executable not found"
+    ls -la ./
+    exit 1
 fi
+
+echo ""
+echo "🏁 Build process completed at: $(date '+%H:%M:%S')"
+echo "📊 Summary:"
+echo "   • Compile time: $(format_time $COMPILE_TIME)"
+echo "   • AppImage packaging handled by appimagetool"
+echo ""
+echo "📋 Available executables in ./LSV/ directory:"
+if [ -d "LSV" ]; then
+    ls -la LSV/
+else
+    echo "   No LSV directory found"
+fi
+
+echo ""
+echo "🚀 To run LSV:"
+echo "   ./LSV/LSV                    # Run regular executable"
+if [ -f "LSV/lsv-x86_64.AppImage" ]; then
+    echo "   ./LSV/lsv-x86_64.AppImage    # Run AppImage (portable)"
+fi
+
+echo ""
+echo "🧪 To test the executable manually:"
+echo "   cd LSV"
+echo "   ldd ./LSV                    # Check dependencies"
+echo "   file ./LSV                   # Check file type"
+echo "   ./LSV                        # Run the application"
