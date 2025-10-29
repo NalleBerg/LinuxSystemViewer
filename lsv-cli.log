@@ -1,259 +1,240 @@
-2025-10-25T16:18:52 DEBUG: Application starting...
-2025-10-25T16:18:52 Application starting. CWD: /home/nalle/Documents/c++/lshwgui, log-file: /home/nalle/Documents/c++/lshwgui/lsv-cli.log
-2025-10-25T16:18:52 DEBUG: Window size set to: 850 x 480
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Initialized
-2025-10-25T16:18:52 DEBUG: Application window shown, scheduling tab creation...
-2025-10-25T16:18:52 DEBUG: Entering event loop...
-2025-10-25T16:18:52 DEBUG: Creating tabs...
-2025-10-25T16:18:52 DEBUG: TabManager: Creating tab 0 : "Summary"
-2025-10-25T16:18:52 TabManager: Creating tab 0 : Summary (command: lshw -short)
-2025-10-25T16:18:52 DEBUG: SummaryTab: Constructor called - base constructor done
-2025-10-25T16:18:52 DEBUG: SummaryTab: createUserFriendlyView called
-2025-10-25T16:18:52 DEBUG: SummaryTab: createUserFriendlyView completed
-2025-10-25T16:18:52 DEBUG: SummaryTab: Constructor finished
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Arranging 1 tabs in 2 rows with 1 tabs per row
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Tab area height set to: 103
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Current index changed to 0
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Added tab "Summary" Total tabs: 1
-2025-10-25T16:18:52 DEBUG: TabManager: Successfully added tab: "Summary"
-2025-10-25T16:18:52 DEBUG: TabManager: Creating tab 1 : "OS"
-2025-10-25T16:18:52 TabManager: Creating tab 1 : OS (command: uname -a && lsb_release -a 2>/dev/null || cat /etc/os-release)
-2025-10-25T16:18:52 TabManager: Instantiating OSTab with command: uname -a && lsb_release -a 2>/dev/null || cat /etc/os-release
-2025-10-25T16:18:52 OSTab: constructor start
-2025-10-25T16:18:52 OSTab: adding content widget to stacked widget
-2025-10-25T16:18:52 OSTab: content widget added to stacked widget
-2025-10-25T16:18:52 OSTab: reading /etc/os-release
-2025-10-25T16:18:52 OSTab: Read /etc/os-release for OS info
-2025-10-25T16:18:52 OSTab: calling getUnameString
-2025-10-25T16:18:52 OSTab: getUnameString returned length 107
-2025-10-25T16:18:52 OSTab: Added uname() output
-2025-10-25T16:18:52 OSTab: parseOutput called, output length: 490
-2025-10-25T16:18:52 OSTab: filling table with output
-2025-10-25T16:18:52 TabManager: OSTab constructed
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Arranging 2 tabs in 2 rows with 1 tabs per row
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Tab area height set to: 103
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Added tab "OS" Total tabs: 2
-2025-10-25T16:18:52 DEBUG: TabManager: Successfully added tab: "OS"
-2025-10-25T16:18:52 DEBUG: TabManager: Creating tab 2 : "Desktop"
-2025-10-25T16:18:52 TabManager: Creating tab 2 : Desktop (command: echo $XDG_CURRENT_DESKTOP && echo $DESKTOP_SESSION && echo $XDG_SESSION_TYPE)
-2025-10-25T16:18:52 DEBUG: WindowingTab: Constructor called - base constructor done
-2025-10-25T16:18:52 DEBUG: WindowingTab: createUserFriendlyView called
-2025-10-25T16:18:52 DEBUG: WindowingTab: createUserFriendlyView completed
-2025-10-25T16:18:52 DEBUG: WindowingTab: Constructor finished
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Arranging 3 tabs in 2 rows with 2 tabs per row
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Tab area height set to: 103
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Added tab "Desktop" Total tabs: 3
-2025-10-25T16:18:52 DEBUG: TabManager: Successfully added tab: "Desktop"
-2025-10-25T16:18:52 DEBUG: TabManager: Creating tab 3 : "Audio"
-2025-10-25T16:18:52 TabManager: Creating tab 3 : Audio (command: lshw -C multimedia -short)
-2025-10-25T16:18:52 DEBUG: AudioTab: Constructor called - base constructor done
-2025-10-25T16:18:52 DEBUG: AudioTab: createUserFriendlyView called
-2025-10-25T16:18:52 DEBUG: AudioTab: createUserFriendlyView completed
-2025-10-25T16:18:52 DEBUG: AudioTab: Constructor finished
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Arranging 4 tabs in 2 rows with 2 tabs per row
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Tab area height set to: 103
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Added tab "Audio" Total tabs: 4
-2025-10-25T16:18:52 DEBUG: TabManager: Successfully added tab: "Audio"
-2025-10-25T16:18:52 DEBUG: TabManager: Creating tab 4 : "Graphics gard"
-2025-10-25T16:18:52 TabManager: Creating tab 4 : Graphics gard (command: lshw -C display -short)
-2025-10-25T16:18:52 DEBUG: GraphicsTab: Constructor called - base constructor done
-2025-10-25T16:18:52 DEBUG: GraphicsTab: createUserFriendlyView called
-2025-10-25T16:18:52 DEBUG: GraphicsTab: createUserFriendlyView completed
-2025-10-25T16:18:52 DEBUG: GraphicsTab: Constructor finished
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Arranging 5 tabs in 2 rows with 3 tabs per row
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Tab area height set to: 103
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Added tab "Graphics gard" Total tabs: 5
-2025-10-25T16:18:52 DEBUG: TabManager: Successfully added tab: "Graphics gard"
-2025-10-25T16:18:52 DEBUG: TabManager: Creating tab 5 : "Screen"
-2025-10-25T16:18:52 TabManager: Creating tab 5 : Screen (command: xrandr --query 2>/dev/null || echo 'Display info not available')
-2025-10-25T16:18:52 DEBUG: ScreenTab: Constructor called - base constructor done
-2025-10-25T16:18:52 DEBUG: ScreenTab: createUserFriendlyView called
-2025-10-25T16:18:52 DEBUG: ScreenTab: createUserFriendlyView completed
-2025-10-25T16:18:52 DEBUG: ScreenTab: Constructor finished
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Arranging 6 tabs in 2 rows with 3 tabs per row
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Tab area height set to: 103
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Added tab "Screen" Total tabs: 6
-2025-10-25T16:18:52 DEBUG: TabManager: Successfully added tab: "Screen"
-2025-10-25T16:18:52 DEBUG: TabManager: Creating tab 6 : "Ports"
-2025-10-25T16:18:52 TabManager: Creating tab 6 : Ports (command: lsusb -t && lspci | grep -i 'serial\|usb')
-2025-10-25T16:18:52 DEBUG: PortsTab: Constructor called - base constructor done
-2025-10-25T16:18:52 DEBUG: PortsTab: createUserFriendlyView called
-2025-10-25T16:18:52 DEBUG: PortsTab: createUserFriendlyView completed
-2025-10-25T16:18:52 DEBUG: PortsTab: Constructor finished
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Arranging 7 tabs in 2 rows with 4 tabs per row
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Tab area height set to: 103
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Added tab "Ports" Total tabs: 7
-2025-10-25T16:18:52 DEBUG: TabManager: Successfully added tab: "Ports"
-2025-10-25T16:18:52 DEBUG: TabManager: Creating tab 7 : "Peripherals"
-2025-10-25T16:18:52 TabManager: Creating tab 7 : Peripherals (command: lsusb && lspci -nn | head -10)
-2025-10-25T16:18:52 DEBUG: PeripheralsTab: Constructor called - base constructor done
-2025-10-25T16:18:52 DEBUG: PeripheralsTab: createUserFriendlyView called
-2025-10-25T16:18:52 DEBUG: PeripheralsTab: createUserFriendlyView completed
-2025-10-25T16:18:52 DEBUG: PeripheralsTab: Constructor finished
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Arranging 8 tabs in 2 rows with 4 tabs per row
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Tab area height set to: 103
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Added tab "Peripherals" Total tabs: 8
-2025-10-25T16:18:52 DEBUG: TabManager: Successfully added tab: "Peripherals"
-2025-10-25T16:18:52 DEBUG: TabManager: Creating tab 8 : "Memory"
-2025-10-25T16:18:52 TabManager: Creating tab 8 : Memory (command: free -h && lshw -C memory -short)
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Arranging 9 tabs in 2 rows with 5 tabs per row
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Tab area height set to: 103
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Added tab "Memory" Total tabs: 9
-2025-10-25T16:18:52 DEBUG: TabManager: Successfully added tab: "Memory"
-2025-10-25T16:18:52 DEBUG: TabManager: Creating tab 9 : "CPU"
-2025-10-25T16:18:52 TabManager: Creating tab 9 : CPU (command: lscpu && cat /proc/cpuinfo | grep -E '(model name|cpu cores|siblings|cache)' | head -8)
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Arranging 10 tabs in 2 rows with 5 tabs per row
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Tab area height set to: 103
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Added tab "CPU" Total tabs: 10
-2025-10-25T16:18:52 DEBUG: TabManager: Successfully added tab: "CPU"
-2025-10-25T16:18:52 DEBUG: TabManager: Creating tab 10 : "Motherboard"
-2025-10-25T16:18:52 TabManager: Creating tab 10 : Motherboard (command: lshw -C bus -short)
-2025-10-25T16:18:52 DEBUG: MotherboardTab: Constructor called - base constructor done
-2025-10-25T16:18:52 DEBUG: MotherboardTab: createUserFriendlyView called
-2025-10-25T16:18:52 DEBUG: MotherboardTab: createUserFriendlyView completed
-2025-10-25T16:18:52 DEBUG: MotherboardTab: Constructor finished
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Arranging 11 tabs in 2 rows with 6 tabs per row
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Tab area height set to: 103
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Added tab "Motherboard" Total tabs: 11
-2025-10-25T16:18:52 DEBUG: TabManager: Successfully added tab: "Motherboard"
-2025-10-25T16:18:52 DEBUG: TabManager: Creating tab 11 : "Disk"
-2025-10-25T16:18:52 TabManager: Creating tab 11 : Disk (command: lsblk && df -h)
-2025-10-25T16:18:52 DEBUG: StorageTab: Constructor called - base constructor done
-2025-10-25T16:18:52 DEBUG: StorageTab: createUserFriendlyView called
-2025-10-25T16:18:52 DEBUG: StorageTab: createUserFriendlyView completed
-2025-10-25T16:18:52 DEBUG: StorageTab: Constructor finished
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Arranging 12 tabs in 2 rows with 6 tabs per row
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Tab area height set to: 103
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Added tab "Disk" Total tabs: 12
-2025-10-25T16:18:52 DEBUG: TabManager: Successfully added tab: "Disk"
-2025-10-25T16:18:52 DEBUG: TabManager: Creating tab 12 : "PC Info"
-2025-10-25T16:18:52 TabManager: Creating tab 12 : PC Info (command: hostnamectl && cat /sys/class/dmi/id/* 2>/dev/null)
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Arranging 13 tabs in 2 rows with 7 tabs per row
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Tab area height set to: 103
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Added tab "PC Info" Total tabs: 13
-2025-10-25T16:18:52 DEBUG: TabManager: Successfully added tab: "PC Info"
-2025-10-25T16:18:52 DEBUG: TabManager: Creating tab 13 : "About"
-2025-10-25T16:18:52 TabManager: Creating tab 13 : About (command: echo 'Linux System Viewer (LSV) v0.6.0')
-2025-10-25T16:18:52 DEBUG: AboutTab: Constructor called - base constructor done
-2025-10-25T16:18:52 DEBUG: AboutTab: createUserFriendlyView called
-2025-10-25T16:18:52 DEBUG: AboutTab: createUserFriendlyView completed
-2025-10-25T16:18:52 DEBUG: AboutTab: Constructor finished
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Arranging 14 tabs in 2 rows with 7 tabs per row
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Tab area height set to: 103
-2025-10-25T16:18:52 DEBUG: MultiRowTabWidget: Added tab "About" Total tabs: 14
-2025-10-25T16:18:52 DEBUG: TabManager: Successfully added tab: "About"
-2025-10-25T16:18:52 DEBUG: All tabs created successfully
-2025-10-25T16:18:52 TabWidgetBase: Process started for Summary command: lshw -short
-2025-10-25T16:18:52 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-2025-10-25T16:18:52 TabWidgetBase: Process started for Windowing environment command: echo $XDG_CURRENT_DESKTOP && echo $DESKTOP_SESSION && echo $XDG_SESSION_TYPE
-2025-10-25T16:18:52 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-2025-10-25T16:18:52 TabWidgetBase: Process started for Audio command: lshw -C multimedia -short
-2025-10-25T16:18:52 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-2025-10-25T16:18:52 TabWidgetBase: Process started for Graphics gard command: lshw -C display -short
-2025-10-25T16:18:52 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-2025-10-25T16:18:52 TabWidgetBase: Process started for Screen command: xrandr --query 2>/dev/null || echo 'Display info not available'
-2025-10-25T16:18:52 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-2025-10-25T16:18:52 TabWidgetBase: Process started for Ports command: lsusb -t && lspci | grep -i 'serial\|usb'
-2025-10-25T16:18:52 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-2025-10-25T16:18:52 TabWidgetBase: Process started for Peripherals command: lsusb && lspci -nn | head -10
-2025-10-25T16:18:52 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-2025-10-25T16:18:52 TabWidgetBase: Process started for Motherboard command: lshw -C bus -short
-2025-10-25T16:18:52 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-2025-10-25T16:18:52 TabWidgetBase: Process started for Storage command: lsblk && df -h
-2025-10-25T16:18:52 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-2025-10-25T16:18:52 TabWidgetBase: Process started for PC Info command: hostnamectl && cat /sys/class/dmi/id/* 2>/dev/null
-2025-10-25T16:18:52 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-2025-10-25T16:18:52 TabWidgetBase: Process started for About command: echo 'Linux System Viewer (LSV) v0.6.0'
-2025-10-25T16:18:52 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-2025-10-25T16:18:52 TabWidgetBase: readyReadStandardOutput for Windowing environment
-2025-10-25T16:18:52 TabWidgetBase: Process finished for Windowing environment exitCode: 0 exitStatus: 0
-2025-10-25T16:18:52 TabWidgetBase: Output length: 24 Err length: 0
-2025-10-25T16:18:52 DEBUG: WindowingTab: parseOutput called
-2025-10-25T16:18:52 DEBUG: WindowingTab: parseOutput completed
-2025-10-25T16:18:52 DEBUG: Loading finished for tab: "Windowing environment"
-2025-10-25T16:18:52 TabWidgetBase: readyReadStandardOutput for Screen
-2025-10-25T16:18:52 TabWidgetBase: Process finished for Screen exitCode: 0 exitStatus: 0
-2025-10-25T16:18:52 TabWidgetBase: Output length: 1216 Err length: 0
-2025-10-25T16:18:52 DEBUG: ScreenTab: parseOutput called
-2025-10-25T16:18:52 DEBUG: ScreenTab: parseOutput completed
-2025-10-25T16:18:52 DEBUG: Loading finished for tab: "Screen"
-2025-10-25T16:18:52 TabWidgetBase: readyReadStandardOutput for Ports
-2025-10-25T16:18:52 TabWidgetBase: Process finished for Ports exitCode: 0 exitStatus: 0
-2025-10-25T16:18:52 TabWidgetBase: Output length: 1170 Err length: 0
-2025-10-25T16:18:52 DEBUG: PortsTab: parseOutput called
-2025-10-25T16:18:52 DEBUG: PortsTab: parseOutput completed
-2025-10-25T16:18:52 DEBUG: Loading finished for tab: "Ports"
-2025-10-25T16:18:52 TabWidgetBase: readyReadStandardOutput for Peripherals
-2025-10-25T16:18:52 TabWidgetBase: Process finished for Peripherals exitCode: 0 exitStatus: 0
-2025-10-25T16:18:52 TabWidgetBase: Output length: 1525 Err length: 0
-2025-10-25T16:18:52 DEBUG: PeripheralsTab: parseOutput called
-2025-10-25T16:18:52 DEBUG: PeripheralsTab: parseOutput completed
-2025-10-25T16:18:52 DEBUG: Loading finished for tab: "Peripherals"
-2025-10-25T16:18:52 TabWidgetBase: readyReadStandardOutput for Storage
-2025-10-25T16:18:52 TabWidgetBase: Process finished for Storage exitCode: 0 exitStatus: 0
-2025-10-25T16:18:52 TabWidgetBase: Output length: 549 Err length: 0
-2025-10-25T16:18:52 DEBUG: StorageTab: parseOutput called
-2025-10-25T16:18:52 DEBUG: StorageTab: parseOutput completed
-2025-10-25T16:18:52 DEBUG: Loading finished for tab: "Storage"
-2025-10-25T16:18:52 TabWidgetBase: readyReadStandardOutput for PC Info
-2025-10-25T16:18:52 TabWidgetBase: Process finished for PC Info exitCode: 1 exitStatus: 0
-2025-10-25T16:18:52 TabWidgetBase: Output length: 888 Err length: 0
-2025-10-25T16:18:52 WARNING: QFile::setFileName: File (/sys/class/dmi/id/product_name) already open
-2025-10-25T16:18:52 WARNING: QFile::setFileName: File (/sys/class/dmi/id/sys_vendor) already open
-2025-10-25T16:18:52 WARNING: QFile::setFileName: File (/sys/class/dmi/id/chassis_type) already open
-2025-10-25T16:18:52 WARNING: QFile::setFileName: File (/sys/class/dmi/id/product_family) already open
-2025-10-25T16:18:52 DEBUG: Loading finished for tab: "PC Info"
-2025-10-25T16:18:52 TabWidgetBase: readyReadStandardOutput for About
-2025-10-25T16:18:52 TabWidgetBase: Process finished for About exitCode: 0 exitStatus: 0
-2025-10-25T16:18:52 TabWidgetBase: Output length: 33 Err length: 0
-2025-10-25T16:18:52 DEBUG: AboutTab: parseOutput called
-2025-10-25T16:18:52 DEBUG: AboutTab: parseOutput completed
-2025-10-25T16:18:52 DEBUG: Loading finished for tab: "About"
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Summary
-2025-10-25T16:18:55 TabWidgetBase: Process finished for Summary exitCode: 0 exitStatus: 0
-2025-10-25T16:18:55 TabWidgetBase: Output length: 4365 Err length: 0
-2025-10-25T16:18:55 DEBUG: SummaryTab: parseOutput called
-2025-10-25T16:18:55 DEBUG: SummaryTab: parseOutput completed
-2025-10-25T16:18:55 DEBUG: Loading finished for tab: "Summary"
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Graphics gard
-2025-10-25T16:18:55 TabWidgetBase: Process finished for Graphics gard exitCode: 0 exitStatus: 0
-2025-10-25T16:18:55 TabWidgetBase: Output length: 182 Err length: 0
-2025-10-25T16:18:55 DEBUG: GraphicsTab: parseOutput called
-2025-10-25T16:18:55 DEBUG: GraphicsTab: parseOutput completed
-2025-10-25T16:18:55 DEBUG: Loading finished for tab: "Graphics gard"
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Audio
-2025-10-25T16:18:55 TabWidgetBase: Process finished for Audio exitCode: 0 exitStatus: 0
-2025-10-25T16:18:55 TabWidgetBase: Output length: 359 Err length: 0
-2025-10-25T16:18:55 DEBUG: AudioTab: parseOutput called
-2025-10-25T16:18:55 DEBUG: AudioTab: parseOutput completed
-2025-10-25T16:18:55 DEBUG: Loading finished for tab: "Audio"
-2025-10-25T16:18:55 TabWidgetBase: readyReadStandardOutput for Motherboard
-2025-10-25T16:18:55 TabWidgetBase: Process finished for Motherboard exitCode: 0 exitStatus: 0
-2025-10-25T16:18:55 TabWidgetBase: Output length: 766 Err length: 0
-2025-10-25T16:18:55 DEBUG: MotherboardTab: parseOutput called
-2025-10-25T16:18:55 DEBUG: MotherboardTab: parseOutput completed
-2025-10-25T16:18:55 DEBUG: Loading finished for tab: "Motherboard"
-2025-10-25T16:18:57 DEBUG: MultiRowTabWidget: Current index changed to 8
+2025-10-27T17:33:00 DEBUG: Application starting...
+2025-10-27T17:33:00 Application starting. CWD: /home/nalle/Documents/c++/lshwgui, log-file: /home/nalle/Documents/c++/lshwgui/lsv-cli.log
+2025-10-27T17:33:00 DEBUG: Window size set to: 850 x 480
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Initialized
+2025-10-27T17:33:00 DEBUG: Application window shown, scheduling tab creation...
+2025-10-27T17:33:00 DEBUG: Entering event loop...
+2025-10-27T17:33:00 DEBUG: Creating tabs...
+2025-10-27T17:33:00 DEBUG: TabManager: Creating tab 0 : "Summary"
+2025-10-27T17:33:00 TabManager: Creating tab 0 : Summary (command: lshw -short)
+2025-10-27T17:33:00 DEBUG: SummaryTab: Constructor called - base constructor done
+2025-10-27T17:33:00 DEBUG: SummaryTab: createUserFriendlyView called
+2025-10-27T17:33:00 DEBUG: SummaryTab: createUserFriendlyView completed
+2025-10-27T17:33:00 DEBUG: SummaryTab: Constructor finished
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Arranging 1 tabs in 2 rows with 1 tabs per row
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Tab area height set to: 103
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Current index changed to 0
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Added tab "Summary" Total tabs: 1
+2025-10-27T17:33:00 DEBUG: TabManager: Successfully added tab: "Summary"
+2025-10-27T17:33:00 DEBUG: TabManager: Creating tab 1 : "OS"
+2025-10-27T17:33:00 TabManager: Creating tab 1 : OS (command: uname -a && lsb_release -a 2>/dev/null || cat /etc/os-release)
+2025-10-27T17:33:00 TabManager: Instantiating OSTab with command: uname -a && lsb_release -a 2>/dev/null || cat /etc/os-release
+2025-10-27T17:33:00 OSTab: constructor start
+2025-10-27T17:33:00 OSTab: adding content widget to stacked widget
+2025-10-27T17:33:00 OSTab: content widget added to stacked widget
+2025-10-27T17:33:00 OSTab: reading /etc/os-release
+2025-10-27T17:33:00 OSTab: Read /etc/os-release for OS info
+2025-10-27T17:33:00 OSTab: calling getUnameString
+2025-10-27T17:33:00 OSTab: getUnameString returned length 107
+2025-10-27T17:33:00 OSTab: Added uname() output
+2025-10-27T17:33:00 OSTab: parseOutput called, output length: 490
+2025-10-27T17:33:00 OSTab: filling table with output
+2025-10-27T17:33:00 TabManager: OSTab constructed
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Arranging 2 tabs in 2 rows with 1 tabs per row
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Tab area height set to: 103
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Added tab "OS" Total tabs: 2
+2025-10-27T17:33:00 DEBUG: TabManager: Successfully added tab: "OS"
+2025-10-27T17:33:00 DEBUG: TabManager: Creating tab 2 : "Desktop"
+2025-10-27T17:33:00 TabManager: Creating tab 2 : Desktop (command: echo $XDG_CURRENT_DESKTOP && echo $DESKTOP_SESSION && echo $XDG_SESSION_TYPE)
+2025-10-27T17:33:00 DEBUG: WindowingTab: Constructor called - base constructor done
+2025-10-27T17:33:00 DEBUG: WindowingTab: createUserFriendlyView called
+2025-10-27T17:33:00 DEBUG: WindowingTab: createUserFriendlyView completed
+2025-10-27T17:33:00 DEBUG: WindowingTab: Constructor finished
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Arranging 3 tabs in 2 rows with 2 tabs per row
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Tab area height set to: 103
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Added tab "Desktop" Total tabs: 3
+2025-10-27T17:33:00 DEBUG: TabManager: Successfully added tab: "Desktop"
+2025-10-27T17:33:00 DEBUG: TabManager: Creating tab 3 : "Audio"
+2025-10-27T17:33:00 TabManager: Creating tab 3 : Audio (command: lshw -C multimedia -short)
+2025-10-27T17:33:00 DEBUG: AudioTab: Constructor called - base constructor done
+2025-10-27T17:33:00 DEBUG: AudioTab: createUserFriendlyView called
+2025-10-27T17:33:00 DEBUG: AudioTab: createUserFriendlyView completed
+2025-10-27T17:33:00 DEBUG: AudioTab: Constructor finished
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Arranging 4 tabs in 2 rows with 2 tabs per row
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Tab area height set to: 103
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Added tab "Audio" Total tabs: 4
+2025-10-27T17:33:00 DEBUG: TabManager: Successfully added tab: "Audio"
+2025-10-27T17:33:00 DEBUG: TabManager: Creating tab 4 : "Graphics gard"
+2025-10-27T17:33:00 TabManager: Creating tab 4 : Graphics gard (command: lshw -C display -short)
+2025-10-27T17:33:00 DEBUG: GraphicsTab: Constructor called - base constructor done
+2025-10-27T17:33:00 DEBUG: GraphicsTab: createUserFriendlyView called
+2025-10-27T17:33:00 DEBUG: GraphicsTab: createUserFriendlyView completed
+2025-10-27T17:33:00 DEBUG: GraphicsTab: Constructor finished
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Arranging 5 tabs in 2 rows with 3 tabs per row
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Tab area height set to: 103
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Added tab "Graphics gard" Total tabs: 5
+2025-10-27T17:33:00 DEBUG: TabManager: Successfully added tab: "Graphics gard"
+2025-10-27T17:33:00 DEBUG: TabManager: Creating tab 5 : "Screen"
+2025-10-27T17:33:00 TabManager: Creating tab 5 : Screen (command: xrandr --query 2>/dev/null || echo 'Display info not available')
+2025-10-27T17:33:00 DEBUG: ScreenTab: Constructor called - base constructor done
+2025-10-27T17:33:00 DEBUG: ScreenTab: createUserFriendlyView called
+2025-10-27T17:33:00 DEBUG: ScreenTab: createUserFriendlyView completed
+2025-10-27T17:33:00 DEBUG: ScreenTab: Constructor finished
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Arranging 6 tabs in 2 rows with 3 tabs per row
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Tab area height set to: 103
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Added tab "Screen" Total tabs: 6
+2025-10-27T17:33:00 DEBUG: TabManager: Successfully added tab: "Screen"
+2025-10-27T17:33:00 DEBUG: TabManager: Creating tab 6 : "Ports"
+2025-10-27T17:33:00 TabManager: Creating tab 6 : Ports (command: lsusb -t && lspci | grep -i 'serial\|usb')
+2025-10-27T17:33:00 DEBUG: PortsTab: Constructor called - base constructor done
+2025-10-27T17:33:00 DEBUG: PortsTab: createUserFriendlyView called
+2025-10-27T17:33:00 DEBUG: PortsTab: createUserFriendlyView completed
+2025-10-27T17:33:00 DEBUG: PortsTab: Constructor finished
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Arranging 7 tabs in 2 rows with 4 tabs per row
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Tab area height set to: 103
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Added tab "Ports" Total tabs: 7
+2025-10-27T17:33:00 DEBUG: TabManager: Successfully added tab: "Ports"
+2025-10-27T17:33:00 DEBUG: TabManager: Creating tab 7 : "Peripherals"
+2025-10-27T17:33:00 TabManager: Creating tab 7 : Peripherals (command: lsusb && lspci -nn | head -10)
+2025-10-27T17:33:00 DEBUG: PeripheralsTab: Constructor called - base constructor done
+2025-10-27T17:33:00 DEBUG: PeripheralsTab: createUserFriendlyView called
+2025-10-27T17:33:00 DEBUG: PeripheralsTab: createUserFriendlyView completed
+2025-10-27T17:33:00 DEBUG: PeripheralsTab: Constructor finished
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Arranging 8 tabs in 2 rows with 4 tabs per row
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Tab area height set to: 103
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Added tab "Peripherals" Total tabs: 8
+2025-10-27T17:33:00 DEBUG: TabManager: Successfully added tab: "Peripherals"
+2025-10-27T17:33:00 DEBUG: TabManager: Creating tab 8 : "Memory"
+2025-10-27T17:33:00 TabManager: Creating tab 8 : Memory (command: free -h && lshw -C memory -short)
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Arranging 9 tabs in 2 rows with 5 tabs per row
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Tab area height set to: 103
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Added tab "Memory" Total tabs: 9
+2025-10-27T17:33:00 DEBUG: TabManager: Successfully added tab: "Memory"
+2025-10-27T17:33:00 DEBUG: TabManager: Creating tab 9 : "CPU"
+2025-10-27T17:33:00 TabManager: Creating tab 9 : CPU (command: lscpu && cat /proc/cpuinfo | grep -E '(model name|cpu cores|siblings|cache)' | head -8)
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Arranging 10 tabs in 2 rows with 5 tabs per row
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Tab area height set to: 103
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Added tab "CPU" Total tabs: 10
+2025-10-27T17:33:00 DEBUG: TabManager: Successfully added tab: "CPU"
+2025-10-27T17:33:00 DEBUG: TabManager: Creating tab 10 : "Motherboard"
+2025-10-27T17:33:00 TabManager: Creating tab 10 : Motherboard (command: lshw -C bus -short)
+2025-10-27T17:33:00 DEBUG: MotherboardTab: Constructor called - base constructor done
+2025-10-27T17:33:00 DEBUG: MotherboardTab: createUserFriendlyView called
+2025-10-27T17:33:00 DEBUG: MotherboardTab: createUserFriendlyView completed
+2025-10-27T17:33:00 DEBUG: MotherboardTab: Constructor finished
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Arranging 11 tabs in 2 rows with 6 tabs per row
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Tab area height set to: 103
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Added tab "Motherboard" Total tabs: 11
+2025-10-27T17:33:00 DEBUG: TabManager: Successfully added tab: "Motherboard"
+2025-10-27T17:33:00 DEBUG: TabManager: Creating tab 11 : "Disk"
+2025-10-27T17:33:00 TabManager: Creating tab 11 : Disk (command: lsblk && df -h)
+2025-10-27T17:33:00 DEBUG: StorageTab: Constructor called - base constructor done
+2025-10-27T17:33:00 DEBUG: StorageTab: createUserFriendlyView called
+2025-10-27T17:33:00 DEBUG: StorageTab: createUserFriendlyView completed
+2025-10-27T17:33:00 DEBUG: StorageTab: Constructor finished
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Arranging 12 tabs in 2 rows with 6 tabs per row
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Tab area height set to: 103
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Added tab "Disk" Total tabs: 12
+2025-10-27T17:33:00 DEBUG: TabManager: Successfully added tab: "Disk"
+2025-10-27T17:33:00 DEBUG: TabManager: Creating tab 12 : "PC Info"
+2025-10-27T17:33:00 TabManager: Creating tab 12 : PC Info (command: hostnamectl && cat /sys/class/dmi/id/* 2>/dev/null)
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Arranging 13 tabs in 2 rows with 7 tabs per row
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Tab area height set to: 103
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Added tab "PC Info" Total tabs: 13
+2025-10-27T17:33:00 DEBUG: TabManager: Successfully added tab: "PC Info"
+2025-10-27T17:33:00 DEBUG: TabManager: Creating tab 13 : "Network"
+2025-10-27T17:33:00 TabManager: Creating tab 13 : Network (command: ip addr && ip route)
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Arranging 14 tabs in 2 rows with 7 tabs per row
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Tab area height set to: 103
+2025-10-27T17:33:00 DEBUG: MultiRowTabWidget: Added tab "Network" Total tabs: 14
+2025-10-27T17:33:00 DEBUG: TabManager: Successfully added tab: "Network"
+2025-10-27T17:33:00 DEBUG: All tabs created successfully
+2025-10-27T17:33:01 TabWidgetBase: Process started for Summary command: lshw -short
+2025-10-27T17:33:01 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+2025-10-27T17:33:01 TabWidgetBase: Process started for Windowing environment command: echo $XDG_CURRENT_DESKTOP && echo $DESKTOP_SESSION && echo $XDG_SESSION_TYPE
+2025-10-27T17:33:01 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+2025-10-27T17:33:01 TabWidgetBase: Process started for Audio command: lshw -C multimedia -short
+2025-10-27T17:33:01 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+2025-10-27T17:33:01 TabWidgetBase: Process started for Graphics gard command: lshw -C display -short
+2025-10-27T17:33:01 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+2025-10-27T17:33:01 TabWidgetBase: Process started for Screen command: xrandr --query 2>/dev/null || echo 'Display info not available'
+2025-10-27T17:33:01 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+2025-10-27T17:33:01 TabWidgetBase: Process started for Ports command: lsusb -t && lspci | grep -i 'serial\|usb'
+2025-10-27T17:33:01 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+2025-10-27T17:33:01 TabWidgetBase: Process started for Peripherals command: lsusb && lspci -nn | head -10
+2025-10-27T17:33:01 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+2025-10-27T17:33:01 TabWidgetBase: Process started for Motherboard command: lshw -C bus -short
+2025-10-27T17:33:01 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+2025-10-27T17:33:01 TabWidgetBase: Process started for Storage command: lsblk && df -h
+2025-10-27T17:33:01 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+2025-10-27T17:33:01 TabWidgetBase: Process started for PC Info command: hostnamectl && cat /sys/class/dmi/id/* 2>/dev/null
+2025-10-27T17:33:01 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+2025-10-27T17:33:01 TabWidgetBase: Process started for Network command: true
+2025-10-27T17:33:01 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+2025-10-27T17:33:01 TabWidgetBase: readyReadStandardOutput for Windowing environment
+2025-10-27T17:33:01 TabWidgetBase: Process finished for Windowing environment exitCode: 0 exitStatus: 0
+2025-10-27T17:33:01 TabWidgetBase: Output length: 13 Err length: 0
+2025-10-27T17:33:01 DEBUG: WindowingTab: parseOutput called
+2025-10-27T17:33:01 DEBUG: WindowingTab: parseOutput completed
+2025-10-27T17:33:01 DEBUG: Loading finished for tab: "Windowing environment"
+2025-10-27T17:33:01 TabWidgetBase: readyReadStandardOutput for Screen
+2025-10-27T17:33:01 TabWidgetBase: Process finished for Screen exitCode: 0 exitStatus: 0
+2025-10-27T17:33:01 TabWidgetBase: Output length: 1216 Err length: 0
+2025-10-27T17:33:01 DEBUG: ScreenTab: parseOutput called
+2025-10-27T17:33:01 DEBUG: ScreenTab: parseOutput completed
+2025-10-27T17:33:01 DEBUG: Loading finished for tab: "Screen"
+2025-10-27T17:33:01 TabWidgetBase: readyReadStandardOutput for Ports
+2025-10-27T17:33:01 TabWidgetBase: Process finished for Ports exitCode: 0 exitStatus: 0
+2025-10-27T17:33:01 TabWidgetBase: Output length: 1170 Err length: 0
+2025-10-27T17:33:01 DEBUG: PortsTab: parseOutput called
+2025-10-27T17:33:01 DEBUG: PortsTab: parseOutput completed
+2025-10-27T17:33:01 DEBUG: Loading finished for tab: "Ports"
+2025-10-27T17:33:01 TabWidgetBase: readyReadStandardOutput for Peripherals
+2025-10-27T17:33:01 TabWidgetBase: Process finished for Peripherals exitCode: 0 exitStatus: 0
+2025-10-27T17:33:01 TabWidgetBase: Output length: 1525 Err length: 0
+2025-10-27T17:33:01 DEBUG: PeripheralsTab: parseOutput called
+2025-10-27T17:33:01 DEBUG: PeripheralsTab: parseOutput completed
+2025-10-27T17:33:01 DEBUG: Loading finished for tab: "Peripherals"
+2025-10-27T17:33:01 TabWidgetBase: readyReadStandardOutput for Storage
+2025-10-27T17:33:01 TabWidgetBase: Process finished for Storage exitCode: 0 exitStatus: 0
+2025-10-27T17:33:01 TabWidgetBase: Output length: 549 Err length: 0
+2025-10-27T17:33:01 DEBUG: StorageTab: parseOutput called
+2025-10-27T17:33:01 DEBUG: StorageTab: parseOutput completed
+2025-10-27T17:33:01 DEBUG: Loading finished for tab: "Storage"
+2025-10-27T17:33:01 TabWidgetBase: readyReadStandardOutput for PC Info
+2025-10-27T17:33:01 TabWidgetBase: Process finished for PC Info exitCode: 1 exitStatus: 0
+2025-10-27T17:33:01 TabWidgetBase: Output length: 888 Err length: 0
+2025-10-27T17:33:01 WARNING: QFile::setFileName: File (/sys/class/dmi/id/product_name) already open
+2025-10-27T17:33:01 WARNING: QFile::setFileName: File (/sys/class/dmi/id/sys_vendor) already open
+2025-10-27T17:33:01 WARNING: QFile::setFileName: File (/sys/class/dmi/id/chassis_type) already open
+2025-10-27T17:33:01 WARNING: QFile::setFileName: File (/sys/class/dmi/id/product_family) already open
+2025-10-27T17:33:01 DEBUG: Loading finished for tab: "PC Info"
+2025-10-27T17:33:01 TabWidgetBase: Process finished for Network exitCode: 0 exitStatus: 0
+2025-10-27T17:33:01 TabWidgetBase: Output length: 0 Err length: 0
+2025-10-27T17:33:01 DEBUG: Loading finished for tab: "Network"
+2025-10-27T17:33:05 TabWidgetBase: readyReadStandardOutput for Summary
+2025-10-27T17:33:05 TabWidgetBase: Process finished for Summary exitCode: 0 exitStatus: 0
+2025-10-27T17:33:05 TabWidgetBase: Output length: 4365 Err length: 0
+2025-10-27T17:33:05 DEBUG: SummaryTab: parseOutput called
+2025-10-27T17:33:05 DEBUG: SummaryTab: parseOutput completed
+2025-10-27T17:33:05 DEBUG: Loading finished for tab: "Summary"
+2025-10-27T17:33:05 TabWidgetBase: readyReadStandardOutput for Motherboard
+2025-10-27T17:33:05 TabWidgetBase: Process finished for Motherboard exitCode: 0 exitStatus: 0
+2025-10-27T17:33:05 TabWidgetBase: Output length: 766 Err length: 0
+2025-10-27T17:33:05 DEBUG: MotherboardTab: parseOutput called
+2025-10-27T17:33:05 DEBUG: MotherboardTab: parseOutput completed
+2025-10-27T17:33:05 DEBUG: Loading finished for tab: "Motherboard"
+2025-10-27T17:33:06 TabWidgetBase: readyReadStandardOutput for Audio
+2025-10-27T17:33:06 TabWidgetBase: Process finished for Audio exitCode: 0 exitStatus: 0
+2025-10-27T17:33:06 TabWidgetBase: Output length: 359 Err length: 0
+2025-10-27T17:33:06 DEBUG: AudioTab: parseOutput called
+2025-10-27T17:33:06 DEBUG: AudioTab: parseOutput completed
+2025-10-27T17:33:06 DEBUG: Loading finished for tab: "Audio"
+2025-10-27T17:33:06 TabWidgetBase: readyReadStandardOutput for Graphics gard
+2025-10-27T17:33:06 TabWidgetBase: Process finished for Graphics gard exitCode: 0 exitStatus: 0
+2025-10-27T17:33:06 TabWidgetBase: Output length: 182 Err length: 0
+2025-10-27T17:33:06 DEBUG: GraphicsTab: parseOutput called
+2025-10-27T17:33:06 DEBUG: GraphicsTab: parseOutput completed
+2025-10-27T17:33:06 DEBUG: Loading finished for tab: "Graphics gard"
+2025-10-27T17:33:12 DEBUG: AboutTab: Constructor called - base constructor done
+2025-10-27T17:33:12 DEBUG: AboutTab: createUserFriendlyView called
+2025-10-27T17:33:12 DEBUG: AboutTab: createUserFriendlyView completed
+2025-10-27T17:33:12 DEBUG: AboutTab: Constructor finished
+2025-10-27T17:33:12 TabWidgetBase: Process started for About command: echo 'Linux System Viewer V. 0.6.0'
+2025-10-27T17:33:12 ENV PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+2025-10-27T17:33:12 TabWidgetBase: readyReadStandardOutput for About
+2025-10-27T17:33:12 TabWidgetBase: Process finished for About exitCode: 0 exitStatus: 0
+2025-10-27T17:33:12 TabWidgetBase: Output length: 29 Err length: 0
+2025-10-27T17:33:12 DEBUG: AboutTab: parseOutput called
+2025-10-27T17:33:12 WARNING: QObject::connect(QLabel, AboutTab): unique connections require a pointer to member function of a QObject subclass
+2025-10-27T17:33:12 DEBUG: AboutTab: parseOutput completed

@@ -21,7 +21,7 @@ protected:
     bool eventFilter(QObject* obj, QEvent* event) override;
 
 private:
-    void showQuitDialog();
+    bool showQuitDialog();
     
     QMainWindow* m_mainWindow;
 };

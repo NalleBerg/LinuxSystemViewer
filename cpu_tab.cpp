@@ -1,5 +1,7 @@
 #include "cpu_tab.h"
 #include "cpu.h"
+#include <QTimer>
+#include <QShowEvent>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -41,7 +43,7 @@ CPUTab::CPUTab(QWidget* parent)
 
     // Table
     tableWidget = new QTableWidget();
-    tableWidget->setColumnCount(4);
+    tableWidget->setColumnCount(3);
     tableWidget->setHorizontalHeaderLabels(getCpuHeaders());
     tableWidget->verticalHeader()->setVisible(false);
     styleCpuTable(tableWidget);
@@ -57,6 +59,23 @@ CPUTab::CPUTab(QWidget* parent)
 
     // Populate table using cpu helper
     loadCpuInformation(tableWidget, QJsonObject());
+
+    // Auto-refresh only the changing values (frequencies) every second
+    refreshTimer = new QTimer(this);
+    refreshTimer->setInterval(1000);
+    connect(refreshTimer, &QTimer::timeout, this, &CPUTab::refreshCpuValues);
+}
+
+void CPUTab::showEvent(QShowEvent* ev)
+{
+    QWidget::showEvent(ev);
+    if (refreshTimer) refreshTimer->start();
+}
+
+void CPUTab::hideEvent(QHideEvent* ev)
+{
+    if (refreshTimer) refreshTimer->stop();
+    QWidget::hideEvent(ev);
 }
 
 void CPUTab::showGeekMode()
@@ -271,5 +290,67 @@ void GeekCpuDialog::fillTable()
     if (minf.open(QIODevice::ReadOnly | QIODevice::Text)) {
         addRow("cpuinfo_min_freq", QTextStream(&minf).readLine().trimmed());
         minf.close();
+    }
+}
+
+void CPUTab::refreshCpuValues()
+{
+    // Read a current frequency value (from /proc/cpuinfo first), and sysfs max/min
+    QString currentFreqGHz = "Unknown";
+    QFile file("/proc/cpuinfo");
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&file);
+        QString content = in.readAll();
+        file.close();
+        for (const QString& line : content.split('\n')) {
+            if (line.startsWith("cpu MHz")) {
+                double mhz = line.section(':',1).trimmed().toDouble();
+                currentFreqGHz = QString::number(mhz / 1000.0, 'f', 2);
+                break;
+            }
+        }
+    }
+
+    QString maxGHz = "Unknown";
+    QFile maxFreqFile("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
+    if (maxFreqFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QString maxFreq = QTextStream(&maxFreqFile).readLine().trimmed();
+        maxFreqFile.close();
+        if (!maxFreq.isEmpty()) {
+            double m = maxFreq.toLongLong() / 1000000.0;
+            maxGHz = QString::number(m, 'f', 2);
+        }
+    }
+
+    QString minGHz = "Unknown";
+    QFile minFreqFile("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq");
+    if (minFreqFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QString minFreq = QTextStream(&minFreqFile).readLine().trimmed();
+        minFreqFile.close();
+        if (!minFreq.isEmpty()) {
+            double m = minFreq.toLongLong() / 1000000.0;
+            minGHz = QString::number(m, 'f', 2);
+        }
+    }
+
+    // Update only the rows which are likely to change
+    for (int r = 0; r < tableWidget->rowCount(); ++r) {
+        QTableWidgetItem* keyItem = tableWidget->item(r, 0);
+        if (!keyItem) continue;
+        QString key = keyItem->text().trimmed();
+
+        if (key.compare("Current freq (GHz)", Qt::CaseInsensitive) == 0) {
+            QTableWidgetItem* val = tableWidget->item(r, 1);
+            if (val) val->setText(currentFreqGHz == "Unknown" ? QString("Unknown") : currentFreqGHz);
+            else tableWidget->setItem(r, 1, new QTableWidgetItem(currentFreqGHz));
+        } else if (key.compare("Max freq (GHz)", Qt::CaseInsensitive) == 0) {
+            QTableWidgetItem* val = tableWidget->item(r, 1);
+            if (val) val->setText(maxGHz == "Unknown" ? QString("Unknown") : maxGHz);
+            else tableWidget->setItem(r, 1, new QTableWidgetItem(maxGHz));
+        } else if (key.compare("Min Freq (GHz)", Qt::CaseInsensitive) == 0 || key.compare("Min Freq (GHz)", Qt::CaseInsensitive) == 0) {
+            QTableWidgetItem* val = tableWidget->item(r, 1);
+            if (val) val->setText(minGHz == "Unknown" ? QString("Unknown") : minGHz);
+            else tableWidget->setItem(r, 1, new QTableWidgetItem(minGHz));
+        }
     }
 }

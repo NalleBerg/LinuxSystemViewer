@@ -3,6 +3,7 @@
 #include <QMainWindow>
 #include <QVBoxLayout>
 #include <sys/stat.h>
+#include <pwd.h>
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QLabel>
@@ -19,9 +20,15 @@
 #include <QDateTime>
 #include <QStringList>
 #include <QFileInfo>
+#include <QProgressBar>
+#include <QFuture>
+#include <QFutureWatcher>
+#include <QtConcurrent/QtConcurrent>
 
 // Forward-declare appendLog from log_helper.h
 #include "log_helper.h"
+// Central version header (single source of truth for the version string)
+#include "version.h"
 
 static bool polkitAgentRunning()
 {
@@ -63,6 +70,25 @@ static QString detectDistroInstallCmds()
     return QString("Please install a polkit authentication agent for your desktop (policykit-1-gnome, mate-polkit, polkit-kde) and log out/in.");
 }
 
+static QPixmap makeBadgePixmap(const QColor &bgColor, int size = 20)
+{
+    QPixmap pix(size, size);
+    pix.fill(Qt::transparent);
+    QPainter p(&pix);
+    p.setRenderHint(QPainter::Antialiasing, true);
+    p.setBrush(bgColor);
+    p.setPen(Qt::NoPen);
+    p.drawEllipse(0, 0, size, size);
+    QFont f = p.font();
+    f.setBold(true);
+    f.setPointSizeF(size * 0.6);
+    p.setFont(f);
+    p.setPen(Qt::white);
+    p.drawText(pix.rect(), Qt::AlignCenter, "i");
+    p.end();
+    return pix;
+}
+
 // Qt message handler: route Qt debug/info/warning messages into the
 // appendLog file instead of printing to the console.
 static void lsvQtMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -99,10 +125,200 @@ static void lsvQtMessageHandler(QtMsgType type, const QMessageLogContext &contex
 #include "storage_tab.h"
 #include "about_tab.h"
 #include "cpu_tab.h"
+#include "network_tab.h"
 #include "tabs_config.h"
 #include "pc_tab.h"
 #include "memory_tab.h"
 #include "log_helper.h"
+
+// Perform cleanup of temporary files the application may have created.
+static void performCleanup()
+{
+    appendLog("Cleaner: starting cleanup of temporary files");
+    QDir tmpDir(QDir::tempPath());
+    QDateTime now = QDateTime::currentDateTime();
+
+    // Helper: check whether a file is owned by the current effective user
+    auto ownedByCurrentUser = [](const QString &path) -> bool {
+        struct stat st;
+        if (stat(path.toUtf8().constData(), &st) != 0) return false;
+        uid_t owner = st.st_uid;
+        return owner == geteuid();
+    };
+
+    // Safety thresholds
+    const qint64 MAX_REMOVE_SIZE = 5LL * 1024 * 1024; // 5 MB: do not remove big files automatically
+    const int MIN_AGE_SECS = 5; // do not touch files younger than this to avoid races
+    const int PRESERVE_IF_LARGER_THAN = 1024 * 1024; // 1 MB preserve threshold for certain logs
+
+    qint64 removedCount = 0;
+    qint64 freedBytes = 0;
+
+    // Broadly target files and small directories that begin with "lsv-" in /tmp
+    QFileInfoList candidates = tmpDir.entryInfoList(QStringList() << "lsv-*" << "lsv_*", QDir::Files | QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+    for (const QFileInfo &fi : candidates) {
+        const QString path = fi.absoluteFilePath();
+
+        // Only operate inside the temp dir and on items owned by this user
+        if (!ownedByCurrentUser(path)) {
+            appendLog(QString("Cleaner: skipping (not owned by user) %1").arg(path));
+            continue;
+        }
+
+        // Skip very recent files to avoid races with other running instances
+        if (fi.lastModified().secsTo(now) <= MIN_AGE_SECS) {
+            appendLog(QString("Cleaner: skipping recent file/dir %1").arg(path));
+            continue;
+        }
+
+        if (fi.isDir()) {
+            // Remove only empty lsv-* directories (safe) and report results
+            QDir d(path);
+            QStringList children = d.entryList(QDir::NoDotAndDotDot | QDir::AllEntries);
+            if (children.isEmpty()) {
+                appendLog(QString("Cleaner: removing empty temp dir %1").arg(path));
+                if (d.rmdir(path)) {
+                    removedCount++;
+                } else {
+                    appendLog(QString("Cleaner: failed to remove dir %1").arg(path));
+                }
+            } else {
+                appendLog(QString("Cleaner: preserving non-empty dir %1 (entries=%2)").arg(path).arg(children.size()));
+            }
+            continue;
+        }
+
+        // It's a file. Make removal decisions based on size and name.
+        qint64 sz = fi.size();
+
+        // Preserve very large files for user inspection
+        if (sz > MAX_REMOVE_SIZE) {
+            appendLog(QString("Cleaner: preserving large file %1 (size=%2)").arg(path).arg(sz));
+            continue;
+        }
+
+        // Preserve certain logs if they are larger than a threshold
+        if (path.endsWith("lsv-about-links.log") && sz > PRESERVE_IF_LARGER_THAN) {
+            appendLog(QString("Cleaner: preserving about-links log %1 (size=%2)").arg(path).arg(sz));
+            continue;
+        }
+
+        // Attempt removal
+        appendLog(QString("Cleaner: removing temp file %1 (size=%2)").arg(path).arg(sz));
+        if (QFile::remove(path)) {
+            removedCount++;
+            freedBytes += sz;
+        } else {
+            appendLog(QString("Cleaner: failed to remove %1").arg(path));
+        }
+    }
+
+    // Tidy up a few other well-known filenames (backwards compatibility)
+    const QString aboutLog = tmpDir.filePath(QStringLiteral("lsv-about-links.log"));
+    QFileInfo aboutFi(aboutLog);
+    if (aboutFi.exists() && ownedByCurrentUser(aboutLog)) {
+        if (aboutFi.size() < PRESERVE_IF_LARGER_THAN && aboutFi.lastModified().secsTo(now) > MIN_AGE_SECS) {
+            appendLog(QString("Cleaner: removing small about-links log %1").arg(aboutLog));
+            if (QFile::remove(aboutLog)) {
+                removedCount++;
+                freedBytes += aboutFi.size();
+            }
+        } else {
+            appendLog(QString("Cleaner: preserving about-links log %1 (size=%2 age=%3s)").arg(aboutLog).arg(aboutFi.size()).arg(aboutFi.lastModified().secsTo(now)));
+        }
+    }
+
+    appendLog(QString("Cleaner: finished. Removed %1 items, freed %2 bytes").arg(QString::number(removedCount)).arg(QString::number(freedBytes)));
+}
+
+// Subclass QMainWindow to intercept closeEvent and show a cleaning dialog
+class CleaningMainWindow : public QMainWindow
+{
+public:
+    using QMainWindow::QMainWindow;
+
+protected:
+    void closeEvent(QCloseEvent *event) override
+    {
+        // Start cleanup in background. Only show the modal dialog if cleanup
+        // takes longer than a short threshold (500 ms) to avoid a UI blink
+        // on fast systems; on slower machines the dialog will appear and
+        // remain until cleanup completes.
+        QFuture<void> fut = QtConcurrent::run(performCleanup);
+        QFutureWatcher<void> *watcher = new QFutureWatcher<void>(this);
+        watcher->setFuture(fut);
+
+        // Prepare dialog but do not show it immediately.
+        QDialog *dlg = new QDialog(this);
+        dlg->setWindowTitle(QStringLiteral("Cleaning up"));
+        QVBoxLayout *lay = new QVBoxLayout(dlg);
+        QLabel *lbl = new QLabel(QStringLiteral("Cleaning up temporary files..."), dlg);
+        lay->addWidget(lbl);
+        QProgressBar *pb = new QProgressBar(dlg);
+        pb->setRange(0, 0); // indeterminate
+        lay->addWidget(pb);
+        dlg->setModal(true);
+        dlg->setMinimumWidth(360);
+
+        bool finished = false;
+        QEventLoop loop;
+        QElapsedTimer shownTimer;
+
+        // When cleanup finishes, mark finished and close the dialog if shown,
+        // then quit the nested event loop so closeEvent can proceed. If the
+        // dialog was shown, ensure it remains visible for at least
+        // MIN_DISPLAY_MS milliseconds before closing to avoid a too-quick blink.
+        const int MIN_DISPLAY_MS = 1000; // keep dialog visible at least 1s if shown
+        QObject::connect(watcher, &QFutureWatcher<void>::finished, this, [dlg, &finished, &loop, &shownTimer]() {
+            finished = true;
+            if (dlg->isVisible()) {
+                // If shownTimer wasn't started for some reason, close immediately.
+                if (!shownTimer.isValid()) {
+                    dlg->accept();
+                    if (loop.isRunning()) loop.quit();
+                    return;
+                }
+                qint64 elapsed = shownTimer.elapsed();
+                if (elapsed < MIN_DISPLAY_MS) {
+                    int remaining = int(MIN_DISPLAY_MS - elapsed);
+                    QTimer::singleShot(remaining, dlg, [dlg, &loop]() {
+                        if (dlg->isVisible()) dlg->accept();
+                        if (loop.isRunning()) loop.quit();
+                    });
+                    return;
+                } else {
+                    dlg->accept();
+                    if (loop.isRunning()) loop.quit();
+                    return;
+                }
+            }
+            if (loop.isRunning()) loop.quit();
+        });
+
+        // After threshold ms, show the dialog only if cleanup still running.
+        const int SHOW_DELAY_MS = 500;
+        QTimer::singleShot(SHOW_DELAY_MS, this, [dlg, &finished, &loop, &shownTimer]() {
+            if (finished) return; // already done, don't flash dialog
+            // Show dialog and start a nested loop that will quit when the
+            // watcher finishes (connected above).
+            dlg->show();
+            shownTimer.start();
+            QObject::connect(dlg, &QDialog::finished, &loop, &QEventLoop::quit);
+            // The nested loop will be executed in closeEvent below.
+        });
+
+        // If cleanup already finished by the time we reach here, skip the loop.
+        if (!finished) loop.exec();
+
+        // Cleanup dialog closed (if shown). Ensure dialog is deleted.
+        if (dlg->isVisible()) dlg->accept();
+        dlg->deleteLater();
+        // watcher will be deleted with this as parent
+
+        // Let the normal close proceed
+        event->accept();
+    }
+};
 
 class TabManager : public QObject
 {
@@ -234,12 +450,18 @@ private:
             connect(pcTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
             tabWidget = pcTab;
         }
-        else if (config.name == "About") {
-            AboutTab* aboutTab = new AboutTab();
-            connect(aboutTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
-            connect(aboutTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
-            tabWidget = aboutTab;
-        }
+            else if (config.name == "About") {
+                AboutTab* aboutTab = new AboutTab();
+                connect(aboutTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
+                connect(aboutTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+                tabWidget = aboutTab;
+            }
+            else if (config.name == "Network") {
+                NetworkTab* netTab = new NetworkTab();
+                connect(netTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
+                connect(netTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+                tabWidget = netTab;
+            }
         else {
             GenericTab* genericTab = new GenericTab(config.name, config.command, true, config.command);
             connect(genericTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
@@ -256,11 +478,13 @@ private:
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    // Central version constant
+#include "version.h"
 
     // Set application properties
     app.setApplicationName("Linux System Viewer");
-    app.setApplicationVersion("0.6.0");
-    app.setOrganizationName("LSV");
+    app.setApplicationVersion(LSVVersionQString());
+    app.setOrganizationName("Linux System Viewer");
 
     // Set application icon from resource
     QIcon appIcon(":/lsv.png");
@@ -273,90 +497,48 @@ int main(int argc, char *argv[])
     qDebug() << "Application starting..."; // will be routed to appendLog
     appendLog(QString("Application starting. CWD: %1, log-file: %2").arg(QDir::currentPath(), QDir::currentPath()+"/lsv-cli.log"));
 
-    // Auto-elevation: if not running as root, try to relaunch via pkexec using
-    // a temporary wrapper script that preserves necessary environment
-    // variables (DISPLAY, XAUTHORITY, DBUS, XDG_RUNTIME_DIR). This keeps the
-    // app portable (no install) while still prompting for password.
+    // Auto-elevation: always relaunch via a terminal sudo prompt and exit the
+    // unprivileged instance. This ensures the user always authenticates in a
+    // terminal window with a clear custom message and the GUI runs as root.
     if (geteuid() != 0 && qgetenv("LSV_ELEVATED").isEmpty()) {
-        // Cleanup old temp files to avoid clutter. Remove lsv-elevated-*
-        // and lsv-relaunch-* files older than an hour.
+        // Cleanup old temp files to avoid clutter.
         QDir tmpDir(QDir::tempPath());
         QDateTime now = QDateTime::currentDateTime();
         const int MAX_AGE_SECS = 60 * 60; // 1 hour
-        QStringList stalePatterns = {"lsv-elevated-*", "lsv-relaunch-*.sh", "lsv-relaunch-*.log"};
+        QStringList stalePatterns = {"lsv-elevated-*"};
         for (const QString &pat : stalePatterns) {
             QFileInfoList entries = tmpDir.entryInfoList(QStringList(pat), QDir::Files);
             for (const QFileInfo &fi : entries) {
-                if (fi.lastModified().secsTo(now) > MAX_AGE_SECS) {
-                    QFile::remove(fi.absoluteFilePath());
-                }
+                if (fi.lastModified().secsTo(now) > MAX_AGE_SECS) QFile::remove(fi.absoluteFilePath());
             }
         }
-        QString pkexecPath = QStandardPaths::findExecutable("pkexec");
+
         QString exe = QCoreApplication::applicationFilePath();
-        QString tmpScript = QDir::tempPath() + QDir::separator() + QString("lsv-relaunch-%1.sh").arg(getpid());
-        // If running from an AppImage mount, copy the executable now (as the
-        // current user) into /tmp so the elevated pkexec child can execute it
-        // even if the AppImage mount is removed when this process exits.
         QString preCopiedExe;
+        // If running from an AppImage mount, try to pre-copy the binary so
+        // root can execute it even if the FUSE mount becomes inaccessible.
         if (exe.contains("/tmp/.mount_")) {
             preCopiedExe = QDir::tempPath() + QDir::separator() + QString("lsv-elevated-%1").arg(QCoreApplication::applicationPid());
             QFile::remove(preCopiedExe);
-            // First try a direct copy of the mounted path. If that fails
-            // (common on some FUSE-mounted AppImage setups where root cannot
-            // access the user's mount), fall back to copying the running
-            // process image via /proc/self/exe which the current user can
-            // read.
             bool copied = QFile::copy(exe, preCopiedExe);
-            // Diagnostic: record whether the source exe is visible to the
-            // unprivileged process and its size. This helps debug cases
-            // where the FUSE-mounted path isn't readable to either the
-            // unprivileged or the elevated process.
-            QFileInfo srcInfo(exe);
-            if (srcInfo.exists()) {
-                appendLog(QString("Auto-elevation: source exe exists: %1 size=%2").arg(exe).arg(QString::number(srcInfo.size())));
-            } else {
-                appendLog(QString("Auto-elevation: source exe does NOT exist (from user's view): %1").arg(exe));
-            }
             if (!copied) {
-                appendLog(QString("Auto-elevation: direct copy failed, trying /proc/self/exe fallback"));
                 QFile in("/proc/self/exe");
                 if (in.open(QIODevice::ReadOnly)) {
                     QFile out(preCopiedExe);
                     if (out.open(QIODevice::WriteOnly)) {
                         const qint64 bufSize = 32768;
-                        QByteArray buf;
-                        while (!in.atEnd()) {
-                            buf = in.read(bufSize);
-                            out.write(buf);
-                        }
+                        while (!in.atEnd()) out.write(in.read(bufSize));
                         out.close();
                         copied = true;
                     }
                     in.close();
-                } else {
-                    appendLog(QString("Auto-elevation: failed to open /proc/self/exe for fallback copy"));
                 }
             }
-            
-            // If fallback read also failed, try a shell-level copy using cat
-            // which sometimes behaves better for special files.
             if (!copied) {
-                appendLog(QString("Auto-elevation: attempting shell-level copy via cat"));
                 QProcess cpProc;
-                QString cmd = QString("sh -c 'cat /proc/self/exe > %1 && chmod 0755 %1'").arg(preCopiedExe);
                 cpProc.start("sh", QStringList() << "-c" << QString("cat /proc/self/exe > '%1' && chmod 0755 '%1'").arg(preCopiedExe));
-                bool started = cpProc.waitForStarted(2000);
-                if (started) {
-                    cpProc.waitForFinished(5000);
-                    if (QFile::exists(preCopiedExe) && QFile(preCopiedExe).size() > 0) {
-                        copied = true;
-                        appendLog(QString("Auto-elevation: shell-level copy succeeded to %1").arg(preCopiedExe));
-                    } else {
-                        appendLog(QString("Auto-elevation: shell-level copy failed"));
-                    }
-                } else {
-                    appendLog(QString("Auto-elevation: could not start shell copy process"));
+                if (cpProc.waitForFinished(5000)) {
+                    if (QFile::exists(preCopiedExe) && QFile(preCopiedExe).size() > 0) copied = true;
                 }
             }
             if (copied) {
@@ -364,306 +546,102 @@ int main(int argc, char *argv[])
                                                    | QFile::ExeGroup | QFile::ReadGroup
                                                    | QFile::ExeOther | QFile::ReadOther);
                 appendLog(QString("Auto-elevation: Copied mounted exe to %1").arg(preCopiedExe));
-                    // Report the size of the pre-copied file for debugging.
-                    QFileInfo preInfo(preCopiedExe);
-                    appendLog(QString("Auto-elevation: pre-copied file size: %1").arg(QString::number(preInfo.size())));
             } else {
                 appendLog(QString("Auto-elevation: Failed to copy mounted exe %1 -> %2").arg(exe, preCopiedExe));
                 preCopiedExe.clear();
             }
         }
-        // If an installed setuid helper is available, prefer it because
-        // it avoids relying on polkit agents and can be more reliable
-        // when launched from a file manager. The helper must be installed
-        // by a system administrator (chown root:root && chmod 4755).
-        QString helperExec = QStandardPaths::findExecutable("lsv-elevate");
-        if (!helperExec.isEmpty()) {
-            appendLog(QString("Auto-elevation: found helper %1, launching helper").arg(helperExec));
-            // If we pre-copied the exe, prefer that path so helper doesn't
-            // need to access the FUSE-mounted AppImage path.
-            QString helperTarget = preCopiedExe.isEmpty() ? exe : preCopiedExe;
-            bool okh = QProcess::startDetached(helperExec, QStringList() << helperTarget);
-            if (okh) {
-                appendLog("Auto-elevation: Relaunched with lsv-elevate helper");
-                QObject::connect(&app, &QCoreApplication::aboutToQuit, [tmpScript, preCopiedExe]() {
-                    if (!tmpScript.isEmpty()) QFile::remove(tmpScript);
-                    if (!preCopiedExe.isEmpty()) QFile::remove(preCopiedExe);
-                });
 
-                // Start the same watchdog as below to detect elevated instance
-                QString watchExe = preCopiedExe.isEmpty() ? exe : preCopiedExe;
-                QTimer* watchTimer = new QTimer();
-                watchTimer->setInterval(500);
-                int maxChecks = 20;
-                int* checks = new int(0);
-                QObject::connect(watchTimer, &QTimer::timeout, [watchTimer, watchExe, checks, maxChecks]() {
-                    (*checks)++;
-                    QProcess p; p.start("ps", QStringList() << "-eo" << "pid,user,cmd"); p.waitForFinished(1000);
-                    QString out = QString::fromLocal8Bit(p.readAllStandardOutput());
-                    bool found = false;
-                    QString watchBase = QFileInfo(watchExe).fileName();
-                    for (const QString& line : out.split('\n')) {
-                        if (line.isEmpty()) continue;
-                        if (line.contains(" root ") && (line.contains(watchExe) || (!watchBase.isEmpty() && line.contains(watchBase)))) {
-                            found = true; break;
-                        }
-                    }
-                    if (found || *checks >= maxChecks) {
-                        watchTimer->stop(); watchTimer->deleteLater(); delete checks;
-                        if (found) qApp->quit();
-                    }
-                });
-                watchTimer->start();
-                // We initiated elevation via helper; don't fall through to pkexec.
-            } else {
-                appendLog("Auto-elevation: failed to start lsv-elevate helper, falling back to pkexec if available");
-            }
+        QString targetExe = preCopiedExe.isEmpty() ? exe : preCopiedExe;
+
+        // Find a terminal emulator to run sudo
+        QStringList terms = {"x-terminal-emulator", "gnome-terminal", "konsole", "xfce4-terminal", "mate-terminal", "lxterminal", "xterm", "alacritty", "terminator"};
+        QString termPath;
+        for (const QString &t : terms) {
+            QString p = QStandardPaths::findExecutable(t);
+            if (!p.isEmpty()) { termPath = p; break; }
+        }
+        if (termPath.isEmpty()) {
+            // Can't prompt in a terminal; inform the user and exit.
+            appendLog("Auto-elevation: No terminal emulator found to prompt for password. Exiting.");
+            QMessageBox::critical(nullptr, "Cannot elevate", "No terminal emulator found to prompt for a password.\nPlease run the application as root.");
+            return 0;
         }
 
-        if (!pkexecPath.isEmpty()) {
-            QFile f(tmpScript);
-            if (f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
-                QTextStream ts(&f);
-                ts << "#!/bin/sh\n";
-                // Export the elevation marker so child won't re-run this branch
-                ts << "export LSV_ELEVATED=1\n";
-                QByteArray display = qgetenv("DISPLAY");
-                if (!display.isEmpty()) ts << "export DISPLAY='" << QString::fromLocal8Bit(display).replace('\'' , "'" "'" "'") << "'\n";
-                QByteArray xauth = qgetenv("XAUTHORITY");
-                if (!xauth.isEmpty()) ts << "export XAUTHORITY='" << QString::fromLocal8Bit(xauth).replace('\'' , "'" "'" "'") << "'\n";
-                QByteArray dbus = qgetenv("DBUS_SESSION_BUS_ADDRESS");
-                if (!dbus.isEmpty()) ts << "export DBUS_SESSION_BUS_ADDRESS='" << QString::fromLocal8Bit(dbus).replace('\'' , "'" "'" "'") << "'\n";
-                QByteArray xdg = qgetenv("XDG_RUNTIME_DIR");
-                if (!xdg.isEmpty()) ts << "export XDG_RUNTIME_DIR='" << QString::fromLocal8Bit(xdg).replace('\'' , "'" "'" "'") << "'\n";
-                // If the application is running from an AppImage-mounted location
-                // (path contains "/tmp/.mount_"), pkexec running as root may be
-                // unable to execute the mounted binary directly. Prefer to use
-                // a pre-copied executable (copied earlier as the unprivileged
-                // user) if available; otherwise copy via mktemp in the wrapper
-                // and exec that copy.
-                if (exe.contains("/tmp/.mount_")) {
-                    if (!preCopiedExe.isEmpty()) {
-                        QString preEsc = preCopiedExe;
-                        preEsc.replace('\'', "'" "'" "'");
-                        ts << "LOG=/tmp/lsv-relaunch-" << getpid() << ".log\n";
-                        ts << "echo \"=== lsv-relaunch wrapper start $(date) PID=$$\" > \"$LOG\"\n";
-                        ts << "echo \"Using pre-copied exec: '" << preEsc << "'\" >> \"$LOG\"\n";
-                        ts << "ls -l '" << preEsc << "' >> \"$LOG\" 2>&1 || true\n";
-                        ts << "exec '" << preEsc << "' >> \"$LOG\" 2>&1 || true\n";
-                    } else {
-                        // Use mktemp to create a unique temporary filename for the
-                        // elevated copy. This avoids permission problems when a
-                        // deterministically-named file already exists and is not
-                        // writable by the calling user.
-                        QString exeEsc = exe;
-                        exeEsc.replace('\'', "'" "'" "'");
-                        // More verbose wrapper: log steps to /tmp/lsv-relaunch-<pid>.log
-                        ts << "LOG=/tmp/lsv-relaunch-" << getpid() << ".log\n";
-                        ts << "echo \"=== lsv-relaunch wrapper start $(date) PID=$$\" > \"$LOG\"\n";
-                        ts << "echo \"exe: '" << exeEsc << "'\" >> \"$LOG\"\n";
-                        ts << "ls -l '" << exeEsc << "' >> \"$LOG\" 2>&1 || true\n";
-                        ts << "stat '" << exeEsc << "' >> \"$LOG\" 2>&1 || true\n";
-                        // Create a unique temporary filename under /tmp
-                        ts << "TMPEXEC=$(mktemp /tmp/lsv-elevated-XXXXXX)\n";
-                        ts << "echo \"Using temp exec: $TMPEXEC\" >> \"$LOG\" 2>&1 || true\n";
-                        // Try cp, fall back to cat if cp fails (some fused mounts behave oddly)
-                        ts << "cp '" << exeEsc << "' \"$TMPEXEC\" >> \"$LOG\" 2>&1 || (cat '" << exeEsc << "' > \"$TMPEXEC\" 2>> \"$LOG\" || true)\n";
-                        ts << "chmod 0755 \"$TMPEXEC\" >> \"$LOG\" 2>&1 || true\n";
-                        ts << "echo \"After copy: \" >> \"$LOG\"; ls -l \"$TMPEXEC\" >> \"$LOG\" 2>&1 || true\n";
-                        ts << "exec \"$TMPEXEC\" >> \"$LOG\" 2>&1 || (echo \"exec $TMPEXEC failed, trying original\" >> \"$LOG\"; exec '" << exeEsc << "')\n";
-                    }
-                } else {
-                    ts << "exec '" << exe.replace('\'' , "'" "'" "'") << "'\n";
-                }
-                f.close();
-                QFile::setPermissions(tmpScript, QFile::ExeOwner | QFile::ReadOwner | QFile::WriteOwner);
-
-                bool launched = false;
-                // Prefer pkexec when a polkit GUI agent is present. If no GUI
-                // agent is detected, fall back to launching a terminal emulator
-                // that runs sudo so the user can authenticate in a terminal.
-                if (polkitAgentRunning()) {
-                    bool ok = QProcess::startDetached(pkexecPath, QStringList() << "/bin/sh" << tmpScript);
-                    if (ok) {
-                        appendLog("Auto-elevation: Relaunched with pkexec");
-                        launched = true;
-                    } else {
-                        appendLog("Auto-elevation: pkexec startDetached failed");
-                    }
-                } else {
-                    appendLog("Auto-elevation: no polkit GUI agent detected, attempting terminal sudo fallback");
-                    // Search for a terminal emulator to run the sudo fallback
-                    QStringList terms = {"x-terminal-emulator", "gnome-terminal", "konsole", "xfce4-terminal", "mate-terminal", "lxterminal", "xterm", "alacritty", "terminator"};
-                    QString termPath;
-                    for (const QString &t : terms) {
-                        QString p = QStandardPaths::findExecutable(t);
-                        if (!p.isEmpty()) { termPath = p; break; }
-                    }
-                    if (!termPath.isEmpty()) {
-                        QStringList args;
-                        // Run the relaunch script via sudo; do NOT wait for an
-                        // extra keypress so the terminal closes as soon as the
-                        // command finishes (user requested immediate close).
-                        QString cmd = QString("sudo -E /bin/sh '%1'").arg(tmpScript);
-                        if (termPath.endsWith("gnome-terminal") || termPath.endsWith("gnome-terminal.real")) {
-                            args << "--" << "bash" << "-c" << cmd;
-                        } else if (termPath.endsWith("konsole")) {
-                            args << "-e" << "bash" << "-c" << cmd;
-                        } else {
-                            // Most terminals accept -e
-                            args << "-e" << QString("sh -c \"%1\"").arg(cmd);
-                        }
-                        bool okTerm = QProcess::startDetached(termPath, args);
-                        if (okTerm) {
-                            appendLog(QString("Auto-elevation: Launched terminal '%1' for sudo fallback").arg(termPath));
-                            launched = true;
-                        } else {
-                            appendLog(QString("Auto-elevation: Failed to launch terminal '%1' for sudo fallback").arg(termPath));
-                        }
-                    } else {
-                        appendLog("Auto-elevation: No terminal emulator found for sudo fallback");
-                    }
-                }
-                if (launched) {
-                    // Schedule cleanup of the temporary script and any pre-copied exe on exit.
-                    QObject::connect(&app, &QCoreApplication::aboutToQuit, [tmpScript, preCopiedExe]() {
-                        if (!tmpScript.isEmpty()) QFile::remove(tmpScript);
-                        if (!preCopiedExe.isEmpty()) QFile::remove(preCopiedExe);
-                    });
-
-                    // Start a short watchdog: if an elevated LSV process appears
-                    // (owned by root and matching the expected executable path),
-                    // quit the non-elevated instance so the elevated GUI becomes
-                    // the only window.
-                    QString watchExe = preCopiedExe.isEmpty() ? exe : preCopiedExe;
-                    QTimer* watchTimer = new QTimer();
-                    watchTimer->setInterval(500); // check twice per second
-                    int maxChecks = 20; // 10 seconds
-                    int* checks = new int(0);
-                    QObject::connect(watchTimer, &QTimer::timeout, [watchTimer, watchExe, checks, maxChecks, pkexecPath, tmpScript, preCopiedExe]() {
-                        (*checks)++;
-                        // run ps to find root-owned process running watchExe
-                        QProcess p;
-                        p.start("ps", QStringList() << "-eo" << "pid,user,cmd");
-                        p.waitForFinished(1000);
-                        QString out = QString::fromLocal8Bit(p.readAllStandardOutput());
-                        bool found = false;
-                        QString watchBase = QFileInfo(watchExe).fileName();
-                        for (const QString& line : out.split('\n')) {
-                            if (line.isEmpty()) continue;
-                            // Match either the full path or the executable basename
-                            if (line.contains(" root ") && (line.contains(watchExe) || (!watchBase.isEmpty() && line.contains(watchBase)))) {
-                                // Write to the wrapper log so the user can see detection
-                                QFile logf(QString("/tmp/lsv-relaunch-%1.log").arg(getpid()));
-                                if (logf.open(QIODevice::Append | QIODevice::Text)) {
-                                    QTextStream lts(&logf);
-                                    lts << "Detected elevated process line: " << line << "\n";
-                                    logf.close();
-                                }
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (found || *checks >= maxChecks) {
-                            watchTimer->stop();
-                            watchTimer->deleteLater();
-                            delete checks;
-                            if (found) {
-                                // Elevated instance started; quit non-elevated app.
-                                qApp->quit();
-                            } else {
-                                // Watchdog timed out. Inform the user and offer actions.
-                                appendLog("Auto-elevation: watchdog timeout, elevated instance not detected");
-                                QString logPath = QString("/tmp/lsv-relaunch-%1.log").arg(getpid());
-                                QMessageBox msg;
-                                msg.setWindowTitle("Elevation failed");
-                                msg.setText("Elevation did not complete. The application will continue in unprivileged mode.\n\nChoose an action:");
-                                QPushButton *retryBtn = msg.addButton("Retry Elevation", QMessageBox::AcceptRole);
-                                QPushButton *helperBtn = msg.addButton("Use installed helper (lsv-elevate)", QMessageBox::ActionRole);
-                                QPushButton *showLogBtn = msg.addButton("Show elevation log", QMessageBox::ActionRole);
-                                QPushButton *cancelBtn = msg.addButton(QMessageBox::Cancel);
-                                msg.exec();
-                                if (msg.clickedButton() == retryBtn) {
-                                    // Retry pkexec
-                                    if (!pkexecPath.isEmpty()) {
-                                        bool ok = QProcess::startDetached(pkexecPath, QStringList() << "/bin/sh" << tmpScript);
-                                        if (ok) {
-                                            appendLog("Auto-elevation: Retry requested - relaunched with pkexec");
-                                            // Recreate watchdog: start a new timer and continue monitoring
-                                            int* newChecks = new int(0);
-                                            QTimer* newWatch = new QTimer();
-                                            newWatch->setInterval(500);
-                                            QObject::connect(newWatch, &QTimer::timeout, [newWatch, watchExe, newChecks, maxChecks, pkexecPath, tmpScript, preCopiedExe]() {
-                                                (*newChecks)++;
-                                                QProcess p2; p2.start("ps", QStringList() << "-eo" << "pid,user,cmd"); p2.waitForFinished(1000);
-                                                QString out2 = QString::fromLocal8Bit(p2.readAllStandardOutput());
-                                                QString watchBase2 = QFileInfo(watchExe).fileName();
-                                                bool found2 = false;
-                                                for (const QString& line2 : out2.split('\n')) {
-                                                    if (line2.isEmpty()) continue;
-                                                    if (line2.contains(" root ") && (line2.contains(watchExe) || (!watchBase2.isEmpty() && line2.contains(watchBase2)))) {
-                                                        found2 = true; break;
-                                                    }
-                                                }
-                                                if (found2 || *newChecks >= maxChecks) {
-                                                    newWatch->stop(); newWatch->deleteLater(); delete newChecks;
-                                                    if (found2) qApp->quit();
-                                                }
-                                            });
-                                            newWatch->start();
-                                        } else {
-                                            appendLog("Auto-elevation: Retry pkexec startDetached failed");
-                                        }
-                                    }
-                                } else if (msg.clickedButton() == helperBtn) {
-                                    QString helper = QStandardPaths::findExecutable("lsv-elevate");
-                                    if (!helper.isEmpty()) {
-                                        bool ok = QProcess::startDetached(helper, QStringList() << QCoreApplication::applicationFilePath());
-                                        if (ok) appendLog("Auto-elevation: launched lsv-elevate helper");
-                                        else appendLog("Auto-elevation: failed to start lsv-elevate helper");
-                                    } else {
-                                        QMessageBox::information(nullptr, "Helper not found", "The lsv-elevate helper was not found. To enable one-click elevation from file manager, install the helper as root:\n\nsudo chown root:root /usr/local/bin/lsv-elevate && sudo chmod 4755 /usr/local/bin/lsv-elevate");
-                                    }
-                                } else if (msg.clickedButton() == showLogBtn) {
-                                    if (!QProcess::startDetached("xdg-open", QStringList() << logPath)) {
-                                        appendLog(QString("Auto-elevation: failed to open log %1").arg(logPath));
-                                    }
-                                } else {
-                                    appendLog("Auto-elevation: user cancelled elevation options");
-                                }
-                            }
-                        }
-                    });
-                    watchTimer->start();
-                } else {
-                    appendLog("Auto-elevation: pkexec startDetached failed");
-                }
-            } else {
-                appendLog("Auto-elevation: failed to write temporary relaunch script");
-            }
+        // Build the sudo command that authenticates and then starts the GUI
+        // as a detached process so the terminal can close after auth.
+        QString sudoPrompt = "Please enter password to run Linux System Viewer as root";
+        QString escTarget = targetExe;
+        escTarget.replace('\'', "'" "'" "'");
+        QString inner = QString("setsid '%1' > /dev/null 2>&1 &").arg(escTarget);
+        // Create a temporary wrapper script to run sudo. This reduces quoting
+        // issues when passing complex commands to terminal emulators.
+        QString wrapperPath = QDir::tempPath() + QDir::separator() + QString("lsv-sudo-%1.sh").arg(getpid());
+        QFile wf(wrapperPath);
+        if (wf.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+            QTextStream ts(&wf);
+            ts << "#!/bin/bash\n";
+            ts << "echo 'LSV wrapper starting at ' $(date) > /tmp/lsv-relaunch-" << getpid() << ".log\n";
+            ts << "echo 'Running sudo to start LSV as root' >> /tmp/lsv-relaunch-" << getpid() << ".log\n";
+            // Prompt and allow up to 3 attempts. Use read -s so Enter works
+            // normally and let sudo validate. On success exit; after 3 bad
+            // attempts give up.
+            QString promptEsc = sudoPrompt;
+            promptEsc.replace('\'' , "'" "'" "'");
+            ts << "printf '\\033]0;Linux System Viewer\\007'\n";
+            ts << "attempts=0\n";
+            ts << "while [ $attempts -lt 3 ]; do\n";
+            ts << "  attempts=$((attempts+1))\n";
+            ts << "  printf '%s: ' '" << promptEsc << "'\n";
+            ts << "  read -s PASS\n";
+            ts << "  echo\n";
+            QString innerEsc = inner;
+            innerEsc.replace('"', "\\\"");
+            ts << "  printf '%s\\n' \"$PASS\" | sudo -S -p '' sh -c \"" << innerEsc << "\"\n";
+            ts << "  rc=$?\n";
+            ts << "  echo 'sudo finished with exitcode:' $rc >> /tmp/lsv-relaunch-" << getpid() << ".log\n";
+            ts << "  if [ $rc -eq 0 ]; then exit 0; fi\n";
+            ts << "  echo 'Authentication failed ('$attempts'/3)' >&2\n";
+            ts << "done\n";
+            ts << "echo 'Giving up after 3 failed attempts' >> /tmp/lsv-relaunch-" << getpid() << ".log\n";
+            ts << "exit 1\n";
+            wf.close();
+            QFile::setPermissions(wrapperPath, QFile::ExeOwner | QFile::ReadOwner | QFile::WriteOwner);
         } else {
-            appendLog("Auto-elevation: pkexec not found, trying sudo fallback");
-            QString sudoPath = QStandardPaths::findExecutable("sudo");
-            if (!sudoPath.isEmpty()) {
-                bool ok2 = QProcess::startDetached(sudoPath, QStringList() << "-E" << "/bin/sh" << tmpScript);
-                if (ok2) {
-                    appendLog("Auto-elevation: Relaunched with sudo -E");
-                    QObject::connect(&app, &QCoreApplication::aboutToQuit, [tmpScript, preCopiedExe]() {
-                        if (!tmpScript.isEmpty()) QFile::remove(tmpScript);
-                        if (!preCopiedExe.isEmpty()) QFile::remove(preCopiedExe);
-                    });
-                } else {
-                    appendLog("Auto-elevation: sudo startDetached failed");
-                }
-            } else {
-                appendLog("Auto-elevation: sudo not found either");
-            }
+            appendLog(QString("Auto-elevation: Failed to write wrapper script %1").arg(wrapperPath));
         }
+
+        QStringList args;
+        // Try to request a small terminal height (3 rows) where supported.
+        QString base = QFileInfo(termPath).fileName();
+        QString geom = "80x3"; // width x height
+        if (base.contains("gnome-terminal")) {
+            args << QString("--geometry=%1").arg(geom) << "--" << "bash" << "-c" << QString("bash '%1'").arg(wrapperPath);
+        } else if (base.contains("konsole")) {
+            args << QString("--geometry") << geom << "-e" << "bash" << "-c" << QString("bash '%1'").arg(wrapperPath);
+        } else if (base.contains("xterm") || base.contains("x-terminal-emulator")) {
+            args << "-geometry" << geom << "-e" << QString("bash -c '%1'").arg(wrapperPath);
+        } else {
+            // Generic terminals: attempt -e without geometry
+            args << "-e" << QString("bash -c '%1'").arg(wrapperPath);
+        }
+
+        bool ok = QProcess::startDetached(termPath, args);
+        if (ok) {
+            appendLog(QString("Auto-elevation: Launched terminal '%1' to prompt for sudo (wrapper: %2)").arg(termPath, wrapperPath));
+        } else {
+            appendLog(QString("Auto-elevation: Failed to launch terminal '%1' for sudo prompt (wrapper: %2)").arg(termPath, wrapperPath));
+            QMessageBox::critical(nullptr, "Elevation failed", "Failed to start a terminal to request sudo password. Please run the application as root.");
+        }
+
+        // Exit the unprivileged instance immediately; the elevated GUI will
+        // be started from the terminal after authentication.
+        return 0;
     }
 
     // Create main window
-    QMainWindow mainWindow;
-    mainWindow.setWindowTitle("Linux System Viewer (LSV) v0.6.0");
+    CleaningMainWindow mainWindow;
+    mainWindow.setWindowTitle(QStringLiteral("Linux System Viewer V. %1").arg(LSVVersionQString()));
     mainWindow.setWindowIcon(appIcon);
 
     // Set fixed initial size (850x480) regardless of DPI
@@ -685,28 +663,44 @@ int main(int argc, char *argv[])
 
     // Create elevation status label (admin shield)
     QHBoxLayout* titleLayout = new QHBoxLayout();
-    QLabel* titleLabel = new QLabel("Linux System Viewer (LSV) v0.6.0");
+    QLabel* titleLabel = new QLabel(QStringLiteral("Linux System Viewer V. %1").arg(LSVVersionQString()));
     QFont titleFont = titleLabel->font();
     titleFont.setBold(true);
     titleFont.setPointSize(12);
     titleLabel->setFont(titleFont);
 
-    QLabel* adminLabel = new QLabel;
-    if (geteuid() == 0) {
-        // Use a less-conflicting icon than the red 'X' used by SP_MessageBoxCritical.
-        // SP_DialogApplyButton is a check/approve icon which better indicates admin mode.
-        QPixmap adminPixmap = app.style()->standardPixmap(QStyle::SP_DialogApplyButton);
-        adminLabel->setPixmap(adminPixmap.scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        adminLabel->setToolTip("Admin mode");
-    }
+    // About button (colored badge): blue for normal user, green for superuser
+    QToolButton* aboutBtn = new QToolButton;
+    QColor bg = (geteuid() == 0) ? QColor("#2ecc71") : QColor("#3498db");
+    QPixmap badge = makeBadgePixmap(bg, 20);
+    aboutBtn->setIcon(QIcon(badge));
+    aboutBtn->setIconSize(QSize(20,20));
+    aboutBtn->setAutoRaise(true);
+    aboutBtn->setToolTip("About Linux System Viewer");
+    QObject::connect(aboutBtn, &QAbstractButton::clicked, [&app]() {
+        // Show AboutTab as a top-level window/dialog
+        AboutTab* about = new AboutTab();
+        about->setAttribute(Qt::WA_DeleteOnClose);
+        about->setWindowModality(Qt::ApplicationModal);
+        about->show();
+        about->raise();
+        about->activateWindow();
+    });
+
     titleLayout->addWidget(titleLabel);
     titleLayout->addStretch();
-    titleLayout->addWidget(adminLabel);
+    titleLayout->addWidget(aboutBtn);
     mainLayout->addLayout(titleLayout);
 
     // Create tab widget
     MultiRowTabWidget* tabWidget = new MultiRowTabWidget();
     mainLayout->addWidget(tabWidget);
+
+    // Install global Ctrl+W / close handler so Ctrl+W shows a quit dialog
+    // and window-close events can be intercepted. The handler is parented
+    // to the main window so it lives as long as the window does.
+    CtrlWHandler* ctrlHandler = new CtrlWHandler(&mainWindow, &mainWindow);
+    Q_UNUSED(ctrlHandler);
 
     // Create tab manager and populate tabs
     TabManager tabManager;

@@ -1,0 +1,72 @@
+{
+	"BUILD_DIR" : "/home/nalle/Documents/c++/lshwgui/build_debug/priv/lsv-elevate_autogen",
+	"CMAKE_BINARY_DIR" : "/home/nalle/Documents/c++/lshwgui/build_debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/nalle/Documents/c++/lshwgui/build_debug/priv",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/nalle/Documents/c++/lshwgui/priv",
+	"CMAKE_EXECUTABLE" : "/usr/bin/cmake",
+	"CMAKE_LIST_FILES" : [ "/home/nalle/Documents/c++/lshwgui/priv/CMakeLists.txt" ],
+	"CMAKE_SOURCE_DIR" : "/home/nalle/Documents/c++/lshwgui",
+	"DEP_FILE" : "/home/nalle/Documents/c++/lshwgui/build_debug/priv/lsv-elevate_autogen/deps",
+	"DEP_FILE_RULE_NAME" : "lsv-elevate_autogen/timestamp",
+	"HEADERS" : [],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "/home/nalle/Documents/c++/lshwgui/build_debug/priv/lsv-elevate_autogen/include",
+	"MOC_COMPILATION_FILE" : "/home/nalle/Documents/c++/lshwgui/build_debug/priv/lsv-elevate_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : [ "LSV_ENABLE_DEBUG_LOGGER" ],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"/usr/include/c++/13",
+		"/usr/include/x86_64-linux-gnu/c++/13",
+		"/usr/include/c++/13/backward",
+		"/usr/lib/gcc/x86_64-linux-gnu/13/include",
+		"/usr/local/include",
+		"/usr/include/x86_64-linux-gnu",
+		"/usr/include"
+	],
+	"MOC_MACRO_NAMES" : 
+	[
+		"Q_OBJECT",
+		"Q_GADGET",
+		"Q_GADGET_EXPORT",
+		"Q_NAMESPACE",
+		"Q_NAMESPACE_EXPORT"
+	],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : 
+	[
+		"/usr/bin/c++",
+		"-std=gnu++17",
+		"-dM",
+		"-E",
+		"-c",
+		"/usr/share/cmake-3.28/Modules/CMakeCXXCompilerABI.cpp"
+	],
+	"MOC_PREDEFS_FILE" : "/home/nalle/Documents/c++/lshwgui/build_debug/priv/lsv-elevate_autogen/moc_predefs.h",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 2,
+	"PARSE_CACHE_FILE" : "/home/nalle/Documents/c++/lshwgui/build_debug/priv/CMakeFiles/lsv-elevate_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "/usr/lib/qt6/libexec/moc",
+	"QT_UIC_EXECUTABLE" : "/usr/lib/qt6/libexec/uic",
+	"QT_VERSION_MAJOR" : 6,
+	"QT_VERSION_MINOR" : 4,
+	"SETTINGS_FILE" : "/home/nalle/Documents/c++/lshwgui/build_debug/priv/CMakeFiles/lsv-elevate_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[ "/home/nalle/Documents/c++/lshwgui/priv/elevate.c", "MU", null ]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"VERBOSITY" : 0
+}

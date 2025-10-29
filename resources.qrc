@@ -3,6 +3,8 @@
     <qresource>
         <file>lsv.png</file>
         <file>lsv.svg</file>
+        <file>gpl2.txt</file>
+        <file>gnu_icon.png</file>
     </qresource>
 </RCC>
 

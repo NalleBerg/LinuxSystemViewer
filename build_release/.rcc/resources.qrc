@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="lsv.png">/home/nalle/Documents/c++/lshwgui/lsv.png</file>
+  </qresource>
+</RCC>
+

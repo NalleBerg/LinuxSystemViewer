@@ -25,7 +25,7 @@ void styleNetworkTable(QTableWidget* table);
 QString getNetworkInfo();
 
 // Network Table Styling
-void styleNetworkTable(QTableWidget* table)
+inline void styleNetworkTable(QTableWidget* table)
 {
     // Set column widths
     table->setColumnWidth(0, 200);  // Property
@@ -46,7 +46,7 @@ void styleNetworkTable(QTableWidget* table)
 }
 
 // Helper function to format bytes - moved to top
-QString formatBytes(long long bytes)
+inline QString formatBytes(long long bytes)
 {
     const QStringList units = {"B", "KB", "MB", "GB", "TB"};
     int unitIndex = 0;
@@ -61,7 +61,7 @@ QString formatBytes(long long bytes)
 }
 
 // Load Network Information
-void loadNetworkInformation(QTableWidget* table, const QJsonObject& data)
+inline void loadNetworkInformation(QTableWidget* table, const QJsonObject& data)
 {
     Q_UNUSED(data); // Use direct system calls instead of JSON data
     
@@ -77,7 +77,7 @@ void loadNetworkInformation(QTableWidget* table, const QJsonObject& data)
         // Skip loopback if it's just "lo"
         if (interfaceName == "lo") continue;
         
-        addRowToTable(table, QStringList() << QString("Interface: %1").arg(interfaceName) << displayName << "" << "Network");
+    addRowToTable(table, QStringList() << QString("Interface: %1").arg(interfaceName) << displayName);
         
         // Interface flags
         QNetworkInterface::InterfaceFlags flags = interface.flags();
@@ -90,30 +90,30 @@ void loadNetworkInformation(QTableWidget* table, const QJsonObject& data)
         if (flags & QNetworkInterface::CanMulticast) flagsList << "MULTICAST";
         
         if (!flagsList.isEmpty()) {
-            addRowToTable(table, QStringList() << QString("  %1 Flags").arg(interfaceName) << flagsList.join(", ") << "" << "Network");
+            addRowToTable(table, QStringList() << QString("  %1 Flags").arg(interfaceName) << flagsList.join(", "));
         }
         
         // MAC Address
         QString macAddress = interface.hardwareAddress();
         if (!macAddress.isEmpty()) {
-            addRowToTable(table, QStringList() << QString("  %1 MAC").arg(interfaceName) << macAddress << "" << "Network");
+            addRowToTable(table, QStringList() << QString("  %1 MAC").arg(interfaceName) << macAddress);
         }
         
         // IP Addresses
         QList<QNetworkAddressEntry> addresses = interface.addressEntries();
         for (const QNetworkAddressEntry& entry : addresses) {
             QHostAddress ip = entry.ip();
-            if (ip.protocol() == QAbstractSocket::IPv4Protocol) {
-                addRowToTable(table, QStringList() << QString("  %1 IPv4").arg(interfaceName) << ip.toString() << "" << "Network");
+                if (ip.protocol() == QAbstractSocket::IPv4Protocol) {
+                addRowToTable(table, QStringList() << QString("  %1 IPv4").arg(interfaceName) << ip.toString());
                 
                 QHostAddress netmask = entry.netmask();
                 if (!netmask.isNull()) {
-                    addRowToTable(table, QStringList() << QString("  %1 Netmask").arg(interfaceName) << netmask.toString() << "" << "Network");
+                    addRowToTable(table, QStringList() << QString("  %1 Netmask").arg(interfaceName) << netmask.toString());
                 }
                 
                 QHostAddress broadcast = entry.broadcast();
                 if (!broadcast.isNull()) {
-                    addRowToTable(table, QStringList() << QString("  %1 Broadcast").arg(interfaceName) << broadcast.toString() << "" << "Network");
+                    addRowToTable(table, QStringList() << QString("  %1 Broadcast").arg(interfaceName) << broadcast.toString());
                 }
             } else if (ip.protocol() == QAbstractSocket::IPv6Protocol) {
                 addRowToTable(table, QStringList() << QString("  %1 IPv6").arg(interfaceName) << ip.toString() << "" << "Network");
@@ -123,7 +123,7 @@ void loadNetworkInformation(QTableWidget* table, const QJsonObject& data)
         // MTU
         int mtu = interface.maximumTransmissionUnit();
         if (mtu > 0) {
-            addRowToTable(table, QStringList() << QString("  %1 MTU").arg(interfaceName) << QString::number(mtu) << "bytes" << "Network");
+            addRowToTable(table, QStringList() << QString("  %1 MTU").arg(interfaceName) << QString("%1 bytes").arg(QString::number(mtu)));
         }
     }
     
@@ -162,22 +162,22 @@ void loadNetworkInformation(QTableWidget* table, const QJsonObject& data)
                 QString rxBytesStr = formatBytes(rxBytes);
                 QString txBytesStr = formatBytes(txBytes);
                 
-                addRowToTable(table, QStringList() << QString("  %1 RX Bytes").arg(interfaceName) << rxBytesStr << "" << "Network");
-                addRowToTable(table, QStringList() << QString("  %1 RX Packets").arg(interfaceName) << QString::number(rxPackets) << "" << "Network");
+                addRowToTable(table, QStringList() << QString("  %1 RX Bytes").arg(interfaceName) << rxBytesStr);
+                addRowToTable(table, QStringList() << QString("  %1 RX Packets").arg(interfaceName) << QString::number(rxPackets));
                 if (rxErrors > 0) {
-                    addRowToTable(table, QStringList() << QString("  %1 RX Errors").arg(interfaceName) << QString::number(rxErrors) << "" << "Network");
+                    addRowToTable(table, QStringList() << QString("  %1 RX Errors").arg(interfaceName) << QString::number(rxErrors));
                 }
                 if (rxDropped > 0) {
-                    addRowToTable(table, QStringList() << QString("  %1 RX Dropped").arg(interfaceName) << QString::number(rxDropped) << "" << "Network");
+                    addRowToTable(table, QStringList() << QString("  %1 RX Dropped").arg(interfaceName) << QString::number(rxDropped));
                 }
-                
-                addRowToTable(table, QStringList() << QString("  %1 TX Bytes").arg(interfaceName) << txBytesStr << "" << "Network");
-                addRowToTable(table, QStringList() << QString("  %1 TX Packets").arg(interfaceName) << QString::number(txPackets) << "" << "Network");
+
+                addRowToTable(table, QStringList() << QString("  %1 TX Bytes").arg(interfaceName) << txBytesStr);
+                addRowToTable(table, QStringList() << QString("  %1 TX Packets").arg(interfaceName) << QString::number(txPackets));
                 if (txErrors > 0) {
-                    addRowToTable(table, QStringList() << QString("  %1 TX Errors").arg(interfaceName) << QString::number(txErrors) << "" << "Network");
+                    addRowToTable(table, QStringList() << QString("  %1 TX Errors").arg(interfaceName) << QString::number(txErrors));
                 }
                 if (txDropped > 0) {
-                    addRowToTable(table, QStringList() << QString("  %1 TX Dropped").arg(interfaceName) << QString::number(txDropped) << "" << "Network");
+                    addRowToTable(table, QStringList() << QString("  %1 TX Dropped").arg(interfaceName) << QString::number(txDropped));
                 }
             }
         }
@@ -208,8 +208,8 @@ void loadNetworkInformation(QTableWidget* table, const QJsonObject& data)
                     quint32 gwHex = gateway.toUInt(&ok, 16);
                     if (ok) {
                         QHostAddress gwAddr(qFromLittleEndian(gwHex));
-                        addRowToTable(table, QStringList() << "Default Gateway" << gwAddr.toString() << "" << "Network");
-                        addRowToTable(table, QStringList() << "Default Interface" << iface << "" << "Network");
+                        addRowToTable(table, QStringList() << "Default Gateway" << gwAddr.toString());
+                        addRowToTable(table, QStringList() << "Default Interface" << iface);
                     }
                     break;
                 }
@@ -251,7 +251,7 @@ void loadNetworkInformation(QTableWidget* table, const QJsonObject& data)
 }
 
 // Get basic network info string
-QString getNetworkInfo()
+inline QString getNetworkInfo()
 {
     QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
     

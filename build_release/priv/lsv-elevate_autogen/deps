@@ -1,0 +1,4 @@
+lsv-elevate_autogen/timestamp: \
+	/home/nalle/Documents/c++/lshwgui/priv/CMakeLists.txt \
+	/home/nalle/Documents/c++/lshwgui/priv/elevate.c \
+	/usr/bin/cmake

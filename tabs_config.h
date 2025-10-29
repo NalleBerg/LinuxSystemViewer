@@ -12,7 +12,7 @@ struct TabConfig {
     QString geekCommand;
 };
 
-// Tab configuration for LSV
+// Tab configuration for Linux System Viewer
 static const QList<TabConfig> TAB_CONFIGS = {
     {
         "Summary",
@@ -106,9 +106,9 @@ static const QList<TabConfig> TAB_CONFIGS = {
     "hostnamectl && cat /sys/class/dmi/id/* 2>/dev/null"
     },
     {
-        "About",
-        "About this application",
-    "echo 'Linux System Viewer (LSV) v0.6.0'",
+        "Network",
+        "Network adapters, IPs and routing",
+        "ip addr && ip route",
         false,
         ""
     }

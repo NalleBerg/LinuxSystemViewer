@@ -1,0 +1,111 @@
+<!-- TinyMCE-ready HTML fragment for release notes -->
+<div class="release-notes">
+  <h2>Release 0.6.5 — 2025-10-29</h2>
+
+  <h3>Added</h3>
+  <ul>
+    <li>
+      <strong>Robust URL opening for About-tab links</strong>: multi-stage
+      fallback that detects the default browser, uses QDesktopServices,
+      falls back to common helpers (xdg-open / gio / …) and finally tries
+      common browser binaries. Click attempts are logged to
+      <code>/tmp/lsv-about-links.log</code>.
+    </li>
+    <li>
+      <strong>Background window-raise attempts</strong>: after launching a
+      browser the app now tries to activate the newly-created browser window
+      (via <code>startRaiseAsync()</code> / <code>attemptRaiseWindow()</code>),
+      improving visibility when the AppImage is launched from file managers.
+    </li>
+    <li>
+      <strong>Embedded GPLv2 and GNU icon</strong>: the GPLv2 text and
+      GNU icon are included in the Qt resources (<code>:/gpl2.txt</code>,
+      <code>:/gnu_icon.png</code>) so the license can be viewed offline.
+    </li>
+  </ul>
+
+  <h3>Changed</h3>
+  <ul>
+    <li>
+      <strong>Centralized version string</strong>: added <code>version.h</code>
+      and updated the code to use <code>LSV_VERSION</code>/<code>LSVVersionQString()</code>;
+      project version bumped to <code>0.6.5</code> and synchronized in
+      <code>CMakeLists.txt</code>.
+    </li>
+    <li>
+      <strong>About dialog UX</strong>: larger logo area, tighter layout and
+      an improved license viewer (HTML rendering with mini-headlines and
+      monospaced body text).
+    </li>
+    <li>
+      <strong>Resource handling</strong>: always embed license resources and
+      only register optional workspace images when present to avoid rcc
+      failures during builds.
+    </li>
+  </ul>
+
+  <h3>Fixed</h3>
+  <ul>
+    <li>
+      <strong>AppImage & browser interaction</strong>: About links now open the
+      default browser more reliably when the AppImage is launched from a file
+      manager (addresses cases where <code>QDesktopServices</code> alone failed).
+    </li>
+    <li>
+      <strong>rcc parse/build error</strong>: fixed an rcc parse failure caused
+      by generator-expression tokens being written into a generated .qrc — the
+      resource registration now uses a safe CMake list.
+    </li>
+    <li>
+      <strong>Ctrl+W and close behavior</strong>: added <code>CtrlWHandler</code>
+      to intercept Ctrl+W / quit shortcuts and show a minimal Quit
+      confirmation. Ctrl+W now properly closes the application when the user
+      confirms and a cursor-position heuristic avoids prompting when the
+      window was closed from the panel/taskbar.
+    </li>
+  </ul>
+
+  <h3>Packaging & Build</h3>
+  <p>
+    The AppImage packaging will now include the embedded license and icon
+    (<code>:/gpl2.txt</code>, <code>:/gnu_icon.png</code>). Re-run the
+    packaging script locally (for example:
+    <code>./makeit.sh --debug-logger</code>) to produce an updated AppImage.
+  </p>
+
+  <h3>Notes & Future work</h3>
+  <ul>
+    <li>
+      Window raising is implemented using X11 helper tools (<code>xdotool</code>
+      / <code>wmctrl</code>). Wayland users may not see consistent raise
+      behavior — implementing a desktop-portal (xdg-desktop-portal) OpenURI
+      DBus fallback would be a recommended follow-up.
+    </li>
+    <li>
+      The embedded license rendering can be converted to Markdown
+      (<code>QTextDocument::setMarkdown</code>) for nicer cross-platform
+      formatting — optional small improvement.
+    </li>
+  </ul>
+
+  <h3>Files touched (high level)</h3>
+  <ul>
+    <li><code>about_tab.cpp</code> — <code>openUrlRobust()</code>, license viewer</li>
+    <li><code>ctrlw.h</code> / <code>ctrlw.cpp</code> — Ctrl+W handler & close logic</li>
+    <li><code>lsv.cpp</code> — cleanup and CleaningMainWindow close flow</li>
+    <li><code>version.h</code> — centralized version header</li>
+    <li><code>CMakeLists.txt</code> — project version bump and resource registration fixes</li>
+  </ul>
+
+  <h3>Suggested release steps</h3>
+  <ol>
+    <li>Commit changes and tag the repo:
+      <pre><code>git add -A
+git commit -m "Bump to v0.6.5 — About links, embedded GPLv2, Ctrl+W/close UX, cleanup"
+git tag -a v0.6.5 -m "Release v0.6.5"
+git push && git push --tags</code></pre>
+    </li>
+    <li>Create the GitHub release and paste this HTML into the release notes.</li>
+    <li>Re-run the packaging script locally and verify About → License and link behavior in the AppImage.</li>
+  </ol>
+</div>

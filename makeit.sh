@@ -1,6 +1,26 @@
 #!/bin/bash
 set -e
 
+# Parse simple command-line flags and environment overrides.
+# Supported flags:
+#   --run             : start the created AppImage in background after packaging
+#   --debug-logger    : build the project with the optional debug logger compiled in
+# Environment variables:
+#   RUN_APPIMAGE=1    : same as --run
+#   DEBUG_LOGGER=1    : same as --debug-logger
+DO_RUN=1
+DO_DEBUG=0
+for arg in "$@"; do
+    case "$arg" in
+        --run) DO_RUN=1 ;;
+        --norun) DO_RUN=0 ;;
+        --debug-logger) DO_DEBUG=1 ;;
+    esac
+done
+if [ "${RUN_APPIMAGE:-}" = "1" ]; then DO_RUN=1; fi
+if [ "${RUN_APPIMAGE:-}" = "0" ]; then DO_RUN=0; fi
+if [ "${DEBUG_LOGGER:-}" = "1" ]; then DO_DEBUG=1; fi
+
 # Format seconds to MM:SS
 format_time() {
     local total_seconds=$1
@@ -17,7 +37,7 @@ echo ""
 
 COMPILE_START=$(date +%s.%N)
 
-echo "🔨 Starting build process..."
+echo "🔨 Starting build process for Linux System Viewer..."
 echo "⏰ Build started at: $(date '+%H:%M:%S')"
 echo ""
 
@@ -25,9 +45,18 @@ mkdir build
 cd build
 
 echo "🔧 Configuring with CMake..."
-cmake .. || { echo "❌ CMake configuration failed"; exit 1; }
 
-echo "🔨 Building LSV..."
+# Pass debug-logger flag to CMake when requested so the built binary may
+# include the optional logger (disabled by default).
+CMAKE_FLAGS=""
+if [ "$DO_DEBUG" -eq 1 ]; then
+    CMAKE_FLAGS="-DLSV_ENABLE_DEBUG_LOGGER=ON"
+    echo "ℹ️  CMake: enabling debug logger for this build"
+fi
+
+cmake .. $CMAKE_FLAGS || { echo "❌ CMake configuration failed"; exit 1; }
+
+echo "🔨 Building Linux System Viewer..."
 make -j$(nproc) || { echo "❌ Build failed"; exit 1; }
 
 COMPILE_END=$(date +%s.%N)
@@ -42,37 +71,15 @@ ls -la ./
 echo ""
 
 if [ -f "./LSV" ]; then
-    echo "🎯 LSV executable found"
+    echo "🎯 Linux System Viewer executable found"
     ls -la ./LSV
     ldd ./LSV 2>/dev/null || echo "   ldd failed - static binary or missing libraries"
     file ./LSV
     echo ""
     
-    echo "🧪 Testing LSV executable..."
-    echo "⏰ Test started at: $(date '+%H:%M:%S')"
-    echo "================================================"
-    export DISPLAY=${DISPLAY:-:0}
-    echo "🖥️  Display: $DISPLAY"
-    echo "🚀 Running ./LSV with 1 second timeout..."
-    if timeout 1s ./LSV 2>&1; then
-        echo "✅ LSV ran successfully"
-    else
-        EXIT_CODE=$?
-        echo "⚠️  LSV exited with code: $EXIT_CODE"
-        if [ $EXIT_CODE -eq 124 ]; then
-            echo "   (Timeout - this is expected for GUI apps)"
-        elif [ $EXIT_CODE -eq 127 ]; then
-            echo "   (Command not found - executable may be corrupted)"
-        else
-            echo "   (Runtime error - check dependencies)"
-        fi
-    fi
-    echo ""
-    echo "================================================"
-    echo "⏰ Test finished at: $(date '+%H:%M:%S')"
-    
+    echo "⚠️  Skipping automatic runtime test of the built executable (no terminal spawn)."
     PACKAGE_START=$(date +%s.%N)
-    echo "📦 Preparing AppImage creation..."
+    echo "📦 Preparing AppImage creation for Linux System Viewer..."
     cd ..
     mkdir -p LSV
 
@@ -96,11 +103,11 @@ if [ -f "./LSV" ]; then
     # Desktop file and icon
     mkdir -p AppDir/usr/share/applications
     if [ ! -f "lsv.desktop" ]; then
-        echo "⚠️  Warning: lsv.desktop not found, creating basic one..."
+        echo "⚠️  Warning: desktop file not found, creating basic one for Linux System Viewer..."
         cat > lsv.desktop << EOF
 [Desktop Entry]
 Type=Application
-Name=LSV
+Name=Linux System Viewer
 Comment=Linux System Viewer
 Exec=LSV
 Icon=lsv
@@ -114,9 +121,9 @@ EOF
 
     # Icon
     if [ ! -f "lsv.png" ]; then
-        echo "⚠️  Warning: lsv.png not found, creating placeholder..."
+    echo "⚠️  Warning: lsv.png not found, creating placeholder for Linux System Viewer..."
         if command -v convert >/dev/null 2>&1; then
-            convert -size 64x64 xc:blue -fill white -gravity center -pointsize 24 -annotate 0 "LSV" lsv.png 2>/dev/null && {
+                convert -size 64x64 xc:blue -fill white -gravity center -pointsize 24 -annotate 0 "LSV" lsv.png 2>/dev/null && {
                 echo "✅ Created placeholder icon with ImageMagick"
             } || {
                 echo "⚠️  ImageMagick convert failed, trying alternative..."
@@ -219,3 +226,4 @@ echo "   cd LSV"
 echo "   ldd ./LSV                    # Check dependencies"
 echo "   file ./LSV                   # Check file type"
 echo "   ./LSV                        # Run the application"
+

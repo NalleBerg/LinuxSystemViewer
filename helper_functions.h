@@ -50,7 +50,7 @@ QIcon createApplicationIcon();
 // Icon and styling helper functions
 void setIconsAggressively(QMainWindow* window)
 {
-    qDebug() << "Setting LSV icons aggressively...";
+    qDebug() << "Setting Linux System Viewer icons aggressively...";
     
     // Try multiple icon sources and sizes
     QIcon appIcon = createApplicationIcon();
@@ -83,7 +83,7 @@ QIcon createApplicationIcon()
 
 void setupWindowProperties(QMainWindow* window)
 {
-    window->setWindowTitle("Linux System Viewer (LSV) - V. " VERSION);
+    window->setWindowTitle("Linux System Viewer - V. " VERSION);
     
     // Set proper window size and properties
     window->setMinimumSize(600, 400);        // Minimum size
@@ -151,10 +151,10 @@ QTableWidget* createStorageTable(const QStringList& headers)
 // Application setup helper functions
 void setupApplicationProperties(QApplication* app)
 {
-    app->setApplicationName("LSV");
+    app->setApplicationName("Linux System Viewer");
     app->setApplicationVersion(VERSION);
-    app->setOrganizationName("LSV");
-    app->setOrganizationDomain("lsv.nalle.no");
+    app->setOrganizationName("Linux System Viewer");
+    app->setOrganizationDomain("linuxsystemviewer.nalle.no");
 }
 
 // Icon refresh helper for show events
