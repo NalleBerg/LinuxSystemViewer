@@ -472,6 +472,80 @@ Smelltu hér fyrir neðan til að afrita slóðina https://lsv.nalle.no/ í skyn
         <source>Graphics</source>
         <translation>Grafík</translation>
     </message>
+    <message>
+        <source>Graphics Card Information</source>
+        <translation>Upplýsingar um skjákort</translation>
+    </message>
+    <message>
+        <source>Graphics Cards</source>
+        <translation>Skjákort</translation>
+    </message>
+    <message>
+        <source>Graphics Drivers</source>
+        <translation>Skjádrifrar</translation>
+    </message>
+    <message>
+        <source>OpenGL Information</source>
+        <translation>OpenGL upplýsingar</translation>
+    </message>
+    <message>
+        <source>Video Memory</source>
+        <translation>Myndminni</translation>
+    </message>
+    <message>
+        <source>Loading %1 information...</source>
+        <translation>Hleður %1 upplýsingar...</translation>
+    </message>
+    <message>
+        <source>Graphics Cards: Not detected</source>
+        <translation>Skjákort: Ekki uppgötvað</translation>
+    </message>
+    <message>
+        <source>Graphics Drivers: Not detected</source>
+        <translation>Skjádrifrar: Ekki uppgötvað</translation>
+    </message>
+    <message>
+        <source>OpenGL: Not detected</source>
+        <translation>OpenGL: Ekki uppgötvað</translation>
+    </message>
+    <message>
+        <source>Video Memory: Not detected</source>
+        <translation>Myndminni: Ekki uppgötvað</translation>
+    </message>
+    <message>
+        <source>Video Memory: %1</source>
+        <translation>Myndminni: %1</translation>
+    </message>
+    <message>
+        <source>NVIDIA proprietary driver (likely)</source>
+        <translation>NVIDIA einkaréttarstjóri (líklega)</translation>
+    </message>
+    <message>
+        <source>AMD/ATI driver (AMDGPU or Radeon)</source>
+        <translation>AMD/ATI stýrir (AMDGPU eða Radeon)</translation>
+    </message>
+    <message>
+        <source>Intel integrated graphics driver</source>
+        <translation>Intel samþættur skjadrifari</translation>
+    </message>
+    <message>
+        <source>Graphics Cards:
+%1</source>
+        <translation>Skjákort:
+%1</translation>
+    </message>
+    <message>
+        <source>Graphics Drivers:
+%1</source>
+        <translation>Skjádrifrar:
+%1</translation>
+    </message>
+    <message>
+        <source>OpenGL Information:
+%1</source>
+        <translation>OpenGL upplýsingar:
+%1</translation>
+    </message>
 </context>
 <context>
     <name>ScreenTab</name>
