@@ -921,6 +921,21 @@ Vennligst kjør applikasjonen som root.</translation>
         <translation>Språk:</translation>
     </message>
     <message>
+        <location filename="../lsv.cpp" line="1158" />
+        <source>Administration</source>
+        <translation>Administrasjon</translation>
+    </message>
+    <message>
+        <location filename="../lsv.cpp" line="1159" />
+        <source>Change language...</source>
+        <translation>Skift språk</translation>
+    </message>
+    <message>
+        <location filename="../lsv.cpp" line="1160" />
+        <source>Reset language</source>
+        <translation>Tilbakestill språk</translation>
+    </message>
+    <message>
         <source>Linux System Viewer V. %1</source>
         <translation>Linux System Viewer v. %1</translation>
     </message>

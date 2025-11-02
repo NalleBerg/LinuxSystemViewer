@@ -1089,33 +1089,8 @@ int main(int argc, char *argv[])
         about->activateWindow();
     });
 
-    // Place a language chooser on the left (opposite the About/info
-    // icon). The drop-down shows native-language names and writes the
-    // chosen code into ~/.config/LSV/lsv_lang.rc when changed.
-    QComboBox* langCombo = new QComboBox;
-    langCombo->setToolTip(QObject::tr("Change language"));
-    langCombo->setAccessibleName(QObject::tr("Change language"));
-    // Populate with discovered shipped languages using native display names
-    QMap<QString, QString> names = shippedLanguageDisplayNames();
-    QStringList codes = discoverShippedLanguageCodes();
-    // Ensure English appears first for a sensible default choice
-    codes.removeAll("en_GB");
-    codes.removeAll("en");
-    codes.prepend("en_GB");
-    for (const QString &c : codes) {
-        QString label = names.value(c, c);
-        // Use the language code as user data so we can persist it
-        langCombo->addItem(label, c);
-    }
-    // Select the current effective language (or English by default)
-    QString curLang = effectiveLang;
-    if (curLang.isEmpty()) curLang = "en";
-    int selIndex = -1;
-    for (int i = 0; i < langCombo->count(); ++i) {
-        QString cd = langCombo->itemData(i).toString();
-        if (cd == curLang || (cd == "en_GB" && curLang == "en")) { selIndex = i; break; }
-    }
-    if (selIndex >= 0) langCombo->setCurrentIndex(selIndex);
+    // NOTE: language chooser dropdown removed from the title bar in favor
+    // of the Administration menu actions (menu is translated via QObject::tr).
 
     // Helper: apply a language code, reload translator and recreate tabs so
     // the whole UI updates immediately. preserveIndex indicates which tab
@@ -1131,6 +1106,18 @@ int main(int argc, char *argv[])
         mainWindow.setWindowTitle(QObject::tr("Linux System Viewer"));
         if (titleLabel) titleLabel->setText(QObject::tr("Linux System Viewer"));
         if (aboutBtn) aboutBtn->setToolTip(QObject::tr("About Linux System Viewer"));
+
+        // Retranslate Administration menu and actions so menu text updates
+        // immediately without restarting the application.
+        QMenuBar* mb = mainWindow.menuBar();
+        if (mb) {
+            QMenu* adminMenu = mb->findChild<QMenu*>("adminMenu");
+            if (adminMenu) adminMenu->setTitle(QObject::tr("Administration"));
+            QAction* changeAct = mb->findChild<QAction*>("changeLangAct");
+            if (changeAct) changeAct->setText(QObject::tr("Change language..."));
+            QAction* resetAct = mb->findChild<QAction*>("resetLangAct");
+            if (resetAct) resetAct->setText(QObject::tr("Reset language"));
+        }
 
         // Recreate the tab widget to ensure constructor-time tr() calls run
         // with the newly installed translator. Preserve the currently
@@ -1164,73 +1151,12 @@ int main(int argc, char *argv[])
         }
     };
 
-    // React to user changes: persist and attempt to reload translator
-    QObject::connect(langCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), [&app, &translator, &settings, &titleLabel, &mainWindow, &aboutBtn, langCombo, &applyLanguage](int idx) {
-        if (idx < 0) return;
-        QString code = langCombo->itemData(idx).toString();
-        if (code.isEmpty()) return;
-        // Persist selection
-        if (!writeLangRc(code)) {
-            QMessageBox::warning(nullptr, QObject::tr("Language selection"), QObject::tr("Failed to write language selection to configuration directory"));
-        }
-        settings.setValue("language", code);
-        // Apply language and recreate tabs preserving current index
-        MultiRowTabWidget* oldTab = mainWindow.findChild<MultiRowTabWidget*>();
-        int curIndex = oldTab ? oldTab->currentIndex() : -1;
-        applyLanguage(code, curIndex);
+    // Language changes are handled via the Administration menu actions.
 
-        // Keep the combo in sync (it already is) and inform the user
-        QMessageBox::information(nullptr, QObject::tr("Language changed"), QObject::tr("Language saved. UI updated to the selected language."));
-    });
-
-    // Reset language button (removes ~/.config/LSV/lsv_lang.rc so chooser
-    // appears again next time). The app will switch to English immediately
-    // and recreate the UI.
-    QToolButton* resetLangBtn = new QToolButton;
-    resetLangBtn->setText(QObject::tr("Reset"));
-    resetLangBtn->setToolTip(QObject::tr("Reset language to default (removes saved setting)"));
-    QObject::connect(resetLangBtn, &QAbstractButton::clicked, [&app, &translator, &settings, &titleLabel, &mainWindow, &aboutBtn, langCombo]() {
-        QString rc = langRcFilePath();
-        if (rc.isEmpty()) {
-            QMessageBox::warning(nullptr, QObject::tr("Reset language"), QObject::tr("Configuration path not available."));
-            return;
-        }
-        if (QFile::exists(rc)) {
-            if (!QFile::remove(rc)) {
-                QMessageBox::warning(nullptr, QObject::tr("Reset language"), QObject::tr("Failed to remove %1").arg(rc));
-                return;
-            }
-        }
-        // Switch to English immediately (do not write a new rc file)
-        settings.setValue("language", "en");
-        app.removeTranslator(&translator);
-        // Update UI strings
-        mainWindow.setWindowTitle(QObject::tr("Linux System Viewer"));
-        if (titleLabel) titleLabel->setText(QObject::tr("Linux System Viewer"));
-        if (aboutBtn) aboutBtn->setToolTip(QObject::tr("About Linux System Viewer"));
-        // Reset combo selection to English if present
-        for (int i = 0; i < langCombo->count(); ++i) {
-            QString cd = langCombo->itemData(i).toString();
-            if (cd == "en_GB" || cd == "en") { langCombo->setCurrentIndex(i); break; }
-        }
-
-        // Try in-place retranslation first to preserve transient state.
-        MultiRowTabWidget* oldTab = mainWindow.findChild<MultiRowTabWidget*>();
-        QWidget* central = mainWindow.centralWidget();
-        QLayout* ml = central ? central->layout() : nullptr;
-        if (oldTab && ml) {
-            oldTab->retranslateTabs([](const QString &orig){ return translateTabName(orig); });
-            // Fallback to recreation is available in the language-change handler
-            // but commented out to prefer state preservation.
-        }
-
-        QMessageBox::information(nullptr, QObject::tr("Reset language"), QObject::tr("Saved language selection removed. The application is now using English."));
-    });
+    // Reset handled via Administration menu action; no title-button required.
 
     // Place stretches on both sides of the title so it stays centered
     // while keeping the About button anchored to the right edge.
-    titleLayout->addWidget(resetLangBtn);
-    titleLayout->addWidget(langCombo);
     titleLayout->addStretch();
     titleLayout->addWidget(titleLabel, 0, Qt::AlignHCenter);
     titleLayout->addStretch();
@@ -1242,10 +1168,13 @@ int main(int argc, char *argv[])
     // desktops where the title-area combo may be less discoverable).
     QMenuBar* mb = mainWindow.menuBar();
     QMenu* adminMenu = mb->addMenu(QObject::tr("Administration"));
+    adminMenu->setObjectName("adminMenu");
     QAction* changeLangAct = adminMenu->addAction(QObject::tr("Change language..."));
+    changeLangAct->setObjectName("changeLangAct");
     QAction* resetLangAct = adminMenu->addAction(QObject::tr("Reset language"));
+    resetLangAct->setObjectName("resetLangAct");
 
-    QObject::connect(changeLangAct, &QAction::triggered, [&mainWindow, &settings, langCombo, &applyLanguage]() {
+    QObject::connect(changeLangAct, &QAction::triggered, [&mainWindow, &settings, &applyLanguage]() {
         QMap<QString, QString> names = shippedLanguageDisplayNames();
         QStringList codes = discoverShippedLanguageCodes();
         codes.removeAll("en_GB");
@@ -1269,14 +1198,11 @@ int main(int argc, char *argv[])
         int curIndex = oldTab ? oldTab->currentIndex() : -1;
         applyLanguage(code, curIndex);
 
-        // Keep the combo in sync with the selected code
-        for (int i = 0; i < langCombo->count(); ++i) {
-            if (langCombo->itemData(i).toString() == code) { langCombo->setCurrentIndex(i); break; }
-        }
+        Q_UNUSED(code);
         QMessageBox::information(nullptr, QObject::tr("Language changed"), QObject::tr("Language saved. UI updated to the selected language."));
     });
 
-    QObject::connect(resetLangAct, &QAction::triggered, [langCombo, &settings, &applyLanguage, &mainWindow]() {
+    QObject::connect(resetLangAct, &QAction::triggered, [&settings, &applyLanguage, &mainWindow]() {
         QString rc = langRcFilePath();
         if (!rc.isEmpty() && QFile::exists(rc)) {
             if (!QFile::remove(rc)) {
@@ -1290,11 +1216,7 @@ int main(int argc, char *argv[])
         int curIndex = oldTab ? oldTab->currentIndex() : -1;
         applyLanguage("en", curIndex);
 
-        // Reset combo selection to English if present
-        for (int i = 0; i < langCombo->count(); ++i) {
-            QString cd = langCombo->itemData(i).toString();
-            if (cd == "en_GB" || cd == "en") { langCombo->setCurrentIndex(i); break; }
-        }
+        Q_UNUSED(settings);
         QMessageBox::information(nullptr, QObject::tr("Reset language"), QObject::tr("Saved language selection removed. The application is now using English."));
     });
 
