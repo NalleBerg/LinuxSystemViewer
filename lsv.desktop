@@ -3,11 +3,12 @@ Type=Application
 Name=Linux System Viewer
 Comment=Linux System Viewer - A comprehensive system information tool
 Icon=lsv
-Categories=Utility;System;Settings;Administration;
+Categories=Utility;System;Settings;
 Keywords=system;info;hardware;monitoring;lshw;preferences;settings;admin;
 StartupWMClass=LSV
 StartupNotify=true
 Exec=/usr/bin/LSV %U
+TryExec=/usr/bin/LSV
 Terminal=false
 
 Actions=ChangeLanguage;ResetLanguage;
