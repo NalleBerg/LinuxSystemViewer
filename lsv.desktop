@@ -8,3 +8,13 @@ Keywords=system;info;hardware;monitoring;lshw;
 StartupNotify=true
 Exec=/usr/bin/LSV %U
 Terminal=false
+
+Actions=ChangeLanguage;ResetLanguage;
+
+[Desktop Action ChangeLanguage]
+Name=Change language...
+Exec=/usr/bin/LSV --choose-lang
+
+[Desktop Action ResetLanguage]
+Name=Reset language
+Exec=/usr/bin/LSV --reset-lang
