@@ -20,6 +20,14 @@ public:
 
     QString getTabName() const { return m_tabName; }
     void refreshData();
+    // Attempt to stop any background work (processes) and make the
+    // widget safe to delete. This is called before tearing down tabs
+    // during runtime language switching or application shutdown.
+    void shutdown();
+    // Re-apply translated UI strings for this tab. Default implementation
+    // will update generic loading text and re-run parseOutput with the
+    // last captured output so derived tabs can refresh visible text.
+    virtual void retranslateUi();
 
 signals:
     void loadingStarted();

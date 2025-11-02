@@ -7,9 +7,10 @@
 #include <QFont>
 #include <QRegularExpression>
 #include <QDebug>
+#include <QCoreApplication>
 
 ScreenTab::ScreenTab(QWidget* parent)
-    : TabWidgetBase("Screen", "xrandr --query 2>/dev/null || echo 'Display info not available'", true, 
+    : TabWidgetBase(QCoreApplication::translate("ScreenTab", "Screen"), "xrandr --query 2>/dev/null || echo 'Display info not available'", true, 
                     "xrandr --verbose 2>/dev/null && xdpyinfo 2>/dev/null", parent)
 {
     qDebug() << "ScreenTab: Constructor called - base constructor done";
@@ -31,7 +32,7 @@ QWidget* ScreenTab::createUserFriendlyView()
     mainLayout->setSpacing(15);
     mainLayout->setContentsMargins(20, 20, 20, 20);
     
-    QLabel* titleLabel = new QLabel("Display and Monitor Information");
+    QLabel* titleLabel = new QLabel(QCoreApplication::translate("ScreenTab", "Display and Monitor Information"));
     titleLabel->setStyleSheet(
         "QLabel {"
         "  font-size: 18px;"
@@ -42,10 +43,10 @@ QWidget* ScreenTab::createUserFriendlyView()
     );
     mainLayout->addWidget(titleLabel);
     
-    createInfoSection("Connected Displays", &m_displaysSection, &m_displaysContent, mainLayout);
-    createInfoSection("Screen Resolution", &m_resolutionSection, &m_resolutionContent, mainLayout);
-    createInfoSection("Refresh Rates", &m_refreshRateSection, &m_refreshRateContent, mainLayout);
-    createInfoSection("Display Orientation", &m_orientationSection, &m_orientationContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("ScreenTab", "Connected Displays"), &m_displaysSection, &m_displaysContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("ScreenTab", "Screen Resolution"), &m_resolutionSection, &m_resolutionContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("ScreenTab", "Refresh Rates"), &m_refreshRateSection, &m_refreshRateContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("ScreenTab", "Display Orientation"), &m_orientationSection, &m_orientationContent, mainLayout);
     
     mainLayout->addStretch();
     
@@ -74,7 +75,7 @@ void ScreenTab::createInfoSection(const QString& title, QGroupBox** groupBox, QL
     );
     
     QVBoxLayout* sectionLayout = new QVBoxLayout(*groupBox);
-    *contentLabel = new QLabel("Loading " + title.toLower() + " information...");
+    *contentLabel = new QLabel(QCoreApplication::translate("ScreenTab", "Loading %1 information...").arg(title.toLower()));
     (*contentLabel)->setWordWrap(true);
     (*contentLabel)->setStyleSheet("QLabel { padding: 10px; background-color: #f8f9fa; border-radius: 4px; }");
     sectionLayout->addWidget(*contentLabel);
@@ -88,10 +89,10 @@ void ScreenTab::parseOutput(const QString& output)
     
     QStringList lines = output.split('\n', Qt::SkipEmptyParts);
     
-    QString displaysInfo = "Connected Displays: Not detected";
-    QString resolutionInfo = "Screen Resolution: Not detected";
-    QString refreshRateInfo = "Refresh Rates: Not detected";
-    QString orientationInfo = "Display Orientation: Not detected";
+    QString displaysInfo = QCoreApplication::translate("ScreenTab", "Connected Displays: Not detected");
+    QString resolutionInfo = QCoreApplication::translate("ScreenTab", "Screen Resolution: Not detected");
+    QString refreshRateInfo = QCoreApplication::translate("ScreenTab", "Refresh Rates: Not detected");
+    QString orientationInfo = QCoreApplication::translate("ScreenTab", "Display Orientation: Not detected");
     
     QStringList displays;
     QStringList resolutions;
@@ -181,21 +182,21 @@ void ScreenTab::parseOutput(const QString& output)
     orientations.removeDuplicates();
     
     if (!displays.isEmpty()) {
-        displaysInfo = "Connected Displays:\n" + displays.join("\n");
+        displaysInfo = QCoreApplication::translate("ScreenTab", "Connected Displays:\n") + displays.join("\n");
     }
     
     if (!resolutions.isEmpty()) {
-        resolutionInfo = "Screen Resolution:\n" + resolutions.join("\n");
+        resolutionInfo = QCoreApplication::translate("ScreenTab", "Screen Resolution:\n") + resolutions.join("\n");
     }
     
     if (!refreshRates.isEmpty()) {
-        refreshRateInfo = "Refresh Rates:\n" + refreshRates.join("\n");
+        refreshRateInfo = QCoreApplication::translate("ScreenTab", "Refresh Rates:\n") + refreshRates.join("\n");
     }
     
     if (!orientations.isEmpty()) {
-        orientationInfo = "Display Orientation:\n" + orientations.join("\n");
+        orientationInfo = QCoreApplication::translate("ScreenTab", "Display Orientation:\n") + orientations.join("\n");
     } else {
-        orientationInfo = "Display Orientation:\nNormal (default)";
+        orientationInfo = QCoreApplication::translate("ScreenTab", "Display Orientation:\nNormal (default)");
     }
     
     // Update the UI with parsed information

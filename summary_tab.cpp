@@ -10,9 +10,10 @@
 #include <QFont>
 #include <QRegularExpression>
 #include <QDebug>
+#include <QCoreApplication>
 
 SummaryTab::SummaryTab(QWidget* parent)
-    : TabWidgetBase("Summary", "lshw -short", true, "lshw", parent)
+    : TabWidgetBase(QCoreApplication::translate("SummaryTab", "Summary"), QCoreApplication::translate("SummaryTab", "lshw -short"), true, "lshw", parent)
 {
     qDebug() << "SummaryTab: Constructor called - base constructor done";
     initializeTab();
@@ -33,7 +34,7 @@ QWidget* SummaryTab::createUserFriendlyView()
     mainLayout->setSpacing(15);
     mainLayout->setContentsMargins(20, 20, 20, 20);
     
-    QLabel* titleLabel = new QLabel("System Hardware Summary");
+    QLabel* titleLabel = new QLabel(QCoreApplication::translate("SummaryTab", "System Hardware Summary"));
     titleLabel->setStyleSheet(
         "QLabel {"
         "  font-size: 18px;"
@@ -44,7 +45,7 @@ QWidget* SummaryTab::createUserFriendlyView()
     );
     mainLayout->addWidget(titleLabel);
     
-    m_systemOverview = new QGroupBox("System Overview");
+    m_systemOverview = new QGroupBox(QCoreApplication::translate("SummaryTab", "System Overview"));
     m_systemOverview->setStyleSheet(
         "QGroupBox {"
         "  font-weight: bold;"
@@ -61,18 +62,18 @@ QWidget* SummaryTab::createUserFriendlyView()
     );
     
     QVBoxLayout* overviewLayout = new QVBoxLayout(m_systemOverview);
-    m_overviewContent = new QLabel("Loading system information...");
+    m_overviewContent = new QLabel(QCoreApplication::translate("SummaryTab", "Loading system information..."));
     m_overviewContent->setWordWrap(true);
     m_overviewContent->setStyleSheet("QLabel { padding: 10px; background-color: #f8f9fa; border-radius: 4px; }");
     overviewLayout->addWidget(m_overviewContent);
     
     mainLayout->addWidget(m_systemOverview);
     
-    createHardwareSection("Processor", &m_cpuSection, &m_cpuContent, mainLayout);
-    createHardwareSection("Memory", &m_memorySection, &m_memoryContent, mainLayout);
-    createHardwareSection("Storage", &m_storageSection, &m_storageContent, mainLayout);
-    createHardwareSection("Network", &m_networkSection, &m_networkContent, mainLayout);
-    createHardwareSection("Graphics", &m_graphicsSection, &m_graphicsContent, mainLayout);
+    createHardwareSection(QCoreApplication::translate("SummaryTab", "Processor"), &m_cpuSection, &m_cpuContent, mainLayout);
+    createHardwareSection(QCoreApplication::translate("SummaryTab", "Memory"), &m_memorySection, &m_memoryContent, mainLayout);
+    createHardwareSection(QCoreApplication::translate("SummaryTab", "Storage"), &m_storageSection, &m_storageContent, mainLayout);
+    createHardwareSection(QCoreApplication::translate("SummaryTab", "Network"), &m_networkSection, &m_networkContent, mainLayout);
+    createHardwareSection(QCoreApplication::translate("SummaryTab", "Graphics"), &m_graphicsSection, &m_graphicsContent, mainLayout);
     
     mainLayout->addStretch();
     
@@ -101,7 +102,7 @@ void SummaryTab::createHardwareSection(const QString& title, QGroupBox** groupBo
     );
     
     QVBoxLayout* sectionLayout = new QVBoxLayout(*groupBox);
-    *contentLabel = new QLabel("Loading " + title.toLower() + " information...");
+    *contentLabel = new QLabel(QCoreApplication::translate("SummaryTab", "Loading %1 information...").arg(title.toLower()));
     (*contentLabel)->setWordWrap(true);
     (*contentLabel)->setStyleSheet("QLabel { padding: 10px; background-color: #f8f9fa; border-radius: 4px; }");
     sectionLayout->addWidget(*contentLabel);
@@ -137,41 +138,41 @@ void SummaryTab::parseOutput(const QString& output)
         
         if (path.contains("/cpu") || device == "processor") {
             if (cpuInfo.contains("Not detected")) {
-                cpuInfo = "CPU: " + description + "\n";
+                cpuInfo = QCoreApplication::translate("SummaryTab", "CPU: ") + description + "\n";
             } else {
                 cpuInfo += "     " + description + "\n";
             }
         }
         else if (path.contains("/memory") || device == "memory") {
             if (memoryInfo.contains("Not detected")) {
-                memoryInfo = "Memory: " + description + "\n";
+                memoryInfo = QCoreApplication::translate("SummaryTab", "Memory: ") + description + "\n";
             } else {
                 memoryInfo += "        " + description + "\n";
             }
         }
         else if (path.contains("/disk") || path.contains("/storage") || device.contains("disk")) {
             if (storageInfo.contains("Not detected")) {
-                storageInfo = "Storage: " + description + "\n";
+                storageInfo = QCoreApplication::translate("SummaryTab", "Storage: ") + description + "\n";
             } else {
                 storageInfo += "         " + description + "\n";
             }
         }
         else if (path.contains("/network") || device == "network") {
             if (networkInfo.contains("Not detected")) {
-                networkInfo = "Network: " + description + "\n";
+                networkInfo = QCoreApplication::translate("SummaryTab", "Network: ") + description + "\n";
             } else {
                 networkInfo += "         " + description + "\n";
             }
         }
         else if (path.contains("/display") || device == "display") {
             if (graphicsInfo.contains("Not detected")) {
-                graphicsInfo = "Graphics: " + description + "\n";
+                graphicsInfo = QCoreApplication::translate("SummaryTab", "Graphics: ") + description + "\n";
             } else {
                 graphicsInfo += "          " + description + "\n";
             }
         }
         else if (path == "/0" || device == "system") {
-            systemInfo = "System: " + description + "\n";
+            systemInfo = QCoreApplication::translate("SummaryTab", "System: ") + description + "\n";
         }
     }
     

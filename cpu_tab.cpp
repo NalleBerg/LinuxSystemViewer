@@ -26,9 +26,9 @@ CPUTab::CPUTab(QWidget* parent)
 {
     // Headline and Geek button
     QHBoxLayout* headlineLayout = new QHBoxLayout();
-    QLabel* headline = new QLabel("CPU");
+    QLabel* headline = new QLabel(tr("CPU"));
     headline->setStyleSheet("font-size: 15px; font-weight: bold; color: #222; margin-bottom: 0px;");
-    geekButton = new QPushButton("Geek Mode", this);
+    geekButton = new QPushButton(tr("Geek Mode"), this);
     geekButton->setStyleSheet(
         "QPushButton { background-color: #3498db; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 11px; min-width: 80px; max-height: 22px;}"
         "QPushButton:hover { background-color: #2980b9; }"
@@ -90,18 +90,18 @@ GeekCpuDialog::GeekCpuDialog(QWidget* parent)
     : QDialog(parent)
     , refreshTimer(new QTimer(this))
 {
-    setWindowTitle("CPU - Geek Mode");
+    setWindowTitle(tr("CPU - Geek Mode"));
     setModal(true);
     resize(700, 500);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
-    QLabel* titleLabel = new QLabel("CPU Technical Details");
+    QLabel* titleLabel = new QLabel(tr("CPU Technical Details"));
     titleLabel->setStyleSheet("font-size:16px; font-weight:bold; color:#2c3e50; margin-bottom:10px;");
     layout->addWidget(titleLabel);
 
     table = new QTableWidget();
     table->setColumnCount(2);
-    table->setHorizontalHeaderLabels(QStringList() << "Property" << "Value");
+    table->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
     table->verticalHeader()->setVisible(false);
     table->horizontalHeader()->setStyleSheet("QHeaderView::section { background-color: #34495e; color: white; font-weight: bold; padding: 8px; border: 1px solid #2c3e50; }");
     table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
@@ -115,8 +115,8 @@ GeekCpuDialog::GeekCpuDialog(QWidget* parent)
 
     // Buttons: Copy, Save, Close
     QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-    QPushButton* copyBtn = new QPushButton("Copy");
-    QPushButton* saveBtn = new QPushButton("Save...");
+    QPushButton* copyBtn = new QPushButton(tr("Copy"));
+    QPushButton* saveBtn = new QPushButton(tr("Save..."));
     buttonBox->addButton(copyBtn, QDialogButtonBox::ActionRole);
     buttonBox->addButton(saveBtn, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
@@ -138,7 +138,7 @@ GeekCpuDialog::GeekCpuDialog(QWidget* parent)
     // `lsv-elevate` helper in `priv/` if desired.
 
     connect(saveBtn, &QPushButton::clicked, [this]() {
-        QString fileName = QFileDialog::getSaveFileName(this, "Save CPU Info", "cpu-info.txt", "Text Files (*.txt);;All Files (*)");
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save CPU Info"), "cpu-info.txt", tr("Text Files (*.txt);;All Files (*)"));
         if (!fileName.isEmpty()) {
             QFile out(fileName);
             if (out.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -214,15 +214,15 @@ void GeekCpuDialog::fillTable()
             }
         }
 
-        addRow("Model", model.isEmpty() ? "Unknown" : model);
-        addRow("Vendor", vendor.isEmpty() ? "Unknown" : vendor);
-        addRow("CPU Cores", cores.isEmpty() ? "Unknown" : cores);
-        addRow("CPU MHz", cpuMHz.isEmpty() ? "Unknown" : cpuMHz);
+    addRow(tr("Model"), model.isEmpty() ? tr("Unknown") : model);
+    addRow(tr("Vendor"), vendor.isEmpty() ? tr("Unknown") : vendor);
+    addRow(tr("CPU Cores"), cores.isEmpty() ? tr("Unknown") : cores);
+    addRow(tr("CPU MHz"), cpuMHz.isEmpty() ? tr("Unknown") : cpuMHz);
 
-        // Add full /proc/cpuinfo as one cell
-        addRow("/proc/cpuinfo", content.trimmed().left(20000));
+    // Add full /proc/cpuinfo as one cell
+    addRow(tr("/proc/cpuinfo"), content.trimmed().left(20000));
     } else {
-        addRow("/proc/cpuinfo", "Could not open /proc/cpuinfo");
+        addRow(tr("/proc/cpuinfo"), tr("Could not open /proc/cpuinfo"));
     }
 
     // Parse topology and per-core frequencies from sysfs
@@ -231,7 +231,7 @@ void GeekCpuDialog::fillTable()
     for (const QString& line : content.split('\n')) {
         if (line.startsWith("processor")) logicalCount++;
     }
-    addRow("Logical processors", QString::number(logicalCount));
+    addRow(tr("Logical processors"), QString::number(logicalCount));
 
     // Physical packages and cores
     // Collect physical ids and core ids
@@ -241,8 +241,8 @@ void GeekCpuDialog::fillTable()
         if (line.startsWith("physical id")) physIds.insert(line.section(':',1).trimmed());
         if (line.startsWith("core id")) coreIds.insert(line.section(':',1).trimmed());
     }
-    addRow("Physical packages", QString::number(physIds.size()));
-    addRow("Unique core ids seen (per-logical sample)", QString::number(coreIds.size()));
+    addRow(tr("Physical packages"), QString::number(physIds.size()));
+    addRow(tr("Unique core ids seen (per-logical sample)"), QString::number(coreIds.size()));
 
     // Per-core current frequency (if available)
     QString freqSummary;
@@ -274,21 +274,21 @@ void GeekCpuDialog::fillTable()
                 }
             }
             if (!val.isEmpty()) {
-                freqSummary += QString("cpu%1: %2 kHz\n").arg(cpu).arg(val);
+                freqSummary += tr("cpu%1: %2 kHz\n").arg(cpu).arg(val);
             }
         }
-        if (!freqSummary.isEmpty()) addRow("Per-core current frequencies (kHz)", freqSummary.trimmed());
+        if (!freqSummary.isEmpty()) addRow(tr("Per-core current frequencies (kHz)"), freqSummary.trimmed());
     }
 
     // sysfs cpuinfo_max_freq/min_freq as additional info
     QFile maxf("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
     if (maxf.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        addRow("cpuinfo_max_freq", QTextStream(&maxf).readLine().trimmed());
+        addRow(tr("cpuinfo_max_freq"), QTextStream(&maxf).readLine().trimmed());
         maxf.close();
     }
     QFile minf("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq");
     if (minf.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        addRow("cpuinfo_min_freq", QTextStream(&minf).readLine().trimmed());
+        addRow(tr("cpuinfo_min_freq"), QTextStream(&minf).readLine().trimmed());
         minf.close();
     }
 }
@@ -296,7 +296,8 @@ void GeekCpuDialog::fillTable()
 void CPUTab::refreshCpuValues()
 {
     // Read a current frequency value (from /proc/cpuinfo first), and sysfs max/min
-    QString currentFreqGHz = "Unknown";
+    const QString unknown = tr("Unknown");
+    QString currentFreqGHz = unknown;
     QFile file("/proc/cpuinfo");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&file);
@@ -338,18 +339,17 @@ void CPUTab::refreshCpuValues()
         QTableWidgetItem* keyItem = tableWidget->item(r, 0);
         if (!keyItem) continue;
         QString key = keyItem->text().trimmed();
-
-        if (key.compare("Current freq (GHz)", Qt::CaseInsensitive) == 0) {
+        if (key.compare(tr("Current freq (GHz)"), Qt::CaseInsensitive) == 0) {
             QTableWidgetItem* val = tableWidget->item(r, 1);
-            if (val) val->setText(currentFreqGHz == "Unknown" ? QString("Unknown") : currentFreqGHz);
+            if (val) val->setText(currentFreqGHz == unknown ? unknown : currentFreqGHz);
             else tableWidget->setItem(r, 1, new QTableWidgetItem(currentFreqGHz));
         } else if (key.compare("Max freq (GHz)", Qt::CaseInsensitive) == 0) {
             QTableWidgetItem* val = tableWidget->item(r, 1);
-            if (val) val->setText(maxGHz == "Unknown" ? QString("Unknown") : maxGHz);
+            if (val) val->setText(maxGHz == unknown ? unknown : maxGHz);
             else tableWidget->setItem(r, 1, new QTableWidgetItem(maxGHz));
         } else if (key.compare("Min Freq (GHz)", Qt::CaseInsensitive) == 0 || key.compare("Min Freq (GHz)", Qt::CaseInsensitive) == 0) {
             QTableWidgetItem* val = tableWidget->item(r, 1);
-            if (val) val->setText(minGHz == "Unknown" ? QString("Unknown") : minGHz);
+            if (val) val->setText(minGHz == unknown ? unknown : minGHz);
             else tableWidget->setItem(r, 1, new QTableWidgetItem(minGHz));
         }
     }

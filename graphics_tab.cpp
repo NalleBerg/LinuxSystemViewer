@@ -7,9 +7,10 @@
 #include <QFont>
 #include <QRegularExpression>
 #include <QDebug>
+#include <QObject>
 
 GraphicsTab::GraphicsTab(QWidget* parent)
-    : TabWidgetBase("Graphics gard", "lshw -C display -short", true, 
+    : TabWidgetBase(QObject::tr("Graphics card"), "lshw -C display -short", true, 
                     "lshw -C display && lspci | grep VGA && glxinfo | head -20 2>/dev/null", parent)
 {
     qDebug() << "GraphicsTab: Constructor called - base constructor done";
@@ -31,7 +32,7 @@ QWidget* GraphicsTab::createUserFriendlyView()
     mainLayout->setSpacing(15);
     mainLayout->setContentsMargins(20, 20, 20, 20);
     
-    QLabel* titleLabel = new QLabel("Graphics Card Information");
+    QLabel* titleLabel = new QLabel(tr("Graphics Card Information"));
     titleLabel->setStyleSheet(
         "QLabel {"
         "  font-size: 18px;"
@@ -42,10 +43,10 @@ QWidget* GraphicsTab::createUserFriendlyView()
     );
     mainLayout->addWidget(titleLabel);
     
-    createInfoSection("Graphics Cards", &m_graphicsCardSection, &m_graphicsCardContent, mainLayout);
-    createInfoSection("Graphics Drivers", &m_driverSection, &m_driverContent, mainLayout);
-    createInfoSection("OpenGL Information", &m_openglSection, &m_openglContent, mainLayout);
-    createInfoSection("Video Memory", &m_memorySection, &m_memoryContent, mainLayout);
+    createInfoSection(tr("Graphics Cards"), &m_graphicsCardSection, &m_graphicsCardContent, mainLayout);
+    createInfoSection(tr("Graphics Drivers"), &m_driverSection, &m_driverContent, mainLayout);
+    createInfoSection(tr("OpenGL Information"), &m_openglSection, &m_openglContent, mainLayout);
+    createInfoSection(tr("Video Memory"), &m_memorySection, &m_memoryContent, mainLayout);
     
     mainLayout->addStretch();
     
@@ -74,7 +75,7 @@ void GraphicsTab::createInfoSection(const QString& title, QGroupBox** groupBox, 
     );
     
     QVBoxLayout* sectionLayout = new QVBoxLayout(*groupBox);
-    *contentLabel = new QLabel("Loading " + title.toLower() + " information...");
+    *contentLabel = new QLabel(tr("Loading %1 information...").arg(title.toLower()));
     (*contentLabel)->setWordWrap(true);
     (*contentLabel)->setStyleSheet("QLabel { padding: 10px; background-color: #f8f9fa; border-radius: 4px; }");
     sectionLayout->addWidget(*contentLabel);
@@ -88,10 +89,10 @@ void GraphicsTab::parseOutput(const QString& output)
     
     QStringList lines = output.split('\n', Qt::SkipEmptyParts);
     
-    QString graphicsCardInfo = "Graphics Cards: Not detected";
-    QString driverInfo = "Graphics Drivers: Not detected";
-    QString openglInfo = "OpenGL: Not detected";
-    QString memoryInfo = "Video Memory: Not detected";
+    QString graphicsCardInfo = tr("Graphics Cards: Not detected");
+    QString driverInfo = tr("Graphics Drivers: Not detected");
+    QString openglInfo = tr("OpenGL: Not detected");
+    QString memoryInfo = tr("Video Memory: Not detected");
     
     QStringList graphicsCards;
     QStringList drivers;
@@ -141,17 +142,17 @@ void GraphicsTab::parseOutput(const QString& output)
             QRegularExpression memRegex("(\\d+\\s*[MG]B)");
             QRegularExpressionMatch match = memRegex.match(trimmed);
             if (match.hasMatch()) {
-                memoryInfo = "Video Memory: " + match.captured(1);
+                memoryInfo = tr("Video Memory: %1").arg(match.captured(1));
             }
         }
         
         // Look for NVIDIA/AMD specific information
         if (trimmed.contains("NVIDIA") || trimmed.contains("GeForce") || trimmed.contains("Quadro")) {
-            drivers.append("NVIDIA proprietary driver (likely)");
+            drivers.append(tr("NVIDIA proprietary driver (likely)"));
         } else if (trimmed.contains("AMD") || trimmed.contains("Radeon") || trimmed.contains("ATI")) {
-            drivers.append("AMD/ATI driver (AMDGPU or Radeon)");
+            drivers.append(tr("AMD/ATI driver (AMDGPU or Radeon)"));
         } else if (trimmed.contains("Intel")) {
-            drivers.append("Intel integrated graphics driver");
+            drivers.append(tr("Intel integrated graphics driver"));
         }
     }
     
@@ -160,15 +161,15 @@ void GraphicsTab::parseOutput(const QString& output)
     drivers.removeDuplicates();
     
     if (!graphicsCards.isEmpty()) {
-        graphicsCardInfo = "Graphics Cards:\n" + graphicsCards.join("\n");
+        graphicsCardInfo = tr("Graphics Cards:\n%1").arg(graphicsCards.join("\n"));
     }
-    
+
     if (!drivers.isEmpty()) {
-        driverInfo = "Graphics Drivers:\n" + drivers.join("\n");
+        driverInfo = tr("Graphics Drivers:\n%1").arg(drivers.join("\n"));
     }
-    
+
     if (!openglDetails.isEmpty()) {
-        openglInfo = "OpenGL Information:\n" + openglDetails.join("\n");
+        openglInfo = tr("OpenGL Information:\n%1").arg(openglDetails.join("\n"));
     }
     
     // Update the UI with parsed information

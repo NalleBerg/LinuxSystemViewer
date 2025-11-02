@@ -7,9 +7,10 @@
 #include <QFont>
 #include <QRegularExpression>
 #include <QDebug>
+#include <QCoreApplication>
 
 PortsTab::PortsTab(QWidget* parent)
-    : TabWidgetBase("Ports", "lsusb -t && lspci | grep -i 'serial\\|usb'", true, 
+    : TabWidgetBase(QCoreApplication::translate("PortsTab", "Ports"), "lsusb -t && lspci | grep -i 'serial\\|usb'", true, 
                     "lsusb -v && lspci -v | grep -A5 -i 'serial\\|usb' && dmesg | grep -i usb | tail -10", parent)
 {
     qDebug() << "PortsTab: Constructor called - base constructor done";
@@ -31,7 +32,7 @@ QWidget* PortsTab::createUserFriendlyView()
     mainLayout->setSpacing(15);
     mainLayout->setContentsMargins(20, 20, 20, 20);
     
-    QLabel* titleLabel = new QLabel("System Ports Information");
+    QLabel* titleLabel = new QLabel(QCoreApplication::translate("PortsTab", "System Ports Information"));
     titleLabel->setStyleSheet(
         "QLabel {"
         "  font-size: 18px;"
@@ -42,10 +43,10 @@ QWidget* PortsTab::createUserFriendlyView()
     );
     mainLayout->addWidget(titleLabel);
     
-    createInfoSection("USB Ports", &m_usbPortsSection, &m_usbPortsContent, mainLayout);
-    createInfoSection("Serial Ports", &m_serialPortsSection, &m_serialPortsContent, mainLayout);
-    createInfoSection("PCI Ports", &m_pciPortsSection, &m_pciPortsContent, mainLayout);
-    createInfoSection("Port Status", &m_portStatusSection, &m_portStatusContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("PortsTab", "USB Ports"), &m_usbPortsSection, &m_usbPortsContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("PortsTab", "Serial Ports"), &m_serialPortsSection, &m_serialPortsContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("PortsTab", "PCI Ports"), &m_pciPortsSection, &m_pciPortsContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("PortsTab", "Port Status"), &m_portStatusSection, &m_portStatusContent, mainLayout);
     
     mainLayout->addStretch();
     
@@ -74,7 +75,7 @@ void PortsTab::createInfoSection(const QString& title, QGroupBox** groupBox, QLa
     );
     
     QVBoxLayout* sectionLayout = new QVBoxLayout(*groupBox);
-    *contentLabel = new QLabel("Loading " + title.toLower() + " information...");
+    *contentLabel = new QLabel(QCoreApplication::translate("PortsTab", "Loading %1 information...").arg(title.toLower()));
     (*contentLabel)->setWordWrap(true);
     (*contentLabel)->setStyleSheet("QLabel { padding: 10px; background-color: #f8f9fa; border-radius: 4px; }");
     sectionLayout->addWidget(*contentLabel);
@@ -88,10 +89,10 @@ void PortsTab::parseOutput(const QString& output)
     
     QStringList lines = output.split('\n', Qt::SkipEmptyParts);
     
-    QString usbPortsInfo = "USB Ports: Not detected";
-    QString serialPortsInfo = "Serial Ports: Not detected";
-    QString pciPortsInfo = "PCI Ports: Not detected";
-    QString portStatusInfo = "Port Status: Unknown";
+    QString usbPortsInfo = QCoreApplication::translate("PortsTab", "USB Ports: Not detected");
+    QString serialPortsInfo = QCoreApplication::translate("PortsTab", "Serial Ports: Not detected");
+    QString pciPortsInfo = QCoreApplication::translate("PortsTab", "PCI Ports: Not detected");
+    QString portStatusInfo = QCoreApplication::translate("PortsTab", "Port Status: Unknown");
     
     QStringList usbPorts;
     QStringList serialPorts;
@@ -156,21 +157,21 @@ void PortsTab::parseOutput(const QString& output)
     
     // Format the information
     if (!usbPorts.isEmpty()) {
-        usbPortsInfo = "USB Ports:\n" + usbPorts.join("\n");
+        usbPortsInfo = QCoreApplication::translate("PortsTab", "USB Ports:\n") + usbPorts.join("\n");
     }
     
     if (!serialPorts.isEmpty()) {
-        serialPortsInfo = "Serial Ports:\n" + serialPorts.join("\n");
+        serialPortsInfo = QCoreApplication::translate("PortsTab", "Serial Ports:\n") + serialPorts.join("\n");
     } else {
-        serialPortsInfo = "Serial Ports:\nNo serial controllers detected";
+        serialPortsInfo = QCoreApplication::translate("PortsTab", "Serial Ports:\nNo serial controllers detected");
     }
     
     if (!pciPorts.isEmpty()) {
-        pciPortsInfo = "PCI Ports:\n" + pciPorts.join("\n");
+        pciPortsInfo = QCoreApplication::translate("PortsTab", "PCI Ports:\n") + pciPorts.join("\n");
     }
     
     if (!portStatus.isEmpty()) {
-        portStatusInfo = "Port Status:\n" + portStatus.join("\n");
+        portStatusInfo = QCoreApplication::translate("PortsTab", "Port Status:\n") + portStatus.join("\n");
     }
     
     // Update the UI with parsed information

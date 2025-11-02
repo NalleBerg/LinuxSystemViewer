@@ -1,1 +1,46 @@
-/build
+# Build directories
+/build/
+/build_*/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Qt resource/build caches
+.rcc/
+.qt/
+LSV_autogen/
+
+# Binary artifacts
+*.o
+*.obj
+*.lo
+*.la
+*.la.*
+
+# Libraries and packages
+*.so
+*.a
+*.dll
+*.dylib
+
+# Packaging artifacts
+*.deb
+*.rpm
+*.AppImage
+squashfs-root/
+
+# Editor and OS files
+*.swp
+*~
+.DS_Store
+
+# Logs and temporary files
+*.log
+lsv-cli.log
+/tmp/lsv-debug.log
+
+# Do not ignore the distribution directory and scripts
+# Keep ./LSV and ./scripts in the repo

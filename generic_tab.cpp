@@ -1,5 +1,6 @@
 #include "generic_tab.h"
 #include <QVBoxLayout>
+#include <QObject>
 #include <QTextEdit>
 #include <QFont>
 #include <QLabel>
@@ -21,7 +22,7 @@ QWidget* GenericTab::createUserFriendlyView()
     m_outputDisplay = new QTextEdit();
     m_outputDisplay->setReadOnly(true);
     m_outputDisplay->setFont(QFont("monospace", 10));
-    m_outputDisplay->setPlainText("Loading " + m_tabName + " information...");
+    m_outputDisplay->setPlainText(QObject::tr("Loading %1 information...").arg(m_tabName));
     
     m_outputDisplay->setStyleSheet(
         "QTextEdit {"
@@ -41,8 +42,8 @@ void GenericTab::parseOutput(const QString& output)
     qDebug() << "GenericTab: parseOutput called for:" << m_tabName;
     
     if (m_outputDisplay) {
-        QString formattedOutput = "=== " + m_tabName + " Information ===\n\n" + output;
-        m_outputDisplay->setPlainText(formattedOutput);
+    QString formattedOutput = QObject::tr("=== %1 Information ===\n\n%2").arg(m_tabName).arg(output);
+    m_outputDisplay->setPlainText(formattedOutput);
     }
     
     qDebug() << "GenericTab: parseOutput completed for:" << m_tabName;

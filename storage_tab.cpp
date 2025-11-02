@@ -7,9 +7,10 @@
 #include <QFont>
 #include <QRegularExpression>
 #include <QDebug>
+#include <QCoreApplication>
 
 StorageTab::StorageTab(QWidget* parent)
-    : TabWidgetBase("Storage", "lsblk && df -h", true, 
+    : TabWidgetBase(QCoreApplication::translate("StorageTab", "Storage"), "lsblk && df -h", true, 
                     "lsblk -f && df -h && lshw -C disk && fdisk -l 2>/dev/null && smartctl --scan 2>/dev/null", parent)
 {
     qDebug() << "StorageTab: Constructor called - base constructor done";
@@ -31,7 +32,7 @@ QWidget* StorageTab::createUserFriendlyView()
     mainLayout->setSpacing(15);
     mainLayout->setContentsMargins(20, 20, 20, 20);
     
-    QLabel* titleLabel = new QLabel("Storage Devices and Disk Information");
+    QLabel* titleLabel = new QLabel(QCoreApplication::translate("StorageTab", "Storage Devices and Disk Information"));
     titleLabel->setStyleSheet(
         "QLabel {"
         "  font-size: 18px;"
@@ -42,10 +43,10 @@ QWidget* StorageTab::createUserFriendlyView()
     );
     mainLayout->addWidget(titleLabel);
     
-    createInfoSection("Disk Drives", &m_diskDrivesSection, &m_diskDrivesContent, mainLayout);
-    createInfoSection("Partitions", &m_partitionsSection, &m_partitionsContent, mainLayout);
-    createInfoSection("Mount Points", &m_mountPointsSection, &m_mountPointsContent, mainLayout);
-    createInfoSection("Disk Usage", &m_diskUsageSection, &m_diskUsageContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("StorageTab", "Disk Drives"), &m_diskDrivesSection, &m_diskDrivesContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("StorageTab", "Partitions"), &m_partitionsSection, &m_partitionsContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("StorageTab", "Mount Points"), &m_mountPointsSection, &m_mountPointsContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("StorageTab", "Disk Usage"), &m_diskUsageSection, &m_diskUsageContent, mainLayout);
     
     mainLayout->addStretch();
     
@@ -74,7 +75,7 @@ void StorageTab::createInfoSection(const QString& title, QGroupBox** groupBox, Q
     );
     
     QVBoxLayout* sectionLayout = new QVBoxLayout(*groupBox);
-    *contentLabel = new QLabel("Loading " + title.toLower() + " information...");
+    *contentLabel = new QLabel(QCoreApplication::translate("StorageTab", "Loading %1 information...").arg(title.toLower()));
     (*contentLabel)->setWordWrap(true);
     (*contentLabel)->setStyleSheet("QLabel { padding: 10px; background-color: #f8f9fa; border-radius: 4px; }");
     sectionLayout->addWidget(*contentLabel);
@@ -88,10 +89,10 @@ void StorageTab::parseOutput(const QString& output)
     
     QStringList lines = output.split('\n', Qt::SkipEmptyParts);
     
-    QString diskDrivesInfo = "Disk Drives: Not detected";
-    QString partitionsInfo = "Partitions: Not detected";
-    QString mountPointsInfo = "Mount Points: Not detected";
-    QString diskUsageInfo = "Disk Usage: Not detected";
+    QString diskDrivesInfo = QCoreApplication::translate("StorageTab", "Disk Drives: Not detected");
+    QString partitionsInfo = QCoreApplication::translate("StorageTab", "Partitions: Not detected");
+    QString mountPointsInfo = QCoreApplication::translate("StorageTab", "Mount Points: Not detected");
+    QString diskUsageInfo = QCoreApplication::translate("StorageTab", "Disk Usage: Not detected");
     
     QStringList diskDrives;
     QStringList partitions;
@@ -172,19 +173,19 @@ void StorageTab::parseOutput(const QString& output)
     
     // Format the information
     if (!diskDrives.isEmpty()) {
-        diskDrivesInfo = "Disk Drives:\n" + diskDrives.join("\n");
+        diskDrivesInfo = QCoreApplication::translate("StorageTab", "Disk Drives:\n") + diskDrives.join("\n");
     }
     
     if (!partitions.isEmpty()) {
-        partitionsInfo = "Partitions:\n" + partitions.join("\n");
+        partitionsInfo = QCoreApplication::translate("StorageTab", "Partitions:\n") + partitions.join("\n");
     }
     
     if (!mountPoints.isEmpty()) {
-        mountPointsInfo = "Mount Points:\n" + mountPoints.join("\n");
+        mountPointsInfo = QCoreApplication::translate("StorageTab", "Mount Points:\n") + mountPoints.join("\n");
     }
     
     if (!diskUsage.isEmpty()) {
-        diskUsageInfo = "Disk Usage:\n" + diskUsage.join("\n");
+        diskUsageInfo = QCoreApplication::translate("StorageTab", "Disk Usage:\n") + diskUsage.join("\n");
     }
     
     // Update the UI with parsed information

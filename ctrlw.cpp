@@ -158,7 +158,7 @@ bool CtrlWHandler::showQuitDialog()
 
     // Build a minimal dialog: title only, icon centered above buttons
     QDialog dlg(m_mainWindow);
-    dlg.setWindowTitle(QStringLiteral("Quit?"));
+    dlg.setWindowTitle(tr("Quit?"));
     QVBoxLayout *lay = new QVBoxLayout(&dlg);
     QLabel *iconLabel = new QLabel(&dlg);
     iconLabel->setPixmap(pix);

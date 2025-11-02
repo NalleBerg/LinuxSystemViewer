@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QProcess>
 #include <QGuiApplication>
+#include <QCoreApplication>
 #include <QClipboard>
 #include <QFileDialog>
 #include <QFile>
@@ -14,7 +15,7 @@
 NetworkGeekDialog::NetworkGeekDialog(QWidget* parent)
     : QDialog(parent), te(new QTextEdit(this)), timer(new QTimer(this))
 {
-    setWindowTitle("Network - Geek Mode");
+    setWindowTitle(QCoreApplication::translate("NetworkGeekDialog", "Network - Geek Mode"));
     resize(800, 480);
 
     te->setReadOnly(true);
@@ -24,8 +25,8 @@ NetworkGeekDialog::NetworkGeekDialog(QWidget* parent)
 
     QDialogButtonBox* box = new QDialogButtonBox(QDialogButtonBox::Close, this);
 
-    QPushButton* copyBtn = new QPushButton("Copy");
-    QPushButton* saveBtn = new QPushButton("Save");
+    QPushButton* copyBtn = new QPushButton(QCoreApplication::translate("NetworkGeekDialog", "Copy"));
+    QPushButton* saveBtn = new QPushButton(QCoreApplication::translate("NetworkGeekDialog", "Save"));
     box->addButton(copyBtn, QDialogButtonBox::ActionRole);
     box->addButton(saveBtn, QDialogButtonBox::ActionRole);
 
@@ -68,7 +69,7 @@ void NetworkGeekDialog::copyToClipboard()
 
 void NetworkGeekDialog::saveToFile()
 {
-    QString fn = QFileDialog::getSaveFileName(this, "Save network info", QString(), "Text files (*.txt);;All files (*)");
+    QString fn = QFileDialog::getSaveFileName(this, QCoreApplication::translate("NetworkGeekDialog", "Save network info"), QString(), QCoreApplication::translate("NetworkGeekDialog", "Text files (*.txt);;All files (*)"));
     if (fn.isEmpty()) return;
     QFile f(fn);
     if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) return;

@@ -7,9 +7,10 @@
 #include <QFont>
 #include <QRegularExpression>
 #include <QDebug>
+#include <QObject>
 
 MotherboardTab::MotherboardTab(QWidget* parent)
-    : TabWidgetBase("Motherboard", "lshw -C bus -short", true, 
+    : TabWidgetBase(QObject::tr("Motherboard"), "lshw -C bus -short", true, 
                     "lshw -C bus && dmidecode -t baseboard 2>/dev/null && dmidecode -t system 2>/dev/null", parent)
 {
     qDebug() << "MotherboardTab: Constructor called - base constructor done";
@@ -31,7 +32,7 @@ QWidget* MotherboardTab::createUserFriendlyView()
     mainLayout->setSpacing(15);
     mainLayout->setContentsMargins(20, 20, 20, 20);
     
-    QLabel* titleLabel = new QLabel("Motherboard and System Information");
+    QLabel* titleLabel = new QLabel(tr("Motherboard and System Information"));
     titleLabel->setStyleSheet(
         "QLabel {"
         "  font-size: 18px;"
@@ -42,10 +43,10 @@ QWidget* MotherboardTab::createUserFriendlyView()
     );
     mainLayout->addWidget(titleLabel);
     
-    createInfoSection("System Board", &m_systemBoardSection, &m_systemBoardContent, mainLayout);
-    createInfoSection("Chipset", &m_chipsetSection, &m_chipsetContent, mainLayout);
-    createInfoSection("BIOS/UEFI", &m_biosSection, &m_biosContent, mainLayout);
-    createInfoSection("Expansion Slots", &m_expansionSlotsSection, &m_expansionSlotsContent, mainLayout);
+    createInfoSection(tr("System Board"), &m_systemBoardSection, &m_systemBoardContent, mainLayout);
+    createInfoSection(tr("Chipset"), &m_chipsetSection, &m_chipsetContent, mainLayout);
+    createInfoSection(tr("BIOS/UEFI"), &m_biosSection, &m_biosContent, mainLayout);
+    createInfoSection(tr("Expansion Slots"), &m_expansionSlotsSection, &m_expansionSlotsContent, mainLayout);
     
     mainLayout->addStretch();
     
@@ -74,7 +75,7 @@ void MotherboardTab::createInfoSection(const QString& title, QGroupBox** groupBo
     );
     
     QVBoxLayout* sectionLayout = new QVBoxLayout(*groupBox);
-    *contentLabel = new QLabel("Loading " + title.toLower() + " information...");
+    *contentLabel = new QLabel(tr("Loading %1 information...").arg(title.toLower()));
     (*contentLabel)->setWordWrap(true);
     (*contentLabel)->setStyleSheet("QLabel { padding: 10px; background-color: #f8f9fa; border-radius: 4px; }");
     sectionLayout->addWidget(*contentLabel);
@@ -88,10 +89,10 @@ void MotherboardTab::parseOutput(const QString& output)
     
     QStringList lines = output.split('\n', Qt::SkipEmptyParts);
     
-    QString systemBoardInfo = "System Board: Not detected";
-    QString chipsetInfo = "Chipset: Not detected";
-    QString biosInfo = "BIOS/UEFI: Not detected";
-    QString expansionSlotsInfo = "Expansion Slots: Not detected";
+    QString systemBoardInfo = tr("System Board: Not detected");
+    QString chipsetInfo = tr("Chipset: Not detected");
+    QString biosInfo = tr("BIOS/UEFI: Not detected");
+    QString expansionSlotsInfo = tr("Expansion Slots: Not detected");
     
     QStringList systemBoard;
     QStringList chipset;
@@ -121,37 +122,37 @@ void MotherboardTab::parseOutput(const QString& output)
         if (trimmed.startsWith("Manufacturer:")) {
             QString manufacturer = trimmed.split(":")[1].trimmed();
             if (!manufacturer.isEmpty() && manufacturer != "Not Specified") {
-                systemBoard.append("Manufacturer: " + manufacturer);
+                systemBoard.append(tr("Manufacturer: %1").arg(manufacturer));
             }
         }
         
         if (trimmed.startsWith("Product Name:")) {
             QString product = trimmed.split(":")[1].trimmed();
             if (!product.isEmpty() && product != "Not Specified") {
-                systemBoard.append("Product: " + product);
+                systemBoard.append(tr("Product: %1").arg(product));
             }
         }
         
         if (trimmed.startsWith("Version:")) {
             QString version = trimmed.split(":")[1].trimmed();
             if (!version.isEmpty() && version != "Not Specified") {
-                systemBoard.append("Version: " + version);
+                systemBoard.append(tr("Version: %1").arg(version));
             }
         }
         
         if (trimmed.startsWith("Serial Number:")) {
             QString serial = trimmed.split(":")[1].trimmed();
             if (!serial.isEmpty() && serial != "Not Specified") {
-                systemBoard.append("Serial: " + serial);
+                systemBoard.append(tr("Serial: %1").arg(serial));
             }
         }
         
         // Parse BIOS information
         if (trimmed.startsWith("BIOS Information") || trimmed.startsWith("Vendor:")) {
-            if (trimmed.startsWith("Vendor:")) {
+                if (trimmed.startsWith("Vendor:")) {
                 QString vendor = trimmed.split(":")[1].trimmed();
                 if (!vendor.isEmpty()) {
-                    bios.append("BIOS Vendor: " + vendor);
+                    bios.append(tr("BIOS Vendor: %1").arg(vendor));
                 }
             }
         }
@@ -159,14 +160,14 @@ void MotherboardTab::parseOutput(const QString& output)
         if (trimmed.startsWith("BIOS Revision:") || trimmed.startsWith("Firmware Revision:")) {
             QString revision = trimmed.split(":")[1].trimmed();
             if (!revision.isEmpty()) {
-                bios.append("BIOS Revision: " + revision);
+                bios.append(tr("BIOS Revision: %1").arg(revision));
             }
         }
         
         if (trimmed.startsWith("Release Date:")) {
             QString date = trimmed.split(":")[1].trimmed();
             if (!date.isEmpty()) {
-                bios.append("Release Date: " + date);
+                bios.append(tr("Release Date: %1").arg(date));
             }
         }
         
@@ -178,26 +179,26 @@ void MotherboardTab::parseOutput(const QString& output)
         if (trimmed.startsWith("Family:")) {
             QString family = trimmed.split(":")[1].trimmed();
             if (!family.isEmpty() && family != "Not Specified") {
-                systemBoard.append("Family: " + family);
+                systemBoard.append(tr("Family: %1").arg(family));
             }
         }
     }
     
     // Format the information
     if (!systemBoard.isEmpty()) {
-        systemBoardInfo = "System Board:\n" + systemBoard.join("\n");
+        systemBoardInfo = tr("System Board:\n%1").arg(systemBoard.join("\n"));
     }
-    
+
     if (!chipset.isEmpty()) {
-        chipsetInfo = "Chipset:\n" + chipset.join("\n");
+        chipsetInfo = tr("Chipset:\n%1").arg(chipset.join("\n"));
     }
-    
+
     if (!bios.isEmpty()) {
-        biosInfo = "BIOS/UEFI:\n" + bios.join("\n");
+        biosInfo = tr("BIOS/UEFI:\n%1").arg(bios.join("\n"));
     }
-    
+
     if (!expansionSlots.isEmpty()) {
-        expansionSlotsInfo = "Expansion Slots:\n" + expansionSlots.join("\n");
+        expansionSlotsInfo = tr("Expansion Slots:\n%1").arg(expansionSlots.join("\n"));
     }
     
     // Update the UI with parsed information

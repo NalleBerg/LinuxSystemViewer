@@ -7,9 +7,10 @@
 #include <QFont>
 #include <QRegularExpression>
 #include <QDebug>
+#include <QCoreApplication>
 
 WindowingTab::WindowingTab(QWidget* parent)
-    : TabWidgetBase("Windowing environment", "echo $XDG_CURRENT_DESKTOP && echo $DESKTOP_SESSION && echo $XDG_SESSION_TYPE", true, 
+    : TabWidgetBase(QCoreApplication::translate("WindowingTab", "Windowing environment"), "echo $XDG_CURRENT_DESKTOP && echo $DESKTOP_SESSION && echo $XDG_SESSION_TYPE", true, 
                     "env | grep -E '(DESKTOP|XDG|WAYLAND|X11)' | sort", parent)
 {
     qDebug() << "WindowingTab: Constructor called - base constructor done";
@@ -31,7 +32,7 @@ QWidget* WindowingTab::createUserFriendlyView()
     mainLayout->setSpacing(15);
     mainLayout->setContentsMargins(20, 20, 20, 20);
     
-    QLabel* titleLabel = new QLabel("Windowing Environment Information");
+    QLabel* titleLabel = new QLabel(QCoreApplication::translate("WindowingTab", "Windowing Environment Information"));
     titleLabel->setStyleSheet(
         "QLabel {"
         "  font-size: 18px;"
@@ -42,10 +43,10 @@ QWidget* WindowingTab::createUserFriendlyView()
     );
     mainLayout->addWidget(titleLabel);
     
-    createInfoSection("Desktop Environment", &m_desktopSection, &m_desktopContent, mainLayout);
-    createInfoSection("Session Type", &m_sessionSection, &m_sessionContent, mainLayout);
-    createInfoSection("Display Server", &m_displayServerSection, &m_displayServerContent, mainLayout);
-    createInfoSection("Window Manager", &m_windowManagerSection, &m_windowManagerContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("WindowingTab", "Desktop Environment"), &m_desktopSection, &m_desktopContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("WindowingTab", "Session Type"), &m_sessionSection, &m_sessionContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("WindowingTab", "Display Server"), &m_displayServerSection, &m_displayServerContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("WindowingTab", "Window Manager"), &m_windowManagerSection, &m_windowManagerContent, mainLayout);
     
     mainLayout->addStretch();
     
@@ -57,6 +58,7 @@ QWidget* WindowingTab::createUserFriendlyView()
 
 void WindowingTab::createInfoSection(const QString& title, QGroupBox** groupBox, QLabel** contentLabel, QVBoxLayout* parentLayout)
 {
+    // Create the group box first, then set up its style and layout.
     *groupBox = new QGroupBox(title);
     (*groupBox)->setStyleSheet(
         "QGroupBox {"
@@ -72,13 +74,13 @@ void WindowingTab::createInfoSection(const QString& title, QGroupBox** groupBox,
         "  padding: 0 10px 0 10px;"
         "}"
     );
-    
+
     QVBoxLayout* sectionLayout = new QVBoxLayout(*groupBox);
-    *contentLabel = new QLabel("Loading " + title.toLower() + " information...");
+    *contentLabel = new QLabel(QCoreApplication::translate("WindowingTab", "Loading %1 information...").arg(title.toLower()));
     (*contentLabel)->setWordWrap(true);
     (*contentLabel)->setStyleSheet("QLabel { padding: 10px; background-color: #f8f9fa; border-radius: 4px; }");
     sectionLayout->addWidget(*contentLabel);
-    
+
     parentLayout->addWidget(*groupBox);
 }
 
@@ -88,10 +90,10 @@ void WindowingTab::parseOutput(const QString& output)
     
     QStringList lines = output.split('\n', Qt::SkipEmptyParts);
     
-    QString desktopInfo = "Desktop Environment: Not detected";
-    QString sessionInfo = "Session: Not detected";
-    QString displayServerInfo = "Display Server: Not detected";
-    QString windowManagerInfo = "Window Manager: Not detected";
+    QString desktopInfo = QCoreApplication::translate("WindowingTab", "Desktop Environment: Not detected");
+    QString sessionInfo = QCoreApplication::translate("WindowingTab", "Session: Not detected");
+    QString displayServerInfo = QCoreApplication::translate("WindowingTab", "Display Server: Not detected");
+    QString windowManagerInfo = QCoreApplication::translate("WindowingTab", "Window Manager: Not detected");
     
     // Simple parsing - the output should contain desktop, session, and session type
     for (int i = 0; i < lines.size(); ++i) {
@@ -99,41 +101,41 @@ void WindowingTab::parseOutput(const QString& output)
         
         if (i == 0 && !trimmed.isEmpty()) {
             // First line should be XDG_CURRENT_DESKTOP
-            desktopInfo = "Desktop Environment: " + trimmed;
+            desktopInfo = QCoreApplication::translate("WindowingTab", "Desktop Environment: ") + trimmed;
         } else if (i == 1 && !trimmed.isEmpty()) {
             // Second line should be DESKTOP_SESSION
-            sessionInfo = "Session: " + trimmed;
+            sessionInfo = QCoreApplication::translate("WindowingTab", "Session: ") + trimmed;
         } else if (i == 2 && !trimmed.isEmpty()) {
             // Third line should be XDG_SESSION_TYPE
             if (trimmed.contains("wayland")) {
-                displayServerInfo = "Display Server: Wayland";
+                displayServerInfo = QCoreApplication::translate("WindowingTab", "Display Server: Wayland");
             } else if (trimmed.contains("x11")) {
-                displayServerInfo = "Display Server: X11";
+                displayServerInfo = QCoreApplication::translate("WindowingTab", "Display Server: X11");
             } else {
-                displayServerInfo = "Display Server: " + trimmed;
+                displayServerInfo = QCoreApplication::translate("WindowingTab", "Display Server: ") + trimmed;
             }
         }
         
         // Look for window manager info in environment variables
         if (trimmed.contains("WINDOW_MANAGER=") || trimmed.contains("WM_NAME=")) {
             QString wm = trimmed.split('=')[1];
-            windowManagerInfo = "Window Manager: " + wm;
+            windowManagerInfo = QCoreApplication::translate("WindowingTab", "Window Manager: ") + wm;
         }
     }
     
     // If we can detect common desktop environments, also set likely window manager
     if (desktopInfo.contains("GNOME")) {
-        windowManagerInfo = "Window Manager: Mutter (GNOME)";
+        windowManagerInfo = QCoreApplication::translate("WindowingTab", "Window Manager: Mutter (GNOME)");
     } else if (desktopInfo.contains("KDE")) {
-        windowManagerInfo = "Window Manager: KWin (KDE)";
+        windowManagerInfo = QCoreApplication::translate("WindowingTab", "Window Manager: KWin (KDE)");
     } else if (desktopInfo.contains("XFCE")) {
-        windowManagerInfo = "Window Manager: Xfwm4 (XFCE)";
+        windowManagerInfo = QCoreApplication::translate("WindowingTab", "Window Manager: Xfwm4 (XFCE)");
     } else if (desktopInfo.contains("MATE")) {
-        windowManagerInfo = "Window Manager: Marco (MATE)";
+        windowManagerInfo = QCoreApplication::translate("WindowingTab", "Window Manager: Marco (MATE)");
     } else if (desktopInfo.contains("Cinnamon")) {
-        windowManagerInfo = "Window Manager: Muffin (Cinnamon)";
+        windowManagerInfo = QCoreApplication::translate("WindowingTab", "Window Manager: Muffin (Cinnamon)");
     } else if (desktopInfo.contains("LXDE")) {
-        windowManagerInfo = "Window Manager: Openbox (LXDE)";
+        windowManagerInfo = QCoreApplication::translate("WindowingTab", "Window Manager: Openbox (LXDE)");
     }
     
     // Update the UI with parsed information
