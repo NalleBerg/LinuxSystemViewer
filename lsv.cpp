@@ -711,6 +711,7 @@ int main(int argc, char *argv[])
     // Simple CLI parsing for language-related args
     QString requestedLang;
     bool chooseLang = false;
+    bool resetLang = false;
     QStringList args = QCoreApplication::arguments();
     for (int i = 1; i < args.size(); ++i) {
         const QString &a = args.at(i);
@@ -728,6 +729,8 @@ int main(int argc, char *argv[])
             requestedLang = a.section('=', 1);
         } else if (a == "--choose-lang") {
             chooseLang = true;
+        } else if (a == "--reset-lang") {
+            resetLang = true;
         } else if (a == "--NO-nb") {
             requestedLang = "en"; // explicit negative flag to avoid nb
         }
@@ -783,6 +786,28 @@ int main(int argc, char *argv[])
             out << "MISSING\n";
         }
         return 0;
+    }
+
+    // Handle reset-lang CLI flag: remove the per-user language RC and exit
+    if (resetLang) {
+        QString p = langRcFilePath();
+        QTextStream out(stdout);
+        if (p.isEmpty()) {
+            out << "ERROR: no config path\n";
+            return 1;
+        }
+        QFile f(p);
+        if (!f.exists()) {
+            out << "MISSING\n";
+            return 0;
+        }
+        if (QFile::remove(p)) {
+            out << "OK\n";
+            return 0;
+        } else {
+            out << "FAILED\n";
+            return 1;
+        }
     }
 
     // Auto-elevation: always relaunch via a terminal sudo prompt and exit the
@@ -1092,8 +1117,55 @@ int main(int argc, char *argv[])
     }
     if (selIndex >= 0) langCombo->setCurrentIndex(selIndex);
 
+    // Helper: apply a language code, reload translator and recreate tabs so
+    // the whole UI updates immediately. preserveIndex indicates which tab
+    // index should be selected after recreation (use -1 to ignore).
+    auto applyLanguage = [&mainWindow, &app, &translator, &settings, &titleLabel, &aboutBtn](const QString &code, int preserveIndex = -1) {
+        // Remove any installed translator then load the requested one
+        app.removeTranslator(&translator);
+        if (code != "en") {
+            tryLoadTranslatorForCode(code, app, &translator);
+        }
+
+        // Update small UI bits
+        mainWindow.setWindowTitle(QObject::tr("Linux System Viewer"));
+        if (titleLabel) titleLabel->setText(QObject::tr("Linux System Viewer"));
+        if (aboutBtn) aboutBtn->setToolTip(QObject::tr("About Linux System Viewer"));
+
+        // Recreate the tab widget to ensure constructor-time tr() calls run
+        // with the newly installed translator. Preserve the currently
+        // selected tab index where possible.
+        MultiRowTabWidget* oldTab = mainWindow.findChild<MultiRowTabWidget*>();
+        QWidget* central = mainWindow.centralWidget();
+        QLayout* ml = central ? central->layout() : nullptr;
+        if (oldTab && ml) {
+            int curIndex = (preserveIndex >= 0) ? preserveIndex : oldTab->currentIndex();
+            oldTab->shutdownTabs();
+            ml->removeWidget(oldTab);
+            oldTab->setParent(nullptr);
+            oldTab->deleteLater();
+
+            // Remove any existing TabManager children (they are parented
+            // to mainWindow by construction earlier).
+            TabManager* oldMgr = mainWindow.findChild<TabManager*>();
+            if (oldMgr) oldMgr->deleteLater();
+
+            MultiRowTabWidget* newTab = new MultiRowTabWidget();
+            ml->addWidget(newTab);
+            TabManager* newMgr = new TabManager(&mainWindow);
+            newMgr->setTabWidget(newTab);
+            QObject::connect(newMgr, &TabManager::tabLoadingStarted, [](const QString& tabName){ qDebug() << "Loading started for tab:" << tabName; });
+            QObject::connect(newMgr, &TabManager::tabLoadingFinished, [](const QString& tabName){ qDebug() << "Loading finished for tab:" << tabName; });
+            QTimer::singleShot(0, [newMgr, curIndex]() {
+                newMgr->createAllTabs();
+                MultiRowTabWidget* nt = newMgr->parent()->findChild<MultiRowTabWidget*>();
+                if (nt && curIndex >= 0) nt->setCurrentIndex(curIndex);
+            });
+        }
+    };
+
     // React to user changes: persist and attempt to reload translator
-    QObject::connect(langCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), [&app, &translator, &settings, &titleLabel, &mainWindow, &aboutBtn, langCombo](int idx) {
+    QObject::connect(langCombo, QOverload<int>::of(&QComboBox::currentIndexChanged), [&app, &translator, &settings, &titleLabel, &mainWindow, &aboutBtn, langCombo, &applyLanguage](int idx) {
         if (idx < 0) return;
         QString code = langCombo->itemData(idx).toString();
         if (code.isEmpty()) return;
@@ -1102,59 +1174,12 @@ int main(int argc, char *argv[])
             QMessageBox::warning(nullptr, QObject::tr("Language selection"), QObject::tr("Failed to write language selection to configuration directory"));
         }
         settings.setValue("language", code);
-        // Reload translator
-        app.removeTranslator(&translator);
-        if (code != "en") {
-            tryLoadTranslatorForCode(code, app, &translator);
-        }
-        // Update a few immediate UI strings. Note: not all UI is retranslated
-        // at runtime — we'll recreate the main tab widget so the whole UI
-        // can be retranslated without requiring an application restart.
-        mainWindow.setWindowTitle(QObject::tr("Linux System Viewer"));
-        if (titleLabel) titleLabel->setText(QObject::tr("Linux System Viewer"));
-        if (aboutBtn) aboutBtn->setToolTip(QObject::tr("About Linux System Viewer"));
-
-        // Find current tab widget and attempt an in-place retranslation first
-        // (preserves transient state). If that is not sufficient we still
-        // recreate the tab widget as a fallback so constructor-time tr()
-        // calls run under the new translator.
+        // Apply language and recreate tabs preserving current index
         MultiRowTabWidget* oldTab = mainWindow.findChild<MultiRowTabWidget*>();
-        QWidget* central = mainWindow.centralWidget();
-        QLayout* ml = central ? central->layout() : nullptr;
-        if (oldTab && ml) {
-            // Try in-place retranslation first to preserve state.
-            oldTab->retranslateTabs([](const QString &orig){ return translateTabName(orig); });
+        int curIndex = oldTab ? oldTab->currentIndex() : -1;
+        applyLanguage(code, curIndex);
 
-            // Also retranslate the widgets inside each tab where possible by
-            // sending a custom event or relying on constructors — we keep the
-            // existing recreation fallback below in case some texts are only
-            // set in constructors and don't update correctly.
-
-            // If you prefer to always recreate (current behaviour), uncomment
-            // the block below. For now we preserve state by not deleting the
-            // existing tab widget unless the in-place retranslation proves
-            // insufficient in testing.
-            /*
-            // Remove the old widget from the layout and delete it
-            ml->removeWidget(oldTab);
-            oldTab->setParent(nullptr);
-            oldTab->deleteLater();
-
-            // Create a new tab widget and populate it via a new TabManager
-            MultiRowTabWidget* newTab = new MultiRowTabWidget();
-            ml->addWidget(newTab);
-            TabManager* newManager = new TabManager(&mainWindow);
-            newManager->setTabWidget(newTab);
-            QObject::connect(newManager, &TabManager::tabLoadingStarted, [](const QString& tabName) {
-                qDebug() << "Loading started for tab:" << tabName;
-            });
-            QObject::connect(newManager, &TabManager::tabLoadingFinished, [](const QString& tabName) {
-                qDebug() << "Loading finished for tab:" << tabName;
-            });
-            QTimer::singleShot(0, [newManager]() { newManager->createAllTabs(); });
-            */
-        }
-
+        // Keep the combo in sync (it already is) and inform the user
         QMessageBox::information(nullptr, QObject::tr("Language changed"), QObject::tr("Language saved. UI updated to the selected language."));
     });
 
@@ -1212,6 +1237,67 @@ int main(int argc, char *argv[])
     titleLayout->addWidget(aboutBtn);
     mainLayout->addLayout(titleLayout);
 
+    // Add an "Administration" menu with language actions so the language
+    // chooser is reachable from the menu as well (useful on translated
+    // desktops where the title-area combo may be less discoverable).
+    QMenuBar* mb = mainWindow.menuBar();
+    QMenu* adminMenu = mb->addMenu(QObject::tr("Administration"));
+    QAction* changeLangAct = adminMenu->addAction(QObject::tr("Change language..."));
+    QAction* resetLangAct = adminMenu->addAction(QObject::tr("Reset language"));
+
+    QObject::connect(changeLangAct, &QAction::triggered, [&mainWindow, &settings, langCombo, &applyLanguage]() {
+        QMap<QString, QString> names = shippedLanguageDisplayNames();
+        QStringList codes = discoverShippedLanguageCodes();
+        codes.removeAll("en_GB");
+        codes.removeAll("en");
+        codes.prepend("en_GB");
+        QStringList choices;
+        for (const QString &c : codes) choices << QString("%1 — %2").arg(c, names.value(c, c));
+        int defaultIndex = 0;
+        for (int i = 0; i < codes.size(); ++i) if (codes.at(i) == "en_GB" || codes.at(i) == "en") { defaultIndex = i; break; }
+        bool ok = false;
+        QString pick = QInputDialog::getItem(nullptr, QObject::tr("Choose language"), QObject::tr("Language:"), choices, defaultIndex, false, &ok);
+        if (!ok || pick.isEmpty()) return;
+        QString code = pick.section(' ', 0, 0);
+        if (!writeLangRc(code)) {
+            QMessageBox::warning(nullptr, QObject::tr("Language selection"), QObject::tr("Failed to write language selection to configuration directory"));
+        }
+        settings.setValue("language", code);
+
+        // Apply the language change and preserve current tab selection.
+        MultiRowTabWidget* oldTab = mainWindow.findChild<MultiRowTabWidget*>();
+        int curIndex = oldTab ? oldTab->currentIndex() : -1;
+        applyLanguage(code, curIndex);
+
+        // Keep the combo in sync with the selected code
+        for (int i = 0; i < langCombo->count(); ++i) {
+            if (langCombo->itemData(i).toString() == code) { langCombo->setCurrentIndex(i); break; }
+        }
+        QMessageBox::information(nullptr, QObject::tr("Language changed"), QObject::tr("Language saved. UI updated to the selected language."));
+    });
+
+    QObject::connect(resetLangAct, &QAction::triggered, [langCombo, &settings, &applyLanguage, &mainWindow]() {
+        QString rc = langRcFilePath();
+        if (!rc.isEmpty() && QFile::exists(rc)) {
+            if (!QFile::remove(rc)) {
+                QMessageBox::warning(nullptr, QObject::tr("Reset language"), QObject::tr("Failed to remove %1").arg(rc));
+                return;
+            }
+        }
+        settings.setValue("language", "en");
+
+        MultiRowTabWidget* oldTab = mainWindow.findChild<MultiRowTabWidget*>();
+        int curIndex = oldTab ? oldTab->currentIndex() : -1;
+        applyLanguage("en", curIndex);
+
+        // Reset combo selection to English if present
+        for (int i = 0; i < langCombo->count(); ++i) {
+            QString cd = langCombo->itemData(i).toString();
+            if (cd == "en_GB" || cd == "en") { langCombo->setCurrentIndex(i); break; }
+        }
+        QMessageBox::information(nullptr, QObject::tr("Reset language"), QObject::tr("Saved language selection removed. The application is now using English."));
+    });
+
     // Create tab widget
     MultiRowTabWidget* tabWidget = new MultiRowTabWidget();
     mainLayout->addWidget(tabWidget);
@@ -1222,16 +1308,17 @@ int main(int argc, char *argv[])
     CtrlWHandler* ctrlHandler = new CtrlWHandler(&mainWindow, &mainWindow);
     Q_UNUSED(ctrlHandler);
 
-    // Create tab manager and populate tabs
-    TabManager tabManager;
-    tabManager.setTabWidget(tabWidget);
+    // Create initial TabManager on the heap and parent it to mainWindow so
+    // it can be safely deleted and recreated when the UI language changes.
+    TabManager* tabManager = new TabManager(&mainWindow);
+    tabManager->setTabWidget(tabWidget);
 
-    // Status connections
-    QObject::connect(&tabManager, &TabManager::tabLoadingStarted, [](const QString& tabName) {
+    // Status connections (use the heap-managed tabManager)
+    QObject::connect(tabManager, &TabManager::tabLoadingStarted, [](const QString& tabName) {
         qDebug() << "Loading started for tab:" << tabName;
     });
 
-    QObject::connect(&tabManager, &TabManager::tabLoadingFinished, [](const QString& tabName) {
+    QObject::connect(tabManager, &TabManager::tabLoadingFinished, [](const QString& tabName) {
         qDebug() << "Loading finished for tab:" << tabName;
     });
 
@@ -1240,9 +1327,9 @@ int main(int argc, char *argv[])
     qDebug() << "Application window shown, scheduling tab creation...";
 
     // Defer heavy tab creation to the event loop so the window can render immediately.
-    QTimer::singleShot(0, [&tabManager]() {
+    QTimer::singleShot(0, [tabManager]() {
         qDebug() << "Creating tabs...";
-        tabManager.createAllTabs();
+        tabManager->createAllTabs();
         qDebug() << "All tabs created successfully";
     });
 
