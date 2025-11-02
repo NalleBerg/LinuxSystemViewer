@@ -170,6 +170,302 @@ Smelltu hér fyrir neðan til að afrita slóðina https://lsv.nalle.no/ í skyn
         <translation>Net</translation>
     </message>
 </context>
+
+<context>
+    <name>GeekCpuDialog</name>
+    <message>
+        <source>CPU - Geek Mode</source>
+        <translation>Örgjörvi - tæknimát</translation>
+    </message>
+    <message>
+        <source>CPU Technical Details</source>
+        <translation>Tæknilegar upplýsingar um örgjörva</translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation>Eiginleiki</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Gildi</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Afrita</translation>
+    </message>
+    <message>
+        <source>Save...</source>
+        <translation>Vista...</translation>
+    </message>
+    <message>
+        <source>Save CPU Info</source>
+        <translation>Vista upplýsingar um örgjörva</translation>
+    </message>
+    <message>
+        <source>Text Files (*.txt);;All Files (*)</source>
+        <translation>Textaskrár (*.txt);;Allt (*)</translation>
+    </message>
+    <message>
+        <source>Model</source>
+        <translation>Gerð</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Óþekkt</translation>
+    </message>
+    <message>
+        <source>Vendor</source>
+        <translation>Framleiðandi</translation>
+    </message>
+    <message>
+        <source>CPU Cores</source>
+        <translation>Örgjörvakjarnar</translation>
+    </message>
+    <message>
+        <source>CPU MHz</source>
+        <translation>Örgjörvi MHz</translation>
+    </message>
+    <message>
+        <source>Could not open /proc/cpuinfo</source>
+        <translation>Gat ekki opnað /proc/cpuinfo</translation>
+    </message>
+    <message>
+        <source>Logical processors</source>
+        <translation>Röklegir vinnslueiningar</translation>
+    </message>
+    <message>
+        <source>Physical packages</source>
+        <translation>Fýsískir pakkar</translation>
+    </message>
+    <message>
+        <source>Unique core ids seen (per-logical sample)</source>
+        <translation>Sérstök kjarnanúmer séð (á röklegu sýni)</translation>
+    </message>
+    <message>
+        <source>Per-core current frequencies (kHz)</source>
+        <translation>Núverandi tíðni per kjarna (kHz)</translation>
+    </message>
+</context>
+
+<context>
+    <name>GeekMemoryDialog</name>
+    <message>
+        <source>Memory - Geek Mode</source>
+        <translation>Minni - tæknimát</translation>
+    </message>
+    <message>
+        <source>RAM Technical Details</source>
+        <translation>Tæknilegar upplýsingar um vinnsluminni</translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation>Eiginleiki</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Gildi</translation>
+    </message>
+    <message>
+        <source>RAM Slots</source>
+        <translation>RAM raufar</translation>
+    </message>
+    <message>
+        <source>Free Slots</source>
+        <translation>Lausar raufar</translation>
+    </message>
+    <message>
+        <source>Max Module Size</source>
+        <translation>Hámarks stærð eininga</translation>
+    </message>
+    <message>
+        <source>Total Installed RAM</source>
+        <translation>Heildaruppsett vinnsluminni</translation>
+    </message>
+    <message>
+        <source>RAM Type</source>
+        <translation>Gerð RAM</translation>
+    </message>
+    <message>
+        <source>RAM Speed</source>
+        <translation>RAM hraði</translation>
+    </message>
+    <message>
+        <source>Slot %1: %2, %3, %4</source>
+        <translation>Rauf %1: %2, %3, %4</translation>
+    </message>
+    <message>
+        <source>No Module</source>
+        <translation>Engin eining</translation>
+    </message>
+    <message>
+        <source>Slot %1 Info</source>
+        <translation>Upplýsingar um rauf %1</translation>
+    </message>
+</context>
+
+<context>
+    <name>NetworkGeekDialog</name>
+    <message>
+        <source>Network - Geek Mode</source>
+        <translation>Net - tæknimát</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Afrita</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Vista</translation>
+    </message>
+    <message>
+        <source>Save network info</source>
+        <translation>Vista netupplýsingar</translation>
+    </message>
+    <message>
+        <source>Text files (*.txt);;All files (*)</source>
+        <translation>Textaskrár (*.txt);;Allt (*)</translation>
+    </message>
+</context>
+
+<context>
+    <name>NetworkTab</name>
+    <message>
+        <source>Network</source>
+        <translation>Net</translation>
+    </message>
+    <message>
+        <source>Geek Mode</source>
+        <translation>Tæknimát</translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation>Eiginleiki</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Gildi</translation>
+    </message>
+</context>
+
+<context>
+    <name>OSTab</name>
+    <message>
+        <source>Operating System</source>
+        <translation>Stýrikerfi</translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation>Eiginleiki</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Gildi</translation>
+    </message>
+</context>
+
+<context>
+    <name>PCTab</name>
+    <message>
+        <source>PC Info</source>
+        <translation>Upplýsingar um tölvu</translation>
+    </message>
+    <message>
+        <source>PC Information</source>
+        <translation>Upplýsingar um tölvu</translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation>Eiginleiki</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Gildi</translation>
+    </message>
+</context>
+
+<context>
+    <name>PeripheralsTab</name>
+    <message>
+        <source>Peripherals</source>
+        <translation>Aðskotin tæki</translation>
+    </message>
+    <message>
+        <source>Connected Peripherals and Devices</source>
+        <translation>Tengd aðskotin tæki og búnaður</translation>
+    </message>
+    <message>
+        <source>USB Devices</source>
+        <translation>USB tæki</translation>
+    </message>
+</context>
+
+<context>
+    <name>PortsTab</name>
+    <message>
+        <source>Ports</source>
+        <translation>Tengi</translation>
+    </message>
+    <message>
+        <source>System Ports Information</source>
+        <translation>Upplýsingar um tengi kerfisins</translation>
+    </message>
+    <message>
+        <source>USB Ports</source>
+        <translation>USB tengi</translation>
+    </message>
+    <message>
+        <source>Serial Ports</source>
+        <translation>Raðtengi</translation>
+    </message>
+    <message>
+        <source>PCI Ports</source>
+        <translation>PCI tengi</translation>
+    </message>
+    <message>
+        <source>Port Status</source>
+        <translation>Staða tengja</translation>
+    </message>
+    <message>
+        <source>USB Ports: Not detected</source>
+        <translation>USB tengi: Ekki uppgötvað</translation>
+    </message>
+    <message>
+        <source>Serial Ports: Not detected</source>
+        <translation>Raðtengi: Ekki uppgötvað</translation>
+    </message>
+    <message>
+        <source>PCI Ports: Not detected</source>
+        <translation>PCI tengi: Ekki uppgötvuð</translation>
+    </message>
+</context>
+
+<context>
+    <name>AudioTab</name>
+    <message>
+        <source>Audio</source>
+        <translation>Hljóð</translation>
+    </message>
+    <message>
+        <source>Audio System Information</source>
+        <translation>Upplýsingar um hljóðkerfi</translation>
+    </message>
+    <message>
+        <source>Audio Devices</source>
+        <translation>Hljóðtæki</translation>
+    </message>
+    <message>
+        <source>Sound Cards</source>
+        <translation>Hljóðkort</translation>
+    </message>
+    <message>
+        <source>Audio Server</source>
+        <translation>Hljóðþjónn</translation>
+    </message>
+    <message>
+        <source>Playback Devices</source>
+        <translation>Uppspilstæki</translation>
+    </message>
+</context>
 <context>
     <name>GraphicsTab</name>
     <message>
