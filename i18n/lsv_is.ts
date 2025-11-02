@@ -155,12 +155,50 @@ Smelltu hér fyrir neðan til að afrita slóðina https://lsv.nalle.no/ í skyn
         <source>Memory</source>
         <translation>Minni</translation>
     </message>
+    <message>
+        <source>Geek Mode</source>
+        <translation>Tæknimát</translation>
+    </message>
+    <message>
+        <source>RAM Total: %1 GB</source>
+        <translation>RAM samtals: %1 GB</translation>
+    </message>
+    <message>
+        <source>Used: %1 GB</source>
+        <translation>Notað: %1 GB</translation>
+    </message>
+    <message>
+        <source>Free: %1 GB (%2%)</source>
+        <translation>Laust: %1 GB (%2%)</translation>
+    </message>
+    <message>
+        <source>SWAP Total: %1 GB</source>
+        <translation>SWAP samtals: %1 GB</translation>
+    </message>
 </context>
 <context>
     <name>StorageTab</name>
     <message>
         <source>Storage</source>
         <translation>Geymsla</translation>
+    </message>
+    <message>
+        <source>Storage Devices and Disk Information</source>
+        <translation>Geymslu- og diskaupplýsingar</translation>
+    </message>
+    <message>
+        <source>Mount Points</source>
+        <translation>Festipunktar</translation>
+    </message>
+    <message>
+        <source>Mount Points: Not detected</source>
+        <translation>Festipunktar: Ekki uppgötvaðir</translation>
+    </message>
+    <message>
+        <source>Mount Points:
+</source>
+        <translation>Festipunktar:
+</translation>
     </message>
 </context>
 <context>
@@ -553,6 +591,10 @@ Smelltu hér fyrir neðan til að afrita slóðina https://lsv.nalle.no/ í skyn
         <source>Screen</source>
         <translation>Skjár</translation>
     </message>
+    <message>
+        <source>Display and Monitor Information</source>
+        <translation>Upplýsingar um skjá og skjámyndar</translation>
+    </message>
 </context>
 <context>
     <name>PortsTab</name>
@@ -573,6 +615,38 @@ Smelltu hér fyrir neðan til að afrita slóðina https://lsv.nalle.no/ í skyn
     <message>
         <source>Mainboard</source>
         <translation>Móðurborð</translation>
+    </message>
+    <message>
+        <source>Motherboard and System Information</source>
+        <translation>Upplýsingar um móðurborð og kerfi</translation>
+    </message>
+    <message>
+        <source>System Board</source>
+        <translation>Kerfistafla</translation>
+    </message>
+    <message>
+        <source>Chipset</source>
+        <translation>Chipset</translation>
+    </message>
+    <message>
+        <source>BIOS/UEFI</source>
+        <translation>BIOS/UEFI</translation>
+    </message>
+    <message>
+        <source>Expansion Slots</source>
+        <translation>Útvíkkunarraufar</translation>
+    </message>
+    <message>
+        <source>Loading %1 information...</source>
+        <translation>Hleður %1 upplýsingar...</translation>
+    </message>
+    <message>
+        <source>System Board: Not detected</source>
+        <translation>Kerfistafla: Ekki uppgötvuð</translation>
+    </message>
+    <message>
+        <source>Chipset: Not detected</source>
+        <translation>Chipset: Ekki uppgötvað</translation>
     </message>
 </context>
 <context>
