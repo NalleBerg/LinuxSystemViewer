@@ -54,6 +54,61 @@ cmake --build build_release -j
 ./makeit.sh
 ```
 
+Packaging note — where to find the built artifacts and how to install
+------------------------------------------------------------------
+
+The packaging script `./makeit.sh` builds the project and creates distribution
+artifacts (DEB/RPM and a small `LSV` runtime bundle) inside the `./LSV`
+directory at the repository root. After `./makeit.sh` completes you should see
+one or more files under `./LSV/` such as `*.deb`, `*.rpm` and the runtime
+executable/bundle named `LSV`.
+
+To install the package you built (example for Debian/Ubuntu):
+
+```bash
+# Install the generated .deb (adjust path if your build puts files elsewhere)
+sudo apt install ./LSV/*.deb
+
+# Verify the installed executable is available
+which LSV
+# Should print: /usr/bin/LSV
+
+# Run a quick check (list supported languages or RC path):
+/usr/bin/LSV --list-langs
+/usr/bin/LSV --rc-path
+```
+
+If you prefer not to install a package you can also move the runtime `LSV`
+bundle into place manually. After running `./makeit.sh` the `LSV` runtime can
+be copied to `/usr/bin` so all users can run it from the menu or command line:
+
+```bash
+# Copy runtime to a system-wide location and make it executable
+sudo cp ./LSV/LSV /usr/bin/LSV
+sudo chown root:root /usr/bin/LSV
+sudo chmod 0755 /usr/bin/LSV
+
+# Now you can run it as a normal system command
+/usr/bin/LSV
+```
+
+Icons & desktop installer (coming soon)
+--------------------------------------
+
+For convenience we will provide a small shell helper that installs
+icons and the desktop entry (so the application appears in the menus
+for GNOME/Cinnamon/MATE/KDE). That helper script will live inside
+the `./LSV` directory next to the built artifacts. For now packaging
+only places the runtime bundle and packages in `./LSV`; the icon and
+desktop installer script will be added in a follow-up change.
+
+If you want to install the desktop file and icon manually right now,
+copy `lsv.desktop` to `/usr/share/applications/` and `lsv.png` to a
+matching location under `/usr/share/icons/hicolor/` and update the
+desktop database (requires sudo). See the repository `lsv.desktop` for
+the packaged desktop file we use.
+
+
 If you need a developer package that includes the logger, build with
 `-DLSV_ENABLE_DEBUG_LOGGER=ON` before running `./makeit.sh`, or add the
 `--debug-logger` option to the packaging script (not enabled by default).
@@ -93,6 +148,24 @@ Why this model
 Contributing
 - Bug reports, feature requests and patches are welcome. If you plan to add
 	functionality that writes persistent data, please discuss it first.
+
+Help translate LSV
+------------------
+
+We welcome help translating Linux System Viewer into more languages. If you'd like to contribute translations (for example Icelandic), follow these steps:
+
+1. Install Qt Linguist tools (lupdate / linguist / lrelease). On Debian/Ubuntu: `sudo apt install qttools5-dev-tools qttools5-dev`.
+2. Update or open the `.ts` file for the language in `i18n/` (e.g. `i18n/lsv_is.ts`) using Qt Linguist, translate any unfinished entries and mark them as "finished".
+3. Run `lrelease i18n/lsv_<code>.ts` to generate the binary `i18n/lsv_<code>.qm` file used at runtime.
+4. Commit both the `.ts` and the generated `.qm` to a branch and open a pull request. Example commit message: `i18n(is): complete Icelandic translation`.
+
+Notes for translators
+- Keep HTML/markup inside translations unchanged (e.g. `&lt;br&gt;`, links, `%1` placeholders).
+- Try to keep technical labels short and consistent with tab names (e.g. "Summary" -> "Yfirlit").
+- If you want me to help with an initial draft I can provide a first-pass translation and you can refine it with Qt Linguist.
+
+Contact
+- Open a PR on GitHub or email me at the project contact address shown on the project website.
 
 License
 - This project is distributed under the GNU General Public License v2 (GPLv2).
