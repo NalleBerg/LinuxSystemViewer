@@ -11,7 +11,7 @@
  *
  * Security notes:
  * - This program intentionally restricts allowed target basenames to a short
- *   whitelist (LSV, lsv, lsv-x86_64.AppImage). Adjust with care.
+ *   whitelist (LSV, lsv). Adjust with care.
  * - The safest installation is to place this binary in /usr/local/bin,
  *   chown root:root /usr/local/bin/lsv-elevate && chmod 4755 /usr/local/bin/lsv-elevate
  * - Running GUI apps as root is discouraged; the user asked for this for
@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 
     /* Whitelist allowed executable basenames to reduce accidental misuse */
     if (strcmp(basename, "LSV") != 0 && strcmp(basename, "lsv") != 0 &&
-        strcmp(basename, "lsv-x86_64.AppImage") != 0 && strcmp(basename, "lsv-elevated") != 0) {
+        strcmp(basename, "lsv-elevated") != 0) {
         fprintf(stderr, "error: target '%s' not allowed (basename '%s')\n", target, basename);
         return 4;
     }

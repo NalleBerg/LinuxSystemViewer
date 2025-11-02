@@ -2,6 +2,7 @@
 #define CPU_H
 
 #include <QTableWidget>
+#include <QObject>
 #include <QTableWidgetItem>
 #include <QJsonObject>
 #include <QFile>
@@ -22,7 +23,7 @@ QString getCpuInfo();
 // CPU Headers
 QStringList getCpuHeaders()
 {
-    return QStringList() << "Property" << "Value" << "Unit";
+    return QStringList() << QObject::tr("Property") << QObject::tr("Value") << QObject::tr("Unit");
 }
 
 // CPU Table Styling
@@ -57,7 +58,7 @@ void loadCpuInformation(QTableWidget* table, const QJsonObject& data)
 
     QFile file("/proc/cpuinfo");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        addRowToTable(table, QStringList() << "Error" << "Could not read /proc/cpuinfo" << "");
+        addRowToTable(table, QStringList() << QObject::tr("Error") << QObject::tr("Could not read /proc/cpuinfo") << "");
         return;
     }
     QTextStream in(&file);
@@ -97,22 +98,22 @@ void loadCpuInformation(QTableWidget* table, const QJsonObject& data)
     }
 
     // Total number of processors (logical)
-    addRowToTable(table, QStringList() << "Total number of processors" << QString::number(logicalCount) << "");
+    addRowToTable(table, QStringList() << QObject::tr("Total number of processors") << QString::number(logicalCount) << "");
 
     // Number of physical processors (sockets)
     int physicalCount = physicalIds.size() > 0 ? physicalIds.size() : 1;
-    addRowToTable(table, QStringList() << "Number of processor (Physical)" << QString::number(physicalCount) << "");
+    addRowToTable(table, QStringList() << QObject::tr("Number of processor (Physical)") << QString::number(physicalCount) << "");
 
     // Vendor and Model
-    addRowToTable(table, QStringList() << "Vendor" << (vendor.isEmpty() ? "Unknown" : vendor) << "");
-    addRowToTable(table, QStringList() << "Model" << (model.isEmpty() ? "Unknown" : model) << "");
+    addRowToTable(table, QStringList() << QObject::tr("Vendor") << (vendor.isEmpty() ? QObject::tr("Unknown") : vendor) << "");
+    addRowToTable(table, QStringList() << QObject::tr("Model") << (model.isEmpty() ? QObject::tr("Unknown") : model) << "");
 
     // Cache size and BogoMIPS
-    addRowToTable(table, QStringList() << "Cache size" << (cacheSize.isEmpty() ? "Unknown" : cacheSize) << "");
-    addRowToTable(table, QStringList() << "Bogomips" << (bogomips.isEmpty() ? "Unknown" : bogomips) << "");
+    addRowToTable(table, QStringList() << QObject::tr("Cache size") << (cacheSize.isEmpty() ? QObject::tr("Unknown") : cacheSize) << "");
+    addRowToTable(table, QStringList() << QObject::tr("Bogomips") << (bogomips.isEmpty() ? QObject::tr("Unknown") : bogomips) << "");
 
     // Current frequency (GHz)
-    addRowToTable(table, QStringList() << "Current freq (GHz)" << (currentFreqGHz.isEmpty() ? "Unknown" : currentFreqGHz) << "GHz");
+    addRowToTable(table, QStringList() << QObject::tr("Current freq (GHz)") << (currentFreqGHz.isEmpty() ? QObject::tr("Unknown") : currentFreqGHz) << "GHz");
 
     // Min / Max freq from sysfs (if available)
     QFile maxFreqFile("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
@@ -120,9 +121,9 @@ void loadCpuInformation(QTableWidget* table, const QJsonObject& data)
         QString maxFreq = QTextStream(&maxFreqFile).readLine().trimmed();
         maxFreqFile.close();
         double maxGHz = maxFreq.toLongLong() / 1000000.0;
-        addRowToTable(table, QStringList() << "Max freq (GHz)" << QString::number(maxGHz, 'f', 2) << "GHz");
+    addRowToTable(table, QStringList() << QObject::tr("Max freq (GHz)") << QString::number(maxGHz, 'f', 2) << "GHz");
     } else {
-        addRowToTable(table, QStringList() << "Max freq (GHz)" << "Unknown" << "GHz");
+    addRowToTable(table, QStringList() << QObject::tr("Max freq (GHz)") << QObject::tr("Unknown") << "GHz");
     }
 
     QFile minFreqFile("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq");
@@ -130,9 +131,9 @@ void loadCpuInformation(QTableWidget* table, const QJsonObject& data)
         QString minFreq = QTextStream(&minFreqFile).readLine().trimmed();
         minFreqFile.close();
         double minGHz = minFreq.toLongLong() / 1000000.0;
-        addRowToTable(table, QStringList() << "Min Freq (GHz)" << QString::number(minGHz, 'f', 2) << "GHz");
+    addRowToTable(table, QStringList() << QObject::tr("Min Freq (GHz)") << QString::number(minGHz, 'f', 2) << "GHz");
     } else {
-        addRowToTable(table, QStringList() << "Min Freq (GHz)" << "Unknown" << "GHz");
+    addRowToTable(table, QStringList() << QObject::tr("Min Freq (GHz)") << QObject::tr("Unknown") << "GHz");
     }
 }
 
@@ -141,7 +142,7 @@ QString getCpuInfo()
 {
     QFile file("/proc/cpuinfo");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        return "Error reading CPU information";
+        return QObject::tr("Error reading CPU information");
     }
     
     QTextStream in(&file);
@@ -161,7 +162,7 @@ QString getCpuInfo()
         }
     }
     
-    return result.isEmpty() ? "Unknown CPU" : result;
+    return result.isEmpty() ? QObject::tr("Unknown CPU") : result;
 }
 
 #endif // CPU_H

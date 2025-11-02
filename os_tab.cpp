@@ -11,6 +11,7 @@
 #include <QProcess>
 #include <QDir>
 #include <sys/utsname.h>
+#include <QCoreApplication>
 
 OSTab::OSTab(const QString& tabName, const QString& command, bool showHeader, const QString& headerText, QWidget* parent)
     : TabWidgetBase(tabName, QString(), showHeader, headerText, parent)
@@ -23,13 +24,13 @@ OSTab::OSTab(const QString& tabName, const QString& command, bool showHeader, co
     QVBoxLayout* contentLayout = new QVBoxLayout(contentWidget);
     contentLayout->setContentsMargins(0,0,0,0);
 
-    QLabel* headline = new QLabel("Operating System");
+    QLabel* headline = new QLabel(QCoreApplication::translate("OSTab", "Operating System"));
     headline->setStyleSheet("font-size: 15px; font-weight: bold; color: #222; margin-bottom: 2px;");
     contentLayout->addWidget(headline);
 
     tableWidget = new QTableWidget();
     tableWidget->setColumnCount(2);
-    tableWidget->setHorizontalHeaderLabels(QStringList() << "Property" << "Value");
+    tableWidget->setHorizontalHeaderLabels(QStringList() << QCoreApplication::translate("OSTab", "Property") << QCoreApplication::translate("OSTab", "Value"));
     tableWidget->verticalHeader()->setVisible(false);
     tableWidget->horizontalHeader()->setStyleSheet(
         "QHeaderView::section {"
@@ -122,7 +123,7 @@ OSTab::OSTab(const QString& tabName, const QString& command, bool showHeader, co
     QString unameOut = getUnameString();
     appendLog(QString("OSTab: getUnameString returned length %1").arg(unameOut.size()));
     if (!unameOut.isEmpty()) {
-        osOutput += QString("uname: %1\n").arg(unameOut);
+    osOutput += QCoreApplication::translate("OSTab", "uname: %1\n").arg(unameOut);
         appendLog("OSTab: Added uname() output");
     } else {
         appendLog("OSTab: uname() and /proc/version both unavailable");

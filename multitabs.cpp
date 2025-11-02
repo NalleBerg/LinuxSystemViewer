@@ -1,4 +1,5 @@
 #include "multitabs.h"
+#include "tab_widget_base.h"
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QPushButton>
@@ -9,12 +10,13 @@
 #include <QResizeEvent>
 #include <QScreen>
 #include <QApplication>
+#include <QObject>
 
 MultiRowTabWidget::MultiRowTabWidget(QWidget* parent)
     : QWidget(parent), m_currentIndex(-1)
 {
     setupUI();
-    qDebug() << "MultiRowTabWidget: Initialized";
+    qDebug() << QObject::tr("MultiRowTabWidget: Initialized");
 }
 
 void MultiRowTabWidget::setupUI()
@@ -50,7 +52,7 @@ QSize MultiRowTabWidget::calculateOptimalSize()
     return QSize(850, 480);
 }
 
-void MultiRowTabWidget::addTab(QWidget* widget, const QString& title)
+void MultiRowTabWidget::addTab(QWidget* widget, const QString& title, const QString& originalName)
 {
     QPushButton* button = new QPushButton(title);
     button->setCheckable(true);
@@ -79,7 +81,9 @@ void MultiRowTabWidget::addTab(QWidget* widget, const QString& title)
     
     connect(button, &QPushButton::clicked, this, &MultiRowTabWidget::onTabButtonClicked);
     
-    m_tabs.append(TabInfo(title, widget, button));
+    // Store the canonical original name (if provided) so we can retranslate
+    // this tab later when the application language changes.
+    m_tabs.append(TabInfo(originalName.isEmpty() ? title : originalName, title, widget, button));
     m_stackedWidget->addWidget(widget);
     
     updateTabLayout();
@@ -88,7 +92,40 @@ void MultiRowTabWidget::addTab(QWidget* widget, const QString& title)
         setCurrentIndex(0);
     }
     
-    qDebug() << "MultiRowTabWidget: Added tab" << title << "Total tabs:" << m_tabs.size();
+    qDebug() << QObject::tr("MultiRowTabWidget: Added tab") << title << QObject::tr("Total tabs:") << m_tabs.size();
+}
+
+void MultiRowTabWidget::retranslateTabs(const std::function<QString(const QString&)>& translatorFunc)
+{
+    if (!translatorFunc) return;
+    for (int i = 0; i < m_tabs.size(); ++i) {
+        TabInfo &ti = m_tabs[i];
+        QString newTitle = translatorFunc(ti.originalName.isEmpty() ? ti.title : ti.originalName);
+        ti.title = newTitle;
+        if (ti.button) ti.button->setText(newTitle);
+        // Ask the tab widget to refresh its UI strings if it supports it.
+        if (ti.widget) {
+            TabWidgetBase* tw = qobject_cast<TabWidgetBase*>(ti.widget);
+            if (tw) {
+                tw->retranslateUi();
+            }
+        }
+    }
+    // After changing titles, update layout to recalc widths
+    updateTabLayout();
+}
+
+void MultiRowTabWidget::shutdownTabs()
+{
+    for (int i = 0; i < m_tabs.size(); ++i) {
+        QWidget* w = m_tabs[i].widget;
+        if (!w) continue;
+        // If the widget derives from TabWidgetBase, ask it to shutdown
+        TabWidgetBase* tw = qobject_cast<TabWidgetBase*>(w);
+        if (tw) {
+            tw->shutdown();
+        }
+    }
 }
 
 void MultiRowTabWidget::updateTabLayout()
@@ -107,7 +144,7 @@ void MultiRowTabWidget::updateTabLayout()
     const int maxRows = 2;
     int tabsPerRow = (tabCount + maxRows - 1) / maxRows; // Ceiling division
     
-    qDebug() << "MultiRowTabWidget: Arranging" << tabCount << "tabs in" << maxRows << "rows with" << tabsPerRow << "tabs per row";
+    qDebug() << QObject::tr("MultiRowTabWidget: Arranging") << tabCount << QObject::tr("tabs in") << maxRows << QObject::tr("rows with") << tabsPerRow << QObject::tr("tabs per row");
     
     // Calculate tab width based on available space
     int availableWidth = width() - 30; // Account for margins and spacing
@@ -146,7 +183,7 @@ void MultiRowTabWidget::updateTabLayout()
     // Force the tab container to the right size
     m_tabContainer->setMinimumSize(availableWidth, requiredHeight - 10);
     
-    qDebug() << "MultiRowTabWidget: Tab area height set to:" << requiredHeight;
+    qDebug() << QObject::tr("MultiRowTabWidget: Tab area height set to:") << requiredHeight;
     
     updateTabStyling();
 }

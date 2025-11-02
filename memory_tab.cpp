@@ -10,9 +10,9 @@ MemoryTab::MemoryTab(QWidget* parent) : QWidget(parent)
 {
     // Headline and Geek button on same line
     QHBoxLayout* headlineLayout = new QHBoxLayout();
-    QLabel* headline = new QLabel("Memory");
+    QLabel* headline = new QLabel(tr("Memory"));
     headline->setStyleSheet("font-size: 15px; font-weight: bold; color: #222; margin-bottom: 0px;");
-    geekButton = new QPushButton("Geek Mode", this);
+    geekButton = new QPushButton(tr("Geek Mode"), this);
     geekButton->setStyleSheet(
         "QPushButton {"
         "  background-color: #3498db;"
@@ -149,12 +149,12 @@ void MemoryTab::updateMemoryInfo()
     double ramUsedGB = ramTotalGB - ramFreeGB;
     int ramPercent = ramTotalGB > 0 ? (int)((ramUsedGB / ramTotalGB) * 100) : 0;
 
-    ramTotalLabel->setText(QString("RAM Total: %1 GB").arg(QString::number(ramTotalGB, 'f', 3)));
+    ramTotalLabel->setText(tr("RAM Total: %1 GB").arg(QString::number(ramTotalGB, 'f', 3)));
     ramUsageBar->setValue(ramPercent);
     setBarColor(ramUsageBar, ramPercent);
 
-    ramUsedLabel->setText(QString("Used: %1 GB").arg(QString::number(ramUsedGB, 'f', 3)));
-    ramFreeLabel->setText(QString("Free: %1 GB (%2%)").arg(QString::number(ramFreeGB, 'f', 3)).arg(100 - ramPercent));
+    ramUsedLabel->setText(tr("Used: %1 GB").arg(QString::number(ramUsedGB, 'f', 3)));
+    ramFreeLabel->setText(tr("Free: %1 GB (%2%)").arg(QString::number(ramFreeGB, 'f', 3)).arg(100 - ramPercent));
 
     // SWAP
     double swapTotalGB = info.totalswap * info.mem_unit / (1024.0 * 1024 * 1024);
@@ -162,12 +162,12 @@ void MemoryTab::updateMemoryInfo()
     double swapUsedGB = swapTotalGB - swapFreeGB;
     int swapPercent = swapTotalGB > 0 ? (int)((swapUsedGB / swapTotalGB) * 100) : 0;
 
-    swapTotalLabel->setText(QString("SWAP Total: %1 GB").arg(QString::number(swapTotalGB, 'f', 3)));
+    swapTotalLabel->setText(tr("SWAP Total: %1 GB").arg(QString::number(swapTotalGB, 'f', 3)));
     swapUsageBar->setValue(swapPercent);
     setBarColor(swapUsageBar, swapPercent);
 
-    swapUsedLabel->setText(QString("Used: %1 GB").arg(QString::number(swapUsedGB, 'f', 3)));
-    swapFreeLabel->setText(QString("Free: %1 GB (%2%)").arg(QString::number(swapFreeGB, 'f', 3)).arg(100 - swapPercent));
+    swapUsedLabel->setText(tr("Used: %1 GB").arg(QString::number(swapUsedGB, 'f', 3)));
+    swapFreeLabel->setText(tr("Free: %1 GB (%2%)").arg(QString::number(swapFreeGB, 'f', 3)).arg(100 - swapPercent));
 }
 
 void MemoryTab::setBarColor(QProgressBar* bar, int percent)
@@ -206,12 +206,12 @@ void MemoryTab::showGeekMode()
 GeekMemoryDialog::GeekMemoryDialog(QWidget* parent)
     : QDialog(parent)
 {
-    setWindowTitle("Memory - Geek Mode");
+    setWindowTitle(tr("Memory - Geek Mode"));
     setModal(true);
     resize(600, 400);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
-    QLabel* titleLabel = new QLabel("RAM Technical Details");
+    QLabel* titleLabel = new QLabel(tr("RAM Technical Details"));
     titleLabel->setStyleSheet(
         "QLabel {"
         "  font-size: 16px;"
@@ -224,7 +224,7 @@ GeekMemoryDialog::GeekMemoryDialog(QWidget* parent)
 
     table = new QTableWidget();
     table->setColumnCount(2);
-    table->setHorizontalHeaderLabels(QStringList() << "Property" << "Value");
+    table->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
     table->verticalHeader()->setVisible(false);
     table->horizontalHeader()->setStyleSheet(
         "QHeaderView::section {"
@@ -333,21 +333,21 @@ void GeekMemoryDialog::fillTable()
         row++;
     };
 
-    addRow("RAM Slots", QString::number(slotCount));
-    addRow("Free Slots", QString::number(freeSlots));
-    addRow("Max Module Size", maxModuleSize > 0 ? QString("%1 MB").arg(maxModuleSize) : "Unknown");
-    addRow("Total Installed RAM", totalMaxRam > 0 ? QString("%1 MB").arg(totalMaxRam) : "Unknown");
-    addRow("RAM Type", ramType.isEmpty() ? "Unknown" : ramType);
-    addRow("RAM Speed", ramSpeed.isEmpty() ? "Unknown" : ramSpeed);
+    addRow(tr("RAM Slots"), QString::number(slotCount));
+    addRow(tr("Free Slots"), QString::number(freeSlots));
+    addRow(tr("Max Module Size"), maxModuleSize > 0 ? QString("%1 MB").arg(maxModuleSize) : tr("Unknown"));
+    addRow(tr("Total Installed RAM"), totalMaxRam > 0 ? QString("%1 MB").arg(totalMaxRam) : tr("Unknown"));
+    addRow(tr("RAM Type"), ramType.isEmpty() ? tr("Unknown") : ramType);
+    addRow(tr("RAM Speed"), ramSpeed.isEmpty() ? tr("Unknown") : ramSpeed);
 
     // Add per-slot info
     for (int i = 0; i < devices.size(); ++i) {
         const auto& dev = devices[i];
-        QString slotInfo = QString("Slot %1: %2, %3, %4")
+        QString slotInfo = tr("Slot %1: %2, %3, %4")
             .arg(i + 1)
-            .arg(dev.value("Size", "No Module"))
-            .arg(dev.value("Type", "Unknown"))
-            .arg(dev.value("Configured Clock Speed", dev.value("Speed", "Unknown")));
-        addRow(QString("Slot %1 Info").arg(i + 1), slotInfo);
+            .arg(dev.value("Size", tr("No Module")))
+            .arg(dev.value("Type", tr("Unknown")))
+            .arg(dev.value("Configured Clock Speed", dev.value("Speed", tr("Unknown"))));
+        addRow(tr("Slot %1 Info").arg(i + 1), slotInfo);
     }
 }

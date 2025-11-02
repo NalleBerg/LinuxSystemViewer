@@ -15,7 +15,7 @@ class NetworkTab : public TabWidgetBase
     Q_OBJECT
 public:
     explicit NetworkTab(QWidget* parent = nullptr)
-        : TabWidgetBase("Network", "", false, "", parent)
+        : TabWidgetBase(tr("Network"), "", false, "", parent)
     {
         initializeTab();
     }
@@ -28,9 +28,9 @@ protected:
 
         // Headline + Geek button
         QHBoxLayout* headlineLayout = new QHBoxLayout();
-        QLabel* headline = new QLabel("Network");
+    QLabel* headline = new QLabel(tr("Network"));
         headline->setStyleSheet("font-size: 15px; font-weight: bold; color: #222; margin-bottom: 0px;");
-        QPushButton* geekButton = new QPushButton("Geek Mode", w);
+    QPushButton* geekButton = new QPushButton(tr("Geek Mode"), w);
         geekButton->setStyleSheet(
             "QPushButton { background-color: #3498db; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 11px; min-width: 80px; max-height: 22px;}"
             "QPushButton:hover { background-color: #2980b9; }"
@@ -43,7 +43,7 @@ protected:
         // Table (Property / Value)
         QTableWidget* table = new QTableWidget();
         table->setColumnCount(2);
-        table->setHorizontalHeaderLabels(QStringList() << "Property" << "Value");
+    table->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
         table->verticalHeader()->setVisible(false);
         styleNetworkTable(table);
         table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);

@@ -7,9 +7,10 @@
 #include <QIODevice>
 #include <QTableWidget>
 #include <QDebug>
+#include <QCoreApplication>
 
 PCTab::PCTab(QWidget* parent)
-    : TabWidgetBase("PC Info", "hostnamectl && cat /sys/class/dmi/id/* 2>/dev/null", true, "", parent)
+    : TabWidgetBase(QCoreApplication::translate("PCTab", "PC Info"), "hostnamectl && cat /sys/class/dmi/id/* 2>/dev/null", true, "", parent)
 {
     initializeTab();
 }
@@ -19,7 +20,7 @@ QWidget* PCTab::createUserFriendlyView()
     QWidget* mainWidget = new QWidget();
     QVBoxLayout* mainLayout = new QVBoxLayout(mainWidget);
 
-    QLabel* titleLabel = new QLabel("PC Information");
+    QLabel* titleLabel = new QLabel(QCoreApplication::translate("PCTab", "PC Information"));
     titleLabel->setStyleSheet("font-size: 18px; font-weight: bold; color: #2c3e50;");
     mainLayout->addWidget(titleLabel);
 
@@ -33,7 +34,7 @@ QWidget* PCTab::createUserFriendlyView()
 void PCTab::setupTable(QTableWidget* table)
 {
     table->setColumnCount(2);
-    table->setHorizontalHeaderLabels(QStringList() << "Property" << "Value");
+    table->setHorizontalHeaderLabels(QStringList() << QCoreApplication::translate("PCTab", "Property") << QCoreApplication::translate("PCTab", "Value"));
     table->verticalHeader()->setVisible(false);
     table->horizontalHeader()->setStretchLastSection(true);
     table->setSelectionBehavior(QAbstractItemView::SelectItems);

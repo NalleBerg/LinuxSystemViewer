@@ -13,9 +13,16 @@ Key features
 - Clean, read-only design: the app gathers information using system utilities and
 	presents it without modifying the system.
 - Two presentation modes: user-friendly summaries and detailed technical views.
-- Portable packaging via AppImage for easy distribution.
+- Packaging: DEB and RPM via CPack for easy distribution on common Linux distros.
 - Developer-friendly build options and an opt-in debug logger for safe
 	troubleshooting (disabled by default in release builds).
+
+Configuration
+- Persistent language selection is stored in `~/.config/LSV/lsv_lang.rc`. The
+	application will consult only this file for the saved language choice — no
+	other locations are used. A "Change language" dropdown is available in the
+	app title bar and a "Reset language" button removes the saved file and
+	reverts the UI to English.
 
 Screenshots and binary downloads
 - Live demo, releases and packaging builds are published at: https://lsv.nalle.no/
@@ -41,34 +48,33 @@ cmake --build build_release -j
 ./build_release/LSV
 ```
 
-3. Build the AppImage (default packaging uses a release build with no logger):
+3. Create DEB and RPM packages (default packaging uses a release build with no logger):
 
 ```bash
 ./makeit.sh
 ```
 
-If you need a developer AppImage that includes the logger, build with
+If you need a developer package that includes the logger, build with
 `-DLSV_ENABLE_DEBUG_LOGGER=ON` before running `./makeit.sh`, or add the
 `--debug-logger` option to the packaging script (not enabled by default).
 
 One-liner examples
-- Default (build, package and RUN the AppImage):
+- Default (build and package for DEB/RPM):
 
 ```bash
 ./makeit.sh
 ```
 
-- Build/package without running the AppImage (opt-out):
+- Build/package without running any runtime tests (opt-out):
 
 ```bash
 ./makeit.sh --norun
 ```
 
-- Create a developer AppImage that includes the debug logger and run it (logger still needs LSV_DEBUG=1 at runtime):
+- Create a developer package that includes the debug logger (runtime still needs LSV_DEBUG=1 to write logs):
 
 ```bash
-./makeit.sh --debug-logger --run
-LSV_DEBUG=1 ./LSV/lsv-x86_64.AppImage
+./makeit.sh --debug-logger
 ```
 
 Logging policy and design
@@ -77,7 +83,7 @@ Logging policy and design
 	`LSV_ENABLE_DEBUG_LOGGER` is enabled. Runtime logging still requires the
 	environment variable `LSV_DEBUG=1` (or `true`) to actually write logs.
 - Logs are deliberately written to the system temp dir to avoid persistent
-	files in user folders or inside AppImages.
+	files in user folders or inside packaged artifacts.
 
 Why this model
 - Respect for users' machines: the application is intended to be read-only for
@@ -98,5 +104,5 @@ Enjoy — and thanks for keeping users' machines respected and secure.
 
 
 
-This document explains how logging works, how to enable it for development, and how to produce release builds / AppImages without logging.
+This document explains how logging works, how to enable it for development, and how to produce release builds / packages without logging.
 

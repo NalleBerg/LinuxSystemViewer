@@ -245,10 +245,10 @@ namespace {
     // namespace to limit visibility to this translation unit.
     static void openUrlRobust(const QString &link)
     {
-        // First try to launch the system default browser with a "new-window"
-        // flag if we can detect it. This helps ensure a visible window/tab is
-        // opened for portable AppImage users (some browsers open a tab in an
-        // existing session without raising the window).
+    // First try to launch the system default browser with a "new-window"
+    // flag if we can detect it. This helps ensure a visible window/tab is
+    // opened for users (some browsers open a tab in an existing session
+    // without raising the window).
         {
             auto brush = detectDefaultBrowserNewWindow();
             const QString &prog = brush.first;
@@ -511,10 +511,11 @@ QWidget* AboutTab::createUserFriendlyView()
     logoLabel->setAlignment(Qt::AlignCenter);
     logoLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    QLabel* titleLabel = new QLabel("Linux System Viewer");
+    // Match the main headline spelling
+    QLabel* titleLabel = new QLabel(tr("Linux System Viewer"));
     titleLabel->setStyleSheet(
         "QLabel {"
-        "  font-size: 24px;"
+        "  font-size: 31px;"  // ~30% larger than previous 24px
         "  font-weight: bold;"
         "  color: #2c3e50;"
         "  margin: 6px 0 12px 0;"  // smaller top/bottom margins
@@ -529,14 +530,14 @@ QWidget* AboutTab::createUserFriendlyView()
     headerLayout->addWidget(titleLabel, 0, Qt::AlignCenter);
     mainLayout->addLayout(headerLayout);
     
-    createInfoSection("Application", &m_applicationSection, &m_applicationContent, mainLayout);
-    createInfoSection("Version", &m_versionSection, &m_versionContent, mainLayout);
-    createInfoSection("Authors", &m_authorsSection, &m_authorsContent, mainLayout);
+    createInfoSection(tr("Application"), &m_applicationSection, &m_applicationContent, mainLayout);
+    createInfoSection(tr("Version"), &m_versionSection, &m_versionContent, mainLayout);
+    createInfoSection(tr("Authors"), &m_authorsSection, &m_authorsContent, mainLayout);
     // Clicking the authors web page link is handled by QLabel::linkActivated
     // which calls openUrlRobust(). We removed the explicit Open/Copy buttons
     // to focus on making the QLabel links behave correctly in file-manager
     // launches (the robust open + raise logic should handle visible opens).
-    createInfoSection("License", &m_licenseSection, &m_licenseContent, mainLayout);
+    createInfoSection(tr("License"), &m_licenseSection, &m_licenseContent, mainLayout);
     
     mainLayout->addStretch();
     
@@ -590,29 +591,28 @@ void AboutTab::parseOutput(const QString& output)
     qDebug() << "AboutTab: parseOutput called";
     
     // Static information for About tab
-    QString applicationInfo = 
+    QString applicationInfo = tr(
         "Linux System Viewer is a comprehensive system information tool "
         "designed to provide detailed insights into your Linux system hardware "
         "and software configuration.\n\n"
         "Linux System Viewer presents system information in an intuitive, easy-to-read format "
         "with both user-friendly and technical (geek mode) views for different "
-        "levels of detail.";
+        "levels of detail.");
     
-    QString versionInfo = QStringLiteral("Version: %1\nBuild Date: October 2025\nQt Version: %2\nPlatform: Linux")
+    QString versionInfo = tr("Version: %1\nBuild Date: November 2025\nQt Version: %2\nPlatform: Linux")
                           .arg(LSVVersionQString(), QString::fromUtf8(QT_VERSION_STR));
     
-    QString authorsInfo =
+    QString authorsInfo = tr(
         "Developer: Nalle Berg<br>"
         "<a href=\"https://lsv.nalle.no/\">Web page</a><br><br>"
         "Built with Qt6 and modern C++ for optimal performance "
         "and cross-platform compatibility.<br><br>"
-    "Special thanks to the open-source community and the "
-    "developers of lshw, lscpu, and other system utilities "
-    "that inspired me to create this application.";
+        "Special thanks to the open-source community and the "
+        "developers of lshw, lscpu, and other system utilities "
+        "that inspired me to create this application.");
     
     // Show a simple clickable license link (rendered as HTML)
-    QString licenseInfo =
-        "<a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0.html\">GPL V2</a>";
+    QString licenseInfo = tr("<a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0.html\">GPL V2</a>");
     
     // Update the UI with static information
     if (m_applicationContent) {
@@ -632,23 +632,23 @@ void AboutTab::parseOutput(const QString& output)
         m_authorsContent->setText(authorsInfo);
         connect(m_authorsContent, &QLabel::linkActivated, this, [this](const QString &link) {
             appendLog(QString("About: authors link clicked: %1").arg(link));
-            // For the authors web page we show a copy-to-clipboard dialog
-            // instead of launching a browser from the AppImage. This keeps
-            // the application read-only while still letting the user open
-            // the page manually if they wish.
+        // For the authors web page we show a copy-to-clipboard dialog
+        // instead of launching a browser from the running application.
+        // This keeps the application read-only while still letting the
+        // user open the page manually if they wish.
             if (link.contains(QStringLiteral("lsv.nalle.no"), Qt::CaseInsensitive)) {
                 QDialog dlg(this);
-                dlg.setWindowTitle(QStringLiteral("Open Web Page"));
+                dlg.setWindowTitle(tr("Open Web Page"));
                 QVBoxLayout *lay = new QVBoxLayout(&dlg);
                 QLabel *msg = new QLabel(&dlg);
                 msg->setWordWrap(true);
-                msg->setText(QStringLiteral(
+                msg->setText(tr(
                     "This is a read only application. For security reasons this app will not do anything to your disk nor start any applications.\n\n"
                     "However click below to copy the URL https://lsv.nalle.no/ to the clipboard."));
                 lay->addWidget(msg);
 
                 QDialogButtonBox *box = new QDialogButtonBox(&dlg);
-                QPushButton *copyBtn = box->addButton(QStringLiteral("Copy URL"), QDialogButtonBox::ActionRole);
+                QPushButton *copyBtn = box->addButton(tr("Copy URL"), QDialogButtonBox::ActionRole);
                 QPushButton *closeBtn = box->addButton(QDialogButtonBox::Close);
                 lay->addWidget(box);
 
@@ -661,7 +661,7 @@ void AboutTab::parseOutput(const QString& output)
                     // Use a single-shot to let the dialog close and the event
                     // loop process the close before we show the message box.
                     QTimer::singleShot(0, this, [this]() {
-                        QMessageBox::information(nullptr, QStringLiteral("Copied"), QStringLiteral("The URL was copied to the clipboard!"));
+                        QMessageBox::information(nullptr, tr("Copied"), tr("The URL was copied to the clipboard!"));
                     });
                 });
                 connect(closeBtn, &QPushButton::clicked, &dlg, &QDialog::reject);
@@ -673,10 +673,10 @@ void AboutTab::parseOutput(const QString& output)
         });
     }
     if (m_licenseContent) {
-        // Use rich text and handle link activation explicitly so our
-        // robust fallback logic runs and we record the click. For the
-        // GPLv2 link we prefer to show the embedded license shipped with
-        // the AppImage (:/gpl2.txt) so users can read it offline.
+    // Use rich text and handle link activation explicitly so our
+    // robust fallback logic runs and we record the click. For the
+    // GPLv2 link we prefer to show the embedded license shipped with
+    // the application resources (:/gpl2.txt) so users can read it offline.
         m_licenseContent->setTextFormat(Qt::RichText);
         m_licenseContent->setTextInteractionFlags(Qt::TextBrowserInteraction | Qt::LinksAccessibleByMouse);
         m_licenseContent->setOpenExternalLinks(false);
@@ -693,14 +693,14 @@ void AboutTab::parseOutput(const QString& output)
                     text = QString::fromUtf8(f.readAll());
                     f.close();
                 } else {
-                    text = QStringLiteral("(Embedded license not found)");
+                    text = tr("(Embedded license not found)");
                 }
                 QDialog dlg(this);
-                dlg.setWindowTitle(QStringLiteral("GNU GPL v2"));
+                dlg.setWindowTitle(tr("GNU GPL v2"));
                 QVBoxLayout *lay = new QVBoxLayout(&dlg);
 
                 // Use the embedded GNU icon resource only (ensure it's present
-                // in resources.qrc so the AppImage always contains it).
+                // in resources.qrc so packaged builds include it).
                 QPixmap gnuPix;
                 if (QFile::exists(QStringLiteral(":/gnu_icon.png"))) {
                     gnuPix.load(QStringLiteral(":/gnu_icon.png"));

@@ -7,9 +7,10 @@
 #include <QFont>
 #include <QRegularExpression>
 #include <QDebug>
+#include <QCoreApplication>
 
 PeripheralsTab::PeripheralsTab(QWidget* parent)
-    : TabWidgetBase("Peripherals", "lsusb && lspci -nn | head -10", true, 
+    : TabWidgetBase(QCoreApplication::translate("PeripheralsTab", "Peripherals"), "lsusb && lspci -nn | head -10", true, 
                     "lsusb -v && lspci -vv && lsblk && cat /proc/bus/input/devices", parent)
 {
     qDebug() << "PeripheralsTab: Constructor called - base constructor done";
@@ -31,7 +32,7 @@ QWidget* PeripheralsTab::createUserFriendlyView()
     mainLayout->setSpacing(15);
     mainLayout->setContentsMargins(20, 20, 20, 20);
     
-    QLabel* titleLabel = new QLabel("Connected Peripherals and Devices");
+    QLabel* titleLabel = new QLabel(QCoreApplication::translate("PeripheralsTab", "Connected Peripherals and Devices"));
     titleLabel->setStyleSheet(
         "QLabel {"
         "  font-size: 18px;"
@@ -42,10 +43,10 @@ QWidget* PeripheralsTab::createUserFriendlyView()
     );
     mainLayout->addWidget(titleLabel);
     
-    createInfoSection("USB Devices", &m_usbDevicesSection, &m_usbDevicesContent, mainLayout);
-    createInfoSection("Input Devices", &m_inputDevicesSection, &m_inputDevicesContent, mainLayout);
-    createInfoSection("Storage Devices", &m_storageDevicesSection, &m_storageDevicesContent, mainLayout);
-    createInfoSection("Network Devices", &m_networkDevicesSection, &m_networkDevicesContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("PeripheralsTab", "USB Devices"), &m_usbDevicesSection, &m_usbDevicesContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("PeripheralsTab", "Input Devices"), &m_inputDevicesSection, &m_inputDevicesContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("PeripheralsTab", "Storage Devices"), &m_storageDevicesSection, &m_storageDevicesContent, mainLayout);
+    createInfoSection(QCoreApplication::translate("PeripheralsTab", "Network Devices"), &m_networkDevicesSection, &m_networkDevicesContent, mainLayout);
     
     mainLayout->addStretch();
     
@@ -74,7 +75,7 @@ void PeripheralsTab::createInfoSection(const QString& title, QGroupBox** groupBo
     );
     
     QVBoxLayout* sectionLayout = new QVBoxLayout(*groupBox);
-    *contentLabel = new QLabel("Loading " + title.toLower() + " information...");
+    *contentLabel = new QLabel(QCoreApplication::translate("PeripheralsTab", "Loading %1 information...").arg(title.toLower()));
     (*contentLabel)->setWordWrap(true);
     (*contentLabel)->setStyleSheet("QLabel { padding: 10px; background-color: #f8f9fa; border-radius: 4px; }");
     sectionLayout->addWidget(*contentLabel);
@@ -88,10 +89,10 @@ void PeripheralsTab::parseOutput(const QString& output)
     
     QStringList lines = output.split('\n', Qt::SkipEmptyParts);
     
-    QString usbDevicesInfo = "USB Devices: Not detected";
-    QString inputDevicesInfo = "Input Devices: Not detected";
-    QString storageDevicesInfo = "Storage Devices: Not detected";
-    QString networkDevicesInfo = "Network Devices: Not detected";
+    QString usbDevicesInfo = QCoreApplication::translate("PeripheralsTab", "USB Devices: Not detected");
+    QString inputDevicesInfo = QCoreApplication::translate("PeripheralsTab", "Input Devices: Not detected");
+    QString storageDevicesInfo = QCoreApplication::translate("PeripheralsTab", "Storage Devices: Not detected");
+    QString networkDevicesInfo = QCoreApplication::translate("PeripheralsTab", "Network Devices: Not detected");
     
     QStringList usbDevices;
     QStringList inputDevices;
@@ -184,19 +185,19 @@ void PeripheralsTab::parseOutput(const QString& output)
     
     // Format the information
     if (!usbDevices.isEmpty()) {
-        usbDevicesInfo = "USB Devices:\n" + usbDevices.join("\n");
+        usbDevicesInfo = QCoreApplication::translate("PeripheralsTab", "USB Devices:\n") + usbDevices.join("\n");
     }
     
     if (!inputDevices.isEmpty()) {
-        inputDevicesInfo = "Input Devices:\n" + inputDevices.join("\n");
+        inputDevicesInfo = QCoreApplication::translate("PeripheralsTab", "Input Devices:\n") + inputDevices.join("\n");
     }
     
     if (!storageDevices.isEmpty()) {
-        storageDevicesInfo = "Storage Devices:\n" + storageDevices.join("\n");
+        storageDevicesInfo = QCoreApplication::translate("PeripheralsTab", "Storage Devices:\n") + storageDevices.join("\n");
     }
     
     if (!networkDevices.isEmpty()) {
-        networkDevicesInfo = "Network Devices:\n" + networkDevices.join("\n");
+        networkDevicesInfo = QCoreApplication::translate("PeripheralsTab", "Network Devices:\n") + networkDevices.join("\n");
     }
     
     // Update the UI with parsed information

@@ -3,10 +3,10 @@ set -e
 
 # Parse simple command-line flags and environment overrides.
 # Supported flags:
-#   --run             : start the created AppImage in background after packaging
+#   --run             : start the built executable (runtime test) in background after packaging
 #   --debug-logger    : build the project with the optional debug logger compiled in
 # Environment variables:
-#   RUN_APPIMAGE=1    : same as --run
+#   RUN_PACKAGE=1     : same as --run
 #   DEBUG_LOGGER=1    : same as --debug-logger
 DO_RUN=1
 DO_DEBUG=0
@@ -17,20 +17,57 @@ for arg in "$@"; do
         --debug-logger) DO_DEBUG=1 ;;
     esac
 done
-if [ "${RUN_APPIMAGE:-}" = "1" ]; then DO_RUN=1; fi
-if [ "${RUN_APPIMAGE:-}" = "0" ]; then DO_RUN=0; fi
+if [ "${RUN_PACKAGE:-}" = "1" ]; then DO_RUN=1; fi
+if [ "${RUN_PACKAGE:-}" = "0" ]; then DO_RUN=0; fi
 if [ "${DEBUG_LOGGER:-}" = "1" ]; then DO_DEBUG=1; fi
 
 # Format seconds to MM:SS
 format_time() {
-    local total_seconds=$1
-    local minutes=$(echo "$total_seconds / 60" | bc)
-    local seconds=$(echo "$total_seconds % 60" | bc)
-    printf "%d:%02.0f" $minutes $seconds
+    # Truncate fractional seconds and format MM:SS
+    local total_seconds=${1%.*}
+    if [ -z "$total_seconds" ]; then total_seconds=0; fi
+    local minutes=$(( total_seconds / 60 ))
+    local seconds=$(( total_seconds % 60 ))
+    printf "%d:%02d" $minutes $seconds
 }
 
 clear
-rm -rf build AppDir *.AppImage LSV
+rm -rf build LSV
+
+# Generate compiled translation files (.qm) from the .ts sources so CMake
+# can pick them up and embed them into the application resources. This
+# ensures the shipped binary contains translations and no runtime
+# fallback is necessary.
+if [ -d "i18n" ]; then
+    # Only run lrelease when needed: generate .qm files for each .ts when the
+    # .qm is missing or older than its .ts source. This avoids unnecessary
+    # re-generation during frequent builds and handles missing lrelease more
+    # gracefully.
+    if ls i18n/*.ts >/dev/null 2>&1; then
+        if command -v lrelease >/dev/null 2>&1; then
+            echo "🔤 Generating/updating .qm translation files from .ts (only when needed)..."
+            for ts in i18n/*.ts; do
+                # If the glob didn't match any files the loop will iterate with
+                # the literal pattern on some shells; guard against that.
+                [ -e "$ts" ] || continue
+                qm="${ts%.ts}.qm"
+                if [ ! -f "$qm" ] || [ "$ts" -nt "$qm" ]; then
+                    echo "  • Generating $qm from $ts"
+                    if ! lrelease "$ts"; then
+                        echo "❌ lrelease failed for $ts"
+                        exit 1
+                    fi
+                else
+                    echo "  • Up-to-date: $qm"
+                fi
+            done
+        else
+            echo "⚠️  lrelease not found; please install Qt tools (lrelease). Translations won't be generated or embedded."
+        fi
+    else
+        echo "ℹ️  No translation source (.ts) files found in i18n/. Skipping translation generation."
+    fi
+fi
 
 echo "📁 Tools cached in: ./tools/"
 echo ""
@@ -79,120 +116,33 @@ if [ -f "./LSV" ]; then
     
     echo "⚠️  Skipping automatic runtime test of the built executable (no terminal spawn)."
     PACKAGE_START=$(date +%s.%N)
-    echo "📦 Preparing AppImage creation for Linux System Viewer..."
+    echo "📦 Preparing DEB and RPM packages for Linux System Viewer..."
     cd ..
     mkdir -p LSV
 
-    # Rebuild AppDir from scratch
-    rm -rf AppDir
-    mkdir -p AppDir/usr/bin
-    mkdir -p AppDir/usr/lib
-    mkdir -p AppDir/usr/plugins
+    # Run CPack to generate DEB and RPM packages in the build directory
+    echo "� Generating .deb package with CPack..."
+    (cd build && cpack -G DEB) || { echo "❌ cpack DEB failed"; exit 1; }
+    echo "🔁 Generating .rpm package with CPack (if rpmbuild is available)..."
+    if (cd build && command -v rpmbuild >/dev/null 2>&1); then
+        (cd build && cpack -G RPM) || { echo "❌ cpack RPM failed"; }
+    else
+        echo "⚠️  rpmbuild not found; skipping RPM generation. Install rpmbuild (rpm-build) to enable RPM packaging."
+    fi
 
-    # Copy main binary and helper files
-    cp build/LSV AppDir/usr/bin/
-    chmod +x AppDir/usr/bin/LSV
-    
-
-    # Copy all shared libraries needed by LSV into AppDir/usr/lib
-    echo "🔍 Copying all shared libraries required by LSV..."
-    ldd AppDir/usr/bin/LSV | awk '{print $3}' | grep '^/' | while read lib; do
-        cp --preserve=links "$lib" AppDir/usr/lib/
+    # Move generated packages into ./LSV/ directory
+    echo "📁 Collecting generated packages into ./LSV/"
+    find build -maxdepth 1 -type f \( -name "*.deb" -o -name "*.rpm" \) -print0 | while IFS= read -r -d '' pkg; do
+        echo "  • Found: $pkg"
+        mv "$pkg" ./LSV/ || { echo "❌ Failed to move $pkg"; exit 1; }
     done
 
-    # Desktop file and icon
-    mkdir -p AppDir/usr/share/applications
-    if [ ! -f "lsv.desktop" ]; then
-        echo "⚠️  Warning: desktop file not found, creating basic one for Linux System Viewer..."
-        cat > lsv.desktop << EOF
-[Desktop Entry]
-Type=Application
-Name=Linux System Viewer
-Comment=Linux System Viewer
-Exec=LSV
-Icon=lsv
-Categories=System;Monitor;
-StartupNotify=true
-EOF
-        echo "✅ Created lsv.desktop"
+    # Copy the built executable for convenience
+    if [ -f build/LSV ]; then
+        cp build/LSV LSV/
+        chmod +x LSV/LSV
+        echo "✅ LSV executable copied to ./LSV/"
     fi
-    cp lsv.desktop AppDir/lsv.desktop
-    cp lsv.desktop AppDir/usr/share/applications/lsv.desktop
-
-    # Icon
-    if [ ! -f "lsv.png" ]; then
-    echo "⚠️  Warning: lsv.png not found, creating placeholder for Linux System Viewer..."
-        if command -v convert >/dev/null 2>&1; then
-                convert -size 64x64 xc:blue -fill white -gravity center -pointsize 24 -annotate 0 "LSV" lsv.png 2>/dev/null && {
-                echo "✅ Created placeholder icon with ImageMagick"
-            } || {
-                echo "⚠️  ImageMagick convert failed, trying alternative..."
-                echo "LSV" > lsv.png
-            }
-        else
-            echo "⚠️  ImageMagick not available, creating text placeholder..."
-            echo "LSV" > lsv.png
-        fi
-    fi
-    cp lsv.png AppDir/
-    mkdir -p AppDir/usr/share/icons
-    cp lsv.png AppDir/usr/share/icons/lsv.png
-    mkdir -p AppDir/usr/share/icons/hicolor/128x128/apps
-    cp lsv.png AppDir/usr/share/icons/hicolor/128x128/apps/lsv.png
-
-    # Copy only Qt 6 plugins (platforms, imageformats, etc.)
-    QT6_PLATFORMS="/usr/lib/x86_64-linux-gnu/qt6/plugins/platforms"
-    QT6_IMAGEFORMATS="/usr/lib/x86_64-linux-gnu/qt6/plugins/imageformats"
-
-    if [ -d "$QT6_PLATFORMS" ]; then
-        mkdir -p AppDir/usr/plugins/platforms
-        cp "$QT6_PLATFORMS"/* AppDir/usr/plugins/platforms/
-    fi
-    if [ -d "$QT6_IMAGEFORMATS" ]; then
-        mkdir -p AppDir/usr/plugins/imageformats
-        cp "$QT6_IMAGEFORMATS"/* AppDir/usr/plugins/imageformats/
-    fi
-
-    # Create qt.conf to help Qt find plugins
-    cat > AppDir/usr/bin/qt.conf << EOF
-[Paths]
-Plugins = ../plugins
-EOF
-
-    # Download appimagetool if not present
-    if [ ! -f "./tools/appimagetool-x86_64.AppImage" ]; then
-        wget -O ./tools/appimagetool-x86_64.AppImage \
-            "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
-        chmod +x ./tools/appimagetool-x86_64.AppImage
-    fi
-
-    chmod +x ./tools/appimagetool-x86_64.AppImage
-
-    # Apprun needed
-    ln -sf usr/bin/LSV AppDir/AppRun
-    chmod +x AppDir/AppRun
-
-    # Enable AppImage debug output
-    export APPIMAGE_DEBUG=1
-
-    # Create AppImage
-    ./tools/appimagetool-x86_64.AppImage AppDir
-
-    # Move the resulting AppImage to ./LSV/
-    APPIMAGE_FILE=$(find . -maxdepth 1 -name "*.AppImage" -type f | head -1)
-    if [ -n "$APPIMAGE_FILE" ]; then
-        mv "$APPIMAGE_FILE" LSV/lsv-x86_64.AppImage
-        chmod +x LSV/lsv-x86_64.AppImage
-        echo "🚀 AppImage moved to: ./LSV/lsv-x86_64.AppImage"
-        echo "📊 AppImage file info:"
-        ls -la LSV/lsv-x86_64.AppImage
-    else
-        echo "❌ AppImage creation failed. Check appimagetool output for errors."
-        exit 1
-    fi
-
-    cp build/LSV LSV/
-    echo "✅ LSV executable also copied to ./LSV/ directory"
 
 else
     echo "❌ Build failed - LSV executable not found"
@@ -204,9 +154,10 @@ echo ""
 echo "🏁 Build process completed at: $(date '+%H:%M:%S')"
 echo "📊 Summary:"
 echo "   • Compile time: $(format_time $COMPILE_TIME)"
-echo "   • AppImage packaging handled by appimagetool"
 echo ""
-echo "📋 Available executables in ./LSV/ directory:"
+echo "   • Packaging: DEB and RPM placed in ./LSV/ (if generation succeeded)"
+echo ""
+echo "📋 Files in ./LSV/ directory:"
 if [ -d "LSV" ]; then
     ls -la LSV/
 else
@@ -214,14 +165,11 @@ else
 fi
 
 echo ""
-echo "🚀 To run LSV:"
-echo "   ./LSV/LSV                    # Run regular executable"
-if [ -f "LSV/lsv-x86_64.AppImage" ]; then
-    echo "   ./LSV/lsv-x86_64.AppImage    # Run AppImage (portable)"
-fi
-
+echo "🚀 To install the generated packages on a target system (example):"
+echo "   sudo dpkg -i ./LSV/<package>.deb   # Debian/Ubuntu"
+echo "   sudo rpm -i ./LSV/<package>.rpm    # openSUSE/Fedora (or use zypper/dnf)"
 echo ""
-echo "🧪 To test the executable manually:"
+echo "🧪 To test the executable manually (without installing):"
 echo "   cd LSV"
 echo "   ldd ./LSV                    # Check dependencies"
 echo "   file ./LSV                   # Check file type"

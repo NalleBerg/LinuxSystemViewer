@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QMovie>
 #include <QApplication>
+#include <QCoreApplication>
 
 TabWidgetBase::TabWidgetBase(const QString& tabName, const QString& command, 
                             bool hasGeekMode, const QString& geekCommand, 
@@ -32,7 +33,7 @@ void TabWidgetBase::setupUI()
     QVBoxLayout* loadingLayout = new QVBoxLayout(m_loadingWidget);
     loadingLayout->setAlignment(Qt::AlignCenter);
 
-    m_loadingLabel = new QLabel("Loading system information...");
+    m_loadingLabel = new QLabel(QCoreApplication::translate("TabWidgetBase", "Loading system information..."));
     m_loadingLabel->setAlignment(Qt::AlignCenter);
     m_loadingLabel->setStyleSheet(
         "QLabel {"
@@ -138,14 +139,48 @@ void TabWidgetBase::onProcessError(QProcess::ProcessError error)
         m_process = nullptr;
     }
 
-    m_loadingLabel->setText(QString("Error loading %1 information").arg(m_tabName));
+    m_loadingLabel->setText(QCoreApplication::translate("TabWidgetBase", "Error loading %1 information").arg(m_tabName));
     emit loadingFinished();
     m_isLoading = false;
 }
 
+void TabWidgetBase::shutdown()
+{
+    // Stop any running process so the object can be safely deleted.
+    if (m_process) {
+        // Attempt graceful termination first
+        if (m_process->state() != QProcess::NotRunning) {
+            m_process->terminate();
+            if (!m_process->waitForFinished(500)) {
+                m_process->kill();
+                m_process->waitForFinished(200);
+            }
+        }
+        // Ensure it is deleted and we don't hold a dangling pointer
+        m_process->deleteLater();
+        m_process = nullptr;
+    }
+    m_isLoading = false;
+}
+
+void TabWidgetBase::retranslateUi()
+{
+    // Update the generic loading label and re-run parseOutput so derived
+    // classes have a chance to refresh their visible text using the
+    // already-parsed output (which may include translated headings).
+    if (m_loadingLabel) {
+        m_loadingLabel->setText(QCoreApplication::translate("TabWidgetBase", "Loading %1 information...").arg(m_tabName));
+    }
+    if (!m_lastOutput.isEmpty()) {
+        // Re-apply parsed output which should recreate or update UI
+        // elements using translated strings where applicable.
+        parseOutput(m_lastOutput);
+    }
+}
+
 void TabWidgetBase::showLoadingMessage()
 {
-    m_loadingLabel->setText(QString("Loading %1 information...").arg(m_tabName));
+    m_loadingLabel->setText(QCoreApplication::translate("TabWidgetBase", "Loading %1 information...").arg(m_tabName));
     m_stackedWidget->setCurrentWidget(m_loadingWidget);
 }
 

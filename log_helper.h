@@ -25,7 +25,7 @@ inline void appendLog(const QString& msg)
     }
 
     // When enabled, write to the system temp directory to avoid creating
-    // persistent files inside AppImage or user folders.
+    // persistent files inside packaged artifacts or user folders.
     static bool firstCall = true;
     QString tmp = QDir::tempPath() + QDir::separator() + "lsv-debug.log";
     QFile f(tmp);
