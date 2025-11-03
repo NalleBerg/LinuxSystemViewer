@@ -1018,25 +1018,25 @@ Vinsamlegast keyrðu forritið sem root.</translation>
     <message>
       <source>Connected Displays:
 </source>
-      <translation>Connected Displays:
+  <translation>Tengdir skjáir:
 </translation>
     </message>
     <message>
       <source>Screen Resolution:
 </source>
-      <translation>Screen Resolution:
+  <translation>Skjárupplausn:
 </translation>
     </message>
     <message>
       <source>Refresh Rates:
 </source>
-      <translation>Refresh Rates:
+  <translation>Uppsýningartíðni:
 </translation>
     </message>
     <message>
       <source>Display Orientation:
 </source>
-      <translation>Display Orientation:
+  <translation>Sýningarstefna:
 </translation>
     </message>
     <message>
@@ -1169,23 +1169,23 @@ Venjuleg (sjálfgefið)</translation>
     </message>
     <message>
       <source>Memory: </source>
-      <translation>Memory: </translation>
+      <translation>Minni: </translation>
     </message>
     <message>
       <source>Storage: </source>
-      <translation>Storage: </translation>
+      <translation>Geymsla: </translation>
     </message>
     <message>
       <source>Network: </source>
-      <translation>Network: </translation>
+      <translation>Net: </translation>
     </message>
     <message>
       <source>Graphics: </source>
-      <translation>Graphics: </translation>
+      <translation>Grafík: </translation>
     </message>
     <message>
       <source>System: </source>
-      <translation>System: </translation>
+      <translation>Kerfi: </translation>
     </message>
   </context>
   <context>
