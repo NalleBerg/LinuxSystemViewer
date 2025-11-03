@@ -152,6 +152,10 @@ static QMap<QString, QString> shippedLanguageDisplayNames()
     // and the application should not present other languages here.
     m.insert("en_GB", "English (UK)");
     m.insert("nb", "Norsk (Bokmål)");
+    // Also recognise Icelandic translators if present and show a friendly
+    // display name instead of the raw code "is".
+    m.insert("is", "Íslenska");
+    m.insert("is_IS", "Íslenska");
     return m;
 }
 
