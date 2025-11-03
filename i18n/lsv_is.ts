@@ -138,6 +138,30 @@ Smelltu hér fyrir neðan til að afrita slóðina https://lsv.nalle.no/ í skyn
         <translation>Villa við að hlaða upplýsingar um %1</translation>
     </message>
     <message>
+        <source>CPU: </source>
+        <translation>Örgjörvi: </translation>
+    </message>
+    <message>
+        <source>Memory: </source>
+        <translation>Minni: </translation>
+    </message>
+    <message>
+        <source>Storage: </source>
+        <translation>Geymsla: </translation>
+    </message>
+    <message>
+        <source>Network: </source>
+        <translation>Net: </translation>
+    </message>
+    <message>
+        <source>Graphics: </source>
+        <translation>Grafík: </translation>
+    </message>
+    <message>
+        <source>System: </source>
+        <translation>Kerfi: </translation>
+    </message>
+    <message>
         <source>No data</source>
         <translation>Engar upplýsingar</translation>
     </message>
@@ -675,6 +699,87 @@ Smelltu hér fyrir neðan til að afrita slóðina https://lsv.nalle.no/ í skyn
     <message>
         <source>Audio</source>
         <translation>Hljóð</translation>
+    </message>
+</context>
+<context>
+    <name>CtrlWHandler</name>
+    <message>
+        <source>Quit?</source>
+        <translation>Hætta?</translation>
+    </message>
+</context>
+<context>
+    <name>SummaryTab</name>
+    <message>
+        <source>Summary</source>
+        <translation>Yfirlit</translation>
+    </message>
+    <message>
+        <source>lshw -short</source>
+        <translation>lshw -short</translation>
+    </message>
+    <message>
+        <source>System Hardware Summary</source>
+        <translation>Yfirlit kerfisbúnaðar</translation>
+    </message>
+    <message>
+        <source>System Overview</source>
+        <translation>Yfirlit kerfis</translation>
+    </message>
+    <message>
+        <source>Loading system information...</source>
+        <translation>Hleður kerfisupplýsingar...</translation>
+    </message>
+    <message>
+        <source>Processor</source>
+        <translation>Örgjörvi</translation>
+    </message>
+    <message>
+        <source>Memory</source>
+        <translation>Minni</translation>
+    </message>
+    <message>
+        <source>Storage</source>
+        <translation>Geymsla</translation>
+    </message>
+    <message>
+        <source>Network</source>
+        <translation>Net</translation>
+    </message>
+    <message>
+        <source>Graphics</source>
+        <translation>Grafík</translation>
+    </message>
+    <message>
+        <source>Loading %1 information...</source>
+        <translation>Hleður %1 upplýsingar...</translation>
+    </message>
+</context>
+<context>
+    <name>WindowingTab</name>
+    <message>
+        <source>Windowing</source>
+        <translation>Skrifborðsumhverfi</translation>
+    </message>
+    <message>
+        <source>Windowing environment</source>
+        <translation>Skrifborðsumhverfi</translation>
+    </message>
+    <message>
+        <source>Windowing Environment Information</source>
+        <translation>Upplýsingar um skrifborðsumhverfi</translation>
+    </message>
+    <message>
+        <source>Desktop Environment</source>
+        <translation>Skrifborðsumhverfi</translation>
+    </message>
+    <message>
+        <source>Session Type</source>
+        <translation>Sessíongerð</translation>
+    </message>
+    <message>
+        <source>Display Server</source>
+        <translation>Sýningarþjónn</translation>
     </message>
 </context>
 <!-- TRUNCATED: this file currently mirrors the English TS content verbatim as a starter for Icelandic translations. If you want I can fill in translations or mark entries as unfinished. -->
