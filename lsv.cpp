@@ -153,10 +153,10 @@ static QMap<QString, QString> shippedLanguageDisplayNames()
     m.insert("en_GB", "English (UK)");
     m.insert("en", "English (UK)");
     m.insert("nb", "Norsk (Bokmål)");
-    // Also recognise Icelandic translators if present and show a friendly
-    // display name instead of the raw code "is".
-    m.insert("is", "Íslenska");
-    m.insert("is_IS", "Íslenska");
+    // Only present English (UK) and Norwegian Bokmål in the shipped
+    // language list shown to users. Icelandic translations are not
+    // included in the default published chooser (they live in
+    // i18n_pending for now).
     return m;
 }
 
@@ -198,6 +198,11 @@ static QStringList discoverShippedLanguageCodes()
         if (c.startsWith("en_")) { hasEnVariant = true; break; }
     }
     if (hasEnVariant) set.remove("en");
+    // Exclude work-in-progress translations (Icelandic) from the
+    // shipped/discoverable list so the published chooser remains
+    // English+Norwegian only even if a developer has a local QM.
+    set.remove("is");
+    set.remove("is_IS");
     QStringList out = set.values();
     out.sort();
     return out;
@@ -239,6 +244,37 @@ static bool tryLoadTranslatorForCode(const QString &code, QApplication &app, QTr
     }
     appendLog(QString("i18n: No translator found for '%1'").arg(code));
     return false;
+}
+
+// Normalize a requested language code to one of the available translator
+// codes present in resources or the application i18n directory. This
+// accepts codes like "is_IS" and will return "is" if only
+// `lsv_is.qm` is available. Returns an empty string if nothing is
+// available (or if code == "en").
+static QString normalizeLanguageCodeToAvailable(const QString &code)
+{
+    if (code.isEmpty()) return QString();
+    if (code == "en") return QString(); // English: no translator
+
+    QStringList tryCodes;
+    tryCodes << code;
+    // If the code contains a region (lang_REGION), also try the base
+    // language (lang) as a fallback.
+    if (code.contains('_')) tryCodes << code.section('_', 0, 0);
+
+    QString appDir = QCoreApplication::applicationDirPath();
+    for (const QString &c : tryCodes) {
+        if (c.isEmpty()) continue;
+        // resource candidates
+        QString r1 = QString(":/i18n/lsv_%1.qm").arg(c);
+        QString r2 = QString(":/i18n/%1.qm").arg(c);
+        if (QFile::exists(r1) || QFile::exists(r2)) return c;
+        // local file candidates next to the binary
+        QString f1 = QString("%1/i18n/lsv_%2.qm").arg(appDir).arg(c);
+        QString f2 = QString("%1/i18n/%2.qm").arg(appDir).arg(c);
+        if (QFile::exists(f1) || QFile::exists(f2)) return c;
+    }
+    return QString();
 }
 
 // Path and helper for persistent language-choice "rc" file. We store a
@@ -732,7 +768,10 @@ int main(int argc, char *argv[])
         if (a == "--list-langs") {
             QStringList lines;
             QMap<QString, QString> names = shippedLanguageDisplayNames();
-            for (const QString &c : shipped) {
+            // For publishing we only advertise English (UK) and Norwegian
+            // Bokmål as the shipped languages.
+            QStringList visible = QStringList() << "en_GB" << "nb";
+            for (const QString &c : visible) {
                 QString display = names.value(c, c);
                 lines << QString("%1\t%2").arg(c, display);
             }
@@ -758,9 +797,18 @@ int main(int argc, char *argv[])
     QString effectiveLang = requestedLang.isEmpty() ? savedLang : requestedLang;
     if (effectiveLang.isEmpty()) effectiveLang = "en"; // default
 
-    // Try to load translator now. If it fails, we'll fall back to English.
+    // Try to load translator now (normalize codes like "is_IS" -> "is").
     if (!effectiveLang.isEmpty() && effectiveLang != "en") {
-        tryLoadTranslatorForCode(effectiveLang, app, &translator);
+        QString actual = normalizeLanguageCodeToAvailable(effectiveLang);
+        if (!actual.isEmpty()) {
+            if (tryLoadTranslatorForCode(actual, app, &translator)) {
+                // Record the actual code used in settings so the UI indicator
+                // and future runs reflect the translator that was loaded.
+                settings.setValue("language", actual);
+            }
+        } else {
+            appendLog(QString("i18n: No available translator for requested language '%1'").arg(effectiveLang));
+        }
     }
 
     // Set application properties
@@ -1036,15 +1084,18 @@ int main(int argc, char *argv[])
             QString code = (idx >= 0 && idx < codes.size()) ? codes.at(idx) : pick;
             // Persist the selection to the rc file so it becomes the default
             // for future runs. Also store in QSettings for internal consistency.
-            if (!writeLangRc(code)) {
+            // Normalize the requested code to an available translator
+            // (e.g. is_IS -> is) before persisting and loading.
+            QString actual = normalizeLanguageCodeToAvailable(code);
+            QString toWrite = actual.isEmpty() ? QString("en") : actual;
+            if (!writeLangRc(toWrite)) {
                 QMessageBox::warning(nullptr, QObject::tr("Language selection"), QObject::tr("Failed to write language selection to %1").arg(primaryRc));
             }
-            settings.setValue("language", code);
+            settings.setValue("language", toWrite);
             // Reload translator if needed
-            if (code != "en") {
-                // If a translator was previously installed, remove it first
-                app.removeTranslator(&translator);
-                tryLoadTranslatorForCode(code, app, &translator);
+            app.removeTranslator(&translator);
+            if (toWrite != "en") {
+                tryLoadTranslatorForCode(toWrite, app, &translator);
             }
         }
     }
@@ -1111,10 +1162,18 @@ int main(int argc, char *argv[])
     // the whole UI updates immediately. preserveIndex indicates which tab
     // index should be selected after recreation (use -1 to ignore).
     auto applyLanguage = [&mainWindow, &app, &translator, &settings, &titleLabel, &aboutBtn](const QString &code, int preserveIndex = -1) {
-        // Remove any installed translator then load the requested one
+        // Remove any installed translator then load the requested one. Use
+        // a normalized code so region variants fall back to available
+        // translator files (is_IS -> is).
+        QString actual = normalizeLanguageCodeToAvailable(code);
         app.removeTranslator(&translator);
-        if (code != "en") {
-            tryLoadTranslatorForCode(code, app, &translator);
+        if (!actual.isEmpty()) {
+            if (tryLoadTranslatorForCode(actual, app, &translator)) {
+                settings.setValue("language", actual);
+            }
+        } else {
+            // No translator: use English and record that choice
+            settings.setValue("language", "en");
         }
 
         // Update small UI bits
@@ -1134,11 +1193,11 @@ int main(int argc, char *argv[])
             if (resetAct) resetAct->setText(QObject::tr("Reset language"));
             // Update the language indicator badge text as well
             QLabel* indicator = mb->findChild<QLabel*>("langIndicator");
-            if (indicator) {
-                QMap<QString, QString> names2 = shippedLanguageDisplayNames();
-                QString display = names2.value(code, code);
-                indicator->setText(display);
-            }
+                if (indicator) {
+                    QMap<QString, QString> names2 = shippedLanguageDisplayNames();
+                    QString display = names2.value(settings.value("language", QString("en")).toString(), code);
+                    indicator->setText(display);
+                }
         }
 
         // Recreate the tab widget to ensure constructor-time tr() calls run
@@ -1212,28 +1271,46 @@ int main(int argc, char *argv[])
 
     QObject::connect(changeLangAct, &QAction::triggered, [&mainWindow, &settings, &applyLanguage]() {
         QMap<QString, QString> names = shippedLanguageDisplayNames();
-        QStringList codes = discoverShippedLanguageCodes();
-        codes.removeAll("en_GB");
-        codes.removeAll("en");
-        codes.prepend("en_GB");
+        // For the published build only offer English (UK) and Norwegian Bokmål
+        QStringList codes;
+        codes << "en_GB" << "nb";
         QStringList choices;
-    for (const QString &c : codes) choices << names.value(c, c);
-    int defaultIndex = 0;
-    for (int i = 0; i < codes.size(); ++i) if (codes.at(i) == "en_GB" || codes.at(i) == "en") { defaultIndex = i; break; }
-    bool ok = false;
-    QString pick = QInputDialog::getItem(nullptr, QObject::tr("Choose language"), QObject::tr("Language:"), choices, defaultIndex, false, &ok);
-    if (!ok || pick.isEmpty()) return;
-    int idx = choices.indexOf(pick);
-    QString code = (idx >= 0 && idx < codes.size()) ? codes.at(idx) : pick;
-        if (!writeLangRc(code)) {
+        for (const QString &c : codes) choices << names.value(c, c);
+
+        // Preselect the currently active language where possible and show
+        // it prominently in the dialog label even when the active language
+        // is not part of the published choices (for example when the
+        // per-user RC contains 'is').
+        QString curLang = settings.value("language", QString()).toString();
+        if (curLang.isEmpty()) curLang = "en_GB";
+        int defaultIndex = codes.indexOf(curLang);
+        if (defaultIndex < 0) defaultIndex = codes.indexOf("en_GB");
+
+        bool ok = false;
+        QString labelText = QObject::tr("Language:");
+        // If current language is not one of the visible choices, show it
+        // in the label so the user knows what is currently active.
+        if (!codes.contains(curLang)) {
+            QMap<QString, QString> namesLocal = shippedLanguageDisplayNames();
+            QString curName = namesLocal.value(curLang, curLang);
+            labelText = QObject::tr("Current: %1\n%2").arg(curName, QObject::tr("Language:"));
+        }
+        QString pick = QInputDialog::getItem(nullptr, QObject::tr("Choose language"), labelText, choices, defaultIndex, false, &ok);
+        if (!ok || pick.isEmpty()) return;
+        int idx = choices.indexOf(pick);
+        QString code = (idx >= 0 && idx < codes.size()) ? codes.at(idx) : pick;
+        // Normalize to an available translator before persisting/loading
+        QString actual = normalizeLanguageCodeToAvailable(code);
+        QString toWrite = actual.isEmpty() ? QString("en") : actual;
+        if (!writeLangRc(toWrite)) {
             QMessageBox::warning(nullptr, QObject::tr("Language selection"), QObject::tr("Failed to write language selection to configuration directory"));
         }
-        settings.setValue("language", code);
+        settings.setValue("language", toWrite);
 
         // Apply the language change and preserve current tab selection.
         MultiRowTabWidget* oldTab = mainWindow.findChild<MultiRowTabWidget*>();
         int curIndex = oldTab ? oldTab->currentIndex() : -1;
-        applyLanguage(code, curIndex);
+        applyLanguage(toWrite, curIndex);
 
         Q_UNUSED(code);
         QMessageBox::information(nullptr, QObject::tr("Language changed"), QObject::tr("Language saved. UI updated to the selected language."));
