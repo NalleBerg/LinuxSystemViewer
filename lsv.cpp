@@ -1009,7 +1009,7 @@ int main(int argc, char *argv[])
         codes.removeAll("en_GB");
         codes.removeAll("en");
         codes.prepend("en_GB");
-        for (const QString &c : codes) choices << QString("%1 — %2").arg(c, names.value(c, c));
+        for (const QString &c : codes) choices << names.value(c, c);
         // Determine the default index (English preferred)
         int defaultIndex = 0;
         for (int i = 0; i < codes.size(); ++i) {
@@ -1018,7 +1018,8 @@ int main(int argc, char *argv[])
         bool ok = false;
         QString pick = QInputDialog::getItem(nullptr, QObject::tr("Choose language"), QObject::tr("Language:"), choices, defaultIndex, false, &ok);
         if (ok && !pick.isEmpty()) {
-            QString code = pick.section(' ', 0, 0);
+            int idx = choices.indexOf(pick);
+            QString code = (idx >= 0 && idx < codes.size()) ? codes.at(idx) : pick;
             // Persist the selection to the rc file so it becomes the default
             // for future runs. Also store in QSettings for internal consistency.
             if (!writeLangRc(code)) {
@@ -1181,13 +1182,14 @@ int main(int argc, char *argv[])
         codes.removeAll("en");
         codes.prepend("en_GB");
         QStringList choices;
-        for (const QString &c : codes) choices << QString("%1 — %2").arg(c, names.value(c, c));
-        int defaultIndex = 0;
-        for (int i = 0; i < codes.size(); ++i) if (codes.at(i) == "en_GB" || codes.at(i) == "en") { defaultIndex = i; break; }
-        bool ok = false;
-        QString pick = QInputDialog::getItem(nullptr, QObject::tr("Choose language"), QObject::tr("Language:"), choices, defaultIndex, false, &ok);
-        if (!ok || pick.isEmpty()) return;
-        QString code = pick.section(' ', 0, 0);
+    for (const QString &c : codes) choices << names.value(c, c);
+    int defaultIndex = 0;
+    for (int i = 0; i < codes.size(); ++i) if (codes.at(i) == "en_GB" || codes.at(i) == "en") { defaultIndex = i; break; }
+    bool ok = false;
+    QString pick = QInputDialog::getItem(nullptr, QObject::tr("Choose language"), QObject::tr("Language:"), choices, defaultIndex, false, &ok);
+    if (!ok || pick.isEmpty()) return;
+    int idx = choices.indexOf(pick);
+    QString code = (idx >= 0 && idx < codes.size()) ? codes.at(idx) : pick;
         if (!writeLangRc(code)) {
             QMessageBox::warning(nullptr, QObject::tr("Language selection"), QObject::tr("Failed to write language selection to configuration directory"));
         }
