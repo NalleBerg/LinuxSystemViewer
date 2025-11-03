@@ -921,6 +921,18 @@ Vinsamlegast keyrðu forritið sem root.</translation>
       <translation>Tungumál:</translation>
     </message>
     <message>
+      <source>Language</source>
+      <translation>Tungumál</translation>
+    </message>
+    <message>
+      <source>Change language...</source>
+      <translation>Breyta tungumáli...</translation>
+    </message>
+    <message>
+      <source>Reset language</source>
+      <translation>Endurstilla tungumál</translation>
+    </message>
+    <message>
       <source>Linux System Viewer V. %1</source>
       <translation>Linux System Viewer útgáfa %1</translation>
     </message>

@@ -921,6 +921,18 @@ Please run the application as root.</translation>
         <translation>Language:</translation>
     </message>
     <message>
+        <source>Language</source>
+        <translation>Language</translation>
+    </message>
+    <message>
+        <source>Change language...</source>
+        <translation>Change language...</translation>
+    </message>
+    <message>
+        <source>Reset language</source>
+        <translation>Reset language</translation>
+    </message>
+    <message>
         <source>Linux System Viewer V. %1</source>
         <translation>Linux System Viewer V. %1</translation>
     </message>

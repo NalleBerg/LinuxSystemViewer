@@ -1108,12 +1108,12 @@ int main(int argc, char *argv[])
         if (titleLabel) titleLabel->setText(QObject::tr("Linux System Viewer"));
         if (aboutBtn) aboutBtn->setToolTip(QObject::tr("About Linux System Viewer"));
 
-        // Retranslate Administration menu and actions so menu text updates
+        // Retranslate Language menu and actions so menu text updates
         // immediately without restarting the application.
         QMenuBar* mb = mainWindow.menuBar();
         if (mb) {
             QMenu* adminMenu = mb->findChild<QMenu*>("adminMenu");
-            if (adminMenu) adminMenu->setTitle(QObject::tr("Administration"));
+            if (adminMenu) adminMenu->setTitle(QObject::tr("Language"));
             QAction* changeAct = mb->findChild<QAction*>("changeLangAct");
             if (changeAct) changeAct->setText(QObject::tr("Change language..."));
             QAction* resetAct = mb->findChild<QAction*>("resetLangAct");
@@ -1152,9 +1152,9 @@ int main(int argc, char *argv[])
         }
     };
 
-    // Language changes are handled via the Administration menu actions.
+    // Language changes are handled via the Language menu actions.
 
-    // Reset handled via Administration menu action; no title-button required.
+    // Reset handled via Language menu action; no title-button required.
 
     // Place stretches on both sides of the title so it stays centered
     // while keeping the About button anchored to the right edge.
@@ -1164,11 +1164,11 @@ int main(int argc, char *argv[])
     titleLayout->addWidget(aboutBtn);
     mainLayout->addLayout(titleLayout);
 
-    // Add an "Administration" menu with language actions so the language
+    // Add a "Language" menu with language actions so the language
     // chooser is reachable from the menu as well (useful on translated
     // desktops where the title-area combo may be less discoverable).
     QMenuBar* mb = mainWindow.menuBar();
-    QMenu* adminMenu = mb->addMenu(QObject::tr("Administration"));
+    QMenu* adminMenu = mb->addMenu(QObject::tr("Language"));
     adminMenu->setObjectName("adminMenu");
     QAction* changeLangAct = adminMenu->addAction(QObject::tr("Change language..."));
     changeLangAct->setObjectName("changeLangAct");
