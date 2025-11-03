@@ -211,17 +211,59 @@ Smelltu hér fyrir neðan til að afrita slóðina https://lsv.nalle.no/ í skyn
         <translation>Geymslu- og diskaupplýsingar</translation>
     </message>
     <message>
+        <source>Disk Drives</source>
+        <translation>Diskadrif</translation>
+    </message>
+    <message>
+        <source>Partitions</source>
+        <translation>Skiptingar</translation>
+    </message>
+    <message>
         <source>Mount Points</source>
         <translation>Festipunktar</translation>
+    </message>
+    <message>
+        <source>Disk Usage</source>
+        <translation>Disknotkun</translation>
+    </message>
+    <message>
+        <source>Disk Drives: Not detected</source>
+        <translation>Diskadrif: Ekki uppgötvað</translation>
+    </message>
+    <message>
+        <source>Partitions: Not detected</source>
+        <translation>Skiptingar: Ekki uppgötvaðar</translation>
     </message>
     <message>
         <source>Mount Points: Not detected</source>
         <translation>Festipunktar: Ekki uppgötvaðir</translation>
     </message>
     <message>
+        <source>Disk Usage: Not detected</source>
+        <translation>Disknotkun: Ekki uppgötvuð</translation>
+    </message>
+    <message>
+        <source>Disk Drives:
+</source>
+        <translation>Diskadrif:
+</translation>
+    </message>
+    <message>
+        <source>Partitions:
+</source>
+        <translation>Skiptingar:
+</translation>
+    </message>
+    <message>
         <source>Mount Points:
 </source>
         <translation>Festipunktar:
+</translation>
+    </message>
+    <message>
+        <source>Disk Usage:
+</source>
+        <translation>Disknotkun:
 </translation>
     </message>
 </context>
