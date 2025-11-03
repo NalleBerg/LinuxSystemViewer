@@ -35,10 +35,10 @@ Linux kerfisskoðari sýnir kerfisupplýsingar á skýran og auðlesanlegan hát
 Build Date: November 2025
 Qt Version: %2
 Platform: Linux</source>
-    <translation>Version: %1
-Build Date: November 2025
-Qt Version: %2
-Platform: Linux</translation>
+    <translation>Útgáfa: %1
+Uppsetningardagur: nóvember 2025
+Qt útgáfa: %2
+Vettvangur: Linux</translation>
     </message>
     <message>
         <source>Developer: Nalle Berg&lt;br&gt;&lt;a href="https://lsv.nalle.no/"&gt;Web page&lt;/a&gt;&lt;br&gt;&lt;br&gt;Built with Qt6 and modern C++ for optimal performance and cross-platform compatibility.&lt;br&gt;&lt;br&gt;Special thanks to the open-source community and the developers of lshw, lscpu, and other system utilities that inspired me to create this application.</source>
@@ -74,7 +74,7 @@ Smelltu hér fyrir neðan til að afrita slóðina https://lsv.nalle.no/ í skyn
     </message>
     <message>
         <source>(Embedded license not found)</source>
-        <translation>(Embedded license not found)</translation>
+        <translation>(Innbyggt leyfi fannst ekki)</translation>
     </message>
     <message>
         <source>GNU GPL v2</source>
