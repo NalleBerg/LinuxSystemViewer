@@ -922,8 +922,8 @@ Vennligst kjør applikasjonen som root.</translation>
     </message>
     <message>
         <location filename="../lsv.cpp" line="1158" />
-        <source>Administration</source>
-        <translation>Administrasjon</translation>
+        <source>Language</source>
+        <translation>Språk</translation>
     </message>
     <message>
         <location filename="../lsv.cpp" line="1159" />
