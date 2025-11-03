@@ -643,7 +643,7 @@ Smelltu hér fyrir neðan til að afrita slóðina https://lsv.nalle.no/ í skyn
     </message>
     <message>
       <source>Loading %1 information...</source>
-      <translation>Loading %1 information...</translation>
+      <translation>Hleður %1 upplýsingar...</translation>
     </message>
     <message>
       <source>USB Ports: Not detected</source>
@@ -659,36 +659,36 @@ Smelltu hér fyrir neðan til að afrita slóðina https://lsv.nalle.no/ í skyn
     </message>
     <message>
       <source>Port Status: Unknown</source>
-      <translation>Port Status: Unknown</translation>
+      <translation>Tengistaða: Óþekkt</translation>
     </message>
     <message>
-      <source>USB Ports:
+  <source>USB Ports:
 </source>
-      <translation>USB Ports:
+  <translation>USB tengi:
 </translation>
     </message>
     <message>
-      <source>Serial Ports:
+  <source>Serial Ports:
 </source>
-      <translation>Serial Ports:
+  <translation>Raðtengi:
 </translation>
     </message>
     <message>
-      <source>Serial Ports:
+  <source>Serial Ports:
 No serial controllers detected</source>
-      <translation>Serial Ports:
-No serial controllers detected</translation>
+  <translation>Raðtengi:
+Engir raðstýringar fundust</translation>
     </message>
     <message>
-      <source>PCI Ports:
+  <source>PCI Ports:
 </source>
-      <translation>PCI Ports:
+  <translation>PCI tengi:
 </translation>
     </message>
     <message>
-      <source>Port Status:
+  <source>Port Status:
 </source>
-      <translation>Port Status:
+  <translation>Tengistaða:
 </translation>
     </message>
   </context>
@@ -720,64 +720,64 @@ No serial controllers detected</translation>
     </message>
     <message>
       <source>Loading %1 information...</source>
-      <translation>Loading %1 information...</translation>
+      <translation>Hleður %1 upplýsingar...</translation>
     </message>
     <message>
       <source>Audio Devices: Not detected</source>
-      <translation>Audio Devices: Not detected</translation>
+      <translation>Hljóðtæki: Ekki uppgötvuð</translation>
     </message>
     <message>
       <source>Sound Cards: Not detected</source>
-      <translation>Sound Cards: Not detected</translation>
+      <translation>Hljóðkort: Ekki uppgötvað</translation>
     </message>
     <message>
       <source>Audio Server: Not detected</source>
-      <translation>Audio Server: Not detected</translation>
+      <translation>Hljóðþjónn: Ekki uppgötvað</translation>
     </message>
     <message>
       <source>Playback Devices: Not detected</source>
-      <translation>Playback Devices: Not detected</translation>
+      <translation>Útspilunartæki: Ekki uppgötvuð</translation>
     </message>
     <message>
       <source>Card:</source>
-      <translation>Card:</translation>
+      <translation>Kort:</translation>
     </message>
     <message>
       <source>Audio Server: PulseAudio (%1)</source>
-      <translation>Audio Server: PulseAudio (%1)</translation>
+      <translation>Hljóðþjónn: PulseAudio (%1)</translation>
     </message>
     <message>
       <source>Audio Server: PulseAudio %1</source>
-      <translation>Audio Server: PulseAudio %1</translation>
+      <translation>Hljóðþjónn: PulseAudio %1</translation>
     </message>
     <message>
       <source>Default: %1</source>
-      <translation>Default: %1</translation>
+      <translation>Sjálfgefið: %1</translation>
     </message>
     <message>
       <source>Audio Server: PipeWire</source>
-      <translation>Audio Server: PipeWire</translation>
+      <translation>Hljóðþjónn: PipeWire</translation>
     </message>
     <message>
       <source>Audio Server: JACK</source>
-      <translation>Audio Server: JACK</translation>
+      <translation>Hljóðþjónn: JACK</translation>
     </message>
     <message>
-      <source>Audio Devices:
+  <source>Audio Devices:
 %1</source>
-      <translation>Audio Devices:
+  <translation>Hljóðtæki:
 %1</translation>
     </message>
     <message>
-      <source>Sound Cards:
+  <source>Sound Cards:
 %1</source>
-      <translation>Sound Cards:
+  <translation>Hljóðkort:
 %1</translation>
     </message>
     <message>
-      <source>Playback Devices:
+  <source>Playback Devices:
 %1</source>
-      <translation>Playback Devices:
+  <translation>Útspilunartæki:
 %1</translation>
     </message>
     <message>
@@ -849,16 +849,16 @@ No serial controllers detected</translation>
       <translation>Óþekktur örgjörvi</translation>
     </message>
     <message>
-      <source>=== %1 Information ===
+  <source>=== %1 Information ===
 
 %2</source>
-      <translation>=== %1 Information ===
+  <translation>=== %1 upplýsingar ===
 
 %2</translation>
     </message>
     <message>
       <source>Graphics card</source>
-      <translation>Graphics card</translation>
+      <translation>Skjákort</translation>
     </message>
     <message>
       <source>sudo apt update &amp;&amp; sudo apt install policykit-1-gnome
@@ -880,7 +880,7 @@ No serial controllers detected</translation>
     </message>
     <message>
       <source>Please install a polkit authentication agent for your desktop (policykit-1-gnome, mate-polkit, polkit-kde) and log out/in.</source>
-      <translation>Please install a polkit authentication agent for your desktop (policykit-1-gnome, mate-polkit, polkit-kde) and log out/in.</translation>
+      <translation>Settu upp polkit auðkenningaraðila fyrir skjáborðið þitt (policykit-1-gnome, mate-polkit, polkit-kde) og skráðu þig út og inn.</translation>
     </message>
     <message>
       <source>Cleaning up</source>
@@ -895,14 +895,14 @@ No serial controllers detected</translation>
       <translation>Ekki hægt að hækka réttindi</translation>
     </message>
     <message>
-      <source>No terminal emulator found to prompt for a password.
+  <source>No terminal emulator found to prompt for a password.
 Please run the application as root.</source>
-      <translation>No terminal emulator found to prompt for a password.
-Please run the application as root.</translation>
+  <translation>Enginn skipanalína-hermir fannst til að biðja um lykilorð.
+Vinsamlegast keyrðu forritið sem root.</translation>
     </message>
     <message>
       <source>Please enter password to run Linux System Viewer as root</source>
-      <translation>Please enter password to run Linux System Viewer as root</translation>
+      <translation>Vinsamlegast sláðu inn lykilorð til að keyra Linux System Viewer sem root</translation>
     </message>
     <message>
       <source>Elevation failed</source>
@@ -910,7 +910,7 @@ Please run the application as root.</translation>
     </message>
     <message>
       <source>Failed to start a terminal to request sudo password. Please run the application as root.</source>
-      <translation>Failed to start a terminal to request sudo password. Please run the application as root.</translation>
+      <translation>Ekki tókst að ræsa skipanalínu til að biðja um sudo lykilorð. Vinsamlegast keyrðu forritið sem root.</translation>
     </message>
     <message>
       <source>Choose language</source>
