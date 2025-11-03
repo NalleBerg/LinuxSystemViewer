@@ -219,12 +219,21 @@ static bool tryLoadTranslatorForCode(const QString &code, QApplication &app, QTr
     // to the application's i18n directory next to the binary.
     // Try each candidate
     for (const QString &p : candidates) {
-        if (QFile::exists(p) || QResource::registerResource(p)) {
-            if (translator->load(p)) {
-                app.installTranslator(translator);
-                appendLog(QString("i18n: Loaded translator for '%1' from %2").arg(code, p));
-                return true;
-            }
+        // For resource paths (":/..."), try loading directly. For
+        // filesystem paths, ensure the file exists first. Avoid using
+        // QResource::registerResource on resource URIs — it expects an
+        // rcc file path and will fail for ":/" URIs.
+        bool tryLoad = false;
+        if (p.startsWith(":/")) {
+            tryLoad = true;
+        } else {
+            tryLoad = QFile::exists(p);
+        }
+        if (!tryLoad) continue;
+        if (translator->load(p)) {
+            app.installTranslator(translator);
+            appendLog(QString("i18n: Loaded translator for '%1' from %2").arg(code, p));
+            return true;
         }
     }
     appendLog(QString("i18n: No translator found for '%1'").arg(code));
