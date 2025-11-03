@@ -122,6 +122,114 @@ Smelltu hér fyrir neðan til að afrita slóðina https://lsv.nalle.no/ í skyn
         <source>Language:</source>
         <translation>Tungumál:</translation>
     </message>
+    <message>
+        <source>Property</source>
+        <translation>Eiginleiki</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation>Gildi</translation>
+    </message>
+    <message>
+        <source>Unit</source>
+        <translation>Eining</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Villa</translation>
+    </message>
+    <message>
+        <source>Could not read /proc/cpuinfo</source>
+        <translation>Gat ekki lesið /proc/cpuinfo</translation>
+    </message>
+    <message>
+        <source>Total number of processors</source>
+        <translation>Heildarfjöldi vinnslueininga</translation>
+    </message>
+    <message>
+        <source>Number of processor (Physical)</source>
+        <translation>Fjöldi örgjörva (fýsískir)</translation>
+    </message>
+    <message>
+        <source>Vendor</source>
+        <translation>Framleiðandi</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Óþekkt</translation>
+    </message>
+    <message>
+        <source>Model</source>
+        <translation>Gerð</translation>
+    </message>
+    <message>
+        <source>Cache size</source>
+        <translation>Skyndiminni (cache)</translation>
+    </message>
+    <message>
+        <source>Bogomips</source>
+        <translation>Bogomips</translation>
+    </message>
+    <message>
+        <source>Current freq (GHz)</source>
+        <translation>Núverandi tíðni (GHz)</translation>
+    </message>
+    <message>
+        <source>Max freq (GHz)</source>
+        <translation>Hámarks tíðni (GHz)</translation>
+    </message>
+    <message>
+        <source>Min Freq (GHz)</source>
+        <translation>Lágmarks tíðni (GHz)</translation>
+    </message>
+    <message>
+        <source>Error reading CPU information</source>
+        <translation>Villa við að lesa upplýsingar um örgjörva</translation>
+    </message>
+    <message>
+        <source>Unknown CPU</source>
+        <translation>Óþekktur örgjörvi</translation>
+    </message>
+    <message>
+        <source>Cleaning up</source>
+        <translation>Hreinsar upp</translation>
+    </message>
+    <message>
+        <source>Cleaning up temporary files...</source>
+        <translation>Hreinsar tímabundnar skrár...</translation>
+    </message>
+    <message>
+        <source>Cannot elevate</source>
+        <translation>Ekki hægt að hækka réttindi</translation>
+    </message>
+    <message>
+        <source>No terminal emulator found to prompt for a password.\nPlease run the application as root.</source>
+        <translation>Enginn skel-hermir fannst fyrir lykilorðabeiðni.\nVinsamlegast keyrðu forritið sem root.</translation>
+    </message>
+    <message>
+        <source>Please enter password to run Linux System Viewer as \nroot</source>
+        <translation>Vinsamlegast sláðu inn lykilorð til að keyra Linux System Viewer sem \nroot</translation>
+    </message>
+    <message>
+        <source>Elevation failed</source>
+        <translation>Ekki tókst að hækka réttindi</translation>
+    </message>
+    <message>
+        <source>Failed to start a terminal to request sudo password.\n Please run the application as root.</source>
+        <translation>Gat ekki ræst skel til að biðja um sudo-lykilorð.\nVinsamlegast keyrðu forritið sem root.</translation>
+    </message>
+    <message>
+        <source>Linux System Viewer V. %1</source>
+        <translation>Linux System Viewer útgáfa %1</translation>
+    </message>
+    <message>
+        <source>Linux System Viewer</source>
+        <translation>Linux kerfisskoðari</translation>
+    </message>
+    <message>
+        <source>About Linux System Viewer</source>
+        <translation>Um Linux kerfisskoðara</translation>
+    </message>
 </context>
 <context>
     <name>TabWidgetBase</name>
