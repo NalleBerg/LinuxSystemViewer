@@ -151,6 +151,7 @@ static QMap<QString, QString> shippedLanguageDisplayNames()
     // The repository and packaging contain only these two translators
     // and the application should not present other languages here.
     m.insert("en_GB", "English (UK)");
+    m.insert("en", "English (UK)");
     m.insert("nb", "Norsk (Bokmål)");
     // Also recognise Icelandic translators if present and show a friendly
     // display name instead of the raw code "is".
@@ -1131,6 +1132,13 @@ int main(int argc, char *argv[])
             if (changeAct) changeAct->setText(QObject::tr("Change language..."));
             QAction* resetAct = mb->findChild<QAction*>("resetLangAct");
             if (resetAct) resetAct->setText(QObject::tr("Reset language"));
+            // Update the language indicator badge text as well
+            QLabel* indicator = mb->findChild<QLabel*>("langIndicator");
+            if (indicator) {
+                QMap<QString, QString> names2 = shippedLanguageDisplayNames();
+                QString display = names2.value(code, code);
+                indicator->setText(display);
+            }
         }
 
         // Recreate the tab widget to ensure constructor-time tr() calls run
@@ -1187,6 +1195,20 @@ int main(int argc, char *argv[])
     changeLangAct->setObjectName("changeLangAct");
     QAction* resetLangAct = adminMenu->addAction(QObject::tr("Reset language"));
     resetLangAct->setObjectName("resetLangAct");
+
+    // Language indicator shown in the menu bar: display current language
+    // in a small blue badge (native name). This is a non-interactive
+    // widget added as a QWidgetAction so it appears alongside the menus.
+    QMap<QString, QString> names = shippedLanguageDisplayNames();
+    QString curLang = settings.value("language", QString()).toString();
+    if (curLang.isEmpty()) curLang = "en";
+    QWidgetAction* langIndicatorAct = new QWidgetAction(mb);
+    QLabel* langIndicator = new QLabel(names.value(curLang, curLang));
+    langIndicator->setObjectName("langIndicator");
+    // Use the pleasant blue consistent with other UI accents
+    langIndicator->setStyleSheet("QLabel#langIndicator { background-color: #1E88E5; color: white; padding: 3px 8px; border-radius: 6px; font-weight: bold; }");
+    langIndicatorAct->setDefaultWidget(langIndicator);
+    mb->addAction(langIndicatorAct);
 
     QObject::connect(changeLangAct, &QAction::triggered, [&mainWindow, &settings, &applyLanguage]() {
         QMap<QString, QString> names = shippedLanguageDisplayNames();
