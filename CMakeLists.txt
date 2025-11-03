@@ -84,6 +84,10 @@ set(LSV_I18N_FILES)
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/i18n")
     file(GLOB QM_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/i18n "${CMAKE_CURRENT_SOURCE_DIR}/i18n/*.qm")
     if(QM_FILES)
+        # Exclude work-in-progress translations from the release bundle.
+        # Icelandic is placed in i18n_pending for now and must not be
+        # embedded into the release resources.
+        list(REMOVE_ITEM QM_FILES "lsv_is.qm")
         foreach(qm ${QM_FILES})
             list(APPEND LSV_I18N_FILES "i18n/${qm}")
         endforeach()
@@ -105,7 +109,13 @@ set_target_properties(LSV PROPERTIES
 # Small privileged helper (optional): builds a tiny launcher which can be
 # installed setuid-root by the system administrator to reliably exec the
 # main LSV binary as root while preserving the user's environment vars.
-add_subdirectory(priv)
+# Only include the helper if the source directory exists. This avoids a
+# hard failure for developer checkouts that don't include the helper.
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/priv")
+    add_subdirectory(priv)
+else()
+    message(STATUS "Optional 'priv' helper not found; skipping privileged helper build")
+endif()
 
 # Install targets and desktop integration for packaging
 install(TARGETS LSV RUNTIME DESTINATION bin)
@@ -116,6 +126,21 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsv.desktop")
 endif()
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsv-512.png")
     install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/lsv-512.png" DESTINATION share/icons/hicolor/512x512/apps RENAME lsv.png)
+endif()
+
+# Also install the generic `lsv.png` into common hicolor sizes so the
+# produced .deb/.rpm packages include the application icon for the menu
+# on target systems even when distro packagers don't resize images.
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsv.png")
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/lsv.png" DESTINATION share/icons/hicolor/16x16/apps RENAME lsv.png)
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/lsv.png" DESTINATION share/icons/hicolor/22x22/apps RENAME lsv.png)
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/lsv.png" DESTINATION share/icons/hicolor/24x24/apps RENAME lsv.png)
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/lsv.png" DESTINATION share/icons/hicolor/32x32/apps RENAME lsv.png)
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/lsv.png" DESTINATION share/icons/hicolor/48x48/apps RENAME lsv.png)
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/lsv.png" DESTINATION share/icons/hicolor/64x64/apps RENAME lsv.png)
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/lsv.png" DESTINATION share/icons/hicolor/128x128/apps RENAME lsv.png)
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/lsv.png" DESTINATION share/icons/hicolor/256x256/apps RENAME lsv.png)
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/lsv.png" DESTINATION share/icons/hicolor/512x512/apps RENAME lsv.png)
 endif()
 
 # CPack packaging configuration: produce .deb and .rpm packages
