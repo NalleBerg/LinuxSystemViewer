@@ -609,6 +609,62 @@ Smelltu hér fyrir neðan til að afrita slóðina https://lsv.nalle.no/ í skyn
         <source>USB Devices</source>
         <translation>USB tæki</translation>
     </message>
+    <message>
+        <source>Input Devices</source>
+        <translation>Inntaks tæki</translation>
+    </message>
+    <message>
+        <source>Storage Devices</source>
+        <translation>Geymslutæki</translation>
+    </message>
+    <message>
+        <source>Network Devices</source>
+        <translation>Netbúnaður</translation>
+    </message>
+    <message>
+        <source>Loading %1 information...</source>
+        <translation>Hleður %1 upplýsingar...</translation>
+    </message>
+    <message>
+        <source>USB Devices: Not detected</source>
+        <translation>USB tæki: Ekki uppgötvað</translation>
+    </message>
+    <message>
+        <source>Input Devices: Not detected</source>
+        <translation>Inntaks tæki: Ekki uppgötvuð</translation>
+    </message>
+    <message>
+        <source>Storage Devices: Not detected</source>
+        <translation>Geymslutæki: Ekki uppgötvuð</translation>
+    </message>
+    <message>
+        <source>Network Devices: Not detected</source>
+        <translation>Netbúnaður: Ekki uppgötvaður</translation>
+    </message>
+    <message>
+        <source>USB Devices:
+</source>
+        <translation>USB tæki:
+</translation>
+    </message>
+    <message>
+        <source>Input Devices:
+</source>
+        <translation>Inntaks tæki:
+</translation>
+    </message>
+    <message>
+        <source>Storage Devices:
+</source>
+        <translation>Geymslutæki:
+</translation>
+    </message>
+    <message>
+        <source>Network Devices:
+</source>
+        <translation>Netbúnaður:
+</translation>
+    </message>
 </context>
 
 <context>
@@ -769,6 +825,48 @@ Smelltu hér fyrir neðan til að afrita slóðina https://lsv.nalle.no/ í skyn
         <source>Display and Monitor Information</source>
         <translation>Upplýsingar um skjá og skjámyndar</translation>
     </message>
+    <message>
+        <source>Connected Displays</source>
+        <translation>Tengdir skjáir</translation>
+    </message>
+    <message>
+        <source>Screen Resolution</source>
+        <translation>Skjárupplausn</translation>
+    </message>
+    <message>
+        <source>Refresh Rates</source>
+        <translation>Uppsýningartíðni</translation>
+    </message>
+    <message>
+        <source>Display Orientation</source>
+        <translation>Sýningarstefna</translation>
+    </message>
+    <message>
+        <source>Loading %1 information...</source>
+        <translation>Hleður %1 upplýsingar...</translation>
+    </message>
+    <message>
+        <source>Connected Displays: Not detected</source>
+        <translation>Tengdir skjáir: Ekki uppgötvaðir</translation>
+    </message>
+    <message>
+        <source>Screen Resolution: Not detected</source>
+        <translation>Skjárupplausn: Ekki uppgötvuð</translation>
+    </message>
+    <message>
+        <source>Refresh Rates: Not detected</source>
+        <translation>Uppsýningartíðni: Ekki uppgötvuð</translation>
+    </message>
+    <message>
+        <source>Display Orientation: Not detected</source>
+        <translation>Sýningarstefna: Ekki uppgötvuð</translation>
+    </message>
+    <message>
+        <source>Display Orientation:
+Normal (default)</source>
+        <translation>Sýningarstefna:
+Venjuleg (sjálfgefið)</translation>
+    </message>
 </context>
 <context>
     <name>PortsTab</name>
@@ -817,6 +915,70 @@ Smelltu hér fyrir neðan til að afrita slóðina https://lsv.nalle.no/ í skyn
     <message>
         <source>System Board: Not detected</source>
         <translation>Kerfistafla: Ekki uppgötvuð</translation>
+    </message>
+    <message>
+        <source>Manufacturer: %1</source>
+        <translation>Framleiðandi: %1</translation>
+    </message>
+    <message>
+        <source>Product: %1</source>
+        <translation>Vara: %1</translation>
+    </message>
+    <message>
+        <source>Version: %1</source>
+        <translation>Útgáfa: %1</translation>
+    </message>
+    <message>
+        <source>Serial: %1</source>
+        <translation>S númer: %1</translation>
+    </message>
+    <message>
+        <source>BIOS Vendor: %1</source>
+        <translation>BIOS framleiðandi: %1</translation>
+    </message>
+    <message>
+        <source>BIOS Revision: %1</source>
+        <translation>BIOS uppfærsla: %1</translation>
+    </message>
+    <message>
+        <source>Release Date: %1</source>
+        <translation>Útgáfudagur: %1</translation>
+    </message>
+    <message>
+        <source>Family: %1</source>
+        <translation>Fjölskylda: %1</translation>
+    </message>
+    <message>
+        <source>BIOS/UEFI: Not detected</source>
+        <translation>BIOS/UEFI: Ekki uppgötvað</translation>
+    </message>
+    <message>
+        <source>Expansion Slots: Not detected</source>
+        <translation>Útvíkkunarraufar: Ekki uppgötvaðar</translation>
+    </message>
+    <message>
+        <source>System Board:
+%1</source>
+        <translation>Kerfistafla:
+%1</translation>
+    </message>
+    <message>
+        <source>Chipset:
+%1</source>
+        <translation>Chipset:
+%1</translation>
+    </message>
+    <message>
+        <source>BIOS/UEFI:
+%1</source>
+        <translation>BIOS/UEFI:
+%1</translation>
+    </message>
+    <message>
+        <source>Expansion Slots:
+%1</source>
+        <translation>Útvíkkunarraufar:
+%1</translation>
     </message>
     <message>
         <source>Chipset: Not detected</source>
