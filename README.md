@@ -88,29 +88,24 @@ Screenshots and binary downloads
 
 Quickstart — build & run (developer)
 
-1. Build a debug/dev binary with the optional debug logger compiled in:
+You only need `makeit.sh` to build and package the project, and `install.sh` /
+`uninstall.sh` to install or remove the built artifacts. `makeit.sh` handles
+configure/build/package for both release and development (debug logger) modes.
+
+Examples:
 
 ```bash
-cmake -S . -B build_debug -DLSV_ENABLE_DEBUG_LOGGER=ON
-cmake --build build_debug -j
-LSV_DEBUG=1 ./build_debug/LSV
-```
-
-When run with `LSV_DEBUG=1` the debug build writes non-invasive logs to
-`$(QDir::tempPath())/lsv-debug.log` (commonly `/tmp/lsv-debug.log`).
-
-2. Build a release binary (no logging compiled in — recommended for releases):
-
-```bash
-cmake -S . -B build_release -DLSV_ENABLE_DEBUG_LOGGER=OFF
-cmake --build build_release -j
-./build_release/LSV
-```
-
-3. Create a DEB package (default packaging uses a release build with no logger):
-
-```bash
+# Build & package (release — recommended for releases)
 ./makeit.sh
+
+# Build & package and enable the optional debug logger (development)
+./makeit.sh --debug-logger
+
+# Install the generated DEB (run as root)
+sudo bash ./install.sh
+
+# Uninstall helper-installed files
+sudo bash ./uninstall.sh -y
 ```
 
 makeit.sh options
