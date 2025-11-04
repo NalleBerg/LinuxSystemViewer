@@ -62,8 +62,6 @@ Security
 If you want me to add official packaging for additional distributions (RPM/Flatpak/Snap) or to produce CI artifacts, tell me which target and I will prepare a reproducible packaging workflow.
 # Linux System Viewer
 
-![screenshot](screenshot.svg)
-
 Official project home & binaries: https://lsv.nalle.no/
 
 Linux System Viewer (LSV) is a small, focused Qt6-based GUI tool that presents
@@ -113,6 +111,35 @@ cmake --build build_release -j
 
 ```bash
 ./makeit.sh
+```
+
+makeit.sh options
+------------------
+
+`makeit.sh` is the canonical build-and-package helper for this repository. You don't need to run `cmake` or `make` manually — `makeit.sh` performs configure, build and packaging steps for you.
+
+Supported command-line flags:
+
+- `--run`       : after packaging, start the built executable as a runtime test (this is a background convenience step).
+- `--norun`     : disable the runtime test (opposite of `--run`).
+- `--debug-logger` : compile the optional debug logger into the binary (useful for development). When this flag is not present the logger is disabled (recommended for release builds).
+
+Environment variable equivalents (alternate ways to set the same options):
+
+- `RUN_PACKAGE=1` or `RUN_PACKAGE=0` — same as `--run` / `--norun`.
+- `DEBUG_LOGGER=1` — same as `--debug-logger`.
+
+Examples:
+
+```bash
+# Build+package and run a brief runtime test
+./makeit.sh --run
+
+# Build+package without running tests and enable the debug logger
+./makeit.sh --debug-logger --norun
+
+# Or set via environment
+DEBUG_LOGGER=1 ./makeit.sh
 ```
 
 Packaging note — where to find the built artifacts and how to install
