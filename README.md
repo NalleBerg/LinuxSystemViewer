@@ -1,3 +1,65 @@
+Linux System Viewer — build & install instructions
+
+NOTE: This repository supports DEB-based installation (Debian/Ubuntu) as the officially supported packaging target. You may build from source on other systems, but packaging and automated installation are targeted at DEB.
+
+This project builds the LSV (Linux System Viewer) application using the provided helper script `makeit.sh` and produces a runnable binary and (on Debian/Ubuntu systems) a `.deb` package in the `build/` directory.
+
+Quick workflow (build & DEB install)
+
+1) Prerequisites (example packages on Debian/Ubuntu):
+
+```bash
+sudo apt-get update
+sudo apt-get install -y build-essential cmake pkg-config git \
+	qt6-base-dev qt6-tools-dev qtmultimedia5-dev qt6-linguist-tools \
+	lsb-release
+```
+
+Note: package names for Qt development tools vary by distribution and version. Ensure you have Qt6 development packages and `lrelease` available for translation compilation.
+
+2) Build (from repository root):
+
+```bash
+./makeit.sh
+```
+
+- `makeit.sh` configures and builds the project (CMake) and places build artifacts in `build/`.
+- Typical outputs you will find in `build/` after a successful run:
+	- `build/LSV` — the compiled binary (executable).
+	- `build/lsv-<version>.deb` — Debian package (if the packaging step was run and the system supports it).
+	- other CPack outputs under `build/_CPack_Packages/` (staging directories).
+
+3) Install (recommended for supported platform — Debian/Ubuntu):
+
+The repository includes `install.sh` to help installing the app system-wide. `install.sh` must be run as root and will prefer installing the `.deb` package if present. If no `.deb` is available it will try to install the built binary and place the desktop and icon files under `/usr` so desktop environments can find them.
+
+Example (DEB install):
+
+```bash
+# from repo root, run as root
+sudo bash ./install.sh
+# or install the generated deb directly
+sudo dpkg -i build/lsv-<version>.deb && sudo apt-get -f install -y
+```
+
+What `install.sh` does (high level)
+- If `build/lsv-*.deb` exists the script installs it using `dpkg -i` and then attempts to fix dependencies with `apt-get -f install`.
+- Otherwise the script will: copy `build/LSV` to `/usr/bin/LSV`, copy `lsv.desktop` to `/usr/share/applications/lsv.desktop`, copy any hicolor icons found under `AppDir/usr/share/icons` (or from the `AppDir/` layout) into `/usr/share/icons/hicolor/`, install AppStream metadata to `/usr/share/metainfo/` and refresh desktop/icon/AppStream caches when possible.
+
+Notes & tips
+- If the menu entry or icon doesn't appear immediately after install, log out and back in, or run:
+
+```bash
+update-desktop-database /usr/share/applications || true
+gtk-update-icon-cache -t -f /usr/share/icons/hicolor || true
+```
+
+- `install.sh` is intentionally conservative and will not remove existing files outside the ones it installs. Use `uninstall.sh -y` to remove the helper-installed files when needed.
+
+Security
+- `install.sh` performs system changes and must be run as root. Inspect the script before running it.
+
+If you want me to add official packaging for additional distributions (RPM/Flatpak/Snap) or to produce CI artifacts, tell me which target and I will prepare a reproducible packaging workflow.
 # Linux System Viewer
 
 ![screenshot](screenshot.svg)
