@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(LSV VERSION 0.7.0)
+project(LSV VERSION 0.7.2)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -161,7 +161,27 @@ set(CPACK_RPM_PACKAGE_RELEASE "1")
 # Let CPack attempt to detect library dependencies for Debian packages
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
+# Include package maintainer scripts (postinst/postrm) for DEB and RPM
+# If the scripts exist in cmake/packaging, instruct CPack to embed them so the
+# package manager will run them on install/remove. Paths are absolute so CPack
+# can find them during package generation.
+set(LSV_PACKAGING_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake/packaging")
+if(EXISTS "${LSV_PACKAGING_DIR}/postinst")
+    # Ensure scripts are executable so the package manager can run them
+    file(CHMOD "${LSV_PACKAGING_DIR}/postinst" PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+    if(EXISTS "${LSV_PACKAGING_DIR}/postrm")
+        file(CHMOD "${LSV_PACKAGING_DIR}/postrm" PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+    endif()
+
+    set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${LSV_PACKAGING_DIR}/postinst;${LSV_PACKAGING_DIR}/postrm")
+    set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE "${LSV_PACKAGING_DIR}/postinst")
+    set(CPACK_RPM_POST_UNINSTALL_SCRIPT_FILE "${LSV_PACKAGING_DIR}/postrm")
+endif()
+
 # Default install prefix for packages
-set(CPACK_PACKAGING_INSTALL_PREFIX "/")
+# Use /usr so installed files end up under /usr/bin and /usr/share (typical
+# packaging convention). Previously '/' produced /bin and /share which are not
+# where desktop environments expect application icons and desktop files.
+set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
 
 include(CPack)

@@ -1,0 +1,102 @@
+#!/bin/sh
+# Post-install script for lsv package
+# Improved: enumerate users using getent, prefer UID >= 1000, set absolute
+# Icon path inside the user's local icons (choose best available size), and
+# run gtk-update-icon-cache as the user (best-effort).
+
+set -e
+
+PKG_DESKTOP="/usr/share/applications/lsv.desktop"
+PKG_ICON_DIR="/usr/share/icons/hicolor"
+
+# Helper: choose best available icon size (prefer 512,256,128,64,48,32,24,22,16)
+choose_best_icon() {
+    base="$1"
+    for s in 512 256 128 64 48 32 24 22 16; do
+        candidate="$base/${s}x${s}/apps/lsv.png"
+        if [ -f "$candidate" ]; then
+            printf '%s' "$candidate"
+            return 0
+        fi
+    done
+    # fallback: any lsv.* under the hicolor tree
+    find "$base" -type f -iname 'lsv.*' | head -n1 || true
+}
+
+# If package didn't install desktop file, nothing to do
+if [ ! -f "$PKG_DESKTOP" ]; then
+    exit 0
+fi
+
+# find the best icon packaged (system-level)
+PKG_BEST_ICON=$(choose_best_icon "$PKG_ICON_DIR")
+
+# Enumerate human users via getent passwd (UID >= 1000, skip nobody/system users)
+getent passwd | while IFS=: read -r username _ uid _ _ homedir shell; do
+    # UID threshold: typical Linux distro uses >=1000 for regular users
+    if [ -z "$uid" ] || [ "$uid" -lt 1000 ]; then
+        continue
+    fi
+    # skip users without a home dir or with nologin shells
+    if [ -z "$homedir" ] || [ ! -d "$homedir" ]; then
+        continue
+    fi
+    case "$shell" in
+        */nologin | */false)
+            continue
+            ;;
+    esac
+
+    user="$username"
+    user_apps="$homedir/.local/share/applications"
+    user_icons="$homedir/.local/share/icons/hicolor"
+    mkdir -p "$user_apps" "$user_icons"
+
+    # Copy desktop file and set ownership
+    cp -f "$PKG_DESKTOP" "$user_apps/lsv.desktop"
+    chown "$user":"$user" "$user_apps/lsv.desktop" || true
+    chmod 644 "$user_apps/lsv.desktop" || true
+
+    # Copy icons preserving hicolor subdirs
+    if [ -d "$PKG_ICON_DIR" ]; then
+        # copy all icon files under hicolor to user's hicolor directory
+        (cd "$PKG_ICON_DIR" && tar -cf - .) | (cd "$user_icons" && tar -xpf -) || true
+        # ensure ownership and perms for copied icons
+        find "$user_icons" -type f -exec chown "$user":"$user" {} + 2>/dev/null || true
+        find "$user_icons" -type f -exec chmod 644 {} + 2>/dev/null || true
+
+        # choose the best icon we packaged and set absolute Icon= in the user's desktop file
+        if [ -n "$PKG_BEST_ICON" ] && [ -f "$PKG_BEST_ICON" ]; then
+            # map system path -> user's local path
+            # e.g. /usr/share/icons/hicolor/512x512/apps/lsv.png -> ~/.local/share/icons/hicolor/512x512/apps/lsv.png
+            rel=${PKG_BEST_ICON#${PKG_ICON_DIR}/}
+            user_icon_path="$user_icons/${rel}"
+            # ensure file exists (should after tar copy)
+            if [ -f "$user_icon_path" ]; then
+                # Update Icon= line (replace or append)
+                if grep -q '^Icon=' "$user_apps/lsv.desktop"; then
+                    sed -i "s|^Icon=.*|Icon=${user_icon_path}|" "$user_apps/lsv.desktop" || true
+                else
+                    echo "Icon=${user_icon_path}" >> "$user_apps/lsv.desktop"
+                fi
+                chown "$user":"$user" "$user_apps/lsv.desktop" || true
+            fi
+        fi
+
+        # Update the user's icon cache (best-effort)
+        if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+            # run as the user so caches are created under their home
+            su -s /bin/sh -c "gtk-update-icon-cache -f -t '${user_icons}'" "$user" || true
+        fi
+    fi
+done
+
+# Update system caches as well (best-effort)
+if command -v update-desktop-database >/dev/null 2>&1; then
+    update-desktop-database /usr/share/applications || true
+fi
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+    gtk-update-icon-cache -f -t /usr/share/icons/hicolor || true
+fi
+
+exit 0

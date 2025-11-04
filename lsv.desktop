@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Linux System Viewer
+Name[nb]=Linux System Viewer
+Comment=Simple GUI for system & hardware info
+Comment[nb]=En enkel GUI for system- og maskinvareinformasjon
+Exec=/usr/bin/LSV
+TryExec=/usr/bin/LSV
+Icon=lsv
+Type=Application
+Categories=Accessories;Utility;Information;
+Terminal=false
+StartupNotify=true

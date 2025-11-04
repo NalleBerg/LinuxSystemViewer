@@ -3,7 +3,7 @@
 
 // Use a simple macro so it can be used in literal concatenation in other
 // translation units where convenient. Change this to bump the version.
-#define LSV_VERSION "0.7.0"
+#define LSV_VERSION "0.7.2"
 
 // Helper to get a QString version when needed. Include <QString> here so
 // consumers that include this header get the helper without needing to

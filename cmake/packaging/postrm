@@ -1,0 +1,45 @@
+#!/bin/sh
+# Post-remove script for lsv package
+# Improved: enumerate users via getent and remove per-user desktop and icons.
+
+set -e
+
+PKG_DESKTOP="/usr/share/applications/lsv.desktop"
+PKG_ICON_DIR="/usr/share/icons/hicolor"
+
+# Enumerate human users via getent passwd
+getent passwd | while IFS=: read -r username _ uid _ _ homedir shell; do
+    if [ -z "$uid" ] || [ "$uid" -lt 1000 ]; then
+        continue
+    fi
+    if [ -z "$homedir" ] || [ ! -d "$homedir" ]; then
+        continue
+    fi
+    case "$shell" in
+        */nologin | */false)
+            continue
+            ;;
+    esac
+
+    user="$username"
+    user_apps_file="$homedir/.local/share/applications/lsv.desktop"
+    user_icons_dir="$homedir/.local/share/icons/hicolor"
+
+    if [ -f "$user_apps_file" ]; then
+        rm -f "$user_apps_file" || true
+    fi
+
+    if [ -d "$user_icons_dir" ]; then
+        find "$user_icons_dir" -type f -name 'lsv.png' -exec rm -f {} + || true
+    fi
+done
+
+# Update system caches
+if command -v update-desktop-database >/dev/null 2>&1; then
+    update-desktop-database /usr/share/applications || true
+fi
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+    gtk-update-icon-cache -f -t /usr/share/icons/hicolor || true
+fi
+
+exit 0
