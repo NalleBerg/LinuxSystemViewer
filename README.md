@@ -71,11 +71,10 @@ detailed system hardware and software information on Linux. It provides both a
 user-friendly overview and technical ("geek") views of components such as CPU,
 memory, storage, network, and more.
 
-Key features
 - Clean, read-only design: the app gathers information using system utilities and
 	presents it without modifying the system.
 - Two presentation modes: user-friendly summaries and detailed technical views.
-- Packaging: DEB and RPM via CPack for easy distribution on common Linux distros.
+-- Packaging: DEB via CPack for easy distribution on Debian/Ubuntu.
 - Developer-friendly build options and an opt-in debug logger for safe
 	troubleshooting (disabled by default in release builds).
 
@@ -110,7 +109,7 @@ cmake --build build_release -j
 ./build_release/LSV
 ```
 
-3. Create DEB and RPM packages (default packaging uses a release build with no logger):
+3. Create a DEB package (default packaging uses a release build with no logger):
 
 ```bash
 ./makeit.sh
@@ -120,9 +119,9 @@ Packaging note — where to find the built artifacts and how to install
 ------------------------------------------------------------------
 
 The packaging script `./makeit.sh` builds the project and creates distribution
-artifacts (DEB/RPM and a small `LSV` runtime bundle) inside the `./LSV`
+artifacts (DEB and a small `LSV` runtime bundle) inside the `./LSV`
 directory at the repository root. After `./makeit.sh` completes you should see
-one or more files under `./LSV/` such as `*.deb`, `*.rpm` and the runtime
+one or more files under `./LSV/` such as `*.deb` and the runtime
 executable/bundle named `LSV`.
 
 To install the package you built (example for Debian/Ubuntu):
@@ -176,7 +175,7 @@ If you need a developer package that includes the logger, build with
 `--debug-logger` option to the packaging script (not enabled by default).
 
 One-liner examples
-- Default (build and package for DEB/RPM):
+- Default (build and package for DEB):
 
 ```bash
 ./makeit.sh
