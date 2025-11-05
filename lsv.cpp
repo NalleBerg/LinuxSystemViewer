@@ -1105,9 +1105,10 @@ int main(int argc, char *argv[])
     mainWindow.setWindowTitle(QObject::tr("Linux System Viewer V. %1").arg(LSVVersionQString()));
     mainWindow.setWindowIcon(appIcon);
 
-    // Set fixed initial size (850x480) regardless of DPI
+    // Set fixed initial size (850x456) regardless of DPI
+    // Reduced height slightly to avoid being obscured by desktop panels
     const int INITIAL_WIDTH = 850;
-    const int INITIAL_HEIGHT = 480;
+    const int INITIAL_HEIGHT = 456;
     
     mainWindow.resize(INITIAL_WIDTH, INITIAL_HEIGHT);
     mainWindow.setMinimumSize(600, 300);
