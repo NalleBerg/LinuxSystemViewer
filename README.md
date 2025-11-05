@@ -108,26 +108,32 @@ sudo chmod 0755 /usr/bin/LSV
 /usr/bin/LSV
 ```
 
-Icons & desktop installer (coming soon)
---------------------------------------
+Icons & desktop installer
+-------------------------
 
-For convenience we will provide a small shell helper that installs
-icons and the desktop entry (so the application appears in the menus
-for GNOME/Cinnamon/MATE/KDE). That helper script will live inside
-the `./LSV` directory next to the built artifacts. For now packaging
-only places the runtime bundle and packages in `./LSV`; the icon and
-desktop installer script will be added in a follow-up change.
+The repository now includes a small installer helper (`install.sh`) and a matching uninstaller (`uninstall.sh`) that will install the runtime, desktop entry, icons and AppStream metadata for you.
 
-If you want to install the desktop file and icon manually right now,
-copy `lsv.desktop` to `/usr/share/applications/` and `lsv.png` to a
-matching location under `/usr/share/icons/hicolor/` and update the
-desktop database (requires sudo). See the repository `lsv.desktop` for
-the packaged desktop file we use.
+Usage (from project root):
 
+```bash
+# Build and package (creates ./LSV/*.deb and the runtime bundle)
+./makeit.sh
 
-If you need a developer package that includes the logger, build with
-`-DLSV_ENABLE_DEBUG_LOGGER=ON` before running `./makeit.sh`, or add the
-`--debug-logger` option to the packaging script (not enabled by default).
+# Install the built package and helper-installed files (run as root)
+sudo ./install.sh
+
+# Remove installed files
+sudo ./uninstall.sh
+```
+
+What `install.sh` does:
+- Installs the generated DEB if present (preferred), or copies the runtime bundle to `/usr/bin/LSV`.
+- Installs `/usr/share/applications/lsv.desktop` and the hicolor icons under `/usr/share/icons/hicolor/` (multiple sizes when available).
+- Installs the AppStream metadata to `/usr/share/metainfo/` and refreshes the system caches (best-effort).
+
+If you prefer manual installation you can still copy `lsv.desktop` to `/usr/share/applications/` and `lsv.png` (or the sizes in `./LSV`) to `/usr/share/icons/hicolor/` and update the icon/desktop caches (requires sudo).
+
+Developer note: to build a developer package that includes the optional logger, pass `-DLSV_ENABLE_DEBUG_LOGGER=ON` to CMake or run `./makeit.sh --debug-logger` (the logger is disabled in normal release builds).
 
 One-liner examples
 - Default (build and package for DEB):
