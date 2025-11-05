@@ -10,33 +10,18 @@ user-friendly overview and technical ("geek") views of components such as CPU,
 memory, storage, network, and more.
 
 - Clean, read-only design: the app gathers information using system utilities and
-	presents it without modifying the system.
+  presents it without modifying the system.
 - Two presentation modes: user-friendly summaries and detailed technical views.
 - Packaging: DEB via CPack for easy distribution on Debian/Ubuntu.
 - Developer-friendly build options and an opt-in debug logger for safe
-	troubleshooting (disabled by default in release builds).
-# Linux System Viewer
-
-Official project home & binaries: https://lsv.nalle.no/
-
-Linux System Viewer (LSV) is a small, focused Qt6-based GUI tool that presents
-detailed system hardware and software information on Linux. It provides both a
-user-friendly overview and technical ("geek") views of components such as CPU,
-memory, storage, network, and more.
-
-- Clean, read-only design: the app gathers information using system utilities and
-	presents it without modifying the system.
-- Two presentation modes: user-friendly summaries and detailed technical views.
--- Packaging: DEB via CPack for easy distribution on Debian/Ubuntu.
-- Developer-friendly build options and an opt-in debug logger for safe
-	troubleshooting (disabled by default in release builds).
+  troubleshooting (disabled by default in release builds).
 
 Configuration
 - Persistent language selection is stored in `~/.config/LSV/lsv_lang.rc`. The
-	application will consult only this file for the saved language choice — no
-	other locations are used. A "Change language" dropdown is available in the
-	app title bar and a "Reset language" button removes the saved file and
-	reverts the UI to English.
+  application will consult only this file for the saved language choice — no
+  other locations are used. A "Change language" dropdown is available in the
+  app title bar and a "Reset language" button removes the saved file and
+  reverts the UI to English.
 
 Screenshots and binary downloads
 - Live demo, releases and packaging builds are published at: https://lsv.nalle.no/
