@@ -1,5 +1,9 @@
 # Linux System Viewer
 
+<p align="center">
+	<img src="ScreenShotLSV-0.7.2.png" alt="Linux System Viewer screenshot" width="720" />
+</p>
+
 Official project home & binaries: https://lsv.nalle.no/
 
 NOTE: At present we provide official DEB binaries (Debian/Ubuntu). If you need other formats we can add them later; meanwhile the repository includes helper scripts (`makeit.sh`, `install.sh`, `uninstall.sh`) to build from source and install locally.
