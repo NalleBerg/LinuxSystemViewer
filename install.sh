@@ -34,7 +34,7 @@ BUILD_DIR="$ROOTDIR/build"
 # when the script runs under sudo. Keep output minimal for GUI/CI use.
 
 # 1) Try to install a .deb if present
-DEB_FILE=$(ls "$BUILD_DIR"/lsv-*.deb 2>/dev/null | head -n1 || true)
+DEB_FILE=$(find "$BUILD_DIR" -maxdepth 1 -type f -name 'lsv-*.deb' -print -quit 2>/dev/null || true)
 if [ -n "$DEB_FILE" ]; then
   echo "Found DEB: $DEB_FILE. Installing with dpkg..."
   dpkg -i "$DEB_FILE" || true

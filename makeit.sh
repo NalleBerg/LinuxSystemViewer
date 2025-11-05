@@ -10,6 +10,7 @@ set -e
 # Environment variables:
 #   RUN_PACKAGE=1     : same as --run
 #   DEBUG_LOGGER=1    : same as --debug-logger
+# shellcheck disable=SC2034  # DO_RUN intentionally configurable; runtime test may be enabled later
 DO_RUN=1
 DO_DEBUG=0
 usage() {
@@ -45,6 +46,8 @@ done
 if [ "${RUN_PACKAGE:-}" = "1" ]; then DO_RUN=1; fi
 if [ "${RUN_PACKAGE:-}" = "0" ]; then DO_RUN=0; fi
 if [ "${DEBUG_LOGGER:-}" = "1" ]; then DO_DEBUG=1; fi
+
+: "$DO_RUN"
 
 # Format seconds to MM:SS
 format_time() {
@@ -119,14 +122,14 @@ fi
 cmake .. $CMAKE_FLAGS || { echo "❌ CMake configuration failed"; exit 1; }
 
 echo "🔨 Building Linux System Viewer..."
-make -j$(nproc) || { echo "❌ Build failed"; exit 1; }
+make -j"$(nproc)" || { echo "❌ Build failed"; exit 1; }
 
 COMPILE_END=$(date +%s.%N)
 COMPILE_TIME=$(echo "$COMPILE_END - $COMPILE_START" | bc -l)
 
 echo ""
 echo "✅ Build completed successfully!"
-echo "⏱️  Compile time: $(format_time $COMPILE_TIME)"
+echo "⏱️  Compile time: $(format_time "$COMPILE_TIME")"
 echo ""
 
 ls -la ./
@@ -140,7 +143,6 @@ if [ -f "./LSV" ]; then
     echo ""
     
     echo "⚠️  Skipping automatic runtime test of the built executable (no terminal spawn)."
-    PACKAGE_START=$(date +%s.%N)
     echo "📦 Preparing DEB and RPM packages for Linux System Viewer..."
     cd ..
     mkdir -p LSV
@@ -178,7 +180,7 @@ fi
 echo ""
 echo "🏁 Build process completed at: $(date '+%H:%M:%S')"
 echo "📊 Summary:"
-echo "   • Compile time: $(format_time $COMPILE_TIME)"
+echo "   • Compile time: $(format_time "$COMPILE_TIME")"
 echo ""
 echo "   • Packaging: DEB and RPM placed in ./LSV/ (if generation succeeded)"
 echo ""

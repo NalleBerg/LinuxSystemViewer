@@ -25,8 +25,6 @@ if [ "${EUID:-$(id -u)}" -ne 0 ]; then
   exit 1
 fi
 
-ROOTDIR=$(pwd)
-
 FORCE=no
 if [ "${1:-}" = "-y" ] || [ "${1:-}" = "--yes" ]; then
   FORCE=yes
@@ -34,7 +32,7 @@ fi
 
 echo "This will remove files that were installed by install.sh (binary, desktop file, icons, and AppStream metadata)."
 if [ "$FORCE" != "yes" ]; then
-  read -p "Proceed? (y/N): " ans
+  read -r -p "Proceed? (y/N): " ans
   case "$ans" in
     [Yy]*) ;;
     *) echo "Aborted."; exit 0;;
