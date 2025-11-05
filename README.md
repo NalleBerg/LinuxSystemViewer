@@ -24,29 +24,22 @@ Configuration
   reverts the UI to English.
 
 Screenshots and binary downloads
-- Live demo, releases and packaging builds are published at: https://lsv.nalle.no/
+- Releases and packaging builds are published at: https://lsv.nalle.no/
 
 Quickstart — build & run (developer)
+----------------------------------
+
+> **VeryQuick guide.**
+>
+> While being in the root of the source files:
+>
+> Build and install: `./makeit.sh` -> `sudo ./install.sh`
+>
+> Uninstall: `sudo ./uninstall.sh`
 
 You only need `makeit.sh` to build and package the project, and `install.sh` /
 `uninstall.sh` to install or remove the built artifacts. `makeit.sh` handles
 configure/build/package for both release and development (debug logger) modes.
-
-Examples:
-
-```bash
-# Build & package (release — recommended for releases)
-./makeit.sh
-
-# Build & package and enable the optional debug logger (development)
-./makeit.sh --debug-logger
-
-# Install the generated DEB (run as root)
-sudo bash ./install.sh
-
-# Uninstall helper-installed files
-sudo bash ./uninstall.sh -y
-```
 
 makeit.sh options
 ------------------
