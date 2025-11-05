@@ -1,7 +1,26 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+
+usage() {
+  cat <<'USAGE'
+Usage: sudo bash ./install.sh [--help]
+
+Installs the generated .deb (preferred) or, if none exists, copies the built
+binary and desktop assets into system locations. Must be run as root.
+
+Options:
+  -h, --help   Show this help message and exit
+USAGE
+}
+
 echo "LSV installer helper"
+
+for arg in "$@"; do
+  case "$arg" in
+    -h|--help) usage; exit 0 ;;
+  esac
+done
 
 if [ "${EUID:-$(id -u)}" -ne 0 ]; then
   echo "This script must be run as root. Use: sudo bash ./install.sh" >&2
@@ -11,7 +30,8 @@ fi
 ROOTDIR=$(pwd)
 BUILD_DIR="$ROOTDIR/build"
 
-set -x
+# Don't enable shell debug tracing in normal installs — it produces noisy '+' lines
+# when the script runs under sudo. Keep output minimal for GUI/CI use.
 
 # 1) Try to install a .deb if present
 DEB_FILE=$(ls "$BUILD_DIR"/lsv-*.deb 2>/dev/null | head -n1 || true)
@@ -53,10 +73,90 @@ if [ -f "$ROOTDIR/lsv.desktop" ]; then
   install -Dm644 "$ROOTDIR/lsv.desktop" /usr/share/applications/lsv.desktop
 fi
 
-# Copy icons from AppDir layout if present
+# Install icons: try AppDir hicolor layout first, then AppDir icons, then
+# repo-root icon files (lsv-512.png, lsv.png). Print concise status messages
+# so users see what's happening.
+echo "Installing icons (if available)..."
+ICON_INSTALLED=0
+
+# Prefer AppDir hicolor layout if present
+if [ -d "$ROOTDIR/AppDir/usr/share/icons/hicolor" ]; then
+  echo "  - Copying AppDir hicolor icons into /usr/share/icons/hicolor/"
+  rsync -a "$ROOTDIR/AppDir/usr/share/icons/hicolor/" /usr/share/icons/hicolor/ || true
+  ICON_INSTALLED=1
+fi
+
+# Fallback: any AppDir icons
 if [ -d "$ROOTDIR/AppDir/usr/share/icons" ]; then
-  echo "Copying AppDir icons into /usr/share/icons/hicolor/"
+  echo "  - Copying AppDir icons into /usr/share/icons/"
   rsync -a "$ROOTDIR/AppDir/usr/share/icons/" /usr/share/icons/ || true
+  ICON_INSTALLED=1
+fi
+
+# Repo-root icon fallbacks (common sizes)
+if [ -f "$ROOTDIR/lsv-512.png" ]; then
+  echo "  - Found repo icon: lsv-512.png"
+  mkdir -p /usr/share/icons/hicolor/512x512/apps
+  if install -Dm644 "$ROOTDIR/lsv-512.png" /usr/share/icons/hicolor/512x512/apps/lsv.png; then
+    echo "    -> installed to /usr/share/icons/hicolor/512x512/apps/lsv.png"
+    chmod 644 /usr/share/icons/hicolor/512x512/apps/lsv.png || true
+    ICON_INSTALLED=1
+  else
+    echo "    -> failed to install lsv-512.png" >&2
+  fi
+fi
+if [ -f "$ROOTDIR/lsv.png" ]; then
+  echo "  - Found repo icon: lsv.png"
+  # Install to several common sizes as fallbacks
+  for size in 128 64 48; do
+    dst="/usr/share/icons/hicolor/${size}x${size}/apps/lsv.png"
+    mkdir -p "$(dirname "$dst")"
+    if install -Dm644 "$ROOTDIR/lsv.png" "$dst"; then
+      echo "    -> installed to ${dst}"
+      chmod 644 "$dst" || true
+      ICON_INSTALLED=1
+    else
+      echo "    -> failed to install lsv.png -> ${dst}" >&2
+    fi
+  done
+fi
+
+if [ "$ICON_INSTALLED" -eq 0 ]; then
+  echo "  - No icons found in AppDir or repo root; skipping icon install"
+fi
+
+# If we installed an icon under hicolor, update the system desktop file to
+# point at the absolute icon path so desktop environments (Cinnamon) show the
+# icon immediately without waiting for theme cache propagation.
+if [ -f /usr/share/applications/lsv.desktop ]; then
+  # prefer large icon if present
+  if [ -f /usr/share/icons/hicolor/512x512/apps/lsv.png ]; then
+    ICON_ABS=/usr/share/icons/hicolor/512x512/apps/lsv.png
+  elif [ -f /usr/share/icons/hicolor/128x128/apps/lsv.png ]; then
+    ICON_ABS=/usr/share/icons/hicolor/128x128/apps/lsv.png
+  elif [ -f /usr/share/icons/hicolor/64x64/apps/lsv.png ]; then
+    ICON_ABS=/usr/share/icons/hicolor/64x64/apps/lsv.png
+  else
+    ICON_ABS=""
+  fi
+
+  if [ -n "$ICON_ABS" ]; then
+    echo "Updating /usr/share/applications/lsv.desktop to use absolute Icon path"
+    if grep -q '^Icon=' /usr/share/applications/lsv.desktop; then
+      sed -i "s|^Icon=.*|Icon=${ICON_ABS}|" /usr/share/applications/lsv.desktop || true
+    else
+      echo "Icon=${ICON_ABS}" >> /usr/share/applications/lsv.desktop || true
+    fi
+    chmod 644 /usr/share/applications/lsv.desktop || true
+  fi
+fi
+# Refresh icon cache and report briefly
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+  if gtk-update-icon-cache -t -f /usr/share/icons/hicolor >/dev/null 2>&1; then
+    echo "Icons: cache updated"
+  else
+    echo "Icons: cache update failed (non-fatal)" >&2
+  fi
 fi
 
 # Install AppStream metadata (appdata) and screenshots if present
@@ -72,16 +172,18 @@ fi
 
 # refresh caches where possible
 if command -v update-desktop-database >/dev/null 2>&1; then
-  update-desktop-database /usr/share/applications || true
+  update-desktop-database /usr/share/applications >/dev/null 2>&1 || true
 fi
 if command -v gtk-update-icon-cache >/dev/null 2>&1; then
-  gtk-update-icon-cache -t -f /usr/share/icons/hicolor || true
+  gtk-update-icon-cache -t -f /usr/share/icons/hicolor >/dev/null 2>&1 || true
 fi
 
 # If AppStream tooling is available, request a refresh so GUI stores pick up the metadata
 if command -v appstreamcli >/dev/null 2>&1; then
   echo "Refreshing AppStream metadata cache"
-  appstreamcli refresh --verbose || true
+  # appstreamcli can be very verbose when run with debug flags. Silence output
+  # to avoid overwhelming the installer logs and GUI package managers.
+  appstreamcli refresh >/dev/null 2>&1 || true
 fi
 
 # SELinux: if enabled, attempt to relabel installed files so they can be used immediately

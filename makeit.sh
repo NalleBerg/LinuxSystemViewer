@@ -4,18 +4,43 @@ set -e
 # Parse simple command-line flags and environment overrides.
 # Supported flags:
 #   --run             : start the built executable (runtime test) in background after packaging
+#   --norun           : don't run the runtime test
 #   --debug-logger    : build the project with the optional debug logger compiled in
+#   --help, -h        : show this help message and exit
 # Environment variables:
 #   RUN_PACKAGE=1     : same as --run
 #   DEBUG_LOGGER=1    : same as --debug-logger
 DO_RUN=1
 DO_DEBUG=0
+usage() {
+        cat <<'USAGE'
+Usage: ./makeit.sh [OPTIONS]
+
+Helper script that configures, builds and packages the project.
+
+Options:
+    --run             Run a short runtime test after packaging
+    --norun           Do not run the runtime test (default when set)
+    --debug-logger    Compile the optional debug logger into the binary
+    -h, --help        Show this help message and exit
+
+Environment variables:
+    RUN_PACKAGE=1     Same as --run
+    DEBUG_LOGGER=1    Same as --debug-logger
+
+Examples:
+    ./makeit.sh --run
+    ./makeit.sh --debug-logger --norun
+USAGE
+}
+
 for arg in "$@"; do
-    case "$arg" in
-        --run) DO_RUN=1 ;;
-        --norun) DO_RUN=0 ;;
-        --debug-logger) DO_DEBUG=1 ;;
-    esac
+        case "$arg" in
+                --run) DO_RUN=1 ;;
+                --norun) DO_RUN=0 ;;
+                --debug-logger) DO_DEBUG=1 ;;
+                -h|--help) usage; exit 0 ;;
+        esac
 done
 if [ "${RUN_PACKAGE:-}" = "1" ]; then DO_RUN=1; fi
 if [ "${RUN_PACKAGE:-}" = "0" ]; then DO_RUN=0; fi
