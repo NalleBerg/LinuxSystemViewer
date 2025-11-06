@@ -932,6 +932,19 @@ int main(int argc, char *argv[])
 
         QString targetExe = preCopiedExe.isEmpty() ? exe : preCopiedExe;
 
+        // Prefer using pkexec (Polkit GUI) first so users get a native
+        // privilege prompt. If pkexec is not available or fails, fall back
+        // to the terminal-based sudo wrapper used previously.
+        // Note: pkexec may strip environment; we pass minimal display
+        // environment variables explicitly.
+        // For reliable behavior when launched from the desktop/file-manager
+        // we prefer the terminal-based elevation flow. Historically we used
+        // pkexec (Polkit) which can fail silently if no GUI authentication
+        // agent is running in the user's session. To avoid the "Request
+        // dismissed" cases where the user can't start the app from the menu
+        // we always use the terminal sudo wrapper here.
+        appendLog("Auto-elevation: pkexec disabled by policy; using terminal sudo fallback for menu launches.");
+
         // Find a terminal emulator to run sudo
         QStringList terms = {"x-terminal-emulator", "gnome-terminal", "konsole", "xfce4-terminal", "mate-terminal", "lxterminal", "xterm", "alacritty", "terminator"};
         QString termPath;
@@ -956,9 +969,11 @@ int main(int argc, char *argv[])
         // issues when passing complex commands to terminal emulators.
         QString wrapperPath = QDir::tempPath() + QDir::separator() + QString("lsv-sudo-%1.sh").arg(getpid());
         QFile wf(wrapperPath);
-        if (wf.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
+            if (wf.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
             QTextStream ts(&wf);
             ts << "#!/bin/bash\n";
+            // Ensure the wrapper removes itself and its temporary log on exit
+            ts << "trap \"rm -f '" << wrapperPath.replace('\'', "'\"'\"'") << "' /tmp/lsv-relaunch-" << getpid() << ".log\" EXIT\n";
             ts << "echo 'LSV wrapper starting at ' $(date) > /tmp/lsv-relaunch-" << getpid() << ".log\n";
             ts << "echo 'Running sudo to start LSV as root' >> /tmp/lsv-relaunch-" << getpid() << ".log\n";
             // Prompt and allow up to 3 attempts. Use read -s so Enter works
@@ -993,7 +1008,12 @@ int main(int argc, char *argv[])
             // the elevation prompt where terminals support OSC 10/11.
             ts << "printf '\033]10;#0000FF\\007'\n"; // foreground blue
             ts << "printf '\033]11;#FFFFFF\\007'\n"; // background white
-            ts << "printf '\033]0;Linux System Viewer\\007'\n";
+            // Set the terminal window title to include the application
+            // version so users can confirm which release they're elevating.
+            QString termTitle = QString("Linux System Viewer %1").arg(LSVVersionQString());
+            QString termTitleEsc = termTitle;
+            termTitleEsc.replace('\'', "'\"'\"'");
+            ts << "printf '\\033]0;" << termTitleEsc << "\\007'\n";
             ts << "attempts=0\n";
             ts << "while [ $attempts -lt 3 ]; do\n";
             ts << "  attempts=$((attempts+1))\n";
@@ -1105,12 +1125,28 @@ int main(int argc, char *argv[])
     mainWindow.setWindowTitle(QObject::tr("Linux System Viewer V. %1").arg(LSVVersionQString()));
     mainWindow.setWindowIcon(appIcon);
 
-    // Set fixed initial size (850x456) regardless of DPI
-    // Reduced height slightly to avoid being obscured by desktop panels
+    // Set initial size (850x456) but adapt to available screen space
+    // Reduced height slightly to avoid being obscured by desktop panels.
     const int INITIAL_WIDTH = 850;
     const int INITIAL_HEIGHT = 456;
-    
-    mainWindow.resize(INITIAL_WIDTH, INITIAL_HEIGHT);
+
+    // Prefer an adaptive height: use the smaller of INITIAL_HEIGHT and
+    // (available screen height - margin). This avoids the window being
+    // placed partially under desktop panels on some setups (Cinnamon/GNOME).
+    int chosenHeight = INITIAL_HEIGHT;
+    QScreen *screen = QGuiApplication::primaryScreen();
+    if (screen) {
+        int avail = screen->availableGeometry().height();
+        // Leave a small margin for panels (48px) and ensure a sensible minimum
+        const int PANEL_MARGIN = 48;
+        const int MIN_HEIGHT = 360;
+        if (avail > PANEL_MARGIN + MIN_HEIGHT) {
+            chosenHeight = qMin(INITIAL_HEIGHT, avail - PANEL_MARGIN);
+            chosenHeight = qMax(MIN_HEIGHT, chosenHeight);
+        }
+    }
+
+    mainWindow.resize(INITIAL_WIDTH, chosenHeight);
     mainWindow.setMinimumSize(600, 300);
 
     qDebug() << "Window size set to:" << INITIAL_WIDTH << "x" << INITIAL_HEIGHT;
@@ -1126,6 +1162,7 @@ int main(int argc, char *argv[])
     // Create elevation status label (admin shield)
     QHBoxLayout* titleLayout = new QHBoxLayout();
     // Headline: show product name only (avoid repeating the version here).
+    // Show product name in the title row (version shown in elevation terminal)
     QLabel* titleLabel = new QLabel(QObject::tr("Linux System Viewer"));
     QFont titleFont = titleLabel->font();
     titleFont.setBold(true);

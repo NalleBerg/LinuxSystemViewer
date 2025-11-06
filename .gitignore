@@ -44,3 +44,6 @@ lsv-cli.log
 
 # Do not ignore the distribution directory and scripts
 # Keep ./LSV and ./scripts in the repo
+
+# Exclude the built LSV binary produced locally
+LSV/LSV

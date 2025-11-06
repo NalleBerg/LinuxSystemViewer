@@ -1,32 +1,13 @@
-<!-- TinyMCE-ready HTML fragment for release notes -->
-<div class="release-notes">
-  <h2>Release 0.7.0 — 2025-11-02</h2>
-<!-- TinyMCE-ready HTML fragment for release notes -->
-<div class="release-notes">
-  <h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 0.7.2 &mdash; 2025-11-06</strong></span></h2>
-
-  <h3>Changed</h3>
-  <ul>
-    <li><strong>Packaging and elevation</strong>: prefer a terminal-based elevation flow when launched from the desktop/file-manager to avoid pkexec/polkit failures; added helper installer/uninstaller scripts and packaging hooks to install icons and AppStream metadata reliably.</li>
-    <li><strong>Installer UX</strong>: quieter installer output, improved icon handling, and per-user fallbacks so menu entries show icons in common desktops (Cinnamon/GNOME).</li>
-  </ul>
-
-  <h3>Files touched (high level)</h3>
-  <ul>
-    <li><code>lsv.cpp</code> — elevation flow (terminal wrapper, pkexec adjustments)</li>
-    <li><code>install.sh</code> / <code>uninstall.sh</code> — helper install scripts</li>
-    <li><code>cmake/packaging/postinst</code> — per-user desktop/icon fallbacks</li>
-  </ul>
-</div>
-  <h3>Suggested release steps</h3>
-  <ol>
-    <li>Commit changes and tag the repo:
-      <pre><code>git add -A
-git commit -m "Bump to v0.6.5 — About links, embedded GPLv2, Ctrl+W/close UX, cleanup"
-git tag -a v0.6.5 -m "Release v0.6.5"
-git push && git push --tags</code></pre>
-    </li>
-    <li>Create the GitHub release and paste this HTML into the release notes.</li>
-    <li>Re-run the packaging script locally and verify About → License and link behavior in the AppImage.</li>
-  </ol>
-</div>
+<h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 0.7.2 &mdash; 2025-11-06</strong></span></h2>
+<h3>Changed</h3>
+<ul>
+<li><strong>Packaging and elevation</strong>: prefer a terminal-based elevation flow when launched from the desktop/file-manager to avoid pkexec/polkit failures; added helper installer/uninstaller scripts and packaging hooks to install icons and AppStream metadata reliably.</li>
+<li><strong>Installer UX</strong>: quieter installer output, improved icon handling, and per-user fallbacks so menu entries show icons in common desktops (Cinnamon/GNOME).</li>
+</ul>
+<h3>Files touched (high level)</h3>
+<ul>
+<li><code>lsv.cpp</code> &mdash; elevation flow (terminal wrapper, pkexec adjustments)</li>
+<li><code>install.sh</code> / <code>uninstall.sh</code> &mdash; helper install scripts</li>
+<li><code>cmake/packaging/postinst</code> &mdash; per-user desktop/icon fallbacks</li>
+</ul>
+<hr />
