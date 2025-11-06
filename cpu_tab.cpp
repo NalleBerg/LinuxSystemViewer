@@ -33,6 +33,8 @@ CPUTab::CPUTab(QWidget* parent)
         "QPushButton { background-color: #3498db; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 11px; min-width: 80px; max-height: 22px;}"
         "QPushButton:hover { background-color: #2980b9; }"
     );
+    // enforce exact height so it matches other tabs
+    geekButton->setFixedHeight(22);
     connect(geekButton, &QPushButton::clicked, this, &CPUTab::showGeekMode);
     headlineLayout->addWidget(headline);
     headlineLayout->addStretch();
