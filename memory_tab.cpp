@@ -5,6 +5,10 @@
 #include <QHeaderView>
 #include <QDialogButtonBox>
 #include <QScrollArea>
+// Needed for sysfs/proc reads in geek dialog
+#include <QFile>
+#include <QTextStream>
+#include <QDir>
 
 MemoryTab::MemoryTab(QWidget* parent) : QWidget(parent)
 {
@@ -272,51 +276,7 @@ void GeekMemoryDialog::fillTable()
 {
     table->setRowCount(0);
 
-    QProcess proc;
-    proc.start("dmidecode", QStringList() << "-t" << "memory");
-    proc.waitForFinished(2000);
-    QString output = QString::fromLocal8Bit(proc.readAllStandardOutput());
-
-    int slotCount = 0, freeSlots = 0, maxModuleSize = 0, totalMaxRam = 0;
-    QString ramType, ramSpeed;
-    QList<QMap<QString, QString>> devices;
-
-    QStringList lines = output.split('\n');
-    QMap<QString, QString> currentDevice;
-    bool inDevice = false;
-    for (const QString& line : lines) {
-        QString trimmed = line.trimmed();
-        if (trimmed.startsWith("Memory Device")) {
-            if (!currentDevice.isEmpty()) devices.append(currentDevice);
-            currentDevice.clear();
-            inDevice = true;
-        } else if (inDevice && !trimmed.isEmpty() && trimmed.contains(':')) {
-            QStringList parts = trimmed.split(':');
-            if (parts.size() == 2)
-                currentDevice[parts[0].trimmed()] = parts[1].trimmed();
-        }
-    }
-    if (!currentDevice.isEmpty()) devices.append(currentDevice);
-
-    slotCount = devices.size();
-    for (const auto& dev : devices) {
-        QString sizeStr = dev.value("Size");
-        if (sizeStr == "No Module Installed") {
-            freeSlots++;
-        } else if (sizeStr.endsWith("MB")) {
-            totalMaxRam += sizeStr.remove("MB").trimmed().toInt();
-        } else if (sizeStr.endsWith("GB")) {
-            totalMaxRam += sizeStr.remove("GB").trimmed().toInt() * 1024;
-        }
-        if (ramType.isEmpty()) ramType = dev.value("Type");
-        if (ramSpeed.isEmpty()) ramSpeed = dev.value("Configured Clock Speed");
-        if (maxModuleSize == 0 && dev.contains("Maximum Capacity")) {
-            QString maxStr = dev.value("Maximum Capacity");
-            if (maxStr.endsWith("MB")) maxModuleSize = maxStr.remove("MB").trimmed().toInt();
-            else if (maxStr.endsWith("GB")) maxModuleSize = maxStr.remove("GB").trimmed().toInt() * 1024;
-        }
-    }
-
+    // Helper to add rows
     int row = 0;
     auto addRow = [&](const QString& prop, const QString& val) {
         table->insertRow(row);
@@ -333,21 +293,80 @@ void GeekMemoryDialog::fillTable()
         row++;
     };
 
-    addRow(tr("RAM Slots"), QString::number(slotCount));
-    addRow(tr("Free Slots"), QString::number(freeSlots));
-    addRow(tr("Max Module Size"), maxModuleSize > 0 ? QString("%1 MB").arg(maxModuleSize) : tr("Unknown"));
-    addRow(tr("Total Installed RAM"), totalMaxRam > 0 ? QString("%1 MB").arg(totalMaxRam) : tr("Unknown"));
-    addRow(tr("RAM Type"), ramType.isEmpty() ? tr("Unknown") : ramType);
-    addRow(tr("RAM Speed"), ramSpeed.isEmpty() ? tr("Unknown") : ramSpeed);
+    // 1) Basic memory totals from /proc/meminfo
+    QFile meminfo("/proc/meminfo");
+    QString memContent;
+    if (meminfo.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&meminfo);
+        memContent = in.readAll();
+        meminfo.close();
 
-    // Add per-slot info
-    for (int i = 0; i < devices.size(); ++i) {
-        const auto& dev = devices[i];
-        QString slotInfo = tr("Slot %1: %2, %3, %4")
-            .arg(i + 1)
-            .arg(dev.value("Size", tr("No Module")))
-            .arg(dev.value("Type", tr("Unknown")))
-            .arg(dev.value("Configured Clock Speed", dev.value("Speed", tr("Unknown"))));
-        addRow(tr("Slot %1 Info").arg(i + 1), slotInfo);
+        // Extract some useful fields
+        auto extractField = [&](const QString& name)->QString{
+            for (const QString& line : memContent.split('\n')) {
+                if (line.startsWith(name)) {
+                    return line.section(':',1).trimmed();
+                }
+            }
+            return QString();
+        };
+
+        QString total = extractField("MemTotal");
+        QString free = extractField("MemFree");
+        QString available = extractField("MemAvailable");
+        QString swapTotal = extractField("SwapTotal");
+
+        addRow(tr("MemTotal (/proc/meminfo)"), total.isEmpty() ? tr("Unknown") : total);
+        addRow(tr("MemFree (/proc/meminfo)"), free.isEmpty() ? tr("Unknown") : free);
+        addRow(tr("MemAvailable (/proc/meminfo)"), available.isEmpty() ? tr("Unknown") : available);
+        addRow(tr("SwapTotal (/proc/meminfo)"), swapTotal.isEmpty() ? tr("Unknown") : swapTotal);
+    } else {
+        addRow(tr("/proc/meminfo"), tr("Could not open /proc/meminfo"));
+    }
+
+    // 2) Memory blocks (hotplug) from sysfs
+    QDir memDir("/sys/devices/system/memory");
+    int memBlocks = 0;
+    if (memDir.exists()) {
+        QStringList entries = memDir.entryList(QStringList() << "memory*", QDir::Dirs | QDir::NoDotAndDotDot);
+        memBlocks = entries.size();
+        addRow(tr("Memory block entries (/sys/devices/system/memory)"), QString::number(memBlocks));
+    } else {
+        addRow(tr("Memory block entries"), tr("Not available"));
+    }
+
+    // 3) NUMA nodes
+    QDir nodeDir("/sys/devices/system/node");
+    if (nodeDir.exists()) {
+        QStringList nodes = nodeDir.entryList(QStringList() << "node*", QDir::Dirs | QDir::NoDotAndDotDot);
+        addRow(tr("NUMA nodes (count)"), QString::number(nodes.size()));
+    } else {
+        addRow(tr("NUMA nodes (count)"), tr("Not available"));
+    }
+
+    // 4) Try to detect DMI memory device entries (type 17) via sysfs if present
+    QDir dmiDir("/sys/firmware/dmi/entries");
+    int dmiMemDevices = 0;
+    if (dmiDir.exists()) {
+        QStringList entries = dmiDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        for (const QString& e : entries) {
+            QString typePath = QString("/sys/firmware/dmi/entries/%1/type").arg(e);
+            QFile typeF(typePath);
+            if (typeF.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                QString t = QTextStream(&typeF).readLine().trimmed();
+                typeF.close();
+                if (t == "17") dmiMemDevices++;
+            }
+        }
+        addRow(tr("DMI memory device entries (type 17)"), dmiMemDevices > 0 ? QString::number(dmiMemDevices) : tr("None detected"));
+    } else {
+        addRow(tr("DMI memory device entries"), tr("Not available"));
+    }
+
+    // 5) Note about detailed per-slot info
+    if (dmiMemDevices == 0) {
+        addRow(tr("Per-slot details"), tr("Detailed slot/module information is not available without parsing DMI tables or running dmidecode."));
+    } else {
+        addRow(tr("Per-slot details"), tr("DMI entries detected but detailed parsing is not implemented; enable dmidecode or request further parsing step if you need per-slot fields."));
     }
 }
