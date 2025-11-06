@@ -12,20 +12,16 @@
 #include <QGuiApplication>
 #include <QClipboard>
 #include <QFileDialog>
+#include "gui_helpers.h"
 
 MemoryTab::MemoryTab(QWidget* parent) : QWidget(parent)
 {
     // Headline and Geek button on same line
     QHBoxLayout* headlineLayout = new QHBoxLayout();
     QLabel* headline = new QLabel(tr("Memory"));
-    headline->setStyleSheet("font-size: 15px; font-weight: bold; color: #222; margin-bottom: 0px;");
+    styleHeadlineLabel(headline);
     geekButton = new QPushButton(tr("Geek Mode"), this);
-    geekButton->setStyleSheet(
-        "QPushButton { background-color: #3498db; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 11px; min-width: 80px; max-height: 22px;}"
-        "QPushButton:hover { background-color: #2980b9; }"
-    );
-    // enforce exact height so it matches other tabs
-    geekButton->setFixedHeight(22);
+    styleGeekButton(geekButton);
     connect(geekButton, &QPushButton::clicked, this, &MemoryTab::showGeekMode);
     headlineLayout->addWidget(headline);
     headlineLayout->addStretch();
@@ -73,6 +69,7 @@ MemoryTab::MemoryTab(QWidget* parent) : QWidget(parent)
     swapFreeLabel->setPalette(darkGray);
 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
+    applyMainLayoutDefaults(mainLayout);
 
     mainLayout->addLayout(headlineLayout);
 

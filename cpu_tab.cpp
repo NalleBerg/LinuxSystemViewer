@@ -27,12 +27,9 @@ CPUTab::CPUTab(QWidget* parent)
     // Headline and Geek button
     QHBoxLayout* headlineLayout = new QHBoxLayout();
     QLabel* headline = new QLabel(tr("CPU"));
-    headline->setStyleSheet("font-size: 15px; font-weight: bold; color: #222; margin-bottom: 0px;");
+    styleHeadlineLabel(headline);
     geekButton = new QPushButton(tr("Geek Mode"), this);
-    geekButton->setStyleSheet(
-        "QPushButton { background-color: #3498db; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 11px; min-width: 80px; max-height: 22px;}"
-        "QPushButton:hover { background-color: #2980b9; }"
-    );
+    styleGeekButton(geekButton);
     // enforce exact height so it matches other tabs
     geekButton->setFixedHeight(22);
     connect(geekButton, &QPushButton::clicked, this, &CPUTab::showGeekMode);
@@ -41,6 +38,7 @@ CPUTab::CPUTab(QWidget* parent)
     headlineLayout->addWidget(geekButton);
 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
+    applyMainLayoutDefaults(mainLayout);
     mainLayout->addLayout(headlineLayout);
 
     // Table

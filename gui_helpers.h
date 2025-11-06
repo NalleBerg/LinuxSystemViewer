@@ -10,6 +10,9 @@
 #include <QHeaderView>
 #include <QColor>
 #include <QBrush>
+#include <QLabel>
+#include <QPushButton>
+#include <QVBoxLayout>
 #include <QRegularExpression>
 #include <QList>
 #include <QDebug>
@@ -399,6 +402,31 @@ inline void initializeSearchTable(QTableWidget* table)
     styleSearchTable(table);
     table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
     table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+}
+
+// UI template helpers (strict template derived from CPU tab)
+inline void styleHeadlineLabel(QLabel* lbl)
+{
+    if (!lbl) return;
+    lbl->setStyleSheet("font-size: 15px; font-weight: bold; color: #222; margin-bottom: 0px;");
+}
+
+inline void styleGeekButton(QPushButton* btn)
+{
+    if (!btn) return;
+    btn->setStyleSheet(
+        "QPushButton { background-color: #3498db; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 11px; min-width: 80px; max-height: 22px;}"
+        "QPushButton:hover { background-color: #2980b9; }"
+    );
+    btn->setFixedHeight(22);
+}
+
+inline void applyMainLayoutDefaults(QVBoxLayout* layout)
+{
+    if (!layout) return;
+    // Use minimal spacing and zero margins to match CPU tab default layout
+    layout->setSpacing(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 }
 
 #endif // UI_HELPERS_H
