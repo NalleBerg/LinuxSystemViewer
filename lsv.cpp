@@ -968,6 +968,9 @@ int main(int argc, char *argv[])
         // Create a temporary wrapper script to run sudo. This reduces quoting
         // issues when passing complex commands to terminal emulators.
         QString wrapperPath = QDir::tempPath() + QDir::separator() + QString("lsv-sudo-%1.sh").arg(getpid());
+        // preferredCols is used later when deciding terminal geometry;
+        // declare it here so it stays in scope outside the writer block.
+        int preferredCols = 80;
         QFile wf(wrapperPath);
             if (wf.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
             QTextStream ts(&wf);
@@ -1004,10 +1007,23 @@ int main(int argc, char *argv[])
             // Escape any double-quotes so we can emit the prompt inside a
             // double-quoted printf without breaking the wrapper script.
             promptEsc.replace('"', "\\\"");
-            // Try to set a clear blue foreground and white background for
-            // the elevation prompt where terminals support OSC 10/11.
-            ts << "printf '\033]10;#0000FF\\007'\n"; // foreground blue
-            ts << "printf '\033]11;#FFFFFF\\007'\n"; // background white
+            // Compute preferred terminal width (columns) based on prompt
+            // length so the window is just wide enough. Keep a sensible
+            // minimum to avoid cramped terminals and a maximum for very
+            // long prompts.
+            preferredCols = promptEsc.size() + 6; // padding
+            if (preferredCols < 40) preferredCols = 40;
+            if (preferredCols > 100) preferredCols = 100;
+            int pad = (preferredCols - (int)promptEsc.size()) / 2;
+            if (pad < 0) pad = 0;
+            int padRight = preferredCols - pad - (int)promptEsc.size();
+            if (padRight < 0) padRight = 0;
+            QString padStr(pad, ' ');
+            QString padRightStr(padRight, ' ');
+            // Try to set terminal colors where supported. Note: not all
+            // terminals apply these to the titlebar; OSC 10/11 set text/bg.
+            ts << "printf '\033]10;#000000\\007'\n"; // foreground black
+            ts << "printf '\033]11;#F3F3F4\\007'\n"; // background light gray
             // Set the terminal window title to include the application
             // version so users can confirm which release they're elevating.
             QString termTitle = QString("Linux System Viewer %1").arg(LSVVersionQString());
@@ -1017,9 +1033,39 @@ int main(int argc, char *argv[])
             ts << "attempts=0\n";
             ts << "while [ $attempts -lt 3 ]; do\n";
             ts << "  attempts=$((attempts+1))\n";
-            ts << "  printf \"%s: \" \"" << promptEsc << "\"\n";
-            ts << "  read -s PASS\n";
-            ts << "  echo\n";
+            // Print centered prompt on the first line. Leave the second
+            // line with the same left padding and immediately read the
+            // password there (so the typed characters are aligned under
+            // the prompt). Leave the third line blank for error messages.
+            // Line 1: left padding + prompt + right padding (equal space both sides)
+            // Print the full centered prompt line in a single printf so
+            // shells receive one well-formed command. Use ANSI SGR to set
+            // the prompt text color to #001675 and reset afterwards.
+            ts << "printf '%s\\033[38;2;0;22;117m%s\\033[0m%s\\n' \"" << padStr << "\" \"" << promptEsc << "\" \"" << padRightStr << "\"\n";
+            // Line 2: print left padding, a centered marker (colored #B10000),
+            // then right padding WITHOUT emitting a newline so we can
+            // reposition the cursor back to the marker column and read
+            // input there. The read is silent so the marker remains visible
+            // while the user types. This preserves the third line for error
+            // messages.
+            // Compute marker padding so the marker is exactly centered in
+            // the terminal frame regardless of the prompt width.
+            int markerPadLeft = (preferredCols - 1) / 2;
+            if (markerPadLeft < 0) markerPadLeft = 0;
+            int markerPadRight = preferredCols - markerPadLeft - 1;
+            if (markerPadRight < 0) markerPadRight = 0;
+            QString markerLeft(markerPadLeft, ' ');
+            QString markerRight(markerPadRight, ' ');
+            ts << "printf '%s\\033[38;2;177;0;0m%s\\033[0m%s' \"" << markerLeft << "\" \"" << ">" << "\" \"" << markerRight << "\"\n";
+            // Move cursor to start of line then print left padding so the
+            // user's input begins centered under the marker. Use the
+            // marker's left padding (markerLeft) so the cursor aligns with
+            // the visual center instead of the prompt's left padding.
+            ts << "printf '\r'\n";
+            ts << "printf '%s' \"" << markerLeft << "\"\n";
+            ts << "read -s PASS\n";
+            // Line 3: empty line reserved for error messages
+            ts << "echo\n";
             QString innerEsc = inner;
             innerEsc.replace('"', "\\\"");
             ts << "  printf '%s\\n' \"$PASS\" | sudo -S -p '' sh -c \"" << innerEsc << "\"\n";
@@ -1036,10 +1082,12 @@ int main(int argc, char *argv[])
             appendLog(QString("Auto-elevation: Failed to write wrapper script %1").arg(wrapperPath));
         }
 
-        QStringList args;
-        // Try to request a small terminal height (3 rows) where supported.
-        QString base = QFileInfo(termPath).fileName();
-        QString geom = "80x3"; // width x height
+    QStringList args;
+    // Use a geometry matching the preferred columns computed earlier
+    // so the terminal width matches the prompt. Height remains 3 rows
+    // (prompt, input, and spare line for errors).
+    QString base = QFileInfo(termPath).fileName();
+    QString geom = QString("%1x3").arg(preferredCols); // width x height
         if (base.contains("gnome-terminal")) {
             args << QString("--geometry=%1").arg(geom) << "--" << "bash" << "-c" << QString("bash '%1'").arg(wrapperPath);
         } else if (base.contains("konsole")) {
