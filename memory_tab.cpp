@@ -21,20 +21,8 @@ MemoryTab::MemoryTab(QWidget* parent) : QWidget(parent)
     headline->setStyleSheet("font-size: 15px; font-weight: bold; color: #222; margin-bottom: 0px;");
     geekButton = new QPushButton(tr("Geek Mode"), this);
     geekButton->setStyleSheet(
-        "QPushButton {"
-        "  background-color: #3498db;"
-        "  color: white;"
-        "  border: none;"
-        "  padding: 4px 10px;"
-        "  border-radius: 4px;"
-        "  font-weight: bold;"
-        "  font-size: 11px;"
-        "  min-width: 80px;"
-        "  max-height: 22px;"
-        "}"
-        "QPushButton:hover {"
-        "  background-color: #2980b9;"
-        "}"
+        "QPushButton { background-color: #3498db; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 11px; min-width: 80px; max-height: 22px;}"
+        "QPushButton:hover { background-color: #2980b9; }"
     );
     connect(geekButton, &QPushButton::clicked, this, &MemoryTab::showGeekMode);
     headlineLayout->addWidget(headline);
@@ -389,6 +377,7 @@ void GeekMemoryDialog::fillTable()
     int dmiMemDevices = 0;
     if (dmiDir.exists()) {
         QStringList entries = dmiDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        // First pass: count type 17 entries
         for (const QString& e : entries) {
             QString typePath = QString("/sys/firmware/dmi/entries/%1/type").arg(e);
             QFile typeF(typePath);
@@ -399,14 +388,69 @@ void GeekMemoryDialog::fillTable()
             }
         }
         addRow(tr("DMI memory device entries (type 17)"), dmiMemDevices > 0 ? QString::number(dmiMemDevices) : tr("None detected"));
+
+        // If entries exist, parse each type 17 entry's raw data and extract strings
+        if (dmiMemDevices > 0) {
+            int slotIndex = 1;
+            for (const QString& e : entries) {
+                QString typePath = QString("/sys/firmware/dmi/entries/%1/type").arg(e);
+                QFile typeF(typePath);
+                if (!typeF.open(QIODevice::ReadOnly | QIODevice::Text)) continue;
+                QString t = QTextStream(&typeF).readLine().trimmed();
+                typeF.close();
+                if (t != "17") continue;
+
+                // Read raw blob
+                QString rawPath = QString("/sys/firmware/dmi/entries/%1/raw").arg(e);
+                QFile rawF(rawPath);
+                if (!rawF.open(QIODevice::ReadOnly)) {
+                    addRow(tr("Slot %1 (DMI entry %2)" ).arg(slotIndex).arg(e), tr("Could not open raw DMI data"));
+                    slotIndex++;
+                    continue;
+                }
+                QByteArray raw = rawF.readAll();
+                rawF.close();
+
+                if (raw.size() < 4) {
+                    addRow(tr("Slot %1 (DMI entry %2)").arg(slotIndex).arg(e), tr("Raw DMI data too short"));
+                    slotIndex++;
+                    continue;
+                }
+
+                int length = static_cast<unsigned char>(raw[1]);
+                if (length > raw.size()) length = raw.size();
+                QByteArray formatted = raw.left(length);
+
+                // Extract trailing NUL-separated strings
+                QList<QString> strings;
+                int i = length;
+                while (i < raw.size()) {
+                    int j = raw.indexOf('\0', i);
+                    if (j == -1) break;
+                    if (j == i) { // double NUL terminator
+                        break;
+                    }
+                    QByteArray s = raw.mid(i, j - i);
+                    strings.append(QString::fromLocal8Bit(s));
+                    i = j + 1;
+                }
+
+                addRow(tr("Slot %1 (DMI entry %2)").arg(slotIndex).arg(e), tr(""));
+                for (int si = 0; si < strings.size(); ++si) {
+                    addRow(tr("Slot %1 - String %2").arg(slotIndex).arg(si+1), strings[si]);
+                }
+
+                // Also show formatted bytes as hex for low-level inspection
+                QString hex;
+                for (int k = 0; k < formatted.size(); ++k) {
+                    hex += QString::asprintf("%02x ", static_cast<unsigned char>(formatted[k]));
+                }
+                addRow(tr("Slot %1 - formatted bytes (hex)").arg(slotIndex), hex.trimmed());
+
+                slotIndex++;
+            }
+        }
     } else {
         addRow(tr("DMI memory device entries"), tr("Not available"));
-    }
-
-    // 5) Note about detailed per-slot info
-    if (dmiMemDevices == 0) {
-        addRow(tr("Per-slot details"), tr("Detailed slot/module information is not available without parsing DMI tables or running dmidecode."));
-    } else {
-        addRow(tr("Per-slot details"), tr("DMI entries detected but detailed parsing is not implemented; enable dmidecode or request further parsing step if you need per-slot fields."));
     }
 }
