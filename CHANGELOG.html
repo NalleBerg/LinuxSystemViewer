@@ -1,152 +1,23 @@
 <!-- TinyMCE-ready HTML fragment for release notes -->
 <div class="release-notes">
   <h2>Release 0.7.0 — 2025-11-02</h2>
-
-  <h3>Added</h3>
-  <ul>
-    <li><strong>User language chooser</strong>: a left-side "Change language" drop-down in the app title area that persists the chosen code to <code>~/.config/LSV/lsv_lang.rc</code>.</li>
-    <li><strong>Reset language button</strong>: removes the saved selection so the chooser will be shown again and the app reverts to English.</li>
-    <li><strong>Runtime language switching</strong>: selecting a language loads the appropriate <code>.qm</code> translator and updates the UI immediately by recreating the main tab widget so constructor-time <code>tr()</code> calls run under the new translator.</li>
-    <li><strong>Norwegian Bokmål translations</strong>: updated <code>i18n/lsv_nb.ts</code> (build date and translations); repository ships only English (UK) and Norwegian Bokmål assets.</li>
-    <li><strong>Translation generation in build script</strong>: <code>makeit.sh</code> now runs <code>lrelease i18n/*.ts</code> prior to configuring CMake so compiled <code>.qm</code> files can be embedded into resources.</li>
-  </ul>
-
-  <h3>Changed</h3>
-  <ul>
-    <li><strong>Strict per-user language config</strong>: the app treats <code>~/.config/LSV/lsv_lang.rc</code> as the single authoritative persistent language setting.</li>
-    <li><strong>No developer i18n fallback</strong>: removed runtime fallback probing <code>../i18n</code> to avoid confusing end users; translations must be embedded or installed to the app i18n directory.</li>
-    <li><strong>Translations reduced</strong>: removed extra translation files; the project ships only <code>en_GB</code> and <code>nb</code>.</li>
-  </ul>
-
-  <h3>Fixed</h3>
-  <ul>
-    <li><strong>Immediate UI retranslation</strong>: switching languages updates tab labels and tab-internal text without restarting the app.</li>
-    <li><strong>Build packaging</strong>: build scripts generate translations before configure so binaries include translators.</li>
-  </ul>
-
-  <h3>Packaging &amp; Build</h3>
-  <p>Generate compiled translation files and rebuild so translations are embedded:</p>
-  <pre><code>lrelease i18n/*.ts
-rm -rf build
-mkdir build && cd build
-cmake ..
-cmake --build . -j
-</code></pre>
-
-  <h3>Notes &amp; Future work</h3>
-  <ul>
-    <li><strong>State preservation</strong>: recreating the tab widget re-applies translations but discards transient tab state; consider adding <code>retranslateUi()</code> methods in future.</li>
-    <li><strong>Translator availability</strong>: ensure <code>lrelease</code> is installed on build hosts/CI.</li>
-  </ul>
-
-  <h3>Files touched (high level)</h3>
-  <ul>
-    <li><code>lsv.cpp</code> — language chooser UI and translator reload logic</li>
-    <li><code>makeit.sh</code> — runs <code>lrelease</code> before CMake configure</li>
-    <li><code>i18n/lsv_nb.ts</code> — Norwegian translations updated</li>
-    <li><code>CMakeLists.txt</code> — resource embedding for <code>i18n/*.qm</code></li>
-  </ul>
-
-  <hr />
-
+<!-- TinyMCE-ready HTML fragment for release notes -->
 <div class="release-notes">
-  <h2>Release 0.6.5 — 2025-10-29</h2>
-
-  <h3>Added</h3>
-  <ul>
-    <li>
-      <strong>Robust URL opening for About-tab links</strong>: multi-stage
-      fallback that detects the default browser, uses QDesktopServices,
-      falls back to common helpers (xdg-open / gio / …) and finally tries
-      common browser binaries. Click attempts are logged to
-      <code>/tmp/lsv-about-links.log</code>.
-    </li>
-    <li>
-      <strong>Background window-raise attempts</strong>: after launching a
-      browser the app now tries to activate the newly-created browser window
-      (via <code>startRaiseAsync()</code> / <code>attemptRaiseWindow()</code>),
-      improving visibility when the AppImage is launched from file managers.
-    </li>
-    <li>
-      <strong>Embedded GPLv2 and GNU icon</strong>: the GPLv2 text and
-      GNU icon are included in the Qt resources (<code>:/gpl2.txt</code>,
-      <code>:/gnu_icon.png</code>) so the license can be viewed offline.
-    </li>
-  </ul>
+  <h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 0.7.2 &mdash; 2025-11-06</strong></span></h2>
 
   <h3>Changed</h3>
   <ul>
-    <li>
-      <strong>Centralized version string</strong>: added <code>version.h</code>
-      and updated the code to use <code>LSV_VERSION</code>/<code>LSVVersionQString()</code>;
-      project version bumped to <code>0.6.5</code> and synchronized in
-      <code>CMakeLists.txt</code>.
-    </li>
-    <li>
-      <strong>About dialog UX</strong>: larger logo area, tighter layout and
-      an improved license viewer (HTML rendering with mini-headlines and
-      monospaced body text).
-    </li>
-    <li>
-      <strong>Resource handling</strong>: always embed license resources and
-      only register optional workspace images when present to avoid rcc
-      failures during builds.
-    </li>
-  </ul>
-
-  <h3>Fixed</h3>
-  <ul>
-    <li>
-      <strong>AppImage & browser interaction</strong>: About links now open the
-      default browser more reliably when the AppImage is launched from a file
-      manager (addresses cases where <code>QDesktopServices</code> alone failed).
-    </li>
-    <li>
-      <strong>rcc parse/build error</strong>: fixed an rcc parse failure caused
-      by generator-expression tokens being written into a generated .qrc — the
-      resource registration now uses a safe CMake list.
-    </li>
-    <li>
-      <strong>Ctrl+W and close behavior</strong>: added <code>CtrlWHandler</code>
-      to intercept Ctrl+W / quit shortcuts and show a minimal Quit
-      confirmation. Ctrl+W now properly closes the application when the user
-      confirms and a cursor-position heuristic avoids prompting when the
-      window was closed from the panel/taskbar.
-    </li>
-  </ul>
-
-  <h3>Packaging & Build</h3>
-  <p>
-    The AppImage packaging will now include the embedded license and icon
-    (<code>:/gpl2.txt</code>, <code>:/gnu_icon.png</code>). Re-run the
-    packaging script locally (for example:
-    <code>./makeit.sh --debug-logger</code>) to produce an updated AppImage.
-  </p>
-
-  <h3>Notes & Future work</h3>
-  <ul>
-    <li>
-      Window raising is implemented using X11 helper tools (<code>xdotool</code>
-      / <code>wmctrl</code>). Wayland users may not see consistent raise
-      behavior — implementing a desktop-portal (xdg-desktop-portal) OpenURI
-      DBus fallback would be a recommended follow-up.
-    </li>
-    <li>
-      The embedded license rendering can be converted to Markdown
-      (<code>QTextDocument::setMarkdown</code>) for nicer cross-platform
-      formatting — optional small improvement.
-    </li>
+    <li><strong>Packaging and elevation</strong>: prefer a terminal-based elevation flow when launched from the desktop/file-manager to avoid pkexec/polkit failures; added helper installer/uninstaller scripts and packaging hooks to install icons and AppStream metadata reliably.</li>
+    <li><strong>Installer UX</strong>: quieter installer output, improved icon handling, and per-user fallbacks so menu entries show icons in common desktops (Cinnamon/GNOME).</li>
   </ul>
 
   <h3>Files touched (high level)</h3>
   <ul>
-    <li><code>about_tab.cpp</code> — <code>openUrlRobust()</code>, license viewer</li>
-    <li><code>ctrlw.h</code> / <code>ctrlw.cpp</code> — Ctrl+W handler & close logic</li>
-    <li><code>lsv.cpp</code> — cleanup and CleaningMainWindow close flow</li>
-    <li><code>version.h</code> — centralized version header</li>
-    <li><code>CMakeLists.txt</code> — project version bump and resource registration fixes</li>
+    <li><code>lsv.cpp</code> — elevation flow (terminal wrapper, pkexec adjustments)</li>
+    <li><code>install.sh</code> / <code>uninstall.sh</code> — helper install scripts</li>
+    <li><code>cmake/packaging/postinst</code> — per-user desktop/icon fallbacks</li>
   </ul>
-
+</div>
   <h3>Suggested release steps</h3>
   <ol>
     <li>Commit changes and tag the repo:
