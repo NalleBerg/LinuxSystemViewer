@@ -69,11 +69,40 @@ void NetworkGeekDialog::copyToClipboard()
 
 void NetworkGeekDialog::saveToFile()
 {
-    QString fn = QFileDialog::getSaveFileName(this, QCoreApplication::translate("NetworkGeekDialog", "Save network info"), QString(), QCoreApplication::translate("NetworkGeekDialog", "Text files (*.txt);;All files (*)"));
+    QString fn = QFileDialog::getSaveFileName(this, QCoreApplication::translate("NetworkGeekDialog", "Save network info"), "network-info.csv", QCoreApplication::translate("NetworkGeekDialog", "CSV files (*.csv);;All files (*)"));
     if (fn.isEmpty()) return;
     QFile f(fn);
     if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) return;
     QTextStream ts(&f);
-    ts << te->toPlainText();
+
+    auto esc = [](const QString &s)->QString{
+        QString out = s;
+        out.replace('"', "\"");
+        if (out.contains(',') || out.contains('\n') || out.contains('"')) out = '"' + out + '"';
+        return out;
+    };
+
+    // Split into sections by blank line; use first line as section title
+    const QString content = te->toPlainText();
+    QStringList parts = content.split("\n\n", Qt::SkipEmptyParts);
+
+    ts << "Section,Text\n";
+    if (parts.isEmpty()) {
+        ts << esc(QString("All")) << ',' << esc(content) << '\n';
+    } else {
+        for (const QString &p : parts) {
+            QString title;
+            QString body;
+            int nl = p.indexOf('\n');
+            if (nl >= 0) {
+                title = p.left(nl).trimmed();
+                body = p.mid(nl+1).trimmed();
+            } else {
+                title = p.trimmed();
+                body.clear();
+            }
+            ts << esc(title.isEmpty() ? QString("Section") : title) << ',' << esc(body.isEmpty() ? title : body) << '\n';
+        }
+    }
     f.close();
 }

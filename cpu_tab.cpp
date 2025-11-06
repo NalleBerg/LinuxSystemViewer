@@ -123,6 +123,7 @@ GeekCpuDialog::GeekCpuDialog(QWidget* parent)
     layout->addWidget(buttonBox);
 
     connect(copyBtn, &QPushButton::clicked, [this]() {
+        // Human-readable UTF-8 copy: Property: Value per line
         QString all;
         for (int r = 0; r < table->rowCount(); ++r) {
             QString prop = table->item(r,0) ? table->item(r,0)->text() : QString();
@@ -130,7 +131,7 @@ GeekCpuDialog::GeekCpuDialog(QWidget* parent)
             all += prop + ": " + val + "\n";
         }
         QClipboard *clipboard = QGuiApplication::clipboard();
-        clipboard->setText(all);
+        clipboard->setText(all, QClipboard::Clipboard);
     });
 
     // Note: run-as-root functionality removed to avoid accidental termination when
@@ -138,19 +139,31 @@ GeekCpuDialog::GeekCpuDialog(QWidget* parent)
     // `lsv-elevate` helper in `priv/` if desired.
 
     connect(saveBtn, &QPushButton::clicked, [this]() {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save CPU Info"), "cpu-info.txt", tr("Text Files (*.txt);;All Files (*)"));
-        if (!fileName.isEmpty()) {
-            QFile out(fileName);
-            if (out.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                QTextStream ts(&out);
-                for (int r = 0; r < table->rowCount(); ++r) {
-                    QString prop = table->item(r,0) ? table->item(r,0)->text() : QString();
-                    QString val = table->item(r,1) ? table->item(r,1)->text() : QString();
-                    ts << prop << ": " << val << "\n";
-                }
-                out.close();
+        // Save as CSV (UTF-8)
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save CPU Info"), "cpu-info.csv", tr("CSV Files (*.csv);;All Files (*)"));
+        if (fileName.isEmpty()) return;
+
+        auto esc = [](const QString &s)->QString {
+            QString out = s;
+            // double quotes -> two double quotes
+            out.replace('"', "\"");
+            // wrap in quotes if contains comma, quote or newline
+            if (out.contains(',') || out.contains('\n') || out.contains('"')) {
+                out = '"' + out + '"';
             }
+            return out;
+        };
+
+        QFile out(fileName);
+        if (!out.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+    QTextStream ts(&out);
+        ts << "Property,Value\n";
+        for (int r = 0; r < table->rowCount(); ++r) {
+            QString prop = table->item(r,0) ? table->item(r,0)->text() : QString();
+            QString val = table->item(r,1) ? table->item(r,1)->text() : QString();
+            ts << esc(prop) << ',' << esc(val) << '\n';
         }
+        out.close();
     });
 
     fillTable();

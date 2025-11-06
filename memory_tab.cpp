@@ -9,6 +9,9 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDir>
+#include <QGuiApplication>
+#include <QClipboard>
+#include <QFileDialog>
 
 MemoryTab::MemoryTab(QWidget* parent) : QWidget(parent)
 {
@@ -266,8 +269,45 @@ GeekMemoryDialog::GeekMemoryDialog(QWidget* parent)
     layout->addWidget(scrollArea);
 
     QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    // Copy and Save buttons (Copy: readable UTF-8; Save: CSV)
+    QPushButton* copyBtn = new QPushButton(tr("Copy"));
+    QPushButton* saveBtn = new QPushButton(tr("Save..."));
+    buttonBox->addButton(copyBtn, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(saveBtn, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     layout->addWidget(buttonBox);
+
+    connect(copyBtn, &QPushButton::clicked, [this]() {
+        QString all;
+        for (int r = 0; r < table->rowCount(); ++r) {
+            QString prop = table->item(r,0) ? table->item(r,0)->text() : QString();
+            QString val = table->item(r,1) ? table->item(r,1)->text() : QString();
+            all += prop + ": " + val + "\n";
+        }
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        clipboard->setText(all, QClipboard::Clipboard);
+    });
+
+    connect(saveBtn, &QPushButton::clicked, [this]() {
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save Memory Info"), "memory-info.csv", tr("CSV Files (*.csv);;All Files (*)"));
+        if (fileName.isEmpty()) return;
+        auto esc = [](const QString &s)->QString {
+            QString out = s;
+            out.replace('"', "\"");
+            if (out.contains(',') || out.contains('\n') || out.contains('"')) out = '"' + out + '"';
+            return out;
+        };
+        QFile out(fileName);
+        if (!out.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+    QTextStream ts(&out);
+        ts << "Property,Value\n";
+        for (int r = 0; r < table->rowCount(); ++r) {
+            QString prop = table->item(r,0) ? table->item(r,0)->text() : QString();
+            QString val = table->item(r,1) ? table->item(r,1)->text() : QString();
+            ts << esc(prop) << ',' << esc(val) << '\n';
+        }
+        out.close();
+    });
 
     fillTable();
 }
