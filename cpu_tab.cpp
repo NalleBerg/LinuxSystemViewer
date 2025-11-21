@@ -24,18 +24,11 @@
 CPUTab::CPUTab(QWidget* parent)
     : QWidget(parent)
 {
-    // Headline and Geek button
-    QHBoxLayout* headlineLayout = new QHBoxLayout();
-    QLabel* headline = new QLabel(tr("CPU"));
-    styleHeadlineLabel(headline);
-    geekButton = new QPushButton(tr("Geek Mode"), this);
-    styleGeekButton(geekButton);
-    // enforce exact height so it matches other tabs
-    geekButton->setFixedHeight(22);
+    // Headline and Geek button (use helper to guarantee identical placement)
+    QPushButton* gb = nullptr;
+    QHBoxLayout* headlineLayout = createHeadlineWithGeek(this, tr("CPU"), &gb);
+    geekButton = gb;
     connect(geekButton, &QPushButton::clicked, this, &CPUTab::showGeekMode);
-    headlineLayout->addWidget(headline);
-    headlineLayout->addStretch();
-    headlineLayout->addWidget(geekButton);
 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     applyMainLayoutDefaults(mainLayout);
@@ -47,6 +40,8 @@ CPUTab::CPUTab(QWidget* parent)
     tableWidget->setHorizontalHeaderLabels(getCpuHeaders());
     tableWidget->verticalHeader()->setVisible(false);
     styleCpuTable(tableWidget);
+    // Enable copy (Ctrl+C and right-click Copy) on the user-facing table
+    // (will attach the refreshTimer so auto-updates are paused while copying)
     tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
     tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
 
@@ -64,6 +59,8 @@ CPUTab::CPUTab(QWidget* parent)
     refreshTimer = new QTimer(this);
     refreshTimer->setInterval(1000);
     connect(refreshTimer, &QTimer::timeout, this, &CPUTab::refreshCpuValues);
+    // Now that the refresh timer exists, enable copy with pause support
+    enableTableCopy(tableWidget, refreshTimer);
 }
 
 void CPUTab::showEvent(QShowEvent* ev)
@@ -121,6 +118,9 @@ GeekCpuDialog::GeekCpuDialog(QWidget* parent)
     buttonBox->addButton(saveBtn, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     layout->addWidget(buttonBox);
+
+    // Enable copy on main geek table (right-click + Ctrl+C) and pause the geek dialog's refresh while copying
+    enableTableCopy(table, refreshTimer);
 
     connect(copyBtn, &QPushButton::clicked, [this]() {
         // Human-readable UTF-8 copy: Property: Value per line

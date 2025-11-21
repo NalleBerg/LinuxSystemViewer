@@ -699,6 +699,7 @@ private:
             tabWidget = motherboardTab;
         }
         else if (config.name == "Disk") {
+            appendLog("TabManager: Instantiating StorageTab");
             StorageTab* storageTab = new StorageTab();
             connect(storageTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
             connect(storageTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);

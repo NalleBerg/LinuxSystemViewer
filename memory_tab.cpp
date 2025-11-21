@@ -16,16 +16,9 @@
 
 MemoryTab::MemoryTab(QWidget* parent) : QWidget(parent)
 {
-    // Headline and Geek button on same line
-    QHBoxLayout* headlineLayout = new QHBoxLayout();
-    QLabel* headline = new QLabel(tr("Memory"));
-    styleHeadlineLabel(headline);
-    geekButton = new QPushButton(tr("Geek Mode"), this);
-    styleGeekButton(geekButton);
+    // Headline and Geek button on same line (constructed by helper to guarantee layout)
+    QHBoxLayout* headlineLayout = createHeadlineWithGeek(this, tr("Memory"), &geekButton);
     connect(geekButton, &QPushButton::clicked, this, &MemoryTab::showGeekMode);
-    headlineLayout->addWidget(headline);
-    headlineLayout->addStretch();
-    headlineLayout->addWidget(geekButton);
 
     // RAM widgets
     ramTotalLabel = new QLabel(this);

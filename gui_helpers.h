@@ -20,6 +20,11 @@
 #include <QVariant>
 #include <QMetaType>
 #include <QtGlobal>
+#include <QMenu>
+#include <QKeyEvent>
+#include <QApplication>
+#include <QClipboard>
+#include <QTimer>
 
 // Search result structure
 struct SearchResult {
@@ -105,9 +110,8 @@ inline void styleTable(QTableWidget* table)
     
     table->setStyleSheet(
         "QTableWidget {"
-        "    gridline-color: #d0d0d0;"
+        "    gridline-color: transparent;"
         "    background-color: white;"
-        "    alternate-background-color: #f5f5f5;"
         "    selection-background-color: #3399ff;"
         "}"
         "QTableWidget::item {"
@@ -122,7 +126,7 @@ inline void styleTable(QTableWidget* table)
         "QHeaderView::section {"
         "    background-color: #e0e0e0;"
         "    padding: 4px;"
-        "    border: 1px solid #d0d0d0;"
+        "    border: none;"
         "    font-weight: bold;"
         "    color: black;"
         "}"
@@ -135,9 +139,8 @@ inline void styleSearchTable(QTableWidget* table)
     
     table->setStyleSheet(
         "QTableWidget {"
-        "    gridline-color: #d0d0d0;"
+        "    gridline-color: transparent;"
         "    background-color: white;"
-        "    alternate-background-color: #f9f9f9;"
         "    selection-background-color: #4CAF50;"
         "    color: black;"
         "}"
@@ -157,7 +160,7 @@ inline void styleSearchTable(QTableWidget* table)
         "QHeaderView::section {"
         "    background-color: #2196F3;"
         "    padding: 8px;"
-        "    border: 1px solid #1976D2;"
+        "    border: none;"
         "    font-weight: bold;"
         "    color: white;"
         "}"
@@ -335,7 +338,8 @@ inline QStringList getMemoryHeaders()
 
 inline QStringList getStorageHeaders()
 {
-    return {"Device", "Mount Point", "Size", "Used", "Available", "Use%", "Filesystem", "Type", "Details"};
+    // Order requested: Device, Size, Used, Available, Use%, Mount Point, Filesystem, Type
+    return {"Device", "Size", "Used", "Available", "Use%", "Mount Point", "Filesystem"};
 }
 
 inline QStringList getNetworkHeaders()
@@ -381,8 +385,38 @@ inline void initializeMemoryTable(QTableWidget* table)
 
 inline void initializeStorageTable(QTableWidget* table)
 {
-    setupTableWidget(table, getStorageHeaders());
-    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    table->setColumnCount(getStorageHeaders().size());
+    table->setHorizontalHeaderLabels(getStorageHeaders());
+    table->verticalHeader()->setVisible(false);
+    
+    // Add essential table properties (from setupTableWidget but skip styleTable)
+    table->setSelectionBehavior(QAbstractItemView::SelectRows);
+    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    table->setSortingEnabled(true);
+    
+    // Apply CPU-style header styling (dark background, white text)
+    table->horizontalHeader()->setStyleSheet(
+        "QHeaderView::section { "
+        "background-color: #2c3e50; "
+        "color: white; "
+        "padding: 8px; "
+        "border: none; "
+        "font-weight: bold; "
+        "}"
+    );
+    
+    // Apply minimal table styling (no problematic item padding)
+    table->setStyleSheet(
+        "QTableWidget {"
+        "    gridline-color: transparent;"
+        "    background-color: white;"
+        "    selection-background-color: #3399ff;"
+        "}"
+        "QTableWidget::item:selected {"
+        "    background-color: #3399ff;"
+        "    color: white;"
+        "}"
+    );
 }
 
 inline void initializeNetworkTable(QTableWidget* table)
@@ -418,7 +452,6 @@ inline void styleGeekButton(QPushButton* btn)
         "QPushButton { background-color: #3498db; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 11px; min-width: 80px; max-height: 22px;}"
         "QPushButton:hover { background-color: #2980b9; }"
     );
-    btn->setFixedHeight(22);
 }
 
 inline void applyMainLayoutDefaults(QVBoxLayout* layout)
@@ -427,6 +460,172 @@ inline void applyMainLayoutDefaults(QVBoxLayout* layout)
     // Use minimal spacing and zero margins to match CPU tab default layout
     layout->setSpacing(0);
     layout->setContentsMargins(0, 0, 0, 0);
+}
+
+// Helper to create the headline layout with a "Geek Mode" button so all tabs
+// share the exact same headline placement and styling.
+inline QHBoxLayout* createHeadlineWithGeek(QWidget* parent, const QString& title, QPushButton** outButton = nullptr)
+{
+    QHBoxLayout* headlineLayout = new QHBoxLayout();
+    QLabel* headline = new QLabel(title);
+    styleHeadlineLabel(headline);
+    QPushButton* geekButton = new QPushButton(parent ? parent->tr("Geek Mode") : QStringLiteral("Geek Mode"), parent);
+    styleGeekButton(geekButton);
+    // ensure exact height
+    geekButton->setFixedHeight(22);
+    headlineLayout->addWidget(headline);
+    headlineLayout->addStretch();
+    headlineLayout->addWidget(geekButton);
+    if (outButton) *outButton = geekButton;
+    return headlineLayout;
+}
+
+// Lightweight helper to add copy-on-selection (Ctrl+C) and right-click Copy to a QTableWidget.
+// Installs an event filter for Ctrl+C and a context menu on the table's viewport.
+class TableCopyHandler : public QObject
+{
+public:
+    explicit TableCopyHandler(QTableWidget* tbl, QTimer* pauseTimer = nullptr)
+        : QObject(tbl), table(tbl), pauseTimer(pauseTimer)
+    {
+        if (!table) return;
+        // allow multi-cell selection and item-level selection so users can select arbitrary cells
+        table->setSelectionMode(QAbstractItemView::ExtendedSelection);
+        table->setSelectionBehavior(QAbstractItemView::SelectItems);
+
+        // ensure right-click on the viewport triggers our custom menu
+        if (table->viewport()) {
+            table->viewport()->setContextMenuPolicy(Qt::CustomContextMenu);
+            QObject::connect(table->viewport(), &QWidget::customContextMenuRequested, [this](const QPoint &pos){ showMenu(table->viewport()->mapToGlobal(pos)); });
+            table->viewport()->installEventFilter(this);
+            // Also install event filter on the table itself so Ctrl+C delivered to table is caught
+            table->installEventFilter(this);
+        } else {
+            table->setContextMenuPolicy(Qt::CustomContextMenu);
+            QObject::connect(table, &QWidget::customContextMenuRequested, [this](const QPoint &pos){ showMenu(table->mapToGlobal(pos)); });
+            table->installEventFilter(this);
+        }
+    }
+
+protected:
+    bool eventFilter(QObject* obj, QEvent* ev) override
+    {
+        if (!table) return QObject::eventFilter(obj, ev);
+        // If user starts interacting (mouse press or key press for selection), pause auto-refresh
+        if ((ev->type() == QEvent::MouseButtonPress) || (ev->type() == QEvent::KeyPress)) {
+            pauseIfNeeded();
+        }
+
+        if (ev->type() == QEvent::KeyPress) {
+            QKeyEvent* ke = static_cast<QKeyEvent*>(ev);
+            if (ke && ke->matches(QKeySequence::Copy)) {
+                doCopy();
+                resumeIfNeeded();
+                return true;
+            }
+        }
+        // Show context menu on right-click releases or context menu events
+        if (ev->type() == QEvent::ContextMenu) {
+            QContextMenuEvent* ce = static_cast<QContextMenuEvent*>(ev);
+            showMenu(ce->globalPos());
+            return true;
+        }
+        if (ev->type() == QEvent::MouseButtonRelease) {
+            QMouseEvent* me = static_cast<QMouseEvent*>(ev);
+            if (me && me->button() == Qt::RightButton) {
+                QWidget* w = qobject_cast<QWidget*>(obj);
+                if (w) showMenu(w->mapToGlobal(me->pos()));
+                return true;
+            }
+        }
+        return QObject::eventFilter(obj, ev);
+    }
+
+private:
+    QTableWidget* table{nullptr};
+    QTimer* pauseTimer{nullptr};
+    bool paused{false};
+
+    // pos is global screen coordinates
+    void showMenu(const QPoint& pos)
+    {
+        if (!table) return;
+        QMenu menu;
+        QAction* copyAct = menu.addAction(QObject::tr("Copy"));
+        QObject::connect(copyAct, &QAction::triggered, [this]() { doCopy(); });
+        pauseIfNeeded();
+        menu.exec(pos);
+        // after menu closed, resume if we paused
+        resumeIfNeeded();
+    }
+
+    void doCopy()
+    {
+        if (!table) return;
+        QList<QTableWidgetSelectionRange> ranges = table->selectedRanges();
+        if (ranges.isEmpty()) return;
+
+        // map row -> map of column->text
+        QMap<int, QMap<int, QString>> rowMap;
+        for (const QTableWidgetSelectionRange &range : ranges) {
+            for (int r = range.topRow(); r <= range.bottomRow(); ++r) {
+                for (int c = range.leftColumn(); c <= range.rightColumn(); ++c) {
+                    QString cellText;
+                    QTableWidgetItem* it = table->item(r, c);
+                    if (it) cellText = it->text();
+                    else if (QWidget* w = table->cellWidget(r, c)) {
+                        // attempt to extract text from common widget types
+                        if (QLabel* lab = qobject_cast<QLabel*>(w)) cellText = lab->text();
+                        else if (QLineEdit* le = qobject_cast<QLineEdit*>(w)) cellText = le->text();
+                        // fallback: empty
+                    }
+                    // Only insert if non-empty (but preserve empties inside selection)
+                    rowMap[r].insert(c, cellText);
+                }
+            }
+        }
+
+        QStringList rowsOut;
+        QList<int> rows = rowMap.keys();
+        std::sort(rows.begin(), rows.end());
+        for (int r : rows) {
+            QMap<int, QString> &cols = rowMap[r];
+            QList<int> colKeys = cols.keys();
+            std::sort(colKeys.begin(), colKeys.end());
+            QStringList colsText;
+            for (int c : colKeys) colsText << cols.value(c);
+            rowsOut << colsText.join('\t');
+        }
+
+        QString out = rowsOut.join('\n'); // Join rows with newline
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        if (clipboard) clipboard->setText(out, QClipboard::Clipboard);
+        // resume after copying
+        resumeIfNeeded();
+    }
+
+    void pauseIfNeeded()
+    {
+        if (pauseTimer && !paused) {
+            pauseTimer->stop();
+            paused = true;
+        }
+    }
+
+    void resumeIfNeeded()
+    {
+        if (pauseTimer && paused) {
+            pauseTimer->start();
+            paused = false;
+        }
+    }
+};
+
+inline void enableTableCopy(QTableWidget* table, QTimer* pauseTimer = nullptr)
+{
+    if (!table) return;
+    // Handler is parented to table so it will be cleaned up automatically
+    new TableCopyHandler(table, pauseTimer);
 }
 
 #endif // UI_HELPERS_H

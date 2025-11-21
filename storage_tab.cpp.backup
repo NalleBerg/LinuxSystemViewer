@@ -1,0 +1,1201 @@
+#include "storage_tab.h"
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QScrollArea>
+#include <QGroupBox>
+#include <QFont>
+#include <QRegularExpression>
+#include <QDebug>
+#include <QtConcurrent/QtConcurrentRun>
+#include <QFuture>
+#include <QFutureWatcher>
+#include <QCoreApplication>
+#include "gui_helpers.h"
+#include "log_helper.h"
+#include <QTableWidget>
+#include <QFileInfo>
+#include <QFrame>
+#include <QTimer>
+#include <QShowEvent>
+#include <QHideEvent>
+
+StorageTab::StorageTab(QWidget* parent)
+    : TabWidgetBase(QCoreApplication::translate("StorageTab", "Storage"),
+                    // Use machine-friendly lsblk (-P) output including PKNAME so we can
+                    // associate partitions with their parent disks; include df for usage
+                    "lsblk -P -o NAME,PKNAME,SIZE,MOUNTPOINT,FSTYPE,TYPE && df -P -h",
+                    true,
+                    // Avoid using lshw/smartctl in periodic output. Keep detailed command identical
+                    // to the regular one so parsing remains predictable and we avoid helper programs.
+                    "lsblk -P -o NAME,PKNAME,SIZE,MOUNTPOINT,FSTYPE,TYPE && df -P -h",
+                    parent)
+{
+    qDebug() << "StorageTab: Constructor called - base constructor done";
+    // create refresh timer (match CPU tab behavior)
+    refreshTimer = new QTimer(this);
+    refreshTimer->setInterval(1000);
+    connect(refreshTimer, &QTimer::timeout, this, &StorageTab::refreshData);
+    // Create parse watcher for async parsing
+    parseWatcher = new QFutureWatcher<QVariantMap>(this);
+    connect(parseWatcher, &QFutureWatcher<QVariantMap>::finished, this, &StorageTab::onParseFinished);
+
+    initializeTab();
+    qDebug() << "StorageTab: Constructor finished";
+    // Also write a persistent appendLog entry so the log file contains an
+    // authoritative trace that this binary created a StorageTab instance.
+    appendLog("StorageTab: constructed (workspace build)");
+}
+
+QWidget* StorageTab::createUserFriendlyView()
+{
+    qDebug() << "StorageTab: createUserFriendlyView called";
+    
+    QWidget* contentWidget = new QWidget();
+    QVBoxLayout* mainLayout = new QVBoxLayout(contentWidget);
+    applyMainLayoutDefaults(mainLayout);
+    
+    // Headline and Geek button (use helper to guarantee identical placement)
+    QPushButton* gb = nullptr;
+    QHBoxLayout* headlineLayout = createHeadlineWithGeek(contentWidget, tr("Storage"), &gb);
+    // Storage doesn't have geek mode, but keep button for consistency
+    if (gb) gb->setVisible(false);
+    mainLayout->addLayout(headlineLayout);
+
+    // Add disk information labels container (like original design)
+    diskInfoContainer = new QWidget();
+    diskInfoLayout = new QVBoxLayout(diskInfoContainer);
+    diskInfoLayout->setContentsMargins(0, 0, 0, 6);
+    diskInfoLayout->setSpacing(2);
+    mainLayout->addWidget(diskInfoContainer);
+
+    // Table - exact CPU tab pattern
+    tableWidget = new QTableWidget();
+    tableWidget->setColumnCount(getStorageHeaders().size());
+    tableWidget->setHorizontalHeaderLabels(getStorageHeaders());
+    tableWidget->verticalHeader()->setVisible(false);
+    
+    // Apply CPU-style header styling  
+    tableWidget->horizontalHeader()->setStyleSheet(
+        "QHeaderView::section { "
+        "background-color: #2c3e50; "
+        "color: white; "
+        "padding: 8px; "
+        "border: none; "
+        "font-weight: bold; "
+        "}"
+    );
+    
+    // CPU-style column sizing
+    tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents); // Device
+    tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents); // Size  
+    tableWidget->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents); // Used
+    tableWidget->horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents); // Available
+    tableWidget->horizontalHeader()->setSectionResizeMode(4, QHeaderView::ResizeToContents); // Use%
+    tableWidget->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Stretch); // Mount Point
+    if (getStorageHeaders().size() > 6) {
+        tableWidget->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Interactive); // Filesystem
+    }
+
+    // Scroll area - exact CPU tab pattern
+    QScrollArea* scrollArea = new QScrollArea;
+    scrollArea->setWidget(tableWidget);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setMinimumHeight(220);
+    mainLayout->addWidget(scrollArea);
+    
+    // Enable copy functionality
+    enableTableCopy(tableWidget, refreshTimer);
+    
+    // Load initial data
+    populateStorageTable();
+    
+    return contentWidget;
+}
+
+void StorageTab::populateStorageTable()
+{
+    if (!tableWidget) return;
+    
+    // Show loading message
+    tableWidget->setRowCount(1);
+    QTableWidgetItem* loadItem = new QTableWidgetItem(tr("Loading..."));
+    loadItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+    tableWidget->setItem(0, 0, loadItem);
+    
+    // Trigger data parsing
+    parseOutput("");
+}
+
+QString StorageTab::formatSizeLocale(const QString& sizeStr)
+{
+    if (sizeStr.isEmpty()) return QString();
+    
+    // Handle sizes like "238.52G", "1.2T", etc. and format with comma decimal separator
+    QRegularExpression rx("([\\d\\.]+)\\s*([KMGTPEkmgtpe])?");
+    QRegularExpressionMatch m = rx.match(sizeStr);
+    if (!m.hasMatch()) return sizeStr;
+    
+    QString numStr = m.captured(1);
+    QString unit = m.captured(2).toUpper();
+    
+    // Replace dot with comma for European locale style
+    numStr.replace('.', ',');
+    
+    return numStr + " " + unit + "B";
+}
+
+void StorageTab::showEvent(QShowEvent* ev)
+{
+    QWidget::showEvent(ev);
+    if (refreshTimer) refreshTimer->start();
+}
+
+void StorageTab::hideEvent(QHideEvent* ev)
+{
+    if (refreshTimer) refreshTimer->stop();
+    QWidget::hideEvent(ev);
+}
+
+void StorageTab::onParseFinished()
+{
+    if (!parseWatcher) return;
+    QVariantMap result = parseWatcher->result();
+    applyParsedPartitions(result);
+}
+
+void StorageTab::refreshData()
+{
+    parseOutput("");
+}
+
+void StorageTab::parseOutput(const QString& output)
+{
+    qDebug() << "StorageTab: parseOutput scheduled (async)";
+
+    if (!parseWatcher) {
+        qWarning() << "StorageTab: parseWatcher not initialized";
+        return;
+    }
+
+    // If a parse is already running, stash the latest output and return; the
+    // onParseFinished handler will re-invoke parseOutput with the pending data.
+    if (parseWatcher->isRunning()) {
+        m_pendingOutput = output;
+        return;
+    }
+
+    // Run parsing in a background thread and return a QVariantMap with two keys:
+    // "disks" -> map of disk device -> { size }
+    // "partitions" -> list of partition maps including parent disk in key "parent"
+    QString jobOutput = output;
+    auto parseJob = [jobOutput]() -> QVariantMap {
+        QVariantMap result;
+        QStringList lines = jobOutput.split('\n');
+
+        QMap<QString, QVariantMap> disks;      // /dev/sda -> { device, size }
+        QMap<QString, QVariantMap> parts;      // /dev/sda1 -> partition map
+
+        bool inDf = false;
+
+        for (const QString &rawLine : lines) {
+            QString line = rawLine.trimmed();
+            if (line.isEmpty()) continue;
+
+            // lsblk -P key="value" lines
+            if (line.contains("NAME=\"")) {
+                QRegularExpression kvRx("(\\w+)=\"([^\"]*)\"");
+                QRegularExpressionMatchIterator mit = kvRx.globalMatch(line);
+                QMap<QString, QString> kv;
+                while (mit.hasNext()) {
+                    QRegularExpressionMatch mm = mit.next();
+                    kv[mm.captured(1)] = mm.captured(2);
+                }
+
+                QString name = kv.value("NAME");
+                QString device = name.startsWith("/dev/") ? name : QString("/dev/%1").arg(name);
+                QString type = kv.value("TYPE");
+                QString size = kv.value("SIZE");
+                QString mount = kv.value("MOUNTPOINT");
+                QString fstype = kv.value("FSTYPE");
+                QString pk = kv.value("PKNAME");
+                QString parentDev = pk.isEmpty() ? QString() : QString("/dev/%1").arg(pk);
+
+                if (type == QLatin1String("disk")) {
+                    QVariantMap d;
+                    d["device"] = device;
+                    d["size"] = size;
+                    disks[device] = d;
+                } else if (type == QLatin1String("part")) {
+                    QVariantMap p;
+                    p["device"] = device;
+                    p["size"] = size;
+                    p["mount"] = mount;
+                    p["filesystem"] = fstype;
+                    p["type"] = type;
+                    p["used"] = QString();
+                    p["available"] = QString();
+                    p["use%"] = QString();
+                    p["parent"] = parentDev;
+                    parts[device] = p;
+                }
+                continue;
+            }
+
+            // detect df section start
+            if (line.startsWith("Filesystem") && line.contains("Use%")) {
+                inDf = true;
+                continue;
+            }
+
+            if (inDf) {
+                QRegularExpression rx("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(.*)$");
+                QRegularExpressionMatch match = rx.match(rawLine);
+                if (!match.hasMatch()) continue;
+                QString fsDev = match.captured(1);
+                QString used = match.captured(3);
+                QString avail = match.captured(4);
+                QString usep = match.captured(5);
+                QString mount = match.captured(6).trimmed();
+
+                // update partition by mount
+                bool matched = false;
+                for (auto it = parts.begin(); it != parts.end(); ++it) {
+                    QString dmount = it.value().value("mount").toString();
+                    if (!dmount.isEmpty() && dmount == mount) {
+                        it.value()["used"] = used;
+                        it.value()["available"] = avail;
+                        it.value()["use%"] = usep;
+                        if (it.value()["filesystem"].toString().isEmpty()) it.value()["filesystem"] = fsDev;
+                        matched = true;
+                        break;
+                    }
+                }
+
+                if (!matched && fsDev.startsWith("/dev/")) {
+                    if (parts.contains(fsDev)) {
+                        parts[fsDev]["used"] = used;
+                        parts[fsDev]["available"] = avail;
+                        parts[fsDev]["use%"] = usep;
+                        if (parts[fsDev]["filesystem"].toString().isEmpty()) parts[fsDev]["filesystem"] = fsDev;
+                    } else {
+                        QVariantMap p;
+                        p["device"] = fsDev;
+                        p["size"] = QString();
+                        p["mount"] = mount;
+                        p["filesystem"] = fsDev;
+                        p["type"] = QString();
+                        p["used"] = used;
+                        p["available"] = avail;
+                        p["use%"] = usep;
+                        p["parent"] = QString();
+                        parts[fsDev] = p;
+                    }
+                }
+            }
+        }
+
+        // Build result
+        QVariantMap disksOut;
+        for (auto it = disks.begin(); it != disks.end(); ++it) {
+            disksOut.insert(it.key(), it.value());
+        }
+
+        QVariantList partsOut;
+        for (auto it = parts.begin(); it != parts.end(); ++it) {
+            partsOut << it.value();
+        }
+
+        result.insert("disks", disksOut);
+        result.insert("partitions", partsOut);
+        return result;
+    };
+
+    QFuture<QVariantMap> future = QtConcurrent::run(parseJob);
+    parseWatcher->setFuture(future);
+}
+
+    void StorageTab::showEvent(QShowEvent* ev)
+    {
+        QWidget::showEvent(ev);
+        if (refreshTimer) refreshTimer->start();
+    }
+
+    void StorageTab::hideEvent(QHideEvent* ev)
+    {
+        if (refreshTimer) refreshTimer->stop();
+        QWidget::hideEvent(ev);
+    }
+
+    void StorageTab::onParseFinished()
+    {
+        if (!parseWatcher) return;
+        QVariantMap parsed = parseWatcher->result();
+        QVariantList parts = parsed.value("partitions").toList();
+        QVariantMap disks = parsed.value("disks").toMap();
+        qDebug() << "StorageTab: onParseFinished disks=" << disks.keys().size() << "parts=" << parts.size();
+        applyParsedPartitions(parsed);
+
+        // If an updated output arrived while we were parsing, parse it now
+        if (!m_pendingOutput.isEmpty()) {
+            QString pending = m_pendingOutput;
+            m_pendingOutput.clear();
+            // schedule another async parse
+            parseOutput(pending);
+        }
+    }
+
+void StorageTab::applyParsedPartitions(const QVariantMap& parsed)
+{
+    if (!tableWidget || !diskInfoContainer) return;
+
+    QVariantList parts = parsed.value("partitions").toList();
+    QVariantMap disks = parsed.value("disks").toMap();
+
+    qDebug() << "StorageTab: applyParsedPartitions called. disks=" << disks.keys().size() << "partitions=" << parts.size();
+
+    // If there's no parsed data, skip update to avoid clearing the UI
+    if (disks.isEmpty() && parts.isEmpty()) {
+        qDebug() << "StorageTab: no parsed data, skipping update";
+        return;
+    }
+
+    // Clear existing disk labels
+    QLayoutItem *child;
+    while ((child = diskInfoLayout->takeAt(0)) != nullptr) {
+        delete child->widget();
+        delete child;
+    }
+
+    // Helper function to detect disk type and format size
+    auto getDiskTypeAndSize = [&](const QString& diskName) -> QPair<QString, QString> {
+        QString diskType = "Unknown";
+        QString totalSize = "0 GB";
+        
+        // Check if it's removable (USB)
+        QFile removableFile(QString("/sys/block/%1/removable").arg(diskName));
+        if (removableFile.open(QIODevice::ReadOnly)) {
+            QString removable = removableFile.readAll().trimmed();
+            if (removable == "1") {
+                diskType = "USB";
+            } else {
+                // Check if it's rotational (HDD vs SSD)
+                QFile rotationalFile(QString("/sys/block/%1/queue/rotational").arg(diskName));
+                if (rotationalFile.open(QIODevice::ReadOnly)) {
+                    QString rotational = rotationalFile.readAll().trimmed();
+                    diskType = (rotational == "1") ? "HDD" : "SSD";
+                }
+            }
+        }
+        
+        // Get total size from disks map
+        if (disks.contains(diskName)) {
+            QVariantMap diskInfo = disks.value(diskName).toMap();
+            totalSize = formatSizeLocale(diskInfo.value("size").toString());
+        }
+        
+        return qMakePair(diskType, totalSize);
+    };
+
+    // Create disk labels for each disk
+    QStringList diskKeys = disks.keys();
+    std::sort(diskKeys.begin(), diskKeys.end());
+    
+    for (const QString& diskKey : diskKeys) {
+        auto typeAndSize = getDiskTypeAndSize(diskKey);
+        QString diskType = typeAndSize.first;
+        QString totalSize = typeAndSize.second;
+        
+        QLabel* diskLabel = new QLabel();
+        diskLabel->setTextFormat(Qt::RichText);
+        diskLabel->setText(QString("Disk: %1&nbsp;&nbsp;-&nbsp;&nbsp;Type: %2&nbsp;&nbsp;-&nbsp;&nbsp;Total size: %3<BR>")
+                          .arg(diskKey, diskType, totalSize));
+        diskLabel->setAlignment(Qt::AlignCenter);
+        diskLabel->setStyleSheet("font-weight: bold; color: #2c3e50; margin: 4px;");
+        diskInfoLayout->addWidget(diskLabel);
+    }
+
+    // Add partition caption
+    QLabel* partitionLabel = new QLabel("<b>Partitions:</b>");
+    partitionLabel->setTextFormat(Qt::RichText);
+    partitionLabel->setAlignment(Qt::AlignLeft);
+    partitionLabel->setStyleSheet("margin: 4px 0px 4px 0px;");
+    diskInfoLayout->addWidget(partitionLabel);
+
+    // Clear and populate table
+    tableWidget->setRowCount(0);
+    tableWidget->setRowCount(parts.size());
+
+    for (int row = 0; row < parts.size(); ++row) {
+        QVariantMap partition = parts[row].toMap();
+        
+        // Device
+        QTableWidgetItem* deviceItem = new QTableWidgetItem(partition.value("device").toString());
+        deviceItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+        tableWidget->setItem(row, 0, deviceItem);
+        
+        // Size
+        QTableWidgetItem* sizeItem = new QTableWidgetItem(formatSizeLocale(partition.value("size").toString()));
+        sizeItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+        tableWidget->setItem(row, 1, sizeItem);
+        
+        // Used
+        QTableWidgetItem* usedItem = new QTableWidgetItem(formatSizeLocale(partition.value("used").toString()));
+        usedItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+        tableWidget->setItem(row, 2, usedItem);
+        
+        // Available
+        QTableWidgetItem* availItem = new QTableWidgetItem(formatSizeLocale(partition.value("available").toString()));
+        availItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+        tableWidget->setItem(row, 3, availItem);
+        
+        // Use%
+        QTableWidgetItem* useItem = new QTableWidgetItem(partition.value("use%").toString());
+        useItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+        tableWidget->setItem(row, 4, useItem);
+        
+        // Mount Point
+        QString mountPoint = partition.value("mount").toString();
+        QTableWidgetItem* mountItem = new QTableWidgetItem(mountPoint);
+        mountItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+        tableWidget->setItem(row, 5, mountItem);
+        
+        // Filesystem
+        if (tableWidget->columnCount() > 6) {
+            QString filesystem = partition.value("filesystem").toString();
+            QTableWidgetItem* fsItem = new QTableWidgetItem(filesystem);
+            fsItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+            tableWidget->setItem(row, 6, fsItem);
+        }
+    }
+
+    qDebug() << "StorageTab: populated table with" << parts.size() << "partitions";
+}
+
+        // small helper: format various human sizes (e.g. "238.52G") into GB with two decimals
+        auto formatSizeToGB = [](const QString &sizeStr)->QString {
+            if (sizeStr.isEmpty()) return QString();
+            QRegularExpression rx("([\\d\\.]+)\\s*([KMGTPEkmgtpe])?");
+            QRegularExpressionMatch m = rx.match(sizeStr);
+            if (!m.hasMatch()) return sizeStr;
+            double n = m.captured(1).toDouble();
+            QString u = m.captured(2).toUpper();
+            double gb = n;
+            if (u == "K") gb = n / 1024.0 / 1024.0;
+            else if (u == "M") gb = n / 1024.0;
+            else if (u == "G" || u.isEmpty()) gb = n;
+            else if (u == "T") gb = n * 1024.0;
+            else if (u == "P") gb = n * 1024.0 * 1024.0;
+            QString out = QString::number(gb, 'f', 2);
+            out.replace('.', ',');
+            return out;
+        };
+
+        // Format a human-readable size string into a localized string with unit
+        // Examples: "238.52G" -> "238,52 GB", "1023M" -> "1023,00 MB"
+        auto formatSizeLocale = [](const QString &sizeStr)->QString {
+            if (sizeStr.isEmpty()) return QString();
+            QRegularExpression rx("([\\d\\.,]+)\\s*([KMGTPEkmgtpe])?");
+            QRegularExpressionMatch m = rx.match(sizeStr.trimmed());
+            if (!m.hasMatch()) return sizeStr;
+            QString numStr = m.captured(1);
+            // normalize decimal point
+            numStr.replace(',', '.');
+            double n = numStr.toDouble();
+            QString u = m.captured(2).toUpper();
+            QString suf = "B";
+            if (u == "K") { suf = "KB"; }
+            else if (u == "M") { suf = "MB"; }
+            else if (u == "G" || u.isEmpty()) { suf = "GB"; }
+            else if (u == "T") { suf = "TB"; }
+            else if (u == "P") { suf = "PB"; }
+            // If the captured unit was a bare number (no unit) we won't scale
+            // here — treat as bytes and present as-is with two decimals and B.
+            QString out = QString::number(n, 'f', 2);
+            out.replace('.', ',');
+            return QString("%1 %2").arg(out, suf);
+        };
+
+        // Detect disk type using sysfs: prefer removable -> USB, else rotational==0 -> SSD, else HDD
+        auto detectDiskType = [](const QString &devPath)->QString {
+            QString name = QFileInfo(devPath).fileName(); // e.g., sda
+            QString sysBase = QString("/sys/block/%1").arg(name);
+            QFile f;
+            // removable
+            QString removablePath = sysBase + "/removable";
+            f.setFileName(removablePath);
+            if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                QByteArray b = f.readAll().trimmed();
+                f.close();
+                if (!b.isEmpty() && b != "0") return QStringLiteral("USB");
+            }
+            // rotational
+            QString rotPath = sysBase + "/queue/rotational";
+            f.setFileName(rotPath);
+            if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                QByteArray b = f.readAll().trimmed();
+                f.close();
+                if (!b.isEmpty() && b == "0") return QStringLiteral("SSD");
+            }
+            // fallback
+            return QStringLiteral("HDD");
+        };
+
+        // Organize partitions per parent disk
+        QMap<QString, QList<QVariantMap>> byDisk;
+        for (const QVariant &pv : parts) {
+            QVariantMap pm = pv.toMap();
+            QString dev = pm.value("device").toString();
+            QString parent = pm.value("parent").toString();
+            if (parent.isEmpty()) {
+                // try to infer parent by prefix match (e.g., /dev/sda1 -> /dev/sda)
+                for (auto it = disks.begin(); it != disks.end(); ++it) {
+                    QString diskDev = it.key();
+                    if (dev.startsWith(diskDev)) {
+                        parent = diskDev;
+                        break;
+                    }
+                }
+            }
+            if (parent.isEmpty()) parent = QStringLiteral("__other__");
+            byDisk[parent].append(pm);
+        }
+
+        // Ensure layout exists
+        QVBoxLayout* disksLayout = qobject_cast<QVBoxLayout*>(m_disksContainer->layout());
+        if (!disksLayout) return;
+
+        // Remove placeholder table if present and real data arrived
+        if (m_diskTables.contains(QStringLiteral("__placeholder__")) && (!disks.isEmpty() || !parts.isEmpty())) {
+            QTableWidget* ph = m_diskTables.take(QStringLiteral("__placeholder__"));
+            if (ph) { disksLayout->removeWidget(ph); ph->deleteLater(); }
+        }
+
+        // Create/update disk sections
+        QSet<QString> seenDisks;
+        // Handle disks in deterministic order
+        QStringList diskKeys = disks.keys();
+        std::sort(diskKeys.begin(), diskKeys.end());
+        for (const QString &diskKey : diskKeys) {
+            seenDisks.insert(diskKey);
+            QVariantMap d = disks.value(diskKey).toMap();
+            QString size = d.value("size").toString();
+
+            // Create per-disk container and label if missing
+            if (!m_diskLabels.contains(diskKey)) {
+                QWidget* diskWidget = new QWidget();
+                QVBoxLayout* diskLayout = new QVBoxLayout(diskWidget);
+                // Ensure caption and table are flush (no gap)
+                diskLayout->setSpacing(0);
+                // Add a small bottom margin on the section so multiple disks are separated,
+                // but keep the top margin zero so the first disk is flush under the headline.
+                // Use a smaller bottom margin so single-disk layout doesn't leave large gaps.
+                diskLayout->setContentsMargins(0, 0, 0, 6);
+                // Allow the per-disk widget to expand horizontally so the contained table can
+                // use the full available width (fixes narrow table when only one disk present).
+                diskWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+                disksLayout->addWidget(diskWidget);
+                m_diskWidgets.insert(diskKey, diskWidget);
+
+                QLabel* lbl = new QLabel();
+                // make disk labels slightly smaller (20% smaller than default headline)
+                lbl->setStyleSheet("font-size: 12px; font-weight: bold; color: #222; margin-bottom: 0px;");
+                // center the disk label horizontally as requested
+                lbl->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+                diskLayout->addWidget(lbl);
+                m_diskLabels.insert(diskKey, lbl);
+            }
+            QLabel* lbl = m_diskLabels.value(diskKey);
+            QString shortName = QFileInfo(diskKey).fileName();
+            QString diskType = detectDiskType(diskKey);
+            QString human = formatSizeLocale(size);
+            if (human.isEmpty()) human = size;
+            lbl->setText(QString("Disk: %1&nbsp;&nbsp;-&nbsp;&nbsp;Type: %2&nbsp;&nbsp;-&nbsp;&nbsp;Total size: %3<br>").arg(shortName, diskType, human));
+            lbl->setTextFormat(Qt::RichText);
+
+            // Build incoming list for this disk
+            QList<QVariantMap> incoming = byDisk.value(diskKey);
+
+            // Create/update caption (e.g. "[+N] Partitions:") immediately before the table
+            int partCount = incoming.size();
+            if (!m_diskCaptions.contains(diskKey)) {
+                QLabel* cap = new QLabel();
+                cap->setTextFormat(Qt::RichText);
+                // remove the [+N] prefix and remove margins so caption sits flush above the table
+                cap->setStyleSheet("font-size: 11px; font-weight: bold; color: #222; margin: 0px;");
+                cap->setText(QString("<b>Partitions:</b>"));
+                QWidget* diskWidget = m_diskWidgets.value(diskKey);
+                if (diskWidget) {
+                    QVBoxLayout* diskLayout = qobject_cast<QVBoxLayout*>(diskWidget->layout());
+                    if (diskLayout) diskLayout->addWidget(cap);
+                    else disksLayout->addWidget(cap);
+                } else {
+                    disksLayout->addWidget(cap);
+                }
+                m_diskCaptions.insert(diskKey, cap);
+            } else {
+                QLabel* cap = m_diskCaptions.value(diskKey);
+                if (cap) cap->setText(QString("<b>Partitions:</b>"));
+            }
+
+            // Create table if missing (after caption so caption is above the table)
+            if (!m_diskTables.contains(diskKey)) {
+                QTableWidget* table = new QTableWidget();
+                initializeStorageTable(table);
+                // start with zero rows to avoid stray empty rows
+                table->setRowCount(0);
+                // remove thin frame and gridlines for a cleaner look
+                table->setFrameStyle(QFrame::NoFrame);
+                table->setShowGrid(false);
+                // let the table expand horizontally but keep a fixed height that fits its contents
+                table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+                // disable the table's own scrollbars so the outer scroll area handles scrolling
+                table->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+                table->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+                table->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+                // Prefer ResizeToContents for small columns and reserve remaining
+                // space for Mount Point and Filesystem to avoid unnecessary scrolling.
+                int colCount = table->columnCount();
+                table->horizontalHeader()->setMinimumSectionSize(60);
+                // columns 0..4 are small fields -> ResizeToContents
+                for (int ci = 0; ci <= 4 && ci < colCount; ++ci) table->horizontalHeader()->setSectionResizeMode(ci, QHeaderView::ResizeToContents);
+                // last two columns (mount point, filesystem) will be allocated after sizing
+                if (colCount >= 6) {
+                    table->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Fixed);
+                    table->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Fixed);
+                } else if (colCount >= 5) {
+                    table->horizontalHeader()->setSectionResizeMode(colCount-1, QHeaderView::Stretch);
+                }
+                table->horizontalHeader()->setStyleSheet("QHeaderView::section { border: none; }");
+                enableTableCopy(table, refreshTimer);
+                QWidget* diskWidget = m_diskWidgets.value(diskKey);
+                if (diskWidget) {
+                    QVBoxLayout* diskLayout = qobject_cast<QVBoxLayout*>(diskWidget->layout());
+                    if (diskLayout) {
+                        diskLayout->addWidget(table);
+                        // Make the table take remaining horizontal space inside the disk widget
+                        diskLayout->setStretch(diskLayout->indexOf(table), 1);
+                    } else disksLayout->addWidget(table);
+                } else {
+                    disksLayout->addWidget(table);
+                }
+                m_diskTables.insert(diskKey, table);
+            }
+
+            QTableWidget* table = m_diskTables.value(diskKey);
+
+            // Build existing map
+            QMap<QString,int> existing;
+            for (int r = 0; r < table->rowCount(); ++r) {
+                QTableWidgetItem* it = table->item(r, 0);
+                if (it) existing[it->text()] = r;
+            }
+
+            // Quick equality check
+            bool equal = true;
+            if (existing.size() != incoming.size()) equal = false;
+            else {
+                for (const QVariantMap &pm : incoming) {
+                    QString dev = pm.value("device").toString();
+                    if (!existing.contains(dev)) { equal = false; break; }
+                    int row = existing.value(dev);
+                    auto cellText = [&](int col)->QString { QTableWidgetItem* it = table->item(row, col); return it ? it->text() : QString(); };
+                    if (cellText(0) != pm.value("device").toString() || cellText(1) != pm.value("size").toString() ||
+                        cellText(2) != pm.value("used").toString() || cellText(3) != pm.value("available").toString() ||
+                        cellText(4) != pm.value("use%").toString() || cellText(5) != pm.value("mount").toString() ||
+                        cellText(6) != pm.value("filesystem").toString()) { equal = false; break; }
+                }
+            }
+
+            if (equal) continue;
+
+            bool prevSorting = table->isSortingEnabled();
+            table->setSortingEnabled(false);
+            table->setUpdatesEnabled(false);
+
+            QSet<QString> seen;
+            QList<int> rowsToRemove;
+
+            // Update or add rows
+            for (const QVariantMap &pm : incoming) {
+                QString dev = pm.value("device").toString();
+                seen.insert(dev);
+                if (existing.contains(dev)) {
+                    int row = existing.value(dev);
+                    auto setCell = [&](int col, const QString &text){
+                        QTableWidgetItem* it = table->item(row, col);
+                        if (!it) { 
+                            it = new QTableWidgetItem(text); 
+                            it->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+                            it->setTextAlignment(Qt::AlignTop | Qt::AlignLeft);
+                            table->setItem(row, col, it);
+                        } else if (it->text() != text) {
+                            it->setText(text);
+                        }
+                    };
+                    setCell(0, pm.value("device").toString());
+                    // format sizes consistently
+                    setCell(1, formatSizeLocale(pm.value("size").toString()));
+                    setCell(2, formatSizeLocale(pm.value("used").toString()));
+                    setCell(3, formatSizeLocale(pm.value("available").toString()));
+                    setCell(4, pm.value("use%").toString());
+                    setCell(5, pm.value("mount").toString());
+                    setCell(6, pm.value("filesystem").toString());
+                } else {
+                    // append row
+                    int r = table->rowCount();
+                    table->insertRow(r);
+                    for (int c = 0; c < table->columnCount(); ++c) {
+                        QString val;
+                        switch (c) {
+                            case 0: val = pm.value("device").toString(); break;
+                            case 1: val = formatSizeLocale(pm.value("size").toString()); break;
+                            case 2: val = formatSizeLocale(pm.value("used").toString()); break;
+                            case 3: val = formatSizeLocale(pm.value("available").toString()); break;
+                            case 4: val = pm.value("use%").toString(); break;
+                            case 5: val = pm.value("mount").toString(); break;
+                            case 6: val = pm.value("filesystem").toString(); break;
+                            default: val = QString();
+                        }
+                        QTableWidgetItem* it = new QTableWidgetItem(val);
+                        it->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+                        it->setTextAlignment(Qt::AlignTop | Qt::AlignLeft);
+                        table->setItem(r, c, it);
+                    }
+                }
+            }
+
+            // Collect rows to remove
+            for (auto it = existing.begin(); it != existing.end(); ++it) {
+                if (!seen.contains(it.key())) rowsToRemove << it.value();
+            }
+            std::sort(rowsToRemove.begin(), rowsToRemove.end(), std::greater<int>());
+            for (int rr : rowsToRemove) { table->removeRow(rr); }
+
+            table->setUpdatesEnabled(true);
+            table->setSortingEnabled(prevSorting);
+            // First let the small columns size to contents
+            table->resizeColumnsToContents();
+            // Ensure rows are sized and the table height fits exactly the contents
+            table->resizeRowsToContents();
+            // Now compute remaining space for mount/filesystem columns and allocate
+            int cols = table->columnCount();
+            if (cols >= 6) {
+                int usedW = 0;
+                for (int c = 0; c <= 4; ++c) usedW += table->columnWidth(c);
+                int viewportW = table->viewport()->width(); if (viewportW <= 0) viewportW = table->width();
+                int avail = viewportW - usedW - table->verticalHeader()->width() - 16; // small padding
+                int minCol = 80;
+                if (avail <= minCol*2) {
+                    // Not enough room: give sensible minima and allow scrolling
+                    table->setColumnWidth(5, minCol);
+                    table->setColumnWidth(6, minCol);
+                    table->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Fixed);
+                    table->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Fixed);
+                    int totalW = usedW + minCol*2 + table->verticalHeader()->width();
+                    table->setMinimumWidth(totalW);
+                } else {
+                    int col5 = avail / 2;
+                    int col6 = avail - col5;
+                    table->setColumnWidth(5, col5);
+                    table->setColumnWidth(6, col6);
+                    table->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Fixed);
+                    table->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Fixed);
+                    // Ensure the table minimum width equals viewport so no horizontal scroll
+                    table->setMinimumWidth(viewportW - 4);
+
+                    // If contents are long, replace plain items in columns 5 and 6
+                    // with wrapped QLabel widgets that show continuation lines prefixed
+                    // by a green dash '-' as requested.
+                    auto makeWrappedLabel = [&](const QString &text, int colWidth)->QLabel* {
+                        QLabel* lab = new QLabel();
+                        lab->setTextFormat(Qt::RichText);
+                        lab->setWordWrap(true);
+                        lab->setStyleSheet("QLabel { color: black; }");
+                        lab->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+                        QFontMetrics fm(table->font());
+                        int maxW = qMax(20, colWidth - 12);
+                        // Prefer splitting on '/' to produce readable lines
+                        QStringList parts = text.split('/');
+                        QStringList lines;
+                        QString cur;
+                        for (int i = 0; i < parts.size(); ++i) {
+                            QString token = (i == 0) ? parts[i] : "/" + parts[i];
+                            QString trial = cur.isEmpty() ? token : cur + token;
+                            if (fm.horizontalAdvance(trial) <= maxW) {
+                                cur = trial;
+                            } else {
+                                if (!cur.isEmpty()) lines << cur;
+                                // token itself may be too long, break by approx char count
+                                if (fm.horizontalAdvance(token) > maxW) {
+                                    int approxChar = qMax(1, maxW / qMax(1, fm.averageCharWidth()));
+                                    for (int pos = 0; pos < token.length(); pos += approxChar) {
+                                        lines << token.mid(pos, approxChar);
+                                    }
+                                    cur.clear();
+                                } else {
+                                    cur = token;
+                                }
+                            }
+                        }
+                        if (!cur.isEmpty()) lines << cur;
+
+                        if (lines.isEmpty()) lab->setText(text);
+                        else {
+                            auto escHtml = [](const QString &s)->QString {
+                                QString out = s;
+                                out.replace('&', "&amp;");
+                                out.replace('<', "&lt;");
+                                out.replace('>', "&gt;");
+                                return out;
+                            };
+                            QString html;
+                            for (int i = 0; i < lines.size(); ++i) {
+                                QString esc = escHtml(lines[i]);
+                                if (i == 0) html += esc;
+                                else html += QString("<span style='color:#006400'>&#8626;</span><br>%1").arg(esc);
+                            }
+                            lab->setText(html);
+                        }
+                        return lab;
+                    };
+
+                    for (int r = 0; r < table->rowCount(); ++r) {
+                        for (int c = 5; c <= 6; ++c) {
+                            QString cellText;
+                            QTableWidgetItem* it = table->item(r, c);
+                            if (it) cellText = it->text();
+                            QLabel* w = makeWrappedLabel(cellText, table->columnWidth(c));
+                            QTableWidgetItem* taken = table->takeItem(r, c);
+                            if (taken) delete taken;
+                            table->setCellWidget(r, c, w);
+                        }
+                    }
+                }
+            } else if (cols > 0) {
+                // fallback for tables with fewer columns
+                table->horizontalHeader()->setStretchLastSection(true);
+            }
+            // Ensure columns for '__other__' table have consistent widths similar
+            // to regular per-disk tables.
+            {
+                QFontMetrics fm(table->font());
+                QFontMetrics hf(table->horizontalHeader()->font());
+                int cols = table->columnCount();
+                QVector<int> required(cols, 0);
+                for (int c = 0; c < cols; ++c) {
+                    QString htxt = table->horizontalHeaderItem(c) ? table->horizontalHeaderItem(c)->text() : QString();
+                    required[c] = hf.horizontalAdvance(htxt) + 24;
+                }
+                for (int r = 0; r < table->rowCount(); ++r) {
+                    for (int c = 0; c < cols; ++c) {
+                        QTableWidgetItem* it = table->item(r, c);
+                        if (!it) continue;
+                        int w = fm.horizontalAdvance(it->text()) + 20;
+                        if (w > required[c]) required[c] = w;
+                    }
+                }
+                int maxReq = 0;
+                for (int c = 0; c < cols; ++c) if (required[c] > maxReq) maxReq = required[c];
+                int viewportW = table->viewport()->width();
+                int chosenColW = maxReq;
+                if (viewportW > 0) {
+                    int equalShare = viewportW / qMax(1, cols);
+                    if (maxReq <= equalShare) chosenColW = equalShare;
+                }
+                table->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+                for (int c = 0; c < cols; ++c) table->setColumnWidth(c, chosenColW);
+                int totalW = chosenColW * cols + table->verticalHeader()->width();
+                table->setMinimumWidth(totalW);
+            }
+            // Compute required width per column and prefer equal distributed
+            // widths (Stretch) when possible. If any column needs more space
+            // than the equal share, make that column fixed at the required
+            // size and let others stretch to fill remaining space.
+            {
+                QFontMetrics fm(table->font());
+                QFontMetrics hf(table->horizontalHeader()->font());
+                int cols = table->columnCount();
+                QVector<int> required(cols, 0);
+                for (int c = 0; c < cols; ++c) {
+                    QString htxt = table->horizontalHeaderItem(c) ? table->horizontalHeaderItem(c)->text() : QString();
+                    required[c] = hf.horizontalAdvance(htxt) + 24; // header padding
+                }
+                for (int r = 0; r < table->rowCount(); ++r) {
+                    for (int c = 0; c < cols; ++c) {
+                        QTableWidgetItem* it = table->item(r, c);
+                        if (!it) continue;
+                        int w = fm.horizontalAdvance(it->text()) + 20; // cell padding
+                        if (w > required[c]) required[c] = w;
+                    }
+                }
+
+                int viewportW = table->viewport()->width();
+                if (viewportW <= 0) viewportW = table->width();
+                int equalShare = (viewportW > 0) ? (viewportW / qMax(1, cols)) : 100;
+
+                // Pick columns that truly need more than equalShare.
+                QVector<int> needFixed(cols, 0);
+                int fixedTotal = 0;
+                for (int c = 0; c < cols; ++c) {
+                    if (required[c] > equalShare) {
+                        needFixed[c] = required[c];
+                        fixedTotal += needFixed[c];
+                    }
+                }
+
+                // If fixed columns alone exceed the viewport, we must allow horizontal scrolling.
+                if (fixedTotal >= viewportW && fixedTotal > 0) {
+                    // set all columns Fixed to their required sizes and allow scrolling
+                    for (int c = 0; c < cols; ++c) {
+                        table->horizontalHeader()->setSectionResizeMode(c, QHeaderView::Fixed);
+                        int w = qMax(required[c], 80);
+                        table->setColumnWidth(c, w);
+                    }
+                    int totalW = 0; for (int c = 0; c < cols; ++c) totalW += table->columnWidth(c);
+                    table->setMinimumWidth(totalW + table->verticalHeader()->width());
+                } else {
+                    // Fixed columns take their required width; remaining width is shared
+                    // by the other columns using Stretch so no horizontal scrollbar appears.
+                    int remainingW = viewportW - fixedTotal;
+                    int stretchCols = 0;
+                    for (int c = 0; c < cols; ++c) if (needFixed[c] == 0) ++stretchCols;
+                    for (int c = 0; c < cols; ++c) {
+                        if (needFixed[c] > 0) {
+                            table->horizontalHeader()->setSectionResizeMode(c, QHeaderView::Fixed);
+                            table->setColumnWidth(c, needFixed[c]);
+                        } else {
+                            // give stretch columns a minimum so they remain usable
+                            table->horizontalHeader()->setSectionResizeMode(c, QHeaderView::Stretch);
+                        }
+                    }
+                    Q_UNUSED(stretchCols);
+                    // Do not force table minimum width beyond viewport: let Stretch distribute
+                    table->setMinimumWidth(viewportW - 4);
+                }
+            }
+            int totalH = table->horizontalHeader()->height();
+            for (int rr = 0; rr < table->rowCount(); ++rr) totalH += table->rowHeight(rr);
+            totalH += table->frameWidth() * 2 + 4; // small padding
+            table->setMinimumHeight(totalH);
+            table->setMaximumHeight(totalH);
+        }
+
+        // Handle any partitions that didn't match a known disk (other mounts)
+        if (byDisk.contains(QStringLiteral("__other__"))) {
+            QString key = QStringLiteral("__other__");
+            if (!m_diskLabels.contains(key)) {
+                QWidget* diskWidget = new QWidget();
+                QVBoxLayout* diskLayout = new QVBoxLayout(diskWidget);
+                diskLayout->setSpacing(0);
+                diskLayout->setContentsMargins(0,0,0,0);
+                diskWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+                disksLayout->addWidget(diskWidget);
+                m_diskWidgets.insert(key, diskWidget);
+
+                QLabel* lbl = new QLabel(tr("Other mounts"));
+                lbl->setStyleSheet("font-size: 12px; font-weight: bold; color: #222; margin-bottom: 0px;");
+                diskLayout->addWidget(lbl);
+                m_diskLabels.insert(key, lbl);
+            }
+            if (!m_diskTables.contains(key)) {
+                QTableWidget* table = new QTableWidget();
+                initializeStorageTable(table);
+                // start with zero rows to avoid stray empty rows
+                table->setRowCount(0);
+                // remove thin frame and gridlines for a cleaner look
+                table->setFrameStyle(QFrame::NoFrame);
+                table->setShowGrid(false);
+                table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+                table->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+                table->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+                table->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+                // For '__other__' tables: prefer small columns to ResizeToContents
+                int otherCols = table->columnCount();
+                table->horizontalHeader()->setMinimumSectionSize(60);
+                for (int ci = 0; ci <= 4 && ci < otherCols; ++ci) table->horizontalHeader()->setSectionResizeMode(ci, QHeaderView::ResizeToContents);
+                if (otherCols >= 6) {
+                    table->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Fixed);
+                    table->horizontalHeader()->setSectionResizeMode(6, QHeaderView::Fixed);
+                } else if (otherCols >= 1) {
+                    table->horizontalHeader()->setStretchLastSection(true);
+                }
+                table->horizontalHeader()->setStyleSheet("QHeaderView::section { border: none; }");
+                enableTableCopy(table, refreshTimer);
+                QWidget* diskWidget = m_diskWidgets.value(key);
+                if (diskWidget) {
+                    QVBoxLayout* diskLayout = qobject_cast<QVBoxLayout*>(diskWidget->layout());
+                    if (diskLayout) {
+                        diskLayout->addWidget(table);
+                        diskLayout->setStretch(diskLayout->indexOf(table), 1);
+                    } else disksLayout->addWidget(table);
+                } else {
+                    disksLayout->addWidget(table);
+                }
+                m_diskTables.insert(key, table);
+            }
+            QTableWidget* table = m_diskTables.value(key);
+            QList<QVariantMap> incoming = byDisk.value(key);
+            // simple replace for other mounts (small count)
+            table->setUpdatesEnabled(false);
+            table->setRowCount(0);
+            for (const QVariantMap &pm : incoming) {
+                int r = table->rowCount(); table->insertRow(r);
+                for (int c = 0; c < table->columnCount(); ++c) {
+                    QString val;
+                    switch (c) {
+                        case 0: val = pm.value("device").toString(); break;
+                        case 1: val = formatSizeLocale(pm.value("size").toString()); break;
+                        case 2: val = formatSizeLocale(pm.value("used").toString()); break;
+                        case 3: val = formatSizeLocale(pm.value("available").toString()); break;
+                        case 4: val = pm.value("use%").toString(); break;
+                        case 5: val = pm.value("mount").toString(); break;
+                        case 6: val = pm.value("filesystem").toString(); break;
+                        default: val = QString();
+                    }
+                    QTableWidgetItem* it = new QTableWidgetItem(val);
+                    it->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+                    it->setTextAlignment(Qt::AlignTop | Qt::AlignLeft);
+                    table->setItem(r, c, it);
+                }
+            }
+            table->setUpdatesEnabled(true);
+            table->resizeColumnsToContents();
+            // size rows and set table height to fit contents to avoid internal scrollbars
+            table->resizeRowsToContents();
+            // Apply mixed resize strategy for '__other__' table similar to per-disk tables
+            {
+                QFontMetrics fm(table->font());
+                QFontMetrics hf(table->horizontalHeader()->font());
+                int cols = table->columnCount();
+                QVector<int> required(cols, 0);
+                for (int c = 0; c < cols; ++c) {
+                    QString htxt = table->horizontalHeaderItem(c) ? table->horizontalHeaderItem(c)->text() : QString();
+                    required[c] = hf.horizontalAdvance(htxt) + 24;
+                }
+                for (int r = 0; r < table->rowCount(); ++r) {
+                    for (int c = 0; c < cols; ++c) {
+                        QTableWidgetItem* it = table->item(r, c);
+                        if (!it) continue;
+                        int w = fm.horizontalAdvance(it->text()) + 20;
+                        if (w > required[c]) required[c] = w;
+                    }
+                }
+                int viewportW = table->viewport()->width();
+                if (viewportW <= 0) viewportW = table->width();
+                int equalShare = (viewportW > 0) ? (viewportW / qMax(1, cols)) : 100;
+                QVector<int> needFixed(cols, 0);
+                int fixedTotal = 0;
+                for (int c = 0; c < cols; ++c) {
+                    if (required[c] > equalShare) { needFixed[c] = required[c]; fixedTotal += needFixed[c]; }
+                }
+                if (fixedTotal >= viewportW && fixedTotal > 0) {
+                    for (int c = 0; c < cols; ++c) {
+                        table->horizontalHeader()->setSectionResizeMode(c, QHeaderView::Fixed);
+                        int w = qMax(required[c], 80);
+                        table->setColumnWidth(c, w);
+                    }
+                    int totalW = 0; for (int c = 0; c < cols; ++c) totalW += table->columnWidth(c);
+                    table->setMinimumWidth(totalW + table->verticalHeader()->width());
+                } else {
+                    int remainingW = viewportW - fixedTotal;
+                    int stretchCols = 0;
+                    for (int c = 0; c < cols; ++c) if (needFixed[c] == 0) ++stretchCols;
+                    for (int c = 0; c < cols; ++c) {
+                        if (needFixed[c] > 0) {
+                            table->horizontalHeader()->setSectionResizeMode(c, QHeaderView::Fixed);
+                            table->setColumnWidth(c, needFixed[c]);
+                        } else {
+                            table->horizontalHeader()->setSectionResizeMode(c, QHeaderView::Stretch);
+                        }
+                    }
+                    Q_UNUSED(stretchCols);
+                    table->setMinimumWidth(viewportW - 4);
+                }
+            }
+            int totalH2 = table->horizontalHeader()->height();
+            for (int rr = 0; rr < table->rowCount(); ++rr) totalH2 += table->rowHeight(rr);
+            totalH2 += table->frameWidth() * 2 + 4;
+            table->setMinimumHeight(totalH2);
+            table->setMaximumHeight(totalH2);
+        }
+
+        // Remove disks that disappeared
+        QList<QString> toRemove;
+        for (const QString &k : m_diskTables.keys()) {
+            if (k == QStringLiteral("__placeholder__")) continue;
+            if (!disks.contains(k) && k != QStringLiteral("__other__")) toRemove << k;
+        }
+        for (const QString &k : toRemove) {
+            QWidget* w = nullptr;
+            if (m_diskWidgets.contains(k)) { w = m_diskWidgets.take(k); }
+            if (w) { disksLayout->removeWidget(w); w->deleteLater(); }
+            // also ensure we remove any dangling references
+            if (m_diskTables.contains(k)) { QTableWidget* t = m_diskTables.take(k); if (t) { t->deleteLater(); } }
+            if (m_diskLabels.contains(k)) { QLabel* l = m_diskLabels.take(k); if (l) l->deleteLater(); }
+            if (m_diskCaptions.contains(k)) { QLabel* c = m_diskCaptions.take(k); if (c) c->deleteLater(); }
+        }
+    }
+
+void StorageTab::refreshData()
+{
+    // Similar to TabWidgetBase::executeCommand but avoid showing the loading
+    // overlay so periodic refreshes do not flicker the UI.
+    if (m_isLoading) return;
+
+    if (m_command.isEmpty()) {
+        m_command = "true";
+    }
+
+    qDebug() << "StorageTab: refreshData starting background process";
+
+    m_process = new QProcess(this);
+
+    // Handle finish directly here (re-implement a subset of TabWidgetBase::onProcessFinished
+    // without touching the loading widget). This reads stdout/stderr, filters stderr,
+    // calls parseOutput, and then cleans up the process object.
+    connect(m_process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+            this, [this](int exitCode, QProcess::ExitStatus exitStatus){
+                if (!m_process) return;
+                QString output = QString::fromLocal8Bit(m_process->readAllStandardOutput());
+                QString errorOutput = QString::fromLocal8Bit(m_process->readAllStandardError());
+
+                auto filterStderr = [](const QString& in) {
+                    if (in.trimmed().isEmpty()) return QString();
+                    QStringList lines = in.split('\n');
+                    QStringList out;
+                    for (const QString& l : lines) {
+                        QString t = l.trimmed();
+                        if (t.contains("you should run this program as super-user", Qt::CaseInsensitive)) continue;
+                        if (t.contains("output may be incomplete or inaccurate", Qt::CaseInsensitive)) continue;
+                        out << l;
+                    }
+                    return out.join('\n').trimmed();
+                };
+
+                QString filteredErr = filterStderr(errorOutput);
+                qDebug() << "StorageTab: Process finished exitCode=" << exitCode << " errLen=" << filteredErr.size();
+
+                m_lastOutput = output;
+                parseOutput(output);
+
+                m_process->deleteLater();
+                m_process = nullptr;
+                m_isLoading = false;
+            });
+
+    connect(m_process, &QProcess::errorOccurred, this, [this](QProcess::ProcessError){
+        if (m_process) {
+            m_process->deleteLater();
+            m_process = nullptr;
+        }
+        m_isLoading = false;
+    });
+
+    connect(m_process, &QProcess::started, this, [this]() {
+        qDebug() << "StorageTab: Process started for" << m_tabName << "cmd:" << m_command;
+    });
+
+    m_process->start("bash", QStringList() << "-c" << m_command);
+    m_isLoading = true;
+}

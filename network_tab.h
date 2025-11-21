@@ -4,6 +4,7 @@
 #include "tab_widget_base.h"
 #include "network.h"
 #include "network_geek.h"
+#include "gui_helpers.h"
 #include <QTableWidget>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -25,20 +26,12 @@ protected:
     {
         QWidget* w = new QWidget;
         QVBoxLayout* mainLayout = new QVBoxLayout(w);
+        applyMainLayoutDefaults(mainLayout);
 
-        // Headline + Geek button
-        QHBoxLayout* headlineLayout = new QHBoxLayout();
-    QLabel* headline = new QLabel(tr("Network"));
-        headline->setStyleSheet("font-size: 15px; font-weight: bold; color: #222; margin-bottom: 0px;");
-    QPushButton* geekButton = new QPushButton(tr("Geek Mode"), w);
-        geekButton->setStyleSheet(
-            "QPushButton { background-color: #3498db; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 11px; min-width: 80px; max-height: 22px;}"
-            "QPushButton:hover { background-color: #2980b9; }"
-        );
-        headlineLayout->addWidget(headline);
-        headlineLayout->addStretch();
-        headlineLayout->addWidget(geekButton);
-        mainLayout->addLayout(headlineLayout);
+    // Headline + Geek button (use strict UI helper to ensure exact placement)
+    QPushButton* geekButton = nullptr;
+    QHBoxLayout* headlineLayout = createHeadlineWithGeek(w, tr("Network"), &geekButton);
+    mainLayout->addLayout(headlineLayout);
 
         // Table (Property / Value)
         QTableWidget* table = new QTableWidget();
@@ -50,8 +43,10 @@ protected:
         table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
         mainLayout->addWidget(table);
 
-        // Populate immediately
-        loadNetworkInformation(table, QJsonObject());
+    // Populate immediately
+    loadNetworkInformation(table, QJsonObject());
+    // Enable copy support on the main table for user pages
+    enableTableCopy(table);
 
         // Geek dialog: opens the richer NetworkGeekDialog
         connect(geekButton, &QPushButton::clicked, this, [this, w]() {
