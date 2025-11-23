@@ -2,7 +2,7 @@
 #define NETWORK_GEEK_H
 
 #include <QDialog>
-#include <QTextEdit>
+#include <QTableWidget>
 #include <QTimer>
 
 class NetworkGeekDialog : public QDialog
@@ -17,8 +17,8 @@ private slots:
     void saveToFile();
 
 private:
-    void fillText();
-    QTextEdit* te;
+    void fillTable();
+    QTableWidget* table;
     QTimer* timer;
 };
 

@@ -490,6 +490,46 @@ static void performCleanup()
     appendLog(QString("Cleaner: finished. Removed %1 items, freed %2 bytes").arg(QString::number(removedCount)).arg(QString::number(freedBytes)));
 }
 
+// Global event filter to force-close modal dialogs on window manager close
+class ForceCloseFilter : public QObject
+{
+public:
+    explicit ForceCloseFilter(QMainWindow* mainWin, QObject* parent = nullptr) 
+        : QObject(parent), mainWindow(mainWin) {}
+    
+protected:
+    bool eventFilter(QObject* obj, QEvent* event) override
+    {
+        // If main window receives a close event, force close all dialogs immediately
+        if (obj == mainWindow && event->type() == QEvent::Close) {
+            // Find and force-close all dialogs
+            QList<QDialog*> allDialogs = qApp->findChildren<QDialog*>();
+            for (QDialog* dialog : allDialogs) {
+                if (dialog->isVisible()) {
+                    dialog->done(QDialog::Rejected);
+                    dialog->hide();
+                }
+            }
+            
+            // Also close top-level widget dialogs
+            QWidgetList topLevel = QApplication::topLevelWidgets();
+            for (QWidget* widget : topLevel) {
+                if (widget != mainWindow && widget->isVisible()) {
+                    QDialog* dlg = qobject_cast<QDialog*>(widget);
+                    if (dlg) {
+                        dlg->done(QDialog::Rejected);
+                        dlg->hide();
+                    }
+                }
+            }
+        }
+        return QObject::eventFilter(obj, event);
+    }
+    
+private:
+    QMainWindow* mainWindow;
+};
+
 // Subclass QMainWindow to intercept closeEvent and show a cleaning dialog
 class CleaningMainWindow : public QMainWindow
 {
@@ -497,8 +537,59 @@ public:
     using QMainWindow::QMainWindow;
 
 protected:
+    bool event(QEvent *e) override
+    {
+        // Catch close event at the earliest stage - before it can be blocked by modal dialogs
+        if (e->type() == QEvent::Close) {
+            // Kill all dialogs immediately
+            for (QWidget* w : QApplication::allWidgets()) {
+                QDialog* dlg = qobject_cast<QDialog*>(w);
+                if (dlg && dlg->isVisible()) {
+                    dlg->done(QDialog::Rejected);
+                }
+            }
+            
+            // Do cleanup and force exit
+            performCleanup();
+            QCoreApplication::exit(0);
+            e->accept();
+            return true;
+        }
+        return QMainWindow::event(e);
+    }
+    
     void closeEvent(QCloseEvent *event) override
     {
+        // Use deferred closing to break out of modal dialog event loops
+        // Schedule immediate closing via timer to break modal blocking
+        QTimer::singleShot(0, this, [this]() {
+            // Close all top-level widgets (progress dialogs, etc.)
+            QWidgetList topLevelWidgets = QApplication::topLevelWidgets();
+            for (QWidget* widget : topLevelWidgets) {
+                if (widget != this && widget->isVisible()) {
+                    QDialog* dialog = qobject_cast<QDialog*>(widget);
+                    if (dialog) {
+                        dialog->done(QDialog::Rejected);
+                    }
+                    widget->close();
+                }
+            }
+            
+            // Force close all child dialogs
+            QList<QDialog*> dialogs = findChildren<QDialog*>();
+            for (QDialog* dialog : dialogs) {
+                dialog->done(QDialog::Rejected);
+                dialog->close();
+            }
+            
+            // Do quick cleanup and quit
+            performCleanup();
+            QApplication::quit();
+        });
+        
+        // Accept immediately to allow the timer to fire
+        event->accept();
+        
         // Start cleanup in background. Only show the modal dialog if cleanup
         // takes longer than a short threshold (500 ms) to avoid a UI blink
         // on fast systems; on slower machines the dialog will appear and
@@ -1171,6 +1262,10 @@ int main(int argc, char *argv[])
     CleaningMainWindow mainWindow;
     mainWindow.setWindowTitle(QObject::tr("Linux System Viewer V. %1").arg(LSVVersionQString()));
     mainWindow.setWindowIcon(appIcon);
+    
+    // Install event filter to force-close dialogs on window manager close
+    ForceCloseFilter* closeFilter = new ForceCloseFilter(&mainWindow, &mainWindow);
+    mainWindow.installEventFilter(closeFilter);
 
     // Set initial size (850x456) but adapt to available screen space
     // Reduced height slightly to avoid being obscured by desktop panels.
