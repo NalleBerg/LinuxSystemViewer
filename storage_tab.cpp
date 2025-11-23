@@ -527,7 +527,7 @@ GeekStorageDialog::GeekStorageDialog(QWidget* parent)
 {
     setWindowTitle(tr("Storage - Geek Mode"));
     setModal(true);
-    resize(800, 600);
+    resize(700, 500);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
     QLabel* titleLabel = new QLabel(tr("Storage Technical Details"));
@@ -557,7 +557,7 @@ GeekStorageDialog::GeekStorageDialog(QWidget* parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     layout->addWidget(buttonBox);
 
-    // Enable copy on main geek table (right-click + Ctrl+C)
+    // Enable copy on main geek table (right-click + Ctrl+C) and pause the geek dialog's refresh while copying
     enableTableCopy(table, refreshTimer);
 
     connect(copyBtn, &QPushButton::clicked, [this]() {
@@ -585,7 +585,9 @@ GeekStorageDialog::GeekStorageDialog(QWidget* parent)
 
         auto esc = [](const QString &s)->QString {
             QString out = s;
+            // double quotes -> two double quotes
             out.replace('"', "\"\"");
+            // wrap in quotes if contains comma, quote or newline
             if (out.contains(',') || out.contains('\n') || out.contains('"')) {
                 out = '"' + out + '"';
             }
@@ -594,7 +596,7 @@ GeekStorageDialog::GeekStorageDialog(QWidget* parent)
 
         QFile out(fileName);
         if (!out.open(QIODevice::WriteOnly | QIODevice::Text)) return;
-        QTextStream ts(&out);
+    QTextStream ts(&out);
         ts << "Property,Value\n";
         for (int r = 0; r < table->rowCount(); ++r) {
             QString prop = table->item(r,0) ? table->item(r,0)->text() : QString();
@@ -606,7 +608,7 @@ GeekStorageDialog::GeekStorageDialog(QWidget* parent)
 
     fillTable();
 
-    // Auto-refresh every 1 second while visible
+    // Auto-refresh every second while visible
     refreshTimer->setInterval(1000);
     connect(refreshTimer, &QTimer::timeout, this, &GeekStorageDialog::fillTable);
 }
@@ -625,48 +627,17 @@ void GeekStorageDialog::hideEvent(QHideEvent* ev)
 
 void GeekStorageDialog::fillTable()
 {
-    // Store scroll position
-    int vScrollPos = table->verticalScrollBar() ? table->verticalScrollBar()->value() : 0;
-    int hScrollPos = table->horizontalScrollBar() ? table->horizontalScrollBar()->value() : 0;
-    
-    // Disable updates during refresh to prevent flicker
-    table->setUpdatesEnabled(false);
-    
+    table->setRowCount(0);
     int row = 0;
 
-    auto addOrUpdateRow = [&](const QString& prop, const QString& val){
-        // Check if row exists
-        if (row >= table->rowCount()) {
-            table->insertRow(row);
-            QTableWidgetItem* p = new QTableWidgetItem(prop);
-            QFont bold; bold.setBold(true); p->setFont(bold);
-            table->setItem(row, 0, p);
-            QTableWidgetItem* v = new QTableWidgetItem(val);
-            table->setItem(row, 1, v);
-        } else {
-            // Update existing row only if content changed
-            QTableWidgetItem* pItem = table->item(row, 0);
-            QTableWidgetItem* vItem = table->item(row, 1);
-            
-            if (!pItem || pItem->text() != prop) {
-                if (!pItem) {
-                    pItem = new QTableWidgetItem(prop);
-                    QFont bold; bold.setBold(true); pItem->setFont(bold);
-                    table->setItem(row, 0, pItem);
-                } else {
-                    pItem->setText(prop);
-                }
-            }
-            
-            if (!vItem || vItem->text() != val) {
-                if (!vItem) {
-                    vItem = new QTableWidgetItem(val);
-                    table->setItem(row, 1, vItem);
-                } else {
-                    vItem->setText(val);
-                }
-            }
-        }
+    auto addRow = [&](const QString& prop, const QString& val){
+        table->insertRow(row);
+        QTableWidgetItem* p = new QTableWidgetItem(prop);
+        QFont bold; bold.setBold(true); p->setFont(bold);
+        table->setItem(row, 0, p);
+        QTableWidgetItem* v = new QTableWidgetItem(val);
+        table->setItem(row, 1, v);
+        table->resizeRowToContents(row);
         ++row;
     };
 
@@ -684,12 +655,12 @@ void GeekStorageDialog::fillTable()
     QString output = lsblk.readAllStandardOutput();
 
     if (!output.isEmpty()) {
-        addOrUpdateRow("=== LSBLK Full Output ===", "");
+        addRow("=== LSBLK Full Output ===", "");
         QStringList lines = output.split('\n', Qt::SkipEmptyParts);
         
         for (const QString& line : lines) {
             if (line.startsWith("NAME=")) {
-                addOrUpdateRow("", ""); // Blank line between devices
+                addRow("", ""); // Blank line between devices
                 
                 // Parse the line into key-value pairs
                 QRegularExpression rx("(\\w+)=\"([^\"]*)\"");
@@ -701,7 +672,7 @@ void GeekStorageDialog::fillTable()
                     QString value = match.captured(2);
                     
                     if (!value.isEmpty()) {
-                        addOrUpdateRow(key, value);
+                        addRow(key, value);
                     }
                 }
             }
@@ -715,23 +686,23 @@ void GeekStorageDialog::fillTable()
     QString dfOutput = df.readAllStandardOutput();
 
     if (!dfOutput.isEmpty()) {
-        addOrUpdateRow("", "");
-        addOrUpdateRow("=== DF Output (Mounted Filesystems) ===", "");
+        addRow("", "");
+        addRow("=== DF Output (Mounted Filesystems) ===", "");
         QStringList dfLines = dfOutput.split('\n', Qt::SkipEmptyParts);
         for (const QString& line : dfLines) {
-            addOrUpdateRow("", line);
+            addRow("", line);
         }
     }
 
     // Get mount information
     QFile mountFile("/proc/mounts");
     if (mountFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        addOrUpdateRow("", "");
-        addOrUpdateRow("=== /proc/mounts ===", "");
+        addRow("", "");
+        addRow("=== /proc/mounts ===", "");
         QTextStream in(&mountFile);
         while (!in.atEnd()) {
             QString line = in.readLine();
-            addOrUpdateRow("", line);
+            addRow("", line);
         }
         mountFile.close();
     }
@@ -743,23 +714,23 @@ void GeekStorageDialog::fillTable()
     QString blkidOutput = blkid.readAllStandardOutput();
 
     if (!blkidOutput.isEmpty()) {
-        addOrUpdateRow("", "");
-        addOrUpdateRow("=== BLKID Output ===", "");
+        addRow("", "");
+        addRow("=== BLKID Output ===", "");
         QStringList blkidLines = blkidOutput.split('\n', Qt::SkipEmptyParts);
         for (const QString& line : blkidLines) {
-            addOrUpdateRow("", line);
+            addRow("", line);
         }
     }
 
     // Get /proc/partitions
     QFile partFile("/proc/partitions");
     if (partFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        addOrUpdateRow("", "");
-        addOrUpdateRow("=== /proc/partitions ===", "");
+        addRow("", "");
+        addRow("=== /proc/partitions ===", "");
         QTextStream in(&partFile);
         while (!in.atEnd()) {
             QString line = in.readLine();
-            addOrUpdateRow("", line);
+            addRow("", line);
         }
         partFile.close();
     }
@@ -767,12 +738,12 @@ void GeekStorageDialog::fillTable()
     // Get disk statistics from /proc/diskstats
     QFile diskstatsFile("/proc/diskstats");
     if (diskstatsFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        addOrUpdateRow("", "");
-        addOrUpdateRow("=== /proc/diskstats ===", "");
+        addRow("", "");
+        addRow("=== /proc/diskstats ===", "");
         QTextStream in(&diskstatsFile);
         while (!in.atEnd()) {
             QString line = in.readLine();
-            addOrUpdateRow("", line);
+            addRow("", line);
         }
         diskstatsFile.close();
     }
@@ -784,35 +755,12 @@ void GeekStorageDialog::fillTable()
     QString smartScan = smart.readAllStandardOutput();
 
     if (!smartScan.isEmpty()) {
-        addOrUpdateRow("", "");
-        addOrUpdateRow("=== SMART Devices ===", "");
+        addRow("", "");
+        addRow("=== SMART Devices ===", "");
         QStringList devices = smartScan.split('\n', Qt::SkipEmptyParts);
         for (const QString& device : devices) {
             QString devName = device.section(' ', 0, 0);
-            addOrUpdateRow("Device", devName);
+            addRow("Device", devName);
         }
-    }
-
-    // Remove extra rows if data shrunk
-    while (table->rowCount() > row) {
-        table->removeRow(table->rowCount() - 1);
-    }
-
-    // Restore scroll position
-    if (table->verticalScrollBar()) {
-        table->verticalScrollBar()->setValue(vScrollPos);
-    }
-    if (table->horizontalScrollBar()) {
-        table->horizontalScrollBar()->setValue(hScrollPos);
-    }
-    
-    // Re-enable updates
-    table->setUpdatesEnabled(true);
-    
-    // Resize first column to contents only on first run
-    static bool firstRun = true;
-    if (firstRun) {
-        table->resizeColumnToContents(0);
-        firstRun = false;
     }
 }
