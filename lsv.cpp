@@ -688,8 +688,6 @@ private:
         }
         else if (config.name == "Peripherals") {
             PeripheralsTab* peripheralsTab = new PeripheralsTab();
-            connect(peripheralsTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
-            connect(peripheralsTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
             tabWidget = peripheralsTab;
         }
         else if (config.name == "Motherboard") {

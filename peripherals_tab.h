@@ -1,36 +1,41 @@
 #ifndef PERIPHERALS_TAB_H
 #define PERIPHERALS_TAB_H
 
-#include "tab_widget_base.h"
-#include <QGroupBox>
-#include <QLabel>
-#include <QVBoxLayout>
+#include <QWidget>
+#include <QTableWidget>
+#include <QPushButton>
+#include <QDialog>
+#include <QTimer>
 
-class PeripheralsTab : public TabWidgetBase
+class GeekPeripheralsDialog : public QDialog
 {
     Q_OBJECT
+public:
+    explicit GeekPeripheralsDialog(QWidget* parent = nullptr);
+    void loadData();
+    void fillTable();
 
+protected:
+    void showEvent(QShowEvent* ev) override;
+    void hideEvent(QHideEvent* ev) override;
+
+private:
+    QTableWidget* table;
+};
+
+class PeripheralsTab : public QWidget
+{
+    Q_OBJECT
 public:
     explicit PeripheralsTab(QWidget* parent = nullptr);
 
-protected:
-    QWidget* createUserFriendlyView() override;
-    void parseOutput(const QString& output) override;
-
 private:
-    void createInfoSection(const QString& title, QGroupBox** groupBox, QLabel** contentLabel, QVBoxLayout* parentLayout);
-    
-    QGroupBox* m_usbDevicesSection;
-    QLabel* m_usbDevicesContent;
-    
-    QGroupBox* m_inputDevicesSection;
-    QLabel* m_inputDevicesContent;
-    
-    QGroupBox* m_storageDevicesSection;
-    QLabel* m_storageDevicesContent;
-    
-    QGroupBox* m_networkDevicesSection;
-    QLabel* m_networkDevicesContent;
+    QTableWidget* tableWidget;
+    QPushButton* geekButton;
+    QTimer* refreshTimer;
+
+    void showGeekMode();
+    void refreshPeripherals();
 };
 
 #endif // PERIPHERALS_TAB_H
