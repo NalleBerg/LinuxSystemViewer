@@ -19,12 +19,23 @@
 #include <QTimer>
 #include <QShowEvent>
 #include <QHideEvent>
+#include <QPushButton>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QClipboard>
+#include <QGuiApplication>
+#include <QFileDialog>
+#include <QFile>
+#include <QTextStream>
+#include <QProcess>
+#include <QScrollBar>
+#include <QMessageBox>
 
 StorageTab::StorageTab(QWidget* parent)
     : TabWidgetBase(QCoreApplication::translate("StorageTab", "Storage"),
-                    "lsblk -P -o NAME,PKNAME,SIZE,MOUNTPOINT,FSTYPE,TYPE,MODEL,VENDOR && df -P -h",
+                    "lsblk -P -o NAME,PKNAME,SIZE,MOUNTPOINT,FSTYPE,TYPE,MODEL,VENDOR,TRAN && df -P -h",
                     true,
-                    "lsblk -P -o NAME,PKNAME,SIZE,MOUNTPOINT,FSTYPE,TYPE,MODEL,VENDOR && df -P -h",
+                    "lsblk -P -o NAME,PKNAME,SIZE,MOUNTPOINT,FSTYPE,TYPE,MODEL,VENDOR,TRAN && df -P -h",
                     parent)
 {
     qDebug() << "StorageTab: Constructor called";
@@ -43,8 +54,15 @@ StorageTab::StorageTab(QWidget* parent)
 QWidget* StorageTab::createUserFriendlyView() {
     QWidget* contentWidget = new QWidget();
     QVBoxLayout* mainLayout = new QVBoxLayout(contentWidget);
-    mainLayout->setContentsMargins(10, 10, 10, 10);
-    mainLayout->setSpacing(10);
+
+    // Headline and Geek button (use helper to guarantee identical placement)
+    QPushButton* gb = nullptr;
+    QHBoxLayout* headlineLayout = createHeadlineWithGeek(contentWidget, tr("Storage"), &gb);
+    geekButton = gb;
+    connect(geekButton, &QPushButton::clicked, this, &StorageTab::showGeekMode);
+    
+    applyMainLayoutDefaults(mainLayout);
+    mainLayout->addLayout(headlineLayout);
 
     // Create container for disk info with CPU-style scroll area
     diskInfoContainer = new QWidget();
@@ -188,20 +206,27 @@ QVariantMap StorageTab::parseStorageData(const QString& output) {
                     QString diskName = name;
                     QVariantMap diskInfo;
                     
-                    // Build disk type from model and vendor
-                    QString model = device["model"].toString();
-                    QString vendor = device["vendor"].toString();
-                    QString diskType = "Unknown";
-                    
-                    if (!model.isEmpty() && !vendor.isEmpty()) {
-                        diskType = vendor + " " + model;
-                    } else if (!model.isEmpty()) {
-                        diskType = model;
-                    } else if (!vendor.isEmpty()) {
-                        diskType = vendor;
+                    // Get transport type (USB, ATA, etc.)
+                    QString transport = device["tran"].toString();
+                    if (transport.isEmpty()) {
+                        transport = "Unknown";
                     }
                     
-                    diskInfo["type"] = diskType;
+                    // Build device name from model and vendor
+                    QString model = device["model"].toString();
+                    QString vendor = device["vendor"].toString();
+                    QString deviceName = "Unknown";
+                    
+                    if (!model.isEmpty() && !vendor.isEmpty()) {
+                        deviceName = vendor + " " + model;
+                    } else if (!model.isEmpty()) {
+                        deviceName = model;
+                    } else if (!vendor.isEmpty()) {
+                        deviceName = vendor;
+                    }
+                    
+                    diskInfo["transport"] = transport;
+                    diskInfo["device_name"] = deviceName;
                     diskInfo["total_size"] = device["size"].toString();
                     disks[diskName] = diskInfo;
                 }
@@ -273,20 +298,27 @@ void StorageTab::applyParsedPartitions(const QVariantMap& data) {
         QString diskName = it.key();
         QVariantMap diskData = it.value().toMap();
         
-        // Create disk label
-        QString labelText = QString("Disk: %1").arg(diskName);
-        if (diskData.contains("type")) {
-            labelText += QString(" - Type: %1").arg(diskData["type"].toString());
-        }
-        if (diskData.contains("total_size")) {
-            labelText += QString(" - Total size: %1").arg(diskData["total_size"].toString());
-        }
+        // Format size with locale-aware formatting
+        QString sizeText = diskData["total_size"].toString();
+        QString formattedSize = formatSizeLocale(sizeText);
         
-        QLabel* diskLabel = new QLabel(labelText);
+        // Create first line: Disk: sdb - Type: USB - Total size: 29.82 GB
+        QString firstLine = QString("Disk: %1 - Type: %2 - Total size: %3")
+                           .arg(diskName)
+                           .arg(diskData["transport"].toString())
+                           .arg(formattedSize);
+        
+        // Create second line: Name: Corsair Survivor 3.0
+        QString secondLine = QString("Name: %1")
+                           .arg(diskData["device_name"].toString());
+        
+        // Create label with two centered lines
+        QLabel* diskLabel = new QLabel(firstLine + "\n" + secondLine);
         QFont font = diskLabel->font();
         font.setBold(true);
         diskLabel->setFont(font);
         diskLabel->setAlignment(Qt::AlignCenter);
+        diskLabel->setWordWrap(true);
         diskInfoLayout->addWidget(diskLabel);
         diskLabels.append(diskLabel);
         
@@ -356,6 +388,9 @@ void StorageTab::applyParsedPartitions(const QVariantMap& data) {
             
             diskInfoLayout->addWidget(diskTable);
             diskTables.append(diskTable);
+            
+            // Enable copy functionality for this table
+            enableTableCopy(diskTable, refreshTimer);
         } else {
             // No partitions, just show a message or skip the table entirely
             QLabel* noPartitionsLabel = new QLabel("No mounted partitions found for this disk");
@@ -476,4 +511,308 @@ void StorageTab::hideEvent(QHideEvent* ev) {
 
 void StorageTab::populateStorageTable() {
     // Placeholder for compatibility
+}
+
+void StorageTab::showGeekMode()
+{
+    GeekStorageDialog dlg(this);
+    dlg.exec();
+}
+
+// --- GeekStorageDialog ---
+
+GeekStorageDialog::GeekStorageDialog(QWidget* parent)
+    : QDialog(parent)
+    , refreshTimer(new QTimer(this))
+{
+    setWindowTitle(tr("Storage - Geek Mode"));
+    setModal(true);
+    resize(800, 600);
+
+    QVBoxLayout* layout = new QVBoxLayout(this);
+    QLabel* titleLabel = new QLabel(tr("Storage Technical Details"));
+    titleLabel->setStyleSheet("font-size:16px; font-weight:bold; color:#2c3e50; margin-bottom:10px;");
+    layout->addWidget(titleLabel);
+
+    table = new QTableWidget();
+    table->setColumnCount(2);
+    table->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
+    table->verticalHeader()->setVisible(false);
+    table->horizontalHeader()->setStyleSheet("QHeaderView::section { background-color: #34495e; color: white; font-weight: bold; padding: 8px; border: 1px solid #2c3e50; }");
+    table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
+    table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+
+    QScrollArea* scrollArea = new QScrollArea;
+    scrollArea->setWidget(table);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setMinimumHeight(350);
+    layout->addWidget(scrollArea);
+
+    // Buttons: Copy, Save, Close
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QPushButton* copyBtn = new QPushButton(tr("Copy"));
+    QPushButton* saveBtn = new QPushButton(tr("Save..."));
+    buttonBox->addButton(copyBtn, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(saveBtn, QDialogButtonBox::ActionRole);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    layout->addWidget(buttonBox);
+
+    // Enable copy on main geek table (right-click + Ctrl+C)
+    enableTableCopy(table, refreshTimer);
+
+    connect(copyBtn, &QPushButton::clicked, [this]() {
+        // Human-readable UTF-8 copy: Property: Value per line
+        QString all;
+        for (int r = 0; r < table->rowCount(); ++r) {
+            QString prop = table->item(r,0) ? table->item(r,0)->text() : QString();
+            QString val = table->item(r,1) ? table->item(r,1)->text() : QString();
+            all += prop + ": " + val + "\n";
+        }
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        clipboard->setText(all, QClipboard::Clipboard);
+        QMessageBox msgBox(this);
+        msgBox.setWindowTitle(tr("Copied"));
+        msgBox.setText(tr("The information has been copied\nto the clipboard."));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.exec();
+    });
+
+    connect(saveBtn, &QPushButton::clicked, [this]() {
+        // Save as CSV (UTF-8)
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save Storage Info"), "storage-info.csv", tr("CSV Files (*.csv);;All Files (*)"));
+        if (fileName.isEmpty()) return;
+
+        auto esc = [](const QString &s)->QString {
+            QString out = s;
+            out.replace('"', "\"\"");
+            if (out.contains(',') || out.contains('\n') || out.contains('"')) {
+                out = '"' + out + '"';
+            }
+            return out;
+        };
+
+        QFile out(fileName);
+        if (!out.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+        QTextStream ts(&out);
+        ts << "Property,Value\n";
+        for (int r = 0; r < table->rowCount(); ++r) {
+            QString prop = table->item(r,0) ? table->item(r,0)->text() : QString();
+            QString val = table->item(r,1) ? table->item(r,1)->text() : QString();
+            ts << esc(prop) << ',' << esc(val) << '\n';
+        }
+        out.close();
+    });
+
+    fillTable();
+
+    // Auto-refresh every 1 second while visible
+    refreshTimer->setInterval(1000);
+    connect(refreshTimer, &QTimer::timeout, this, &GeekStorageDialog::fillTable);
+}
+
+void GeekStorageDialog::showEvent(QShowEvent* ev)
+{
+    QDialog::showEvent(ev);
+    if (refreshTimer) refreshTimer->start();
+}
+
+void GeekStorageDialog::hideEvent(QHideEvent* ev)
+{
+    if (refreshTimer) refreshTimer->stop();
+    QDialog::hideEvent(ev);
+}
+
+void GeekStorageDialog::fillTable()
+{
+    // Store scroll position
+    int vScrollPos = table->verticalScrollBar() ? table->verticalScrollBar()->value() : 0;
+    int hScrollPos = table->horizontalScrollBar() ? table->horizontalScrollBar()->value() : 0;
+    
+    // Disable updates during refresh to prevent flicker
+    table->setUpdatesEnabled(false);
+    
+    int row = 0;
+
+    auto addOrUpdateRow = [&](const QString& prop, const QString& val){
+        // Check if row exists
+        if (row >= table->rowCount()) {
+            table->insertRow(row);
+            QTableWidgetItem* p = new QTableWidgetItem(prop);
+            QFont bold; bold.setBold(true); p->setFont(bold);
+            table->setItem(row, 0, p);
+            QTableWidgetItem* v = new QTableWidgetItem(val);
+            table->setItem(row, 1, v);
+        } else {
+            // Update existing row only if content changed
+            QTableWidgetItem* pItem = table->item(row, 0);
+            QTableWidgetItem* vItem = table->item(row, 1);
+            
+            if (!pItem || pItem->text() != prop) {
+                if (!pItem) {
+                    pItem = new QTableWidgetItem(prop);
+                    QFont bold; bold.setBold(true); pItem->setFont(bold);
+                    table->setItem(row, 0, pItem);
+                } else {
+                    pItem->setText(prop);
+                }
+            }
+            
+            if (!vItem || vItem->text() != val) {
+                if (!vItem) {
+                    vItem = new QTableWidgetItem(val);
+                    table->setItem(row, 1, vItem);
+                } else {
+                    vItem->setText(val);
+                }
+            }
+        }
+        ++row;
+    };
+
+    // Run lsblk with ALL available fields for maximum information
+    QProcess lsblk;
+    lsblk.start("lsblk", QStringList() << "-P" << "-b" << "-o" 
+        << "NAME,KNAME,PATH,MAJ:MIN,FSAVAIL,FSSIZE,FSTYPE,FSUSED,FSUSE%"
+        << ",MOUNTPOINT,MOUNTPOINTS,LABEL,UUID,PTUUID,PTTYPE,PARTTYPE"
+        << ",PARTLABEL,PARTUUID,PARTFLAGS,RA,RO,RM,HOTPLUG,MODEL,SERIAL"
+        << ",SIZE,STATE,OWNER,GROUP,MODE,ALIGNMENT,MIN-IO,OPT-IO,PHY-SEC"
+        << ",LOG-SEC,ROTA,SCHED,RQ-SIZE,TYPE,DISC-ALN,DISC-GRAN,DISC-MAX"
+        << ",DISC-ZERO,WSAME,WWN,RAND,PKNAME,HCTL,TRAN,SUBSYSTEMS,REV"
+        << ",VENDOR,ZONED,DAX,FSROOTS,FSVER");
+    lsblk.waitForFinished(5000);
+    QString output = lsblk.readAllStandardOutput();
+
+    if (!output.isEmpty()) {
+        addOrUpdateRow("=== LSBLK Full Output ===", "");
+        QStringList lines = output.split('\n', Qt::SkipEmptyParts);
+        
+        for (const QString& line : lines) {
+            if (line.startsWith("NAME=")) {
+                addOrUpdateRow("", ""); // Blank line between devices
+                
+                // Parse the line into key-value pairs
+                QRegularExpression rx("(\\w+)=\"([^\"]*)\"");
+                QRegularExpressionMatchIterator matches = rx.globalMatch(line);
+                
+                while (matches.hasNext()) {
+                    QRegularExpressionMatch match = matches.next();
+                    QString key = match.captured(1);
+                    QString value = match.captured(2);
+                    
+                    if (!value.isEmpty()) {
+                        addOrUpdateRow(key, value);
+                    }
+                }
+            }
+        }
+    }
+
+    // Get df output for mounted filesystems
+    QProcess df;
+    df.start("df", QStringList() << "-h" << "-T");
+    df.waitForFinished(5000);
+    QString dfOutput = df.readAllStandardOutput();
+
+    if (!dfOutput.isEmpty()) {
+        addOrUpdateRow("", "");
+        addOrUpdateRow("=== DF Output (Mounted Filesystems) ===", "");
+        QStringList dfLines = dfOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : dfLines) {
+            addOrUpdateRow("", line);
+        }
+    }
+
+    // Get mount information
+    QFile mountFile("/proc/mounts");
+    if (mountFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        addOrUpdateRow("", "");
+        addOrUpdateRow("=== /proc/mounts ===", "");
+        QTextStream in(&mountFile);
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            addOrUpdateRow("", line);
+        }
+        mountFile.close();
+    }
+
+    // Get blkid information (requires root typically, but try anyway)
+    QProcess blkid;
+    blkid.start("blkid", QStringList());
+    blkid.waitForFinished(5000);
+    QString blkidOutput = blkid.readAllStandardOutput();
+
+    if (!blkidOutput.isEmpty()) {
+        addOrUpdateRow("", "");
+        addOrUpdateRow("=== BLKID Output ===", "");
+        QStringList blkidLines = blkidOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : blkidLines) {
+            addOrUpdateRow("", line);
+        }
+    }
+
+    // Get /proc/partitions
+    QFile partFile("/proc/partitions");
+    if (partFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        addOrUpdateRow("", "");
+        addOrUpdateRow("=== /proc/partitions ===", "");
+        QTextStream in(&partFile);
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            addOrUpdateRow("", line);
+        }
+        partFile.close();
+    }
+
+    // Get disk statistics from /proc/diskstats
+    QFile diskstatsFile("/proc/diskstats");
+    if (diskstatsFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        addOrUpdateRow("", "");
+        addOrUpdateRow("=== /proc/diskstats ===", "");
+        QTextStream in(&diskstatsFile);
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            addOrUpdateRow("", line);
+        }
+        diskstatsFile.close();
+    }
+
+    // Get smart information if smartctl is available
+    QProcess smart;
+    smart.start("smartctl", QStringList() << "--scan");
+    smart.waitForFinished(5000);
+    QString smartScan = smart.readAllStandardOutput();
+
+    if (!smartScan.isEmpty()) {
+        addOrUpdateRow("", "");
+        addOrUpdateRow("=== SMART Devices ===", "");
+        QStringList devices = smartScan.split('\n', Qt::SkipEmptyParts);
+        for (const QString& device : devices) {
+            QString devName = device.section(' ', 0, 0);
+            addOrUpdateRow("Device", devName);
+        }
+    }
+
+    // Remove extra rows if data shrunk
+    while (table->rowCount() > row) {
+        table->removeRow(table->rowCount() - 1);
+    }
+
+    // Restore scroll position
+    if (table->verticalScrollBar()) {
+        table->verticalScrollBar()->setValue(vScrollPos);
+    }
+    if (table->horizontalScrollBar()) {
+        table->horizontalScrollBar()->setValue(hScrollPos);
+    }
+    
+    // Re-enable updates
+    table->setUpdatesEnabled(true);
+    
+    // Resize first column to contents only on first run
+    static bool firstRun = true;
+    if (firstRun) {
+        table->resizeColumnToContents(0);
+        firstRun = false;
+    }
 }

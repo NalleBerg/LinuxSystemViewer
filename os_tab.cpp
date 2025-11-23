@@ -12,6 +12,17 @@
 #include <QDir>
 #include <sys/utsname.h>
 #include <QCoreApplication>
+#include <QPushButton>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QClipboard>
+#include <QGuiApplication>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QTimer>
+#include <QShowEvent>
+#include <QHideEvent>
+#include "gui_helpers.h"
 
 OSTab::OSTab(const QString& tabName, const QString& command, bool showHeader, const QString& headerText, QWidget* parent)
     : TabWidgetBase(tabName, QString(), showHeader, headerText, parent)
@@ -24,9 +35,12 @@ OSTab::OSTab(const QString& tabName, const QString& command, bool showHeader, co
     QVBoxLayout* contentLayout = new QVBoxLayout(contentWidget);
     contentLayout->setContentsMargins(0,0,0,0);
 
-    QLabel* headline = new QLabel(QCoreApplication::translate("OSTab", "Operating System"));
-    headline->setStyleSheet("font-size: 15px; font-weight: bold; color: #222; margin-bottom: 2px;");
-    contentLayout->addWidget(headline);
+    // Headline and Geek button (use helper to guarantee identical placement)
+    QPushButton* gb = nullptr;
+    QHBoxLayout* headlineLayout = createHeadlineWithGeek(contentWidget, QCoreApplication::translate("OSTab", "Operating System"), &gb);
+    geekButton = gb;
+    connect(geekButton, &QPushButton::clicked, this, &OSTab::showGeekMode);
+    contentLayout->addLayout(headlineLayout);
 
     tableWidget = new QTableWidget();
     tableWidget->setColumnCount(2);
@@ -180,4 +194,190 @@ void OSTab::fillTableWithOutput(const QString& output)
             }
         }
     }
+}
+
+void OSTab::showGeekMode()
+{
+    GeekOsDialog dlg(this);
+    dlg.exec();
+}
+
+// --- GeekOsDialog ---
+
+GeekOsDialog::GeekOsDialog(QWidget* parent)
+    : QDialog(parent)
+    , refreshTimer(new QTimer(this))
+{
+    setWindowTitle(tr("OS - Geek Mode"));
+    setModal(true);
+    resize(700, 500);
+
+    QVBoxLayout* layout = new QVBoxLayout(this);
+    QLabel* titleLabel = new QLabel(tr("OS Technical Details"));
+    titleLabel->setStyleSheet("font-size:16px; font-weight:bold; color:#2c3e50; margin-bottom:10px;");
+    layout->addWidget(titleLabel);
+
+    table = new QTableWidget();
+    table->setColumnCount(2);
+    table->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
+    table->verticalHeader()->setVisible(false);
+    table->horizontalHeader()->setStyleSheet("QHeaderView::section { background-color: #34495e; color: white; font-weight: bold; padding: 8px; border: 1px solid #2c3e50; }");
+    table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
+    table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+
+    QScrollArea* scrollArea = new QScrollArea;
+    scrollArea->setWidget(table);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setMinimumHeight(350);
+    layout->addWidget(scrollArea);
+
+    // Buttons: Copy, Save, Close
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QPushButton* copyBtn = new QPushButton(tr("Copy"));
+    QPushButton* saveBtn = new QPushButton(tr("Save..."));
+    buttonBox->addButton(copyBtn, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(saveBtn, QDialogButtonBox::ActionRole);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    layout->addWidget(buttonBox);
+
+    // Enable copy on main geek table (right-click + Ctrl+C)
+    enableTableCopy(table, refreshTimer);
+
+    connect(copyBtn, &QPushButton::clicked, [this]() {
+        // Human-readable UTF-8 copy: Property: Value per line
+        QString all;
+        for (int r = 0; r < table->rowCount(); ++r) {
+            QString prop = table->item(r,0) ? table->item(r,0)->text() : QString();
+            QString val = table->item(r,1) ? table->item(r,1)->text() : QString();
+            all += prop + ": " + val + "\n";
+        }
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        clipboard->setText(all, QClipboard::Clipboard);
+        QMessageBox msgBox(this);
+        msgBox.setWindowTitle(tr("Copied"));
+        msgBox.setText(tr("The information has been copied\nto the clipboard."));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.exec();
+    });
+
+    connect(saveBtn, &QPushButton::clicked, [this]() {
+        // Save as CSV (UTF-8)
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save OS Info"), "os-info.csv", tr("CSV Files (*.csv);;All Files (*)"));
+        if (fileName.isEmpty()) return;
+
+        auto esc = [](const QString &s)->QString {
+            QString out = s;
+            out.replace('"', "\"\"");
+            if (out.contains(',') || out.contains('\n') || out.contains('"')) {
+                out = '"' + out + '"';
+            }
+            return out;
+        };
+
+        QFile out(fileName);
+        if (!out.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+        QTextStream ts(&out);
+        ts << "Property,Value\n";
+        for (int r = 0; r < table->rowCount(); ++r) {
+            QString prop = table->item(r,0) ? table->item(r,0)->text() : QString();
+            QString val = table->item(r,1) ? table->item(r,1)->text() : QString();
+            ts << esc(prop) << ',' << esc(val) << '\n';
+        }
+        out.close();
+    });
+
+    fillTable();
+
+    // Auto-refresh every second while visible
+    refreshTimer->setInterval(1000);
+    connect(refreshTimer, &QTimer::timeout, this, &GeekOsDialog::fillTable);
+}
+
+void GeekOsDialog::showEvent(QShowEvent* ev)
+{
+    QDialog::showEvent(ev);
+    if (refreshTimer) refreshTimer->start();
+}
+
+void GeekOsDialog::hideEvent(QHideEvent* ev)
+{
+    if (refreshTimer) refreshTimer->stop();
+    QDialog::hideEvent(ev);
+}
+
+void GeekOsDialog::fillTable()
+{
+    table->setRowCount(0);
+    int row = 0;
+
+    auto addRow = [&](const QString& prop, const QString& val) {
+        table->insertRow(row);
+        table->setItem(row, 0, new QTableWidgetItem(prop));
+        table->setItem(row, 1, new QTableWidgetItem(val));
+        row++;
+    };
+
+    // Read /etc/os-release
+    QFile osRelease("/etc/os-release");
+    if (osRelease.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        addRow("=== OS Release ===", "");
+        QTextStream in(&osRelease);
+        while (!in.atEnd()) {
+            QString line = in.readLine().trimmed();
+            if (line.contains('=')) {
+                QString k = line.section('=', 0, 0).trimmed();
+                QString v = line.section('=', 1).trimmed();
+                if (v.startsWith('"') && v.endsWith('"')) v = v.mid(1, v.size()-2);
+                addRow(k, v);
+            }
+        }
+        osRelease.close();
+    }
+
+    // Get uname info
+    struct utsname unameData;
+    if (uname(&unameData) == 0) {
+        addRow("", "");
+        addRow("=== System Information ===", "");
+        addRow("System Name", unameData.sysname);
+        addRow("Node Name", unameData.nodename);
+        addRow("Release", unameData.release);
+        addRow("Version", unameData.version);
+        addRow("Machine", unameData.machine);
+    }
+
+    // Read /proc/version
+    QFile procVersion("/proc/version");
+    if (procVersion.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        addRow("", "");
+        addRow("=== Kernel Version ===", "");
+        QString version = procVersion.readAll().trimmed();
+        addRow("", version);
+        procVersion.close();
+    }
+
+    // Read /proc/cmdline
+    QFile cmdline("/proc/cmdline");
+    if (cmdline.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        addRow("", "");
+        addRow("=== Kernel Command Line ===", "");
+        QString cmd = cmdline.readAll().trimmed();
+        addRow("", cmd);
+        cmdline.close();
+    }
+
+    // Get environment variables
+    addRow("", "");
+    addRow("=== Environment ===", "");
+    QStringList env = QProcess::systemEnvironment();
+    for (const QString& e : env) {
+        if (e.contains('=')) {
+            QString key = e.section('=', 0, 0);
+            QString value = e.section('=', 1);
+            addRow(key, value);
+        }
+    }
+
+    table->resizeColumnToContents(0);
 }

@@ -20,6 +20,7 @@
 #include <QFont>
 #include <QJsonObject>
 #include <QTableWidget>
+#include <QMessageBox>
 
 CPUTab::CPUTab(QWidget* parent)
     : QWidget(parent)
@@ -132,6 +133,12 @@ GeekCpuDialog::GeekCpuDialog(QWidget* parent)
         }
         QClipboard *clipboard = QGuiApplication::clipboard();
         clipboard->setText(all, QClipboard::Clipboard);
+        QMessageBox msgBox(this);
+        msgBox.setWindowTitle(tr("Copied"));
+        msgBox.setText(tr("The information has been copied\nto the clipboard."));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.exec();
     });
 
     // Note: run-as-root functionality removed to avoid accidental termination when

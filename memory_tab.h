@@ -18,8 +18,13 @@ public:
     explicit GeekMemoryDialog(QWidget* parent = nullptr);
     void fillTable();
 
+protected:
+    void showEvent(QShowEvent* ev) override;
+    void hideEvent(QHideEvent* ev) override;
+
 private:
     QTableWidget* table;
+    QTimer* refreshTimer;
 };
 
 class MemoryTab : public QWidget
@@ -31,23 +36,15 @@ public:
     void updateMemoryInfo();
 
 private:
-    // RAM widgets
-    QLabel* ramTotalLabel;
-    QProgressBar* ramUsageBar;
-    QLabel* ramUsedLabel;
-    QLabel* ramFreeLabel;
-
-    // SWAP widgets
-    QLabel* swapTotalLabel;
-    QProgressBar* swapUsageBar;
-    QLabel* swapUsedLabel;
-    QLabel* swapFreeLabel;
-
+    QTableWidget* tableWidget;
     QPushButton* geekButton;
+    QTimer* refreshTimer;
 
     void setBarColor(QProgressBar* bar, int percent);
     void showGeekMode();
-    QTimer* timer;
+
+private slots:
+    void refreshMemoryValues();
 };
 
 #endif // MEMORY_TAB_H

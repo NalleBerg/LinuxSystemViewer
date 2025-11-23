@@ -11,7 +11,25 @@
 #include <QTimer>
 #include <QFutureWatcher>
 #include <QVariantMap>
+#include <QPushButton>
+#include <QDialog>
 #include "tab_widget_base.h"
+
+class GeekStorageDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit GeekStorageDialog(QWidget* parent = nullptr);
+    void fillTable();
+
+protected:
+    void showEvent(QShowEvent* ev) override;
+    void hideEvent(QHideEvent* ev) override;
+
+private:
+    QTableWidget* table;
+    QTimer* refreshTimer;
+};
 
 class StorageTab : public TabWidgetBase
 {
@@ -29,8 +47,10 @@ protected:
 private slots:
     void onParseFinished();
     void applyParsedPartitions(const QVariantMap& parsed);
+    void showGeekMode();
 
 private:
+    QPushButton* geekButton{nullptr};
     void refreshData();
     void createInfoSection(const QString& title, QGroupBox** groupBox, QLabel** contentLabel, QVBoxLayout* parentLayout);
     

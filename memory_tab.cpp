@@ -12,147 +12,142 @@
 #include <QGuiApplication>
 #include <QClipboard>
 #include <QFileDialog>
+#include <QMessageBox>
 #include "gui_helpers.h"
 
 MemoryTab::MemoryTab(QWidget* parent) : QWidget(parent)
 {
-    // Headline and Geek button on same line (constructed by helper to guarantee layout)
-    QHBoxLayout* headlineLayout = createHeadlineWithGeek(this, tr("Memory"), &geekButton);
+    // Headline and Geek button (use helper to guarantee identical placement)
+    QPushButton* gb = nullptr;
+    QHBoxLayout* headlineLayout = createHeadlineWithGeek(this, tr("Memory"), &gb);
+    geekButton = gb;
     connect(geekButton, &QPushButton::clicked, this, &MemoryTab::showGeekMode);
-
-    // RAM widgets
-    ramTotalLabel = new QLabel(this);
-    ramTotalLabel->setStyleSheet("font-weight: bold; font-size: 11px; color: #222; margin-bottom: 0px;");
-    ramUsageBar = new QProgressBar(this);
-    ramUsedLabel = new QLabel(this);
-    ramFreeLabel = new QLabel(this);
-
-    ramUsageBar->setMinimum(0);
-    ramUsageBar->setMaximum(100);
-    ramUsageBar->setTextVisible(false);
-    ramUsageBar->setFixedHeight(10);
-
-    QFont smallBoldFont = ramUsedLabel->font();
-    smallBoldFont.setPointSize(9);
-    smallBoldFont.setBold(true);
-
-    ramUsedLabel->setFont(smallBoldFont);
-    ramFreeLabel->setFont(smallBoldFont);
-
-    QPalette darkGray;
-    darkGray.setColor(QPalette::WindowText, QColor("#333"));
-    ramUsedLabel->setPalette(darkGray);
-    ramFreeLabel->setPalette(darkGray);
-
-    // SWAP widgets
-    swapTotalLabel = new QLabel(this);
-    swapTotalLabel->setStyleSheet("font-weight: bold; font-size: 11px; color: #222; margin-bottom: 0px;");
-    swapUsageBar = new QProgressBar(this);
-    swapUsedLabel = new QLabel(this);
-    swapFreeLabel = new QLabel(this);
-
-    swapUsageBar->setMinimum(0);
-    swapUsageBar->setMaximum(100);
-    swapUsageBar->setTextVisible(false);
-    swapUsageBar->setFixedHeight(10);
-
-    swapUsedLabel->setFont(smallBoldFont);
-    swapFreeLabel->setFont(smallBoldFont);
-    swapUsedLabel->setPalette(darkGray);
-    swapFreeLabel->setPalette(darkGray);
 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     applyMainLayoutDefaults(mainLayout);
-
     mainLayout->addLayout(headlineLayout);
 
-    // RAM section
-    mainLayout->addWidget(ramTotalLabel);
-
-    QHBoxLayout* ramBarLayout = new QHBoxLayout();
-    ramBarLayout->setSpacing(1);
-    ramBarLayout->addWidget(ramUsageBar, 1);
-    mainLayout->addLayout(ramBarLayout);
-
-    QHBoxLayout* ramLabelsLayout = new QHBoxLayout();
-    ramLabelsLayout->setSpacing(1);
-    ramLabelsLayout->addWidget(ramUsedLabel, 0, Qt::AlignLeft);
-    ramLabelsLayout->addStretch(1);
-    ramLabelsLayout->addWidget(ramFreeLabel, 0, Qt::AlignRight);
-    mainLayout->addLayout(ramLabelsLayout);
-
-    // Separator
-    QFrame* sep = new QFrame(this);
-    sep->setFrameShape(QFrame::HLine);
-    sep->setFrameShadow(QFrame::Sunken);
-    mainLayout->addWidget(sep);
-
-    // SWAP section
-    mainLayout->addWidget(swapTotalLabel);
-
-    QHBoxLayout* swapBarLayout = new QHBoxLayout();
-    swapBarLayout->setSpacing(1);
-    swapBarLayout->addWidget(swapUsageBar, 1);
-    mainLayout->addLayout(swapBarLayout);
-
-    QHBoxLayout* swapLabelsLayout = new QHBoxLayout();
-    swapLabelsLayout->setSpacing(1);
-    swapLabelsLayout->addWidget(swapUsedLabel, 0, Qt::AlignLeft);
-    swapLabelsLayout->addStretch(1);
-    swapLabelsLayout->addWidget(swapFreeLabel, 0, Qt::AlignRight);
-    mainLayout->addLayout(swapLabelsLayout);
-
-    setStyleSheet(
-        "QLabel { font-size: 11px; color: #2c3e50; }"
-        "QProgressBar {"
-        " border: 1px solid #34495e;"
-        " border-radius: 5px;"
-        " background: #eee;"
-        " min-height: 6px;"
-        " max-height: 12px;"
-        "}"
-        "QProgressBar::chunk {"
-        " border-radius: 5px;"
+    // Table
+    tableWidget = new QTableWidget();
+    tableWidget->setColumnCount(2);
+    tableWidget->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
+    tableWidget->verticalHeader()->setVisible(false);
+    tableWidget->horizontalHeader()->setStyleSheet(
+        "QHeaderView::section {"
+        "  background-color: #34495e;"
+        "  color: white;"
+        "  font-weight: bold;"
+        "  padding: 8px;"
+        "  border: 1px solid #2c3e50;"
         "}"
     );
+    tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
+    tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &MemoryTab::updateMemoryInfo);
-    timer->start(1000);
+    // Scroll area
+    QScrollArea* scrollArea = new QScrollArea;
+    scrollArea->setWidget(tableWidget);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setMinimumHeight(220);
+    mainLayout->addWidget(scrollArea);
 
-    updateMemoryInfo();
+    // Auto-refresh every second
+    refreshTimer = new QTimer(this);
+    refreshTimer->setInterval(1000);
+    connect(refreshTimer, &QTimer::timeout, this, &MemoryTab::refreshMemoryValues);
+    refreshTimer->start();
+
+    // Enable copy functionality
+    enableTableCopy(tableWidget, refreshTimer);
+
+    // Initial population
+    refreshMemoryValues();
 }
 
-void MemoryTab::updateMemoryInfo()
+void MemoryTab::refreshMemoryValues()
 {
     struct sysinfo info;
     sysinfo(&info);
 
-    // RAM
+    // Calculate RAM values
     double ramTotalGB = info.totalram * info.mem_unit / (1024.0 * 1024 * 1024);
     double ramFreeGB = info.freeram * info.mem_unit / (1024.0 * 1024 * 1024);
     double ramUsedGB = ramTotalGB - ramFreeGB;
     int ramPercent = ramTotalGB > 0 ? (int)((ramUsedGB / ramTotalGB) * 100) : 0;
 
-    ramTotalLabel->setText(tr("RAM Total: %1 GB").arg(QString::number(ramTotalGB, 'f', 3)));
-    ramUsageBar->setValue(ramPercent);
-    setBarColor(ramUsageBar, ramPercent);
-
-    ramUsedLabel->setText(tr("Used: %1 GB").arg(QString::number(ramUsedGB, 'f', 3)));
-    ramFreeLabel->setText(tr("Free: %1 GB (%2%)").arg(QString::number(ramFreeGB, 'f', 3)).arg(100 - ramPercent));
-
-    // SWAP
+    // Calculate SWAP values
     double swapTotalGB = info.totalswap * info.mem_unit / (1024.0 * 1024 * 1024);
     double swapFreeGB = info.freeswap * info.mem_unit / (1024.0 * 1024 * 1024);
     double swapUsedGB = swapTotalGB - swapFreeGB;
     int swapPercent = swapTotalGB > 0 ? (int)((swapUsedGB / swapTotalGB) * 100) : 0;
 
-    swapTotalLabel->setText(tr("SWAP Total: %1 GB").arg(QString::number(swapTotalGB, 'f', 3)));
-    swapUsageBar->setValue(swapPercent);
-    setBarColor(swapUsageBar, swapPercent);
+    // Clear and repopulate table
+    tableWidget->setRowCount(0);
+    tableWidget->setRowCount(4);
 
-    swapUsedLabel->setText(tr("Used: %1 GB").arg(QString::number(swapUsedGB, 'f', 3)));
-    swapFreeLabel->setText(tr("Free: %1 GB (%2%)").arg(QString::number(swapFreeGB, 'f', 3)).arg(100 - swapPercent));
+    // Row 0: RAM Total
+    QTableWidgetItem* ramTotalItem = new QTableWidgetItem(tr("RAM Total"));
+    QFont boldFont;
+    boldFont.setBold(true);
+    ramTotalItem->setFont(boldFont);
+    tableWidget->setItem(0, 0, ramTotalItem);
+    tableWidget->setItem(0, 1, new QTableWidgetItem(QString::number(ramTotalGB, 'f', 2) + " GB"));
+
+    // Row 1: RAM Usage (with progress bar)
+    QTableWidgetItem* ramUsageItem = new QTableWidgetItem(tr("RAM Usage"));
+    ramUsageItem->setFont(boldFont);
+    tableWidget->setItem(1, 0, ramUsageItem);
+    QWidget* ramWidget = new QWidget();
+    QVBoxLayout* ramLayout = new QVBoxLayout(ramWidget);
+    ramLayout->setContentsMargins(4, 4, 4, 4);
+    QProgressBar* ramBar = new QProgressBar();
+    ramBar->setMinimum(0);
+    ramBar->setMaximum(100);
+    ramBar->setValue(ramPercent);
+    ramBar->setFixedHeight(20);
+    setBarColor(ramBar, ramPercent);
+    ramLayout->addWidget(ramBar);
+    QLabel* ramLabel = new QLabel(tr("Used: %1 GB / Free: %2 GB (%3%)")
+        .arg(QString::number(ramUsedGB, 'f', 2))
+        .arg(QString::number(ramFreeGB, 'f', 2))
+        .arg(ramPercent));
+    ramLabel->setStyleSheet("font-size: 12px; color: #666;");
+    ramLayout->addWidget(ramLabel);
+    tableWidget->setCellWidget(1, 1, ramWidget);
+
+    // Row 2: SWAP Total
+    QTableWidgetItem* swapTotalItem = new QTableWidgetItem(tr("SWAP Total"));
+    swapTotalItem->setFont(boldFont);
+    tableWidget->setItem(2, 0, swapTotalItem);
+    tableWidget->setItem(2, 1, new QTableWidgetItem(QString::number(swapTotalGB, 'f', 2) + " GB"));
+
+    // Row 3: SWAP Usage (with progress bar)
+    QTableWidgetItem* swapUsageItem = new QTableWidgetItem(tr("SWAP Usage"));
+    swapUsageItem->setFont(boldFont);
+    tableWidget->setItem(3, 0, swapUsageItem);
+    QWidget* swapWidget = new QWidget();
+    QVBoxLayout* swapLayout = new QVBoxLayout(swapWidget);
+    swapLayout->setContentsMargins(4, 4, 4, 4);
+    QProgressBar* swapBar = new QProgressBar();
+    swapBar->setMinimum(0);
+    swapBar->setMaximum(100);
+    swapBar->setValue(swapPercent);
+    swapBar->setFixedHeight(20);
+    setBarColor(swapBar, swapPercent);
+    swapLayout->addWidget(swapBar);
+    QLabel* swapLabel = new QLabel(tr("Used: %1 GB / Free: %2 GB (%3%)")
+        .arg(QString::number(swapUsedGB, 'f', 2))
+        .arg(QString::number(swapFreeGB, 'f', 2))
+        .arg(swapPercent));
+    swapLabel->setStyleSheet("font-size: 12px; color: #666;");
+    swapLayout->addWidget(swapLabel);
+    tableWidget->setCellWidget(3, 1, swapWidget);
+
+    // Resize rows to content
+    tableWidget->resizeRowsToContents();
 }
 
 void MemoryTab::setBarColor(QProgressBar* bar, int percent)
@@ -190,6 +185,7 @@ void MemoryTab::showGeekMode()
 
 GeekMemoryDialog::GeekMemoryDialog(QWidget* parent)
     : QDialog(parent)
+    , refreshTimer(new QTimer(this))
 {
     setWindowTitle(tr("Memory - Geek Mode"));
     setModal(true);
@@ -246,6 +242,8 @@ GeekMemoryDialog::GeekMemoryDialog(QWidget* parent)
     scrollArea->setMinimumHeight(250);
     layout->addWidget(scrollArea);
 
+    enableTableCopy(table, refreshTimer);
+
     QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     // Copy and Save buttons (Copy: readable UTF-8; Save: CSV)
     QPushButton* copyBtn = new QPushButton(tr("Copy"));
@@ -264,6 +262,12 @@ GeekMemoryDialog::GeekMemoryDialog(QWidget* parent)
         }
         QClipboard *clipboard = QGuiApplication::clipboard();
         clipboard->setText(all, QClipboard::Clipboard);
+        QMessageBox msgBox(this);
+        msgBox.setWindowTitle(tr("Copied"));
+        msgBox.setText(tr("The information has been copied\nto the clipboard."));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.exec();
     });
 
     connect(saveBtn, &QPushButton::clicked, [this]() {
@@ -288,6 +292,22 @@ GeekMemoryDialog::GeekMemoryDialog(QWidget* parent)
     });
 
     fillTable();
+
+    // Auto-refresh every second while visible
+    refreshTimer->setInterval(1000);
+    connect(refreshTimer, &QTimer::timeout, this, &GeekMemoryDialog::fillTable);
+}
+
+void GeekMemoryDialog::showEvent(QShowEvent* ev)
+{
+    QDialog::showEvent(ev);
+    if (refreshTimer) refreshTimer->start();
+}
+
+void GeekMemoryDialog::hideEvent(QHideEvent* ev)
+{
+    if (refreshTimer) refreshTimer->stop();
+    QDialog::hideEvent(ev);
 }
 
 void GeekMemoryDialog::fillTable()
