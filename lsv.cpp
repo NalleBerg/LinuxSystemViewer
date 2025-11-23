@@ -755,8 +755,7 @@ private:
         }
         else if (config.name == "Desktop") {
             WindowingTab* windowingTab = new WindowingTab();
-            connect(windowingTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
-            connect(windowingTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+            // WindowingTab doesn't use TabWidgetBase, so no loading signals
             tabWidget = windowingTab;
         }
         else if (config.name == "Graphics gard") {
