@@ -1,12 +1,16 @@
 #ifndef AUDIO_TAB_H
 #define AUDIO_TAB_H
 
-#include "tab_widget_base.h"
-#include <QGroupBox>
-#include <QLabel>
-#include <QVBoxLayout>
+#include <QWidget>
+#include <QTableWidget>
+#include <QTimer>
+#include <QPushButton>
+#include <QDialog>
+#include <QListWidget>
 
-class AudioTab : public TabWidgetBase
+class AudioGeekDialog;
+
+class AudioTab : public QWidget
 {
     Q_OBJECT
 
@@ -14,23 +18,45 @@ public:
     explicit AudioTab(QWidget* parent = nullptr);
 
 protected:
-    QWidget* createUserFriendlyView() override;
-    void parseOutput(const QString& output) override;
+    void showEvent(QShowEvent* ev) override;
+    void hideEvent(QHideEvent* ev) override;
+
+private slots:
+    void showGeekMode();
+    void testSound();
+    void refreshValues();
 
 private:
-    void createInfoSection(const QString& title, QGroupBox** groupBox, QLabel** contentLabel, QVBoxLayout* parentLayout);
+    void loadAudioInfo();
+    void playTestSound(class QListWidget* checkList, class QPushButton* closeBtn);
+    void playSoundFile(const QString& filename);
+    void generateAndPlayTone(double frequency, double duration, double leftVolume, double rightVolume);
     
-    QGroupBox* m_audioDevicesSection;
-    QLabel* m_audioDevicesContent;
-    
-    QGroupBox* m_soundCardSection;
-    QLabel* m_soundCardContent;
-    
-    QGroupBox* m_audioServerSection;
-    QLabel* m_audioServerContent;
-    
-    QGroupBox* m_playbackSection;
-    QLabel* m_playbackContent;
+    QTableWidget* tableWidget;
+    QTimer* refreshTimer;
+    QPushButton* geekButton;
+    QPushButton* testSoundButton;
+};
+
+// --- Geek Mode Dialog ---
+class AudioGeekDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit AudioGeekDialog(QWidget* parent = nullptr);
+
+protected:
+    void showEvent(QShowEvent* ev) override;
+    void hideEvent(QHideEvent* ev) override;
+
+private slots:
+    void copyToClipboard();
+    void saveToFile();
+    void rescan();
+
+private:
+    void fillTable();
+    QTableWidget* table;
 };
 
 #endif // AUDIO_TAB_H

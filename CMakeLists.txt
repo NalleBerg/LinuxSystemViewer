@@ -13,7 +13,9 @@ else()
     message(STATUS "LSV: Debug logger DISABLED (default)")
 endif()
 
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Network Multimedia)
+find_package(ALSA REQUIRED)
+include_directories(${ALSA_INCLUDE_DIRS})
 
 qt6_standard_project_setup()
 
@@ -28,6 +30,7 @@ qt6_add_executable(LSV
     os_tab.cpp
     cpu_tab.cpp
     audio_tab.cpp
+    alsa_player.cpp
     graphics_tab.cpp
     ports_tab.cpp
     screen_tab.cpp
@@ -47,6 +50,8 @@ target_link_libraries(LSV PRIVATE
     Qt6::Core 
     Qt6::Widgets 
     Qt6::Network
+    Qt6::Multimedia
+    ${ALSA_LIBRARIES}
 )
 
 # Resources: always include the embedded license and GNU icon so packaged
@@ -141,6 +146,14 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lsv.png")
     install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/lsv.png" DESTINATION share/icons/hicolor/128x128/apps RENAME lsv.png)
     install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/lsv.png" DESTINATION share/icons/hicolor/256x256/apps RENAME lsv.png)
     install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/lsv.png" DESTINATION share/icons/hicolor/512x512/apps RENAME lsv.png)
+    
+    # Install sound files for audio testing
+    install(FILES 
+        "${CMAKE_CURRENT_SOURCE_DIR}/sounds/a440.wav"
+        "${CMAKE_CURRENT_SOURCE_DIR}/sounds/lowc.wav"
+        "${CMAKE_CURRENT_SOURCE_DIR}/sounds/left.wav"
+        "${CMAKE_CURRENT_SOURCE_DIR}/sounds/right.wav"
+        DESTINATION share/lsv/sounds)
 endif()
 
 # CPack packaging configuration: produce .deb and .rpm packages
