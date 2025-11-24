@@ -113,3 +113,8 @@ fi
 
 ok "Done — LSV is installed. You can launch it from your desktop menu or run: ${BOLD}lsv${RESET}"
 
+# Play notification sound (try multiple methods)
+paplay /usr/share/sounds/LinuxMint/stereo/dialog-question.wav 2>/dev/null || \
+aplay /usr/share/sounds/LinuxMint/stereo/dialog-question.wav 2>/dev/null || \
+canberra-gtk-play -i complete 2>/dev/null || \
+true

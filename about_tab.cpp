@@ -428,7 +428,7 @@ namespace {
 }
 
 AboutTab::AboutTab(QWidget* parent)
-    : TabWidgetBase("About", "echo 'Linux System Viewer V. " LSV_VERSION "'", false, "", parent)
+    : TabWidgetBase("About", (QString("echo 'Linux System Viewer V. ") + LSV_VERSION + "'").toStdString().c_str(), false, "", parent)
 {
     qDebug() << "AboutTab: Constructor called - base constructor done";
     initializeTab();

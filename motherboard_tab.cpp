@@ -1,219 +1,372 @@
 #include "motherboard_tab.h"
+#include "mainboard.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QHeaderView>
 #include <QScrollArea>
-#include <QGroupBox>
+#include <QFile>
+#include <QTextStream>
+#include <QDir>
+#include <QClipboard>
+#include <QGuiApplication>
+#include <QFileDialog>
+#include <QPushButton>
+#include <QDialogButtonBox>
+#include <QTableWidgetItem>
 #include <QFont>
-#include <QRegularExpression>
-#include <QDebug>
-#include <QObject>
+#include <QJsonObject>
+#include <QTableWidget>
+#include <QMessageBox>
+#include <QProcess>
+#include <QProgressDialog>
+#include "gui_helpers.h"
 
 MotherboardTab::MotherboardTab(QWidget* parent)
-    : TabWidgetBase(QObject::tr("Motherboard"), "lshw -C bus -short", true, 
-                    "lshw -C bus && dmidecode -t baseboard 2>/dev/null && dmidecode -t system 2>/dev/null", parent)
+    : QWidget(parent)
 {
-    qDebug() << "MotherboardTab: Constructor called - base constructor done";
-    initializeTab();
-    qDebug() << "MotherboardTab: Constructor finished";
-}
+    // Headline and Geek button (use helper to guarantee identical placement)
+    QPushButton* gb = nullptr;
+    QHBoxLayout* headlineLayout = createHeadlineWithGeek(this, tr("Motherboard"), &gb);
+    geekButton = gb;
+    connect(geekButton, &QPushButton::clicked, this, &MotherboardTab::showGeekMode);
 
-QWidget* MotherboardTab::createUserFriendlyView()
-{
-    qDebug() << "MotherboardTab: createUserFriendlyView called";
-    
-    QScrollArea* scrollArea = new QScrollArea();
+    QVBoxLayout* mainLayout = new QVBoxLayout(this);
+    applyMainLayoutDefaults(mainLayout);
+    mainLayout->addLayout(headlineLayout);
+
+    // Table
+    tableWidget = new QTableWidget();
+    tableWidget->setColumnCount(2);
+    tableWidget->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
+    tableWidget->verticalHeader()->setVisible(false);
+    tableWidget->horizontalHeader()->setStyleSheet(
+        "QHeaderView::section { "
+        "background-color: #2c3e50; "
+        "color: white; "
+        "padding: 8px; "
+        "border: none; "
+        "font-weight: bold; "
+        "}"
+    );
+    tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
+    tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    tableWidget->setColumnWidth(0, 200);
+    tableWidget->setAlternatingRowColors(true);
+    tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    // Enable copy (Ctrl+C and right-click Copy)
+    enableTableCopy(tableWidget, nullptr);
+
+    // Scroll area
+    QScrollArea* scrollArea = new QScrollArea;
+    scrollArea->setWidget(tableWidget);
     scrollArea->setWidgetResizable(true);
-    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    
-    QWidget* contentWidget = new QWidget();
-    QVBoxLayout* mainLayout = new QVBoxLayout(contentWidget);
-    mainLayout->setSpacing(15);
-    mainLayout->setContentsMargins(20, 20, 20, 20);
-    
-    QLabel* titleLabel = new QLabel(tr("Motherboard and System Information"));
-    titleLabel->setStyleSheet(
-        "QLabel {"
-        "  font-size: 18px;"
-        "  font-weight: bold;"
-        "  color: #2c3e50;"
-        "  margin-bottom: 10px;"
-        "}"
-    );
-    mainLayout->addWidget(titleLabel);
-    
-    createInfoSection(tr("System Board"), &m_systemBoardSection, &m_systemBoardContent, mainLayout);
-    createInfoSection(tr("Chipset"), &m_chipsetSection, &m_chipsetContent, mainLayout);
-    createInfoSection(tr("BIOS/UEFI"), &m_biosSection, &m_biosContent, mainLayout);
-    createInfoSection(tr("Expansion Slots"), &m_expansionSlotsSection, &m_expansionSlotsContent, mainLayout);
-    
-    mainLayout->addStretch();
-    
-    scrollArea->setWidget(contentWidget);
-    
-    qDebug() << "MotherboardTab: createUserFriendlyView completed";
-    return scrollArea;
+    scrollArea->setMinimumHeight(220);
+    mainLayout->addWidget(scrollArea);
+
+    // Populate table (no progress dialog - motherboard info doesn't change)
+    loadMainboardInformation(tableWidget, QJsonObject());
 }
 
-void MotherboardTab::createInfoSection(const QString& title, QGroupBox** groupBox, QLabel** contentLabel, QVBoxLayout* parentLayout)
+void MotherboardTab::showGeekMode()
 {
-    *groupBox = new QGroupBox(title);
-    (*groupBox)->setStyleSheet(
-        "QGroupBox {"
-        "  font-weight: bold;"
-        "  border: 2px solid #bdc3c7;"
-        "  border-radius: 8px;"
-        "  margin-top: 10px;"
-        "  padding-top: 10px;"
-        "}"
-        "QGroupBox::title {"
-        "  subcontrol-origin: margin;"
-        "  left: 10px;"
-        "  padding: 0 10px 0 10px;"
-        "}"
-    );
-    
-    QVBoxLayout* sectionLayout = new QVBoxLayout(*groupBox);
-    *contentLabel = new QLabel(tr("Loading %1 information...").arg(title.toLower()));
-    (*contentLabel)->setWordWrap(true);
-    (*contentLabel)->setStyleSheet("QLabel { padding: 10px; background-color: #f8f9fa; border-radius: 4px; }");
-    sectionLayout->addWidget(*contentLabel);
-    
-    parentLayout->addWidget(*groupBox);
+    GeekMotherboardDialog dlg(this);
+    dlg.exec();
 }
 
-void MotherboardTab::parseOutput(const QString& output)
+// --- GeekMotherboardDialog ---
+
+GeekMotherboardDialog::GeekMotherboardDialog(QWidget* parent)
+    : QDialog(parent)
 {
-    qDebug() << "MotherboardTab: parseOutput called";
+    setWindowTitle(tr("Motherboard - Geek Mode"));
+    setModal(true);
+    resize(700, 500);
+
+    QVBoxLayout* layout = new QVBoxLayout(this);
+    QLabel* titleLabel = new QLabel(tr("Motherboard Technical Details"));
+    titleLabel->setStyleSheet("font-size:16px; font-weight:bold; color:#2c3e50; margin-bottom:10px;");
+    layout->addWidget(titleLabel);
+
+    table = new QTableWidget();
+    table->setColumnCount(2);
+    table->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
+    table->verticalHeader()->setVisible(false);
+    table->horizontalHeader()->setStyleSheet("QHeaderView::section { background-color: #34495e; color: white; font-weight: bold; padding: 8px; border: 1px solid #2c3e50; }");
+    table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
+    table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    table->setColumnWidth(0, 250);
+
+    QScrollArea* scrollArea = new QScrollArea;
+    scrollArea->setWidget(table);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setMinimumHeight(350);
+    layout->addWidget(scrollArea);
+
+    // Buttons: Copy, Save, Close
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QPushButton* copyBtn = new QPushButton(tr("Copy"));
+    QPushButton* saveBtn = new QPushButton(tr("Save..."));
+    buttonBox->addButton(copyBtn, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(saveBtn, QDialogButtonBox::ActionRole);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    layout->addWidget(buttonBox);
+
+    // Enable copy on geek table
+    enableTableCopy(table, nullptr);
+
+    connect(copyBtn, &QPushButton::clicked, [this]() {
+        // Human-readable UTF-8 copy: Property: Value per line
+        QString all;
+        for (int r = 0; r < table->rowCount(); ++r) {
+            QString prop = table->item(r,0) ? table->item(r,0)->text() : QString();
+            QString val = table->item(r,1) ? table->item(r,1)->text() : QString();
+            all += prop + ": " + val + "\n";
+        }
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        clipboard->setText(all, QClipboard::Clipboard);
+        QMessageBox msgBox(this);
+        msgBox.setWindowTitle(tr("Copied"));
+        msgBox.setText(tr("The information has been copied\nto the clipboard."));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.exec();
+    });
+
+    connect(saveBtn, &QPushButton::clicked, [this]() {
+        // Save as CSV (UTF-8)
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save Motherboard Info"), "motherboard-info.csv", tr("CSV Files (*.csv);;All Files (*)"));
+        if (fileName.isEmpty()) return;
+
+        auto esc = [](const QString &s)->QString {
+            QString out = s;
+            // double quotes -> two double quotes
+            out.replace('"', "\"\"");
+            // wrap in quotes if contains comma, quote or newline
+            if (out.contains(',') || out.contains('\n') || out.contains('"')) {
+                out = '"' + out + '"';
+            }
+            return out;
+        };
+
+        QFile out(fileName);
+        if (!out.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+        QTextStream ts(&out);
+        ts << "Property,Value\n";
+        for (int r = 0; r < table->rowCount(); ++r) {
+            QString prop = table->item(r,0) ? table->item(r,0)->text() : QString();
+            QString val = table->item(r,1) ? table->item(r,1)->text() : QString();
+            ts << esc(prop) << ',' << esc(val) << '\n';
+        }
+        out.close();
+    });
+
+    // Fill table (no progress dialog - motherboard info doesn't change)
+    fillTable();
+}
+
+void GeekMotherboardDialog::fillTable()
+{
+    table->setRowCount(0);
+    int row = 0;
+
+    auto addRow = [&](const QString& prop, const QString& val){
+        table->insertRow(row);
+        QTableWidgetItem* p = new QTableWidgetItem(prop);
+        QFont bold; bold.setBold(true); p->setFont(bold);
+        table->setItem(row, 0, p);
+        QTableWidgetItem* v = new QTableWidgetItem(val);
+        table->setItem(row, 1, v);
+        table->resizeRowToContents(row);
+        ++row;
+    };
+
+    // === DMI BASEBOARD ===
+    QProcess dmiBaseboard;
+    dmiBaseboard.start("dmidecode", QStringList() << "-t" << "baseboard");
+    dmiBaseboard.waitForFinished(3000);
+    QString baseboardOutput = dmiBaseboard.readAllStandardOutput();
     
-    QStringList lines = output.split('\n', Qt::SkipEmptyParts);
-    
-    QString systemBoardInfo = tr("System Board: Not detected");
-    QString chipsetInfo = tr("Chipset: Not detected");
-    QString biosInfo = tr("BIOS/UEFI: Not detected");
-    QString expansionSlotsInfo = tr("Expansion Slots: Not detected");
-    
-    QStringList systemBoard;
-    QStringList chipset;
-    QStringList bios;
-    QStringList expansionSlots;
-    
-    for (const QString& line : lines) {
-        QString trimmed = line.trimmed();
-        
-        // Parse lshw bus output
-        if (trimmed.contains("bus") && !trimmed.startsWith("H/W path")) {
-            QStringList parts = trimmed.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
-            if (parts.size() >= 3) {
-                QString description = parts.mid(2).join(" ");
-                if (!description.isEmpty()) {
-                    if (description.contains("PCI", Qt::CaseInsensitive) ||
-                        description.contains("Host bridge", Qt::CaseInsensitive)) {
-                        chipset.append(description);
-                    } else {
-                        expansionSlots.append(description);
+    if (!baseboardOutput.isEmpty()) {
+        addRow(tr("=== BASEBOARD (DMI Type 2) ==="), "");
+        QStringList lines = baseboardOutput.split('\n');
+        for (const QString& line : lines) {
+            QString trimmed = line.trimmed();
+            if (trimmed.isEmpty() || trimmed.startsWith("Base Board") || 
+                trimmed.startsWith("Handle") || trimmed.startsWith("DMI type")) continue;
+            
+            if (trimmed.contains(':')) {
+                QStringList parts = trimmed.split(':', Qt::SkipEmptyParts);
+                if (parts.size() >= 2) {
+                    QString key = parts[0].trimmed();
+                    QString value = parts.mid(1).join(':').trimmed();
+                    if (!value.isEmpty() && value != "Not Specified" && value != "To Be Filled By O.E.M.") {
+                        addRow(key, value);
+                    }
+                }
+            } else if (trimmed.startsWith("Features:") || trimmed.startsWith("Chassis Handle:")) {
+                // Skip subheadings
+            } else {
+                // Potentially multi-line values or bullet points
+                if (row > 0 && !trimmed.isEmpty()) {
+                    QTableWidgetItem* lastVal = table->item(row - 1, 1);
+                    if (lastVal) {
+                        QString current = lastVal->text();
+                        if (!current.isEmpty()) {
+                            lastVal->setText(current + "\n" + trimmed);
+                        }
                     }
                 }
             }
         }
-        
-        // Parse dmidecode baseboard output
-        if (trimmed.startsWith("Manufacturer:")) {
-            QString manufacturer = trimmed.split(":")[1].trimmed();
-            if (!manufacturer.isEmpty() && manufacturer != "Not Specified") {
-                systemBoard.append(tr("Manufacturer: %1").arg(manufacturer));
-            }
-        }
-        
-        if (trimmed.startsWith("Product Name:")) {
-            QString product = trimmed.split(":")[1].trimmed();
-            if (!product.isEmpty() && product != "Not Specified") {
-                systemBoard.append(tr("Product: %1").arg(product));
-            }
-        }
-        
-        if (trimmed.startsWith("Version:")) {
-            QString version = trimmed.split(":")[1].trimmed();
-            if (!version.isEmpty() && version != "Not Specified") {
-                systemBoard.append(tr("Version: %1").arg(version));
-            }
-        }
-        
-        if (trimmed.startsWith("Serial Number:")) {
-            QString serial = trimmed.split(":")[1].trimmed();
-            if (!serial.isEmpty() && serial != "Not Specified") {
-                systemBoard.append(tr("Serial: %1").arg(serial));
-            }
-        }
-        
-        // Parse BIOS information
-        if (trimmed.startsWith("BIOS Information") || trimmed.startsWith("Vendor:")) {
-                if (trimmed.startsWith("Vendor:")) {
-                QString vendor = trimmed.split(":")[1].trimmed();
-                if (!vendor.isEmpty()) {
-                    bios.append(tr("BIOS Vendor: %1").arg(vendor));
+    }
+
+    // === DMI SYSTEM ===
+    QProcess dmiSystem;
+    dmiSystem.start("dmidecode", QStringList() << "-t" << "system");
+    dmiSystem.waitForFinished(3000);
+    QString systemOutput = dmiSystem.readAllStandardOutput();
+    
+    if (!systemOutput.isEmpty()) {
+        addRow(tr("=== SYSTEM (DMI Type 1) ==="), "");
+        QStringList lines = systemOutput.split('\n');
+        for (const QString& line : lines) {
+            QString trimmed = line.trimmed();
+            if (trimmed.isEmpty() || trimmed.startsWith("System Information") || 
+                trimmed.startsWith("Handle") || trimmed.startsWith("DMI type")) continue;
+            
+            if (trimmed.contains(':')) {
+                QStringList parts = trimmed.split(':', Qt::SkipEmptyParts);
+                if (parts.size() >= 2) {
+                    QString key = parts[0].trimmed();
+                    QString value = parts.mid(1).join(':').trimmed();
+                    if (!value.isEmpty() && value != "Not Specified" && value != "To Be Filled By O.E.M.") {
+                        addRow(key, value);
+                    }
                 }
             }
         }
-        
-        if (trimmed.startsWith("BIOS Revision:") || trimmed.startsWith("Firmware Revision:")) {
-            QString revision = trimmed.split(":")[1].trimmed();
-            if (!revision.isEmpty()) {
-                bios.append(tr("BIOS Revision: %1").arg(revision));
-            }
-        }
-        
-        if (trimmed.startsWith("Release Date:")) {
-            QString date = trimmed.split(":")[1].trimmed();
-            if (!date.isEmpty()) {
-                bios.append(tr("Release Date: %1").arg(date));
-            }
-        }
-        
-        // Look for system information
-        if (trimmed.startsWith("System Information")) {
-            // This indicates the start of system info section
-        }
-        
-        if (trimmed.startsWith("Family:")) {
-            QString family = trimmed.split(":")[1].trimmed();
-            if (!family.isEmpty() && family != "Not Specified") {
-                systemBoard.append(tr("Family: %1").arg(family));
-            }
-        }
-    }
-    
-    // Format the information
-    if (!systemBoard.isEmpty()) {
-        systemBoardInfo = tr("System Board:\n%1").arg(systemBoard.join("\n"));
     }
 
-    if (!chipset.isEmpty()) {
-        chipsetInfo = tr("Chipset:\n%1").arg(chipset.join("\n"));
+    // === DMI BIOS ===
+    QProcess dmiBios;
+    dmiBios.start("dmidecode", QStringList() << "-t" << "bios");
+    dmiBios.waitForFinished(3000);
+    QString biosOutput = dmiBios.readAllStandardOutput();
+    
+    if (!biosOutput.isEmpty()) {
+        addRow(tr("=== BIOS (DMI Type 0) ==="), "");
+        QStringList lines = biosOutput.split('\n');
+        for (const QString& line : lines) {
+            QString trimmed = line.trimmed();
+            if (trimmed.isEmpty() || trimmed.startsWith("BIOS Information") || 
+                trimmed.startsWith("Handle") || trimmed.startsWith("DMI type")) continue;
+            
+            if (trimmed.contains(':')) {
+                QStringList parts = trimmed.split(':', Qt::SkipEmptyParts);
+                if (parts.size() >= 2) {
+                    QString key = parts[0].trimmed();
+                    QString value = parts.mid(1).join(':').trimmed();
+                    if (!value.isEmpty()) {
+                        addRow(key, value);
+                    }
+                }
+            } else if (trimmed.startsWith("Characteristics:") || trimmed.startsWith("BIOS Revision:")) {
+                // Handle these specially
+            } else {
+                // Multi-line characteristics
+                if (row > 0 && !trimmed.isEmpty() && trimmed != "Characteristics:") {
+                    QTableWidgetItem* lastVal = table->item(row - 1, 1);
+                    if (lastVal) {
+                        QString current = lastVal->text();
+                        if (!current.isEmpty()) {
+                            lastVal->setText(current + "\n" + trimmed);
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    if (!bios.isEmpty()) {
-        biosInfo = tr("BIOS/UEFI:\n%1").arg(bios.join("\n"));
+    // === DMI CHASSIS ===
+    QProcess dmiChassis;
+    dmiChassis.start("dmidecode", QStringList() << "-t" << "chassis");
+    dmiChassis.waitForFinished(3000);
+    QString chassisOutput = dmiChassis.readAllStandardOutput();
+    
+    if (!chassisOutput.isEmpty()) {
+        addRow(tr("=== CHASSIS (DMI Type 3) ==="), "");
+        QStringList lines = chassisOutput.split('\n');
+        for (const QString& line : lines) {
+            QString trimmed = line.trimmed();
+            if (trimmed.isEmpty() || trimmed.startsWith("Chassis Information") || 
+                trimmed.startsWith("Handle") || trimmed.startsWith("DMI type")) continue;
+            
+            if (trimmed.contains(':')) {
+                QStringList parts = trimmed.split(':', Qt::SkipEmptyParts);
+                if (parts.size() >= 2) {
+                    QString key = parts[0].trimmed();
+                    QString value = parts.mid(1).join(':').trimmed();
+                    if (!value.isEmpty() && value != "Not Specified" && value != "To Be Filled By O.E.M.") {
+                        addRow(key, value);
+                    }
+                }
+            }
+        }
     }
 
-    if (!expansionSlots.isEmpty()) {
-        expansionSlotsInfo = tr("Expansion Slots:\n%1").arg(expansionSlots.join("\n"));
-    }
+    // === LSHW BUS ===
+    QProcess lshwBus;
+    lshwBus.start("lshw", QStringList() << "-C" << "bus");
+    lshwBus.waitForFinished(3000);
+    QString lshwOutput = lshwBus.readAllStandardOutput();
     
-    // Update the UI with parsed information
-    if (m_systemBoardContent) {
-        m_systemBoardContent->setText(systemBoardInfo);
+    if (!lshwOutput.isEmpty()) {
+        addRow(tr("=== LSHW BUS OUTPUT ==="), "");
+        addRow(tr("Full lshw -C bus output"), lshwOutput.trimmed().left(10000));
     }
-    if (m_chipsetContent) {
-        m_chipsetContent->setText(chipsetInfo);
-    }
-    if (m_biosContent) {
-        m_biosContent->setText(biosInfo);
-    }
-    if (m_expansionSlotsContent) {
-        m_expansionSlotsContent->setText(expansionSlotsInfo);
-    }
+
+    // === LSPCI CHIPSET INFO ===
+    QProcess lspci;
+    lspci.start("lspci", QStringList() << "-v");
+    lspci.waitForFinished(3000);
+    QString lspciOutput = lspci.readAllStandardOutput();
     
-    qDebug() << "MotherboardTab: parseOutput completed";
+    if (!lspciOutput.isEmpty()) {
+        addRow(tr("=== CHIPSET & BRIDGES ==="), "");
+        QStringList lines = lspciOutput.split('\n');
+        for (const QString& line : lines) {
+            if (line.contains("Host bridge:", Qt::CaseInsensitive) || 
+                line.contains("ISA bridge:", Qt::CaseInsensitive) ||
+                line.contains("PCI bridge:", Qt::CaseInsensitive)) {
+                QString cleaned = line.trimmed();
+                if (!cleaned.isEmpty()) {
+                    QStringList parts = cleaned.split(':');
+                    if (parts.size() >= 2) {
+                        QString device = parts[0].trimmed();
+                        QString description = parts.mid(1).join(':').trimmed();
+                        addRow(device, description);
+                    }
+                }
+            }
+        }
+    }
+
+    // === USB CONTROLLERS ===
+    addRow(tr("=== USB CONTROLLERS ==="), "");
+    QStringList usbLines = lspciOutput.split('\n');
+    int usbCount = 1;
+    for (const QString& line : usbLines) {
+        if (line.contains("USB controller:", Qt::CaseInsensitive)) {
+            QString cleaned = line.trimmed();
+            QStringList parts = cleaned.split(':');
+            if (parts.size() >= 2) {
+                QString description = parts.mid(1).join(':').trimmed();
+                addRow(tr("USB Controller %1").arg(usbCount++), description);
+            }
+        }
+    }
 }
+

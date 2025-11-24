@@ -49,6 +49,17 @@ if [ "${DEBUG_LOGGER:-}" = "1" ]; then DO_DEBUG=1; fi
 
 : "$DO_RUN"
 
+# Sync version from version.cpp to CMakeLists.txt
+echo "Synchronizing version number..."
+VERSION=$(grep -oP 'LSV_VERSION = "\K[^"]+' version.cpp)
+if [ -n "$VERSION" ]; then
+    echo "Found version: $VERSION"
+    sed -i "s/^project(LSV VERSION [0-9.]*)/project(LSV VERSION $VERSION)/" CMakeLists.txt
+    echo "Updated CMakeLists.txt to version $VERSION"
+else
+    echo "Warning: Could not extract version from version.cpp"
+fi
+
 # Format seconds to MM:SS
 format_time() {
     # Truncate fractional seconds and format MM:SS

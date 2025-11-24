@@ -749,8 +749,7 @@ private:
         }
         else if (config.name == "Audio") {
             AudioTab* audioTab = new AudioTab();
-            connect(audioTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
-            connect(audioTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
+            // AudioTab doesn't use TabWidgetBase, so no loading signals
             tabWidget = audioTab;
         }
         else if (config.name == "Desktop") {
@@ -782,8 +781,6 @@ private:
         }
         else if (config.name == "Motherboard") {
             MotherboardTab* motherboardTab = new MotherboardTab();
-            connect(motherboardTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
-            connect(motherboardTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
             tabWidget = motherboardTab;
         }
         else if (config.name == "Disk") {

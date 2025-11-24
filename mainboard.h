@@ -20,7 +20,7 @@ QString getMainboardInfo();
 // Mainboard Headers
 QStringList getMainboardHeaders()
 {
-    return QStringList() << "Property" << "Value" << "Unit" << "Type";
+    return QStringList() << "Property" << "Value";
 }
 
 // Mainboard Table Styling
@@ -28,14 +28,12 @@ void styleMainboardTable(QTableWidget* table)
 {
     // Set column widths
     table->setColumnWidth(0, 200);  // Property
-    table->setColumnWidth(1, 300);  // Value
-    table->setColumnWidth(2, 80);   // Unit
-    table->setColumnWidth(3, 120);  // Type
+    table->setColumnWidth(1, 400);  // Value
     
     // Style headers
     table->horizontalHeader()->setStyleSheet(
         "QHeaderView::section { "
-        "background-color: #16a085; "
+        "background-color: #2c3e50; "
         "color: white; "
         "padding: 8px; "
         "border: none; "
@@ -44,23 +42,41 @@ void styleMainboardTable(QTableWidget* table)
     );
 }
 
-// Load Mainboard Information
+// Helper to add a simple 2-column row
+inline void addMainboardRow(QTableWidget* table, const QString& property, const QString& value)
+{
+    int row = table->rowCount();
+    table->insertRow(row);
+    
+    QTableWidgetItem* propItem = new QTableWidgetItem(property);
+    QFont boldFont;
+    boldFont.setBold(true);
+    propItem->setFont(boldFont);
+    table->setItem(row, 0, propItem);
+    
+    QTableWidgetItem* valItem = new QTableWidgetItem(value);
+    table->setItem(row, 1, valItem);
+    
+    table->resizeRowToContents(row);
+}
+
+// Load Mainboard Information - User-friendly view
 void loadMainboardInformation(QTableWidget* table, const QJsonObject& data)
 {
     Q_UNUSED(data);
     
     table->setRowCount(0);
     
-    // Get DMI information
+    // Get DMI baseboard information
     QProcess dmiProcess;
-    dmiProcess.start("sudo", QStringList() << "dmidecode" << "-t" << "baseboard");
-    dmiProcess.waitForFinished();
+    dmiProcess.start("dmidecode", QStringList() << "-t" << "baseboard");
+    dmiProcess.waitForFinished(3000);
     QString dmiOutput = dmiProcess.readAllStandardOutput();
+    
+    QString manufacturer, product, version, serialNumber;
     
     if (!dmiOutput.isEmpty()) {
         QStringList lines = dmiOutput.split('\n');
-        QString manufacturer, product, version, serialNumber;
-        
         for (const QString& line : lines) {
             QString trimmedLine = line.trimmed();
             if (trimmedLine.startsWith("Manufacturer:")) {
@@ -73,24 +89,57 @@ void loadMainboardInformation(QTableWidget* table, const QJsonObject& data)
                 serialNumber = trimmedLine.mid(14).trimmed();
             }
         }
-        
-        if (!manufacturer.isEmpty() && manufacturer != "Not Specified") {
-            addRowToTable(table, QStringList() << "Manufacturer" << manufacturer << "" << "Mainboard");
-        }
-        if (!product.isEmpty() && product != "Not Specified") {
-            addRowToTable(table, QStringList() << "Model" << product << "" << "Mainboard");
-        }
-        if (!version.isEmpty() && version != "Not Specified") {
-            addRowToTable(table, QStringList() << "Version" << version << "" << "Mainboard");
-        }
-        if (!serialNumber.isEmpty() && serialNumber != "Not Specified") {
-            addRowToTable(table, QStringList() << "Serial Number" << serialNumber << "" << "Mainboard");
+    }
+    
+    // Get system information for additional context
+    dmiProcess.start("dmidecode", QStringList() << "-t" << "system");
+    dmiProcess.waitForFinished(3000);
+    QString systemOutput = dmiProcess.readAllStandardOutput();
+    
+    QString systemManufacturer, systemProduct, systemFamily;
+    
+    if (!systemOutput.isEmpty()) {
+        QStringList lines = systemOutput.split('\n');
+        for (const QString& line : lines) {
+            QString trimmedLine = line.trimmed();
+            if (trimmedLine.startsWith("Manufacturer:")) {
+                systemManufacturer = trimmedLine.mid(13).trimmed();
+            } else if (trimmedLine.startsWith("Product Name:")) {
+                systemProduct = trimmedLine.mid(13).trimmed();
+            } else if (trimmedLine.startsWith("Family:")) {
+                systemFamily = trimmedLine.mid(7).trimmed();
+            }
         }
     }
     
+    // Add user-friendly rows
+    if (!manufacturer.isEmpty() && manufacturer != "Not Specified" && manufacturer != "To Be Filled By O.E.M.") {
+        addMainboardRow(table, QObject::tr("Manufacturer"), manufacturer);
+    } else if (!systemManufacturer.isEmpty() && systemManufacturer != "Not Specified") {
+        addMainboardRow(table, QObject::tr("Manufacturer"), systemManufacturer);
+    }
+    
+    if (!product.isEmpty() && product != "Not Specified" && product != "To Be Filled By O.E.M.") {
+        addMainboardRow(table, QObject::tr("Name"), product);
+    } else if (!systemProduct.isEmpty() && systemProduct != "Not Specified") {
+        addMainboardRow(table, QObject::tr("Name"), systemProduct);
+    }
+    
+    if (!systemFamily.isEmpty() && systemFamily != "Not Specified" && systemFamily != "To Be Filled By O.E.M.") {
+        addMainboardRow(table, QObject::tr("Type"), systemFamily);
+    }
+    
+    if (!version.isEmpty() && version != "Not Specified" && version != "To Be Filled By O.E.M.") {
+        addMainboardRow(table, QObject::tr("Version"), version);
+    }
+    
+    if (!serialNumber.isEmpty() && serialNumber != "Not Specified" && serialNumber != "To Be Filled By O.E.M.") {
+        addMainboardRow(table, QObject::tr("Serial Number"), serialNumber);
+    }
+    
     // Get BIOS information
-    dmiProcess.start("sudo", QStringList() << "dmidecode" << "-t" << "bios");
-    dmiProcess.waitForFinished();
+    dmiProcess.start("dmidecode", QStringList() << "-t" << "bios");
+    dmiProcess.waitForFinished(3000);
     QString biosOutput = dmiProcess.readAllStandardOutput();
     
     if (!biosOutput.isEmpty()) {
@@ -109,52 +158,32 @@ void loadMainboardInformation(QTableWidget* table, const QJsonObject& data)
         }
         
         if (!biosVendor.isEmpty()) {
-            addRowToTable(table, QStringList() << "BIOS Vendor" << biosVendor << "" << "Mainboard");
+            addMainboardRow(table, QObject::tr("BIOS Vendor"), biosVendor);
         }
         if (!biosVersion.isEmpty()) {
-            addRowToTable(table, QStringList() << "BIOS Version" << biosVersion << "" << "Mainboard");
+            addMainboardRow(table, QObject::tr("BIOS Version"), biosVersion);
         }
         if (!biosDate.isEmpty()) {
-            addRowToTable(table, QStringList() << "BIOS Date" << biosDate << "" << "Mainboard");
+            addMainboardRow(table, QObject::tr("BIOS Date"), biosDate);
         }
     }
     
     // Get chipset information from lspci
     QProcess lspciProcess;
-    lspciProcess.start("lspci", QStringList() << "-v");
-    lspciProcess.waitForFinished();
+    lspciProcess.start("lspci");
+    lspciProcess.waitForFinished(3000);
     QString lspciOutput = lspciProcess.readAllStandardOutput();
     
     QStringList lspciLines = lspciOutput.split('\n');
+    bool foundChipset = false;
     for (const QString& line : lspciLines) {
-        if (line.contains("Host bridge:") || line.contains("ISA bridge:")) {
-            QString chipset = line.split(':').last().trimmed();
-            if (line.contains("Host bridge:")) {
-                addRowToTable(table, QStringList() << "Chipset" << chipset << "" << "Mainboard");
-            } else if (line.contains("ISA bridge:")) {
-                addRowToTable(table, QStringList() << "South Bridge" << chipset << "" << "Mainboard");
+        if (line.contains("Host bridge:", Qt::CaseInsensitive)) {
+            QString chipset = line.section(':', 2).trimmed();
+            if (!chipset.isEmpty() && !foundChipset) {
+                addMainboardRow(table, QObject::tr("Chipset"), chipset);
+                foundChipset = true;
             }
         }
-    }
-    
-    // Get USB controllers
-    lspciProcess.start("lspci", QStringList() << "-v" << "-d" << "*:*");
-    lspciProcess.waitForFinished();
-    QString usbOutput = lspciProcess.readAllStandardOutput();
-    
-    QStringList usbLines = usbOutput.split('\n');
-    QStringList usbControllers;
-    for (const QString& line : usbLines) {
-        if (line.contains("USB controller:")) {
-            QString controller = line.split(':').last().trimmed();
-            if (!usbControllers.contains(controller)) {
-                usbControllers.append(controller);
-            }
-        }
-    }
-    
-    for (int i = 0; i < usbControllers.size(); ++i) {
-        addRowToTable(table, QStringList() << QString("USB Controller %1").arg(i + 1) << usbControllers[i] << "" << "Mainboard");
     }
 }
 

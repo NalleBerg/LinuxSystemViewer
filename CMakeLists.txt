@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(LSV VERSION 0.7.2)
+project(LSV VERSION 0.17.0)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -22,6 +22,7 @@ qt6_standard_project_setup()
 # Main executable with all source files
 qt6_add_executable(LSV
     lsv.cpp
+    version.cpp
     multitabs.cpp
     ctrlw.cpp
     tab_widget_base.cpp
