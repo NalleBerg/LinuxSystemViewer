@@ -32,6 +32,11 @@ LSV_autogen/
 *.AppImage
 squashfs-root/
 
+# Virtual machines and ISOs
+*.vdi
+*.vmdk
+*.iso
+
 # Editor and OS files
 *.swp
 *~
