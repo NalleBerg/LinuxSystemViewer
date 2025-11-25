@@ -33,20 +33,7 @@ BUILD_DIR="$ROOTDIR/build"
 # Don't enable shell debug tracing in normal installs — it produces noisy '+' lines
 # when the script runs under sudo. Keep output minimal for GUI/CI use.
 
-# 1) Try to install a .deb if present
-DEB_FILE=$(find "$BUILD_DIR" -maxdepth 1 -type f -name 'lsv-*.deb' -print -quit 2>/dev/null || true)
-if [ -n "$DEB_FILE" ]; then
-  echo "Found DEB: $DEB_FILE. Installing with dpkg..."
-  dpkg -i "$DEB_FILE" || true
-  # try to fix deps if apt is available
-  if command -v apt-get >/dev/null 2>&1; then
-    apt-get -f install -y || true
-  fi
-  echo "DEB install finished."
-  exit 0
-fi
-
-# 2) If no DEB, try to install the built binary
+# Install the built binary from build/LSV
 BIN_FILE="$BUILD_DIR/LSV"
 if [ ! -f "$BIN_FILE" ]; then
   echo "No built binary found at $BIN_FILE. Trying to build with ./makeit.sh"

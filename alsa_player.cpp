@@ -3,6 +3,7 @@
 #include <fstream>
 #include <cstring>
 #include <iostream>
+#include <unistd.h>  // for usleep
 
 // WAV file header structure
 struct WavHeader {
@@ -144,11 +145,26 @@ bool AlsaPlayer::playWavFile(const std::string& filename) {
     std::cout << "ALSA: Draining remaining samples..." << std::endl;
     std::cout.flush();
     snd_pcm_nonblock(pcm_handle, 0); // Ensure blocking mode
-    snd_pcm_drain(pcm_handle);        // Wait for all samples to play
+    err = snd_pcm_drain(pcm_handle);  // Wait for all samples to play
+    if (err < 0) {
+        std::cerr << "ALSA WARNING: Drain failed: " << snd_strerror(err) << std::endl;
+        std::cerr.flush();
+        // Drop frames instead if drain failed
+        snd_pcm_drop(pcm_handle);
+    }
     
-    // Close device
-    snd_pcm_close(pcm_handle);
+    // Close device and ensure it's fully released
+    std::cout << "ALSA: Closing device..." << std::endl;
+    std::cout.flush();
+    err = snd_pcm_close(pcm_handle);
+    if (err < 0) {
+        std::cerr << "ALSA WARNING: Close failed: " << snd_strerror(err) << std::endl;
+        std::cerr.flush();
+    }
     file.close();
+    
+    // Give the audio system a moment to fully release resources
+    usleep(50000); // 50ms delay to ensure device is released
     
     std::cout << "ALSA: Playback completed successfully" << std::endl;
     std::cout.flush();

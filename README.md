@@ -6,29 +6,39 @@
 
 Official project home & binaries: https://lsv.nalle.no/
 
-NOTE: At present we provide official DEB binaries (Debian/Ubuntu). If you need other formats we can add them later; meanwhile the repository includes helper scripts (`makeit.sh`, `install.sh`, `uninstall.sh`) to build from source and install locally.
+**Current version: 0.17.0**
 
-Linux System Viewer (LSV) is a small, focused Qt6-based GUI tool that presents
+Linux System Viewer (LSV) is a lightweight, focused Qt6-based GUI tool that presents
 detailed system hardware and software information on Linux. It provides both a
 user-friendly overview and technical ("geek") views of components such as CPU,
-memory, storage, network, and more.
+memory, storage, network, graphics, audio, and more.
 
-- Clean, read-only design: the app gathers information using system utilities and
-  presents it without modifying the system.
-- Two presentation modes: user-friendly summaries and detailed technical views.
-- Packaging: DEB via CPack for easy distribution on Debian/Ubuntu.
-- Developer-friendly build options and an opt-in debug logger for safe
-  troubleshooting (disabled by default in release builds).
+**Key features:**
+- Clean, read-only design: gathers information using direct system file access (no external dependencies like lshw, dmidecode, etc.)
+- Two presentation modes: user-friendly summaries and detailed technical views
+- Instant loading: no external process spawning for data collection
+- Packaging: DEB and RPM packages via CPack for easy distribution
+- Internationalization: supports multiple languages with built-in translations
+- Sound testing: built-in audio hardware testing using ALSA
+- Developer-friendly: optional debug logger for safe troubleshooting (disabled by default)
 
-Configuration
-- Persistent language selection is stored in `~/.config/LSV/lsv_lang.rc`. The
-  application will consult only this file for the saved language choice — no
-  other locations are used. A "Change language" dropdown is available in the
-  app title bar and a "Reset language" button removes the saved file and
-  reverts the UI to English.
+**Recent changes (v0.17.0):**
+- Major redesign of all information tabs with consistent UI/UX
+- TabWidgetBase class removed - simplified to pure QWidget architecture
+- Direct system file access eliminates dependency on external tools
+- Significantly improved performance and loading speed
+- Enhanced Norwegian translation (69% complete)
+- Audio tab with built-in sound testing
+- New Ports & Summary tabs for comprehensive system overview
 
-Screenshots and binary downloads
-- Releases and packaging builds are published at: https://lsv.nalle.no/
+**Configuration:**
+- Language selection is stored in `~/.config/LSV/lsv_lang.rc`
+- "Change language" dropdown in the app title bar
+- "Reset language" button reverts UI to English
+
+**Downloads:**
+- Official releases and packages: https://lsv.nalle.no/
+- DEB and RPM packages available for Debian/Ubuntu and Fedora/openSUSE
 
 Quickstart — build & run (developer)
 ----------------------------------
@@ -98,110 +108,212 @@ which LSV
 /usr/bin/LSV --rc-path
 ```
 
-If you prefer not to install a package you can also move the runtime `LSV`
-bundle into place manually. After running `./makeit.sh` the `LSV` runtime can
-be copied to `/usr/bin` so all users can run it from the menu or command line:
+Manual installation (without package manager):
+If you prefer not to use the package manager, you can install the built binary manually:
 
 ```bash
-# Copy runtime to a system-wide location and make it executable
-sudo cp ./LSV/LSV /usr/bin/LSV
-sudo chown root:root /usr/bin/LSV
-sudo chmod 0755 /usr/bin/LSV
+# After running ./makeit.sh, copy the binary and assets
+sudo install -Dm755 ./LSV/LSV /usr/bin/LSV
+sudo install -Dm644 ./lsv.desktop /usr/share/applications/lsv.desktop
 
-# Now you can run it as a normal system command
-/usr/bin/LSV
+# Copy icon (if available)
+sudo install -Dm644 ./lsv-512.png /usr/share/icons/hicolor/512x512/apps/lsv.png
+
+# Update desktop database
+sudo update-desktop-database /usr/share/applications
+sudo gtk-update-icon-cache -f -t /usr/share/icons/hicolor
 ```
 
-Icons & desktop installer
--------------------------
+Installation helpers
+--------------------
 
-The repository now includes a small installer helper (`install.sh`) and a matching uninstaller (`uninstall.sh`) that will install the runtime, desktop entry, icons and AppStream metadata for you.
+The repository includes `install.sh` and `uninstall.sh` scripts that handle package installation and system integration:
 
-Usage (from project root):
-
+**Installing:**
 ```bash
-# Build and package (creates ./LSV/*.deb and the runtime bundle)
+# Build and package (creates ./LSV/lsv-0.17.0.deb and ./LSV/lsv-0.17.0.rpm)
 ./makeit.sh
 
-# Install the built package and helper-installed files (run as root)
+# Install the DEB package (Debian/Ubuntu)
 sudo ./install.sh
-
-# Remove installed files
-sudo ./uninstall.sh
 ```
 
-What `install.sh` does:
-- Installs the generated DEB if present (preferred), or copies the runtime bundle to `/usr/bin/LSV`.
-- Installs `/usr/share/applications/lsv.desktop` and the hicolor icons under `/usr/share/icons/hicolor/` (multiple sizes when available).
-- Installs the AppStream metadata to `/usr/share/metainfo/` and refreshes the system caches (best-effort).
+**What install.sh does:**
+- Installs the generated DEB package if found in `build/` directory (preferred method)
+- Falls back to manual binary installation if no package exists
+- Installs desktop entry to `/usr/share/applications/lsv.desktop`
+- Installs hicolor icons in multiple sizes to `/usr/share/icons/hicolor/`
+- Installs AppStream metadata to `/usr/share/metainfo/`
+- Updates desktop and icon caches
+- Handles SELinux relabeling if needed
 
-If you prefer manual installation you can still copy `lsv.desktop` to `/usr/share/applications/` and `lsv.png` (or the sizes in `./LSV`) to `/usr/share/icons/hicolor/` and update the icon/desktop caches (requires sudo).
+**Uninstalling:**
+```bash
+# Remove all installed files
+sudo ./uninstall.sh
 
-Developer note: to build a developer package that includes the optional logger, pass `-DLSV_ENABLE_DEBUG_LOGGER=ON` to CMake or run `./makeit.sh --debug-logger` (the logger is disabled in normal release builds).
+# Or use -y to skip confirmation prompt
+sudo ./uninstall.sh -y
+```
 
-One-liner examples
-- Default (build and package for DEB):
+**What uninstall.sh does:**
+- Removes `/usr/bin/LSV` binary
+- Removes desktop file and icons
+- Removes AppStream metadata
+- Cleans up per-user desktop/icon copies in `~/.local/share/`
+- Updates desktop and icon caches
 
+Build examples
+--------------
+
+**Default build** (creates DEB and RPM packages):
 ```bash
 ./makeit.sh
 ```
 
-- Build/package without running any runtime tests (opt-out):
-
-```bash
-./makeit.sh --norun
-```
-
-- Create a developer package that includes the debug logger (runtime still needs LSV_DEBUG=1 to write logs):
-
+**Build with debug logger** (for development):
 ```bash
 ./makeit.sh --debug-logger
 ```
 
-Logging policy and design
-- Default (release): NO logging and no files written by the app.
-- Developer/debug builds: logging is compiled in only when the CMake option
-	`LSV_ENABLE_DEBUG_LOGGER` is enabled. Runtime logging still requires the
-	environment variable `LSV_DEBUG=1` (or `true`) to actually write logs.
-- Logs are deliberately written to the system temp dir to avoid persistent
-	files in user folders or inside packaged artifacts.
+**Build without running tests:**
+```bash
+./makeit.sh --norun
+```
 
-Why this model
-- Respect for users' machines: the application is intended to be read-only for
-	normal users and will not leave traces or write files unless explicitly
-	requested by developers for debugging.
+**Build and run:**
+```bash
+./makeit.sh --run
+```
+
+The logger is disabled by default in release builds. When compiled with `--debug-logger`, 
+you still need to set `LSV_DEBUG=1` environment variable at runtime to actually write logs.
+
+Development and debugging
+-------------------------
+
+**Logging policy:**
+- Release builds: NO logging, no files written by the app
+- Debug builds: logging compiled in only when `LSV_ENABLE_DEBUG_LOGGER` is enabled
+- Runtime logging requires environment variable `LSV_DEBUG=1` (or `true`)
+- Logs written to system temp directory to avoid persistent files
+
+**Why this design:**
+The application is read-only by design and respects users' machines. It gathers 
+system information without modifying anything or leaving traces unless explicitly 
+requested for debugging.
+
+**Sound files location:**
+Audio test files are installed to:
+- System: `/usr/share/lsv/sounds/` (package install)
+- Local: `/usr/local/share/lsv/sounds/` (make install)
+- Development: `../sounds/` (relative to binary)
+
+Build requirements
+------------------
+
+**Required:**
+- Qt6 (Core, Widgets, Network, Multimedia)
+- CMake 3.16 or later
+- C++17 compatible compiler (GCC 7+, Clang 5+)
+- ALSA development libraries (`libasound2-dev` on Debian/Ubuntu)
+
+**Optional:**
+- Qt Linguist tools for translation work
+- CPack for package generation (included with CMake)
+- `rpmbuild` for RPM package generation
+- AppStream tools for metadata validation
+
+**Install dependencies on Debian/Ubuntu:**
+```bash
+sudo apt install build-essential cmake \
+                 qt6-base-dev qt6-multimedia-dev \
+                 libasound2-dev \
+                 qt6-tools-dev qt6-tools-dev-tools
+```
 
 Contributing
-- Bug reports, feature requests and patches are welcome. If you plan to add
-	functionality that writes persistent data, please discuss it first.
+------------
+
+Bug reports, feature requests, and patches are welcome! 
+
+**Guidelines:**
+- Keep the app read-only - no persistent data writes unless for debug purposes
+- Follow existing code style and architecture patterns
+- Test in both normal and geek mode views
+- Update translations if you modify UI strings
+- Submit PRs with clear descriptions of changes
+
+**Code structure:**
+- Each tab inherits from `QWidget` (simplified from `TabWidgetBase`)
+- Direct system file access (no external tool dependencies)
+- Two-mode display: normal view and geek mode (detailed technical info)
 
 Help translate LSV
 ------------------
 
-We welcome help translating Linux System Viewer into more languages. If you'd like to contribute translations (for example Icelandic), follow these steps:
+We welcome translations! Current status:
+- **Norwegian (Bokmål)**: 69% complete (311/452 strings)
+- **British English**: Available as reference
 
-1. Install Qt Linguist tools (lupdate / linguist / lrelease). On Debian/Ubuntu: `sudo apt install qttools5-dev-tools qttools5-dev`.
-2. Update or open the `.ts` file for the language in `i18n/` (e.g. `i18n/lsv_is.ts`) using Qt Linguist, translate any unfinished entries and mark them as "finished".
-3. Run `lrelease i18n/lsv_<code>.ts` to generate the binary `i18n/lsv_<code>.qm` file used at runtime.
-4. Commit both the `.ts` and the generated `.qm` to a branch and open a pull request. Example commit message: `i18n(is): complete Icelandic translation`.
+**To contribute a translation:**
 
-Notes for translators
-- Keep HTML/markup inside translations unchanged (e.g. `&lt;br&gt;`, links, `%1` placeholders).
-- Try to keep technical labels short and consistent with tab names (e.g. "Summary" -> "Yfirlit").
-- If you want me to help with an initial draft I can provide a first-pass translation and you can refine it with Qt Linguist.
+1. **Install Qt Linguist tools:**
+   ```bash
+   # Debian/Ubuntu (Qt6)
+   sudo apt install qt6-tools-dev qt6-tools-dev-tools
+   
+   # Or Qt5 tools work too
+   sudo apt install qttools5-dev-tools
+   ```
 
-Contact
-- Open a PR on GitHub or email me at the project contact address shown on the project website.
+2. **Create or update translation file:**
+   ```bash
+   # Extract strings to .ts file
+   lupdate . -ts i18n/lsv_<langcode>.ts
+   
+   # Open in Qt Linguist GUI
+   linguist i18n/lsv_<langcode>.ts
+   ```
+
+3. **Translate and compile:**
+   - Mark translated strings as "finished" in Qt Linguist
+   - Save the .ts file
+   - Compile to .qm: `lrelease i18n/lsv_<langcode>.ts`
+
+4. **Test your translation:**
+   ```bash
+   ./makeit.sh
+   ./build/LSV
+   # Select your language from the dropdown
+   ```
+
+5. **Submit:**
+   - Commit both `.ts` and `.qm` files
+   - Open a pull request
+   - Example message: `i18n(is): add Icelandic translation`
+
+**Translation notes:**
+- Keep HTML/markup unchanged (e.g. `<br>`, `%1` placeholders)
+- Technical labels should be short and consistent
+- Test in both normal and geek mode views
 
 License
-- This project is distributed under the GNU General Public License v2 (GPLv2).
+-------
 
-Contact / Project home
-- Homepage and downloadable binaries: https://lsv.nalle.no/
+This project is distributed under the **GNU General Public License v2 (GPLv2)**.
 
-Enjoy — and thanks for keeping users' machines respected and secure.
+Contact
+-------
 
+- **Project homepage:** https://lsv.nalle.no/
+- **Source repository:** https://github.com/NalleBerg/LinuxSystemViewer
+- **Bug reports:** Open an issue on GitHub
+- **Email:** Contact address available on project website
 
+---
 
-This document explains how logging works, how to enable it for development, and how to produce release builds / packages without logging.
+**Version 0.17.0** — November 2024
+
+Enjoy LSV, and thank you for respecting users' machines and privacy!
 

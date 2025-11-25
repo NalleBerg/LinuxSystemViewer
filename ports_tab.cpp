@@ -1,192 +1,455 @@
 #include "ports_tab.h"
+#include "gui_helpers.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QHeaderView>
+#include <QFile>
+#include <QTextStream>
+#include <QDir>
 #include <QScrollArea>
-#include <QGroupBox>
 #include <QFont>
-#include <QRegularExpression>
-#include <QDebug>
-#include <QCoreApplication>
+#include <QClipboard>
+#include <QGuiApplication>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QDialogButtonBox>
+#include <QShowEvent>
 
 PortsTab::PortsTab(QWidget* parent)
-    : TabWidgetBase(QCoreApplication::translate("PortsTab", "Ports"), "lsusb -t && lspci | grep -i 'serial\\|usb'", true, 
-                    "lsusb -v && lspci -v | grep -A5 -i 'serial\\|usb' && dmesg | grep -i usb | tail -10", parent)
+    : QWidget(parent)
 {
-    qDebug() << "PortsTab: Constructor called - base constructor done";
-    initializeTab();
-    qDebug() << "PortsTab: Constructor finished";
-}
+    // Headline and Geek button
+    QPushButton* gb = nullptr;
+    QHBoxLayout* headlineLayout = createHeadlineWithGeek(this, tr("Ports"), &gb);
+    geekButton = gb;
+    connect(geekButton, &QPushButton::clicked, this, &PortsTab::showGeekMode);
 
-QWidget* PortsTab::createUserFriendlyView()
-{
-    qDebug() << "PortsTab: createUserFriendlyView called";
-    
-    QScrollArea* scrollArea = new QScrollArea();
+    QVBoxLayout* mainLayout = new QVBoxLayout(this);
+    applyMainLayoutDefaults(mainLayout);
+    mainLayout->addLayout(headlineLayout);
+
+    // Table
+    tableWidget = new QTableWidget();
+    tableWidget->setColumnCount(2);
+    tableWidget->setHorizontalHeaderLabels({tr("Property"), tr("Value")});
+    tableWidget->verticalHeader()->setVisible(false);
+    tableWidget->horizontalHeader()->setStyleSheet(
+        "QHeaderView::section { background-color: #2c3e50; color: white; "
+        "padding: 5px; font-weight: bold; }"
+    );
+    tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    tableWidget->setWordWrap(true);
+    tableWidget->setAlternatingRowColors(true);
+    tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    // Scroll area
+    QScrollArea* scrollArea = new QScrollArea;
+    scrollArea->setWidget(tableWidget);
     scrollArea->setWidgetResizable(true);
-    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    
-    QWidget* contentWidget = new QWidget();
-    QVBoxLayout* mainLayout = new QVBoxLayout(contentWidget);
-    mainLayout->setSpacing(15);
-    mainLayout->setContentsMargins(20, 20, 20, 20);
-    
-    QLabel* titleLabel = new QLabel(QCoreApplication::translate("PortsTab", "System Ports Information"));
-    titleLabel->setStyleSheet(
-        "QLabel {"
-        "  font-size: 18px;"
-        "  font-weight: bold;"
-        "  color: #2c3e50;"
-        "  margin-bottom: 10px;"
-        "}"
-    );
-    mainLayout->addWidget(titleLabel);
-    
-    createInfoSection(QCoreApplication::translate("PortsTab", "USB Ports"), &m_usbPortsSection, &m_usbPortsContent, mainLayout);
-    createInfoSection(QCoreApplication::translate("PortsTab", "Serial Ports"), &m_serialPortsSection, &m_serialPortsContent, mainLayout);
-    createInfoSection(QCoreApplication::translate("PortsTab", "PCI Ports"), &m_pciPortsSection, &m_pciPortsContent, mainLayout);
-    createInfoSection(QCoreApplication::translate("PortsTab", "Port Status"), &m_portStatusSection, &m_portStatusContent, mainLayout);
-    
-    mainLayout->addStretch();
-    
-    scrollArea->setWidget(contentWidget);
-    
-    qDebug() << "PortsTab: createUserFriendlyView completed";
-    return scrollArea;
+    scrollArea->setMinimumHeight(220);
+    mainLayout->addWidget(scrollArea);
+
+    // Enable copy
+    enableTableCopy(tableWidget);
+
+    // Load information
+    loadPortsInformation();
 }
 
-void PortsTab::createInfoSection(const QString& title, QGroupBox** groupBox, QLabel** contentLabel, QVBoxLayout* parentLayout)
+void PortsTab::loadPortsInformation()
 {
-    *groupBox = new QGroupBox(title);
-    (*groupBox)->setStyleSheet(
-        "QGroupBox {"
-        "  font-weight: bold;"
-        "  border: 2px solid #bdc3c7;"
-        "  border-radius: 8px;"
-        "  margin-top: 10px;"
-        "  padding-top: 10px;"
-        "}"
-        "QGroupBox::title {"
-        "  subcontrol-origin: margin;"
-        "  left: 10px;"
-        "  padding: 0 10px 0 10px;"
-        "}"
-    );
+    tableWidget->setRowCount(0);
     
-    QVBoxLayout* sectionLayout = new QVBoxLayout(*groupBox);
-    *contentLabel = new QLabel(QCoreApplication::translate("PortsTab", "Loading %1 information...").arg(title.toLower()));
-    (*contentLabel)->setWordWrap(true);
-    (*contentLabel)->setStyleSheet("QLabel { padding: 10px; background-color: #f8f9fa; border-radius: 4px; }");
-    sectionLayout->addWidget(*contentLabel);
-    
-    parentLayout->addWidget(*groupBox);
-}
-
-void PortsTab::parseOutput(const QString& output)
-{
-    qDebug() << "PortsTab: parseOutput called";
-    
-    QStringList lines = output.split('\n', Qt::SkipEmptyParts);
-    
-    QString usbPortsInfo = QCoreApplication::translate("PortsTab", "USB Ports: Not detected");
-    QString serialPortsInfo = QCoreApplication::translate("PortsTab", "Serial Ports: Not detected");
-    QString pciPortsInfo = QCoreApplication::translate("PortsTab", "PCI Ports: Not detected");
-    QString portStatusInfo = QCoreApplication::translate("PortsTab", "Port Status: Unknown");
-    
-    QStringList usbPorts;
-    QStringList serialPorts;
-    QStringList pciPorts;
-    QStringList portStatus;
-    
-    bool inUsbTree = false;
-    int usbHubCount = 0;
-    int usbDeviceCount = 0;
-    
-    for (const QString& line : lines) {
-        QString trimmed = line.trimmed();
+    auto addRow = [this](const QString& property, const QString& value) {
+        if (value.isEmpty()) return;
+        int row = tableWidget->rowCount();
+        tableWidget->insertRow(row);
         
-        // Parse lsusb -t output (USB tree)
-        if (trimmed.startsWith("/:") || trimmed.startsWith("|__") || trimmed.startsWith("`__")) {
-            inUsbTree = true;
-            
-            if (trimmed.startsWith("/:")) {
-                // USB hub/root
-                QRegularExpression hubRegex("Bus\\s+(\\d+)");
-                QRegularExpressionMatch hubMatch = hubRegex.match(trimmed);
-                if (hubMatch.hasMatch()) {
-                    QString busNum = hubMatch.captured(1);
-                    usbPorts.append("USB Bus " + busNum + " (Root Hub)");
-                    usbHubCount++;
-                }
-            } else if (trimmed.contains("Class=")) {
-                // USB device
-                QRegularExpression devRegex("Dev\\s+(\\d+).*?Class=([^,]+)");
-                QRegularExpressionMatch devMatch = devRegex.match(trimmed);
-                if (devMatch.hasMatch()) {
-                    QString devNum = devMatch.captured(1);
-                    QString devClass = devMatch.captured(2);
-                    usbPorts.append("  Device " + devNum + " (" + devClass.trimmed() + ")");
+        QTableWidgetItem* propItem = new QTableWidgetItem(property);
+        QFont boldFont;
+        boldFont.setBold(true);
+        propItem->setFont(boldFont);
+        tableWidget->setItem(row, 0, propItem);
+        
+        QString displayVal = value;
+        displayVal.replace("\n", " ↳ ");
+        
+        QTableWidgetItem* valItem = new QTableWidgetItem(displayVal);
+        tableWidget->setItem(row, 1, valItem);
+        tableWidget->resizeRowToContents(row);
+    };
+    
+    // Count USB devices
+    int usbDeviceCount = 0;
+    int usbHubCount = 0;
+    QDir usbDir("/sys/bus/usb/devices");
+    if (usbDir.exists()) {
+        QStringList usbDevices = usbDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        for (const QString& dev : usbDevices) {
+            QFile devFile(QString("/sys/bus/usb/devices/%1/product").arg(dev));
+            if (devFile.exists()) {
+                if (dev.contains(':')) {
                     usbDeviceCount++;
+                } else {
+                    usbHubCount++;
                 }
             }
         }
-        
-        // Parse lspci output for serial and USB controllers
-        if (trimmed.contains("Serial controller") || trimmed.contains("serial", Qt::CaseInsensitive)) {
-            serialPorts.append(trimmed);
-        }
-        
-        if (trimmed.contains("USB controller") || trimmed.contains("USB", Qt::CaseInsensitive)) {
-            pciPorts.append(trimmed);
-        }
-        
-        // Parse other PCI devices that might be relevant
-        if (trimmed.contains("Communication controller") || 
-            trimmed.contains("Bridge") ||
-            trimmed.contains("Host bridge")) {
-            pciPorts.append(trimmed);
+    }
+    
+    addRow(tr("USB Buses/Hubs"), QString::number(usbHubCount));
+    addRow(tr("USB Devices Connected"), QString::number(usbDeviceCount));
+    
+    // Count serial ports
+    int serialCount = 0;
+    QDir serialDir("/sys/class/tty");
+    if (serialDir.exists()) {
+        QStringList serials = serialDir.entryList(QStringList() << "ttyS*" << "ttyUSB*" << "ttyACM*", QDir::Dirs);
+        serialCount = serials.count();
+        if (serialCount > 0) {
+            addRow(tr("Serial Ports"), serials.join(", "));
         }
     }
     
-    // Generate port status summary
-    portStatus.append("USB Hubs: " + QString::number(usbHubCount));
-    portStatus.append("USB Devices: " + QString::number(usbDeviceCount));
-    portStatus.append("Serial Controllers: " + QString::number(serialPorts.size()));
-    portStatus.append("USB Controllers: " + QString::number(pciPorts.count("USB")));
-    
-    // Format the information
-    if (!usbPorts.isEmpty()) {
-        usbPortsInfo = QCoreApplication::translate("PortsTab", "USB Ports:\n") + usbPorts.join("\n");
+    // Count PCI USB controllers
+    int usbControllers = 0;
+    QDir pciDir("/sys/bus/pci/devices");
+    if (pciDir.exists()) {
+        QStringList pciDevices = pciDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        for (const QString& dev : pciDevices) {
+            QFile classFile(QString("/sys/bus/pci/devices/%1/class").arg(dev));
+            if (classFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                QString classId = QTextStream(&classFile).readLine().trimmed();
+                classFile.close();
+                // 0x0c03xx = USB controller
+                if (classId.startsWith("0x0c03")) {
+                    usbControllers++;
+                }
+            }
+        }
     }
     
-    if (!serialPorts.isEmpty()) {
-        serialPortsInfo = QCoreApplication::translate("PortsTab", "Serial Ports:\n") + serialPorts.join("\n");
-    } else {
-        serialPortsInfo = QCoreApplication::translate("PortsTab", "Serial Ports:\nNo serial controllers detected");
+    addRow(tr("USB Controllers (PCI)"), QString::number(usbControllers));
+    
+    // Check for Bluetooth
+    QDir bluetoothDir("/sys/class/bluetooth");
+    if (bluetoothDir.exists()) {
+        QStringList btDevices = bluetoothDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        if (!btDevices.isEmpty()) {
+            addRow(tr("Bluetooth Adapters"), QString::number(btDevices.count()));
+        }
     }
     
-    if (!pciPorts.isEmpty()) {
-        pciPortsInfo = QCoreApplication::translate("PortsTab", "PCI Ports:\n") + pciPorts.join("\n");
+    // Network interfaces (can be seen as network ports)
+    int ethCount = 0, wlanCount = 0;
+    QDir netDir("/sys/class/net");
+    if (netDir.exists()) {
+        QStringList interfaces = netDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        for (const QString& iface : interfaces) {
+            if (iface.startsWith("eth") || iface.startsWith("enp")) ethCount++;
+            else if (iface.startsWith("wlan") || iface.startsWith("wlp")) wlanCount++;
+        }
+        if (ethCount > 0) addRow(tr("Ethernet Ports"), QString::number(ethCount));
+        if (wlanCount > 0) addRow(tr("Wireless Adapters"), QString::number(wlanCount));
+    }
+}
+
+void PortsTab::showGeekMode()
+{
+    GeekPortsDialog dlg(this);
+    dlg.exec();
+}
+
+// ===== Geek Mode Dialog =====
+
+GeekPortsDialog::GeekPortsDialog(QWidget* parent)
+    : QDialog(parent)
+    , refreshTimer(new QTimer(this))
+{
+    setWindowTitle(tr("Ports - Geek Mode"));
+    setModal(true);
+    resize(700, 500);
+
+    QVBoxLayout* layout = new QVBoxLayout(this);
+    QLabel* titleLabel = new QLabel(tr("Ports Technical Details"));
+    titleLabel->setStyleSheet("font-size:16px; font-weight:bold; color:#2c3e50; margin-bottom:10px;");
+    layout->addWidget(titleLabel);
+
+    table = new QTableWidget();
+    table->setColumnCount(2);
+    table->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
+    table->verticalHeader()->setVisible(false);
+    table->horizontalHeader()->setStyleSheet("QHeaderView::section { background-color: #34495e; color: white; font-weight: bold; padding: 8px; border: 1px solid #2c3e50; }");
+    table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    table->setWordWrap(true);
+
+    QScrollArea* scrollArea = new QScrollArea;
+    scrollArea->setWidget(table);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setMinimumHeight(350);
+    layout->addWidget(scrollArea);
+
+    // Buttons: Copy, Save, Close
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QPushButton* copyBtn = new QPushButton(tr("Copy"));
+    QPushButton* saveBtn = new QPushButton(tr("Save..."));
+    buttonBox->addButton(copyBtn, QDialogButtonBox::ActionRole);
+    buttonBox->addButton(saveBtn, QDialogButtonBox::ActionRole);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    layout->addWidget(buttonBox);
+
+    // Enable copy
+    enableTableCopy(table, refreshTimer);
+
+    connect(copyBtn, &QPushButton::clicked, [this]() {
+        QString all;
+        for (int r = 0; r < table->rowCount(); ++r) {
+            QString prop = table->item(r,0) ? table->item(r,0)->text() : QString();
+            QString val = table->item(r,1) ? table->item(r,1)->text() : QString();
+            all += prop + ": " + val + "\n";
+        }
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        clipboard->setText(all, QClipboard::Clipboard);
+        QMessageBox msgBox(this);
+        msgBox.setWindowTitle(tr("Copied"));
+        msgBox.setText(tr("The information has been copied\nto the clipboard."));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.exec();
+    });
+
+    connect(saveBtn, &QPushButton::clicked, [this]() {
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save Ports Info"), "ports-info.csv", tr("CSV Files (*.csv);;All Files (*)"));
+        if (fileName.isEmpty()) return;
+
+        auto esc = [](const QString &s)->QString {
+            QString out = s;
+            out.replace('"', "\"\"");
+            if (out.contains(',') || out.contains('\n') || out.contains('"')) {
+                out = '"' + out + '"';
+            }
+            return out;
+        };
+
+        QFile out(fileName);
+        if (!out.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+        QTextStream ts(&out);
+        ts << "Property,Value\n";
+        for (int r = 0; r < table->rowCount(); ++r) {
+            QString prop = table->item(r,0) ? table->item(r,0)->text() : QString();
+            QString val = table->item(r,1) ? table->item(r,1)->text() : QString();
+            ts << esc(prop) << ',' << esc(val) << '\n';
+        }
+        out.close();
+    });
+
+    fillTable();
+
+    // Auto-refresh every second
+    refreshTimer->setInterval(1000);
+    connect(refreshTimer, &QTimer::timeout, this, &GeekPortsDialog::fillTable);
+}
+
+void GeekPortsDialog::showEvent(QShowEvent* ev)
+{
+    QDialog::showEvent(ev);
+    if (refreshTimer) refreshTimer->start();
+}
+
+void GeekPortsDialog::hideEvent(QHideEvent* ev)
+{
+    if (refreshTimer) refreshTimer->stop();
+    QDialog::hideEvent(ev);
+}
+
+void GeekPortsDialog::fillTable()
+{
+    table->setRowCount(0);
+    int row = 0;
+    
+    auto addRow = [&](const QString& prop, const QString& val) {
+        table->insertRow(row);
+        QTableWidgetItem* p = new QTableWidgetItem(prop);
+        QFont bold;
+        bold.setBold(true);
+        p->setFont(bold);
+        table->setItem(row, 0, p);
+        
+        QString displayVal = val;
+        displayVal.replace("\n", " ↳ ");
+        
+        QTableWidgetItem* v = new QTableWidgetItem(displayVal);
+        v->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        table->setItem(row, 1, v);
+        table->resizeRowToContents(row);
+        ++row;
+    };
+    
+    // === USB DEVICES ===
+    addRow(tr("=== USB DEVICES ==="), "");
+    
+    QDir usbDir("/sys/bus/usb/devices");
+    if (usbDir.exists()) {
+        QStringList usbDevices = usbDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+        for (const QString& dev : usbDevices) {
+            QDir devDir(usbDir.filePath(dev));
+            
+            addRow(tr("Device"), dev);
+            
+            // Read device properties
+            QStringList props;
+            props << "manufacturer" << "product" << "serial" << "idVendor" << "idProduct" 
+                  << "bDeviceClass" << "bDeviceSubClass" << "bDeviceProtocol" 
+                  << "bMaxPacketSize0" << "bMaxPower" << "speed" << "version";
+            
+            for (const QString& prop : props) {
+                QFile propFile(devDir.filePath(prop));
+                if (propFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                    QString value = QTextStream(&propFile).readLine().trimmed();
+                    propFile.close();
+                    if (!value.isEmpty()) {
+                        addRow(QString("  %1/%2").arg(dev, prop), value);
+                    }
+                }
+            }
+            
+            addRow("", ""); // Spacer
+        }
     }
     
-    if (!portStatus.isEmpty()) {
-        portStatusInfo = QCoreApplication::translate("PortsTab", "Port Status:\n") + portStatus.join("\n");
+    // === SERIAL PORTS ===
+    addRow(tr("=== SERIAL PORTS ==="), "");
+    
+    QDir ttyDir("/sys/class/tty");
+    if (ttyDir.exists()) {
+        QStringList ttys = ttyDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+        for (const QString& tty : ttys) {
+            if (tty.startsWith("ttyS") || tty.startsWith("ttyUSB") || tty.startsWith("ttyACM")) {
+                QDir ttyDevDir(ttyDir.filePath(tty));
+                
+                addRow(tr("Serial Port"), QString("/dev/%1").arg(tty));
+                
+                // Check if device exists
+                QFile devFile(QString("/dev/%1").arg(tty));
+                if (devFile.exists()) {
+                    addRow(QString("  %1/exists").arg(tty), "yes");
+                    
+                    // Try to read uevent
+                    QFile ueventFile(ttyDevDir.filePath("uevent"));
+                    if (ueventFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                        QString uevent = QTextStream(&ueventFile).readAll();
+                        ueventFile.close();
+                        addRow(QString("  %1/uevent").arg(tty), uevent);
+                    }
+                }
+                
+                addRow("", "");
+            }
+        }
     }
     
-    // Update the UI with parsed information
-    if (m_usbPortsContent) {
-        m_usbPortsContent->setText(usbPortsInfo);
-    }
-    if (m_serialPortsContent) {
-        m_serialPortsContent->setText(serialPortsInfo);
-    }
-    if (m_pciPortsContent) {
-        m_pciPortsContent->setText(pciPortsInfo);
-    }
-    if (m_portStatusContent) {
-        m_portStatusContent->setText(portStatusInfo);
+    // === PCI USB CONTROLLERS ===
+    addRow(tr("=== PCI USB CONTROLLERS ==="), "");
+    
+    QDir pciDir("/sys/bus/pci/devices");
+    if (pciDir.exists()) {
+        QStringList pciDevices = pciDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        for (const QString& dev : pciDevices) {
+            QFile classFile(QString("/sys/bus/pci/devices/%1/class").arg(dev));
+            if (classFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                QString classId = QTextStream(&classFile).readLine().trimmed();
+                classFile.close();
+                
+                // 0x0c03xx = USB controller, 0x0c00xx = Firewire, 0x0c05xx = SMBus
+                if (classId.startsWith("0x0c03") || classId.startsWith("0x0c00") || classId.startsWith("0x0c05")) {
+                    addRow(tr("PCI Device"), dev);
+                    addRow(QString("  %1/class").arg(dev), classId);
+                    
+                    QStringList pciProps;
+                    pciProps << "vendor" << "device" << "subsystem_vendor" << "subsystem_device" 
+                             << "irq" << "enable";
+                    
+                    for (const QString& prop : pciProps) {
+                        QFile propFile(QString("/sys/bus/pci/devices/%1/%2").arg(dev, prop));
+                        if (propFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                            QString value = QTextStream(&propFile).readLine().trimmed();
+                            propFile.close();
+                            if (!value.isEmpty()) {
+                                addRow(QString("  %1/%2").arg(dev, prop), value);
+                            }
+                        }
+                    }
+                    
+                    addRow("", "");
+                }
+            }
+        }
     }
     
-    qDebug() << "PortsTab: parseOutput completed";
+    // === BLUETOOTH ADAPTERS ===
+    QDir bluetoothDir("/sys/class/bluetooth");
+    if (bluetoothDir.exists()) {
+        QStringList btDevices = bluetoothDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        if (!btDevices.isEmpty()) {
+            addRow("", "");
+            addRow(tr("=== BLUETOOTH ADAPTERS ==="), "");
+            
+            for (const QString& bt : btDevices) {
+                addRow(tr("Bluetooth Adapter"), bt);
+                
+                QDir btDir(bluetoothDir.filePath(bt));
+                QStringList btProps;
+                btProps << "address" << "name" << "type";
+                
+                for (const QString& prop : btProps) {
+                    QFile propFile(btDir.filePath(prop));
+                    if (propFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                        QString value = QTextStream(&propFile).readLine().trimmed();
+                        propFile.close();
+                        if (!value.isEmpty()) {
+                            addRow(QString("  %1/%2").arg(bt, prop), value);
+                        }
+                    }
+                }
+                
+                addRow("", "");
+            }
+        }
+    }
+    
+    // === NETWORK INTERFACES ===
+    addRow(tr("=== NETWORK INTERFACES ==="), "");
+    
+    QDir netDir("/sys/class/net");
+    if (netDir.exists()) {
+        QStringList interfaces = netDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+        for (const QString& iface : interfaces) {
+            if (iface == "lo") continue; // Skip loopback
+            
+            QDir ifaceDir(netDir.filePath(iface));
+            
+            addRow(tr("Interface"), iface);
+            
+            QStringList netProps;
+            netProps << "address" << "operstate" << "speed" << "duplex" << "mtu" 
+                     << "type" << "tx_queue_len";
+            
+            for (const QString& prop : netProps) {
+                QFile propFile(ifaceDir.filePath(prop));
+                if (propFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                    QString value = QTextStream(&propFile).readLine().trimmed();
+                    propFile.close();
+                    if (!value.isEmpty() && value != "-1") {
+                        addRow(QString("  %1/%2").arg(iface, prop), value);
+                    }
+                }
+            }
+            
+            addRow("", "");
+        }
+    }
 }

@@ -1,4 +1,5 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
 <TS version="2.1" language="en_GB">
 <context>
     <name>AboutTab</name>
@@ -31,22 +32,22 @@ Linux System Viewer presents system information in an intuitive, easy-to-read fo
 Linux System Viewer presents system information in an intuitive, easy-to-read format with both user-friendly and technical (geek mode) views for different levels of detail.</translation>
     </message>
     <message>
-    <source>Version: %1
+        <source>Version: %1
 Build Date: November 2025
 Qt Version: %2
 Platform: Linux</source>
-    <translation>Version: %1
+        <translation>Version: %1
 Build Date: November 2025
 Qt Version: %2
 Platform: Linux</translation>
     </message>
     <message>
-        <source>Developer: Nalle Berg&lt;br&gt;&lt;a href="https://lsv.nalle.no/"&gt;Web page&lt;/a&gt;&lt;br&gt;&lt;br&gt;Built with Qt6 and modern C++ for optimal performance and cross-platform compatibility.&lt;br&gt;&lt;br&gt;Special thanks to the open-source community and the developers of lshw, lscpu, and other system utilities that inspired me to create this application.</source>
-        <translation>Developer: Nalle Berg&lt;br&gt;&lt;a href="https://lsv.nalle.no/"&gt;Web page&lt;/a&gt;&lt;br&gt;&lt;br&gt;Built with Qt6 and modern C++ for optimal performance and cross-platform compatibility.&lt;br&gt;&lt;br&gt;Special thanks to the open-source community and the developers of lshw, lscpu, and other system utilities that inspired me to create this application.</translation>
+        <source>Developer: Nalle Berg&lt;br&gt;&lt;a href=&quot;https://lsv.nalle.no/&quot;&gt;Web page&lt;/a&gt;&lt;br&gt;&lt;br&gt;Built with Qt6 and modern C++ for optimal performance and cross-platform compatibility.&lt;br&gt;&lt;br&gt;Special thanks to the open-source community and the developers of lshw, lscpu, and other system utilities that inspired me to create this application.</source>
+        <translation>Developer: Nalle Berg&lt;br&gt;&lt;a href=&quot;https://lsv.nalle.no/&quot;&gt;Web page&lt;/a&gt;&lt;br&gt;&lt;br&gt;Built with Qt6 and modern C++ for optimal performance and cross-platform compatibility.&lt;br&gt;&lt;br&gt;Special thanks to the open-source community and the developers of lshw, lscpu, and other system utilities that inspired me to create this application.</translation>
     </message>
     <message>
-        <source>&lt;a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"&gt;GPL V2&lt;/a&gt;</source>
-        <translation>&lt;a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"&gt;GPL V2&lt;/a&gt;</translation>
+        <source>&lt;a href=&quot;https://www.gnu.org/licenses/old-licenses/gpl-2.0.html&quot;&gt;GPL V2&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;https://www.gnu.org/licenses/old-licenses/gpl-2.0.html&quot;&gt;GPL V2&lt;/a&gt;</translation>
     </message>
     <message>
         <source>Open Web Page</source>
@@ -80,6 +81,125 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
         <source>GNU GPL v2</source>
         <translation>GNU GPL v2</translation>
     </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AudioGeekDialog</name>
+    <message>
+        <source>Audio - Geek Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio System Technical Details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>Rescan</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <source>Save...</source>
+        <translation type="unfinished">Save...</translation>
+    </message>
+    <message>
+        <source>Rescanning audio devices, please wait...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rescanning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation type="unfinished">Copied</translation>
+    </message>
+    <message>
+        <source>The information has been copied
+to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Audio Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CSV Files (*.csv);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AudioTab</name>
+    <message>
+        <source>Audio</source>
+        <translation type="unfinished">Audio</translation>
+    </message>
+    <message>
+        <source>Sound-test</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>Scanning audio devices, please wait...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loading</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Test</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Testing audio output with generated tones:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Server</source>
+        <translation type="unfinished">Audio Server</translation>
+    </message>
+    <message>
+        <source>Default Output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default Input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sound Card %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Playback Device %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CPUTab</name>
@@ -89,7 +209,7 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
     </message>
     <message>
         <source>Geek Mode</source>
-        <translation>Geek Mode</translation>
+        <translation type="vanished">Geek Mode</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -139,7 +259,7 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
     </message>
     <message>
         <source>Text Files (*.txt);;All Files (*)</source>
-        <translation>Text Files (*.txt);;All Files (*)</translation>
+        <translation type="vanished">Text Files (*.txt);;All Files (*)</translation>
     </message>
     <message>
         <source>Model</source>
@@ -199,6 +319,159 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
         <source>cpuinfo_min_freq</source>
         <translation>cpuinfo_min_freq</translation>
     </message>
+    <message>
+        <source>Copied</source>
+        <translation type="unfinished">Copied</translation>
+    </message>
+    <message>
+        <source>The information has been copied
+to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CSV Files (*.csv);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GeekGraphicsDialog</name>
+    <message>
+        <source>Graphics - Geek Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Graphics Technical Details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <source>Save...</source>
+        <translation type="unfinished">Save...</translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation type="unfinished">Copied</translation>
+    </message>
+    <message>
+        <source>The information has been copied
+to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Graphics Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CSV Files (*.csv);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== PCI GRAPHICS DEVICES ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PCI Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Device Class</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current Driver</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>uevent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Memory Resources</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== DRM/DRI INFORMATION ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DRM Card</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Device uevent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DRI Debug Dir</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DRI Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DRI Clients</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== FRAMEBUFFER INFORMATION ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Framebuffer Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== DISPLAY CONNECTORS ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connector</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>EDID Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>EDID (hex)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== BACKLIGHT INFORMATION ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Backlight Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== GPU FREQUENCY/POWER ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AMDGPU Clock Levels (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 (%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NVIDIA Power State (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GeekMemoryDialog</name>
@@ -220,15 +493,15 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
     </message>
     <message>
         <source>RAM Slots</source>
-        <translation>RAM Slots</translation>
+        <translation type="vanished">RAM Slots</translation>
     </message>
     <message>
         <source>Free Slots</source>
-        <translation>Free Slots</translation>
+        <translation type="vanished">Free Slots</translation>
     </message>
     <message>
         <source>Max Module Size</source>
-        <translation>Max Module Size</translation>
+        <translation type="vanished">Max Module Size</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -236,104 +509,765 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
     </message>
     <message>
         <source>Total Installed RAM</source>
-        <translation>Total Installed RAM</translation>
+        <translation type="vanished">Total Installed RAM</translation>
     </message>
     <message>
         <source>RAM Type</source>
-        <translation>RAM Type</translation>
+        <translation type="vanished">RAM Type</translation>
     </message>
     <message>
         <source>RAM Speed</source>
-        <translation>RAM Speed</translation>
+        <translation type="vanished">RAM Speed</translation>
     </message>
     <message>
         <source>Slot %1: %2, %3, %4</source>
-        <translation>Slot %1: %2, %3, %4</translation>
+        <translation type="vanished">Slot %1: %2, %3, %4</translation>
     </message>
     <message>
         <source>No Module</source>
-        <translation>No Module</translation>
+        <translation type="vanished">No Module</translation>
     </message>
     <message>
         <source>Slot %1 Info</source>
-        <translation>Slot %1 Info</translation>
+        <translation type="vanished">Slot %1 Info</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <source>Save...</source>
+        <translation type="unfinished">Save...</translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation type="unfinished">Copied</translation>
+    </message>
+    <message>
+        <source>The information has been copied
+to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Memory Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CSV Files (*.csv);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MemTotal (/proc/meminfo)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MemFree (/proc/meminfo)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MemAvailable (/proc/meminfo)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SwapTotal (/proc/meminfo)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>/proc/meminfo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not open /proc/meminfo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Memory block entries (/sys/devices/system/memory)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Memory block entries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NUMA nodes (count)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DMI memory device entries (type 17)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None detected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slot %1 (DMI entry %2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not open raw DMI data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Raw DMI data too short</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slot %1 - String %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slot %1 - formatted bytes (hex)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DMI memory device entries</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GeekMotherboardDialog</name>
+    <message>
+        <source>Motherboard - Geek Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motherboard Technical Details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <source>Save...</source>
+        <translation type="unfinished">Save...</translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation type="unfinished">Copied</translation>
+    </message>
+    <message>
+        <source>The information has been copied
+to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Motherboard Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CSV Files (*.csv);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== BASEBOARD (DMI Type 2) ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== SYSTEM (DMI Type 1) ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== BIOS (DMI Type 0) ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== CHASSIS (DMI Type 3) ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== LSHW BUS OUTPUT ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Full lshw -C bus output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== CHIPSET &amp; BRIDGES ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== USB CONTROLLERS ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>USB Controller %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GeekOsDialog</name>
+    <message>
+        <source>OS - Geek Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OS Technical Details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <source>Save...</source>
+        <translation type="unfinished">Save...</translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation type="unfinished">Copied</translation>
+    </message>
+    <message>
+        <source>The information has been copied
+to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save OS Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CSV Files (*.csv);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GeekPCDialog</name>
+    <message>
+        <source>PC Info - Geek Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PC Technical Details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <source>Save...</source>
+        <translation type="unfinished">Save...</translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation type="unfinished">Copied</translation>
+    </message>
+    <message>
+        <source>The information has been copied
+to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save PC Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CSV Files (*.csv);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== DMI/SMBIOS INFORMATION ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== HOSTNAME INFORMATION ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== MACHINE ID ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== HOSTNAMECTL OUTPUT ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== FIRMWARE/BIOS INFORMATION ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== ACPI INFORMATION ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== BOOT INFORMATION ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== SYSTEM UPTIME ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GeekPeripheralsDialog</name>
+    <message>
+        <source>Peripherals - Geek Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Peripherals Technical Details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>Rescan</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <source>Save...</source>
+        <translation type="unfinished">Save...</translation>
+    </message>
+    <message>
+        <source>Rescanning peripherals, please wait...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rescanning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation type="unfinished">Copied</translation>
+    </message>
+    <message>
+        <source>The information has been copied
+to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Peripherals Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CSV Files (*.csv);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GeekPortsDialog</name>
+    <message>
+        <source>Ports - Geek Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ports Technical Details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <source>Save...</source>
+        <translation type="unfinished">Save...</translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation type="unfinished">Copied</translation>
+    </message>
+    <message>
+        <source>The information has been copied
+to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Ports Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CSV Files (*.csv);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== USB DEVICES ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== SERIAL PORTS ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Serial Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== PCI USB CONTROLLERS ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PCI Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== BLUETOOTH ADAPTERS ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bluetooth Adapter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== NETWORK INTERFACES ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GeekScreenDialog</name>
+    <message>
+        <source>Screen - Geek Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen Technical Details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <source>Save...</source>
+        <translation type="unfinished">Save...</translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation type="unfinished">Copied</translation>
+    </message>
+    <message>
+        <source>The information has been copied
+to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Screen Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CSV Files (*.csv);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== ALL SCREENS ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 Manufacturer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 Model</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 Serial Number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 Resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 Virtual Resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 Refresh Rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 Physical Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 DPI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 Physical DPI X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 Physical DPI Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 Device Pixel Ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 Orientation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 Geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 Available Geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Screen %1 Depth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>=== DRM CONNECTOR INFORMATION ===</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connector</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/dpms</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/modes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/EDID Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/Manufacturer ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/Product Code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/Serial Number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/Manufacture Date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/Display Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/Display String</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/EDID (first 128 bytes hex)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GeekStorageDialog</name>
+    <message>
+        <source>Storage - Geek Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Storage Technical Details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <source>Save...</source>
+        <translation type="unfinished">Save...</translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation type="unfinished">Copied</translation>
+    </message>
+    <message>
+        <source>The information has been copied
+to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Storage Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CSV Files (*.csv);;All Files (*)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>GraphicsTab</name>
     <message>
         <source>Graphics Card Information</source>
-        <translation>Graphics Card Information</translation>
+        <translation type="vanished">Graphics Card Information</translation>
     </message>
     <message>
         <source>Graphics Cards</source>
-        <translation>Graphics Cards</translation>
+        <translation type="vanished">Graphics Cards</translation>
     </message>
     <message>
         <source>Graphics Drivers</source>
-        <translation>Graphics Drivers</translation>
+        <translation type="vanished">Graphics Drivers</translation>
     </message>
     <message>
         <source>OpenGL Information</source>
-        <translation>OpenGL Information</translation>
+        <translation type="vanished">OpenGL Information</translation>
     </message>
     <message>
         <source>Video Memory</source>
-        <translation>Video Memory</translation>
+        <translation type="vanished">Video Memory</translation>
     </message>
     <message>
         <source>Loading %1 information...</source>
-        <translation>Loading %1 information...</translation>
+        <translation type="vanished">Loading %1 information...</translation>
     </message>
     <message>
         <source>Graphics Cards: Not detected</source>
-        <translation>Graphics Cards: Not detected</translation>
+        <translation type="vanished">Graphics Cards: Not detected</translation>
     </message>
     <message>
         <source>Graphics Drivers: Not detected</source>
-        <translation>Graphics Drivers: Not detected</translation>
+        <translation type="vanished">Graphics Drivers: Not detected</translation>
     </message>
     <message>
         <source>OpenGL: Not detected</source>
-        <translation>OpenGL: Not detected</translation>
+        <translation type="vanished">OpenGL: Not detected</translation>
     </message>
     <message>
         <source>Video Memory: Not detected</source>
-        <translation>Video Memory: Not detected</translation>
+        <translation type="vanished">Video Memory: Not detected</translation>
     </message>
     <message>
         <source>Video Memory: %1</source>
-        <translation>Video Memory: %1</translation>
+        <translation type="vanished">Video Memory: %1</translation>
     </message>
     <message>
         <source>NVIDIA proprietary driver (likely)</source>
-        <translation>NVIDIA proprietary driver (likely)</translation>
+        <translation type="vanished">NVIDIA proprietary driver (likely)</translation>
     </message>
     <message>
         <source>AMD/ATI driver (AMDGPU or Radeon)</source>
-        <translation>AMD/ATI driver (AMDGPU or Radeon)</translation>
+        <translation type="vanished">AMD/ATI driver (AMDGPU or Radeon)</translation>
     </message>
     <message>
         <source>Intel integrated graphics driver</source>
-        <translation>Intel integrated graphics driver</translation>
+        <translation type="vanished">Intel integrated graphics driver</translation>
     </message>
     <message>
         <source>Graphics Cards:
 %1</source>
-        <translation>Graphics Cards:
+        <translation type="vanished">Graphics Cards:
 %1</translation>
     </message>
     <message>
         <source>Graphics Drivers:
 %1</source>
-        <translation>Graphics Drivers:
+        <translation type="vanished">Graphics Drivers:
 %1</translation>
     </message>
     <message>
         <source>OpenGL Information:
 %1</source>
-        <translation>OpenGL Information:
+        <translation type="vanished">OpenGL Information:
 %1</translation>
+    </message>
+    <message>
+        <source>Graphics</source>
+        <translation type="unfinished">Graphics</translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
     </message>
 </context>
 <context>
@@ -344,122 +1278,162 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
     </message>
     <message>
         <source>Geek Mode</source>
-        <translation>Geek Mode</translation>
+        <translation type="vanished">Geek Mode</translation>
     </message>
     <message>
         <source>RAM Total: %1 GB</source>
-        <translation>RAM Total: %1 GB</translation>
+        <translation type="vanished">RAM Total: %1 GB</translation>
     </message>
     <message>
         <source>Used: %1 GB</source>
-        <translation>Used: %1 GB</translation>
+        <translation type="vanished">Used: %1 GB</translation>
     </message>
     <message>
         <source>Free: %1 GB (%2%)</source>
-        <translation>Free: %1 GB (%2%)</translation>
+        <translation type="vanished">Free: %1 GB (%2%)</translation>
     </message>
     <message>
         <source>SWAP Total: %1 GB</source>
-        <translation>SWAP Total: %1 GB</translation>
+        <translation type="vanished">SWAP Total: %1 GB</translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>RAM Total</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RAM Usage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Used: %1 GB / Free: %2 GB (%3%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SWAP Total</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SWAP Usage</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MotherboardTab</name>
     <message>
         <source>Motherboard and System Information</source>
-        <translation>Motherboard and System Information</translation>
+        <translation type="vanished">Motherboard and System Information</translation>
     </message>
     <message>
         <source>System Board</source>
-        <translation>System Board</translation>
+        <translation type="vanished">System Board</translation>
     </message>
     <message>
         <source>Chipset</source>
-        <translation>Chipset</translation>
+        <translation type="vanished">Chipset</translation>
     </message>
     <message>
         <source>BIOS/UEFI</source>
-        <translation>BIOS/UEFI</translation>
+        <translation type="vanished">BIOS/UEFI</translation>
     </message>
     <message>
         <source>Expansion Slots</source>
-        <translation>Expansion Slots</translation>
+        <translation type="vanished">Expansion Slots</translation>
     </message>
     <message>
         <source>Loading %1 information...</source>
-        <translation>Loading %1 information...</translation>
+        <translation type="vanished">Loading %1 information...</translation>
     </message>
     <message>
         <source>System Board: Not detected</source>
-        <translation>System Board: Not detected</translation>
+        <translation type="vanished">System Board: Not detected</translation>
     </message>
     <message>
         <source>Chipset: Not detected</source>
-        <translation>Chipset: Not detected</translation>
+        <translation type="vanished">Chipset: Not detected</translation>
     </message>
     <message>
         <source>BIOS/UEFI: Not detected</source>
-        <translation>BIOS/UEFI: Not detected</translation>
+        <translation type="vanished">BIOS/UEFI: Not detected</translation>
     </message>
     <message>
         <source>Expansion Slots: Not detected</source>
-        <translation>Expansion Slots: Not detected</translation>
+        <translation type="vanished">Expansion Slots: Not detected</translation>
     </message>
     <message>
         <source>Manufacturer: %1</source>
-        <translation>Manufacturer: %1</translation>
+        <translation type="vanished">Manufacturer: %1</translation>
     </message>
     <message>
         <source>Product: %1</source>
-        <translation>Product: %1</translation>
+        <translation type="vanished">Product: %1</translation>
     </message>
     <message>
         <source>Version: %1</source>
-        <translation>Version: %1</translation>
+        <translation type="vanished">Version: %1</translation>
     </message>
     <message>
         <source>Serial: %1</source>
-        <translation>Serial: %1</translation>
+        <translation type="vanished">Serial: %1</translation>
     </message>
     <message>
         <source>BIOS Vendor: %1</source>
-        <translation>BIOS Vendor: %1</translation>
+        <translation type="vanished">BIOS Vendor: %1</translation>
     </message>
     <message>
         <source>BIOS Revision: %1</source>
-        <translation>BIOS Revision: %1</translation>
+        <translation type="vanished">BIOS Revision: %1</translation>
     </message>
     <message>
         <source>Release Date: %1</source>
-        <translation>Release Date: %1</translation>
+        <translation type="vanished">Release Date: %1</translation>
     </message>
     <message>
         <source>Family: %1</source>
-        <translation>Family: %1</translation>
+        <translation type="vanished">Family: %1</translation>
     </message>
     <message>
         <source>System Board:
 %1</source>
-        <translation>System Board:
+        <translation type="vanished">System Board:
 %1</translation>
     </message>
     <message>
         <source>Chipset:
 %1</source>
-        <translation>Chipset:
+        <translation type="vanished">Chipset:
 %1</translation>
     </message>
     <message>
         <source>BIOS/UEFI:
 %1</source>
-        <translation>BIOS/UEFI:
+        <translation type="vanished">BIOS/UEFI:
 %1</translation>
     </message>
     <message>
         <source>Expansion Slots:
 %1</source>
-        <translation>Expansion Slots:
+        <translation type="vanished">Expansion Slots:
 %1</translation>
+    </message>
+    <message>
+        <source>Motherboard</source>
+        <translation type="unfinished">Motherboard</translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
     </message>
 </context>
 <context>
@@ -474,7 +1448,7 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
     </message>
     <message>
         <source>Save</source>
-        <translation>Save</translation>
+        <translation type="vanished">Save</translation>
     </message>
     <message>
         <source>Save network info</source>
@@ -482,7 +1456,36 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
     </message>
     <message>
         <source>Text files (*.txt);;All files (*)</source>
-        <translation>Text files (*.txt);;All files (*)</translation>
+        <translation type="vanished">Text files (*.txt);;All files (*)</translation>
+    </message>
+    <message>
+        <source>Network Technical Details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>Save...</source>
+        <translation type="unfinished">Save...</translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation type="unfinished">Copied</translation>
+    </message>
+    <message>
+        <source>The information has been copied
+to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CSV files (*.csv);;All files (*)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -493,7 +1496,7 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
     </message>
     <message>
         <source>Geek Mode</source>
-        <translation>Geek Mode</translation>
+        <translation type="vanished">Geek Mode</translation>
     </message>
     <message>
         <source>Property</source>
@@ -524,6 +1527,10 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
         <translation>uname: %1
 </translation>
     </message>
+    <message>
+        <source>OS</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PCTab</name>
@@ -533,7 +1540,7 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
     </message>
     <message>
         <source>PC Information</source>
-        <translation>PC Information</translation>
+        <translation type="vanished">PC Information</translation>
     </message>
     <message>
         <source>Property</source>
@@ -542,6 +1549,42 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
     <message>
         <source>Value</source>
         <translation>Value</translation>
+    </message>
+    <message>
+        <source>Computer Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PC Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Manufacturer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Product Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Product Family</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation type="unfinished">Version</translation>
+    </message>
+    <message>
+        <source>Serial Number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SKU Number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>UUID</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -552,67 +1595,83 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
     </message>
     <message>
         <source>Connected Peripherals and Devices</source>
-        <translation>Connected Peripherals and Devices</translation>
+        <translation type="vanished">Connected Peripherals and Devices</translation>
     </message>
     <message>
         <source>USB Devices</source>
-        <translation>USB Devices</translation>
+        <translation type="vanished">USB Devices</translation>
     </message>
     <message>
         <source>Input Devices</source>
-        <translation>Input Devices</translation>
+        <translation type="vanished">Input Devices</translation>
     </message>
     <message>
         <source>Storage Devices</source>
-        <translation>Storage Devices</translation>
+        <translation type="vanished">Storage Devices</translation>
     </message>
     <message>
         <source>Network Devices</source>
-        <translation>Network Devices</translation>
+        <translation type="vanished">Network Devices</translation>
     </message>
     <message>
         <source>Loading %1 information...</source>
-        <translation>Loading %1 information...</translation>
+        <translation type="vanished">Loading %1 information...</translation>
     </message>
     <message>
         <source>USB Devices: Not detected</source>
-        <translation>USB Devices: Not detected</translation>
+        <translation type="vanished">USB Devices: Not detected</translation>
     </message>
     <message>
         <source>Input Devices: Not detected</source>
-        <translation>Input Devices: Not detected</translation>
+        <translation type="vanished">Input Devices: Not detected</translation>
     </message>
     <message>
         <source>Storage Devices: Not detected</source>
-        <translation>Storage Devices: Not detected</translation>
+        <translation type="vanished">Storage Devices: Not detected</translation>
     </message>
     <message>
         <source>Network Devices: Not detected</source>
-        <translation>Network Devices: Not detected</translation>
+        <translation type="vanished">Network Devices: Not detected</translation>
     </message>
     <message>
         <source>USB Devices:
 </source>
-        <translation>USB Devices:
+        <translation type="vanished">USB Devices:
 </translation>
     </message>
     <message>
         <source>Input Devices:
 </source>
-        <translation>Input Devices:
+        <translation type="vanished">Input Devices:
 </translation>
     </message>
     <message>
         <source>Storage Devices:
 </source>
-        <translation>Storage Devices:
+        <translation type="vanished">Storage Devices:
 </translation>
     </message>
     <message>
         <source>Network Devices:
 </source>
-        <translation>Network Devices:
+        <translation type="vanished">Network Devices:
 </translation>
+    </message>
+    <message>
+        <source>Device Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Device Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scanning peripherals, please wait...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loading</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -623,11 +1682,11 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
     </message>
     <message>
         <source>System Ports Information</source>
-        <translation>System Ports Information</translation>
+        <translation type="vanished">System Ports Information</translation>
     </message>
     <message>
         <source>USB Ports</source>
-        <translation>USB Ports</translation>
+        <translation type="vanished">USB Ports</translation>
     </message>
     <message>
         <source>Serial Ports</source>
@@ -635,88 +1694,120 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</tra
     </message>
     <message>
         <source>PCI Ports</source>
-        <translation>PCI Ports</translation>
+        <translation type="vanished">PCI Ports</translation>
     </message>
     <message>
         <source>Port Status</source>
-        <translation>Port Status</translation>
+        <translation type="vanished">Port Status</translation>
     </message>
     <message>
         <source>Loading %1 information...</source>
-        <translation>Loading %1 information...</translation>
+        <translation type="vanished">Loading %1 information...</translation>
     </message>
     <message>
         <source>USB Ports: Not detected</source>
-        <translation>USB Ports: Not detected</translation>
+        <translation type="vanished">USB Ports: Not detected</translation>
     </message>
     <message>
         <source>Serial Ports: Not detected</source>
-        <translation>Serial Ports: Not detected</translation>
+        <translation type="vanished">Serial Ports: Not detected</translation>
     </message>
     <message>
         <source>PCI Ports: Not detected</source>
-        <translation>PCI Ports: Not detected</translation>
+        <translation type="vanished">PCI Ports: Not detected</translation>
     </message>
     <message>
         <source>Port Status: Unknown</source>
-        <translation>Port Status: Unknown</translation>
+        <translation type="vanished">Port Status: Unknown</translation>
     </message>
     <message>
         <source>USB Ports:
 </source>
-        <translation>USB Ports:
+        <translation type="vanished">USB Ports:
 </translation>
     </message>
     <message>
         <source>Serial Ports:
 </source>
-        <translation>Serial Ports:
+        <translation type="vanished">Serial Ports:
 </translation>
     </message>
     <message>
         <source>Serial Ports:
 No serial controllers detected</source>
-        <translation>Serial Ports:
+        <translation type="vanished">Serial Ports:
 No serial controllers detected</translation>
     </message>
     <message>
         <source>PCI Ports:
 </source>
-        <translation>PCI Ports:
+        <translation type="vanished">PCI Ports:
 </translation>
     </message>
     <message>
         <source>Port Status:
 </source>
-        <translation>Port Status:
+        <translation type="vanished">Port Status:
 </translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>USB Buses/Hubs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>USB Devices Connected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>USB Controllers (PCI)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bluetooth Adapters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ethernet Ports</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wireless Adapters</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Audio</source>
-        <translation>Audio</translation>
+        <translation type="vanished">Audio</translation>
     </message>
     <message>
         <source>Audio System Information</source>
-        <translation>Audio System Information</translation>
+        <translation type="vanished">Audio System Information</translation>
     </message>
     <message>
         <source>Audio Devices</source>
-        <translation>Audio Devices</translation>
+        <translation type="vanished">Audio Devices</translation>
     </message>
     <message>
         <source>Sound Cards</source>
-        <translation>Sound Cards</translation>
+        <translation type="vanished">Sound Cards</translation>
     </message>
     <message>
         <source>Audio Server</source>
-        <translation>Audio Server</translation>
+        <translation type="vanished">Audio Server</translation>
     </message>
     <message>
         <source>Playback Devices</source>
-        <translation>Playback Devices</translation>
+        <translation type="vanished">Playback Devices</translation>
     </message>
     <message>
         <source>Loading %1 information...</source>
@@ -724,60 +1815,60 @@ No serial controllers detected</translation>
     </message>
     <message>
         <source>Audio Devices: Not detected</source>
-        <translation>Audio Devices: Not detected</translation>
+        <translation type="vanished">Audio Devices: Not detected</translation>
     </message>
     <message>
         <source>Sound Cards: Not detected</source>
-        <translation>Sound Cards: Not detected</translation>
+        <translation type="vanished">Sound Cards: Not detected</translation>
     </message>
     <message>
         <source>Audio Server: Not detected</source>
-        <translation>Audio Server: Not detected</translation>
+        <translation type="vanished">Audio Server: Not detected</translation>
     </message>
     <message>
         <source>Playback Devices: Not detected</source>
-        <translation>Playback Devices: Not detected</translation>
+        <translation type="vanished">Playback Devices: Not detected</translation>
     </message>
     <message>
         <source>Card:</source>
-        <translation>Card:</translation>
+        <translation type="vanished">Card:</translation>
     </message>
     <message>
         <source>Audio Server: PulseAudio (%1)</source>
-        <translation>Audio Server: PulseAudio (%1)</translation>
+        <translation type="vanished">Audio Server: PulseAudio (%1)</translation>
     </message>
     <message>
         <source>Audio Server: PulseAudio %1</source>
-        <translation>Audio Server: PulseAudio %1</translation>
+        <translation type="vanished">Audio Server: PulseAudio %1</translation>
     </message>
     <message>
         <source>Default: %1</source>
-        <translation>Default: %1</translation>
+        <translation type="vanished">Default: %1</translation>
     </message>
     <message>
         <source>Audio Server: PipeWire</source>
-        <translation>Audio Server: PipeWire</translation>
+        <translation type="vanished">Audio Server: PipeWire</translation>
     </message>
     <message>
         <source>Audio Server: JACK</source>
-        <translation>Audio Server: JACK</translation>
+        <translation type="vanished">Audio Server: JACK</translation>
     </message>
     <message>
         <source>Audio Devices:
 %1</source>
-        <translation>Audio Devices:
+        <translation type="vanished">Audio Devices:
 %1</translation>
     </message>
     <message>
         <source>Sound Cards:
 %1</source>
-        <translation>Sound Cards:
+        <translation type="vanished">Sound Cards:
 %1</translation>
     </message>
     <message>
         <source>Playback Devices:
 %1</source>
-        <translation>Playback Devices:
+        <translation type="vanished">Playback Devices:
 %1</translation>
     </message>
     <message>
@@ -858,7 +1949,7 @@ No serial controllers detected</translation>
     </message>
     <message>
         <source>Graphics card</source>
-        <translation>Graphics card</translation>
+        <translation type="vanished">Graphics card</translation>
     </message>
     <message>
         <source>sudo apt update &amp;&amp; sudo apt install policykit-1-gnome
@@ -946,7 +2037,7 @@ Please run the application as root.</translation>
     </message>
     <message>
         <source>Motherboard</source>
-        <translation>Motherboard</translation>
+        <translation type="vanished">Motherboard</translation>
     </message>
     <message>
         <source>MultiRowTabWidget: Initialized</source>
@@ -980,6 +2071,115 @@ Please run the application as root.</translation>
         <source>MultiRowTabWidget: Tab area height set to:</source>
         <translation>MultiRowTabWidget: Tab area height set to:</translation>
     </message>
+    <message>
+        <source>Graphics Card</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Device ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Driver</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DRI Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Framebuffer Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Virtual Resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Memory</source>
+        <translation type="unfinished">Video Memory</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No graphics card detected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <source>Language selection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to write language selection to %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current: %1
+%2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to write language selection to configuration directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language changed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language saved. UI updated to the selected language.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to remove %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saved language selection removed. The application is now using English.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Manufacturer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation type="unfinished">Version</translation>
+    </message>
+    <message>
+        <source>Serial Number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BIOS Vendor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BIOS Version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BIOS Date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chipset</source>
+        <translation type="unfinished">Chipset</translation>
+    </message>
 </context>
 <context>
     <name>ScreenTab</name>
@@ -989,73 +2189,105 @@ Please run the application as root.</translation>
     </message>
     <message>
         <source>Display and Monitor Information</source>
-        <translation>Display and Monitor Information</translation>
+        <translation type="vanished">Display and Monitor Information</translation>
     </message>
     <message>
         <source>Connected Displays</source>
-        <translation>Connected Displays</translation>
+        <translation type="vanished">Connected Displays</translation>
     </message>
     <message>
         <source>Screen Resolution</source>
-        <translation>Screen Resolution</translation>
+        <translation type="vanished">Screen Resolution</translation>
     </message>
     <message>
         <source>Refresh Rates</source>
-        <translation>Refresh Rates</translation>
+        <translation type="vanished">Refresh Rates</translation>
     </message>
     <message>
         <source>Display Orientation</source>
-        <translation>Display Orientation</translation>
+        <translation type="vanished">Display Orientation</translation>
     </message>
     <message>
         <source>Loading %1 information...</source>
-        <translation>Loading %1 information...</translation>
+        <translation type="vanished">Loading %1 information...</translation>
     </message>
     <message>
         <source>Connected Displays: Not detected</source>
-        <translation>Connected Displays: Not detected</translation>
+        <translation type="vanished">Connected Displays: Not detected</translation>
     </message>
     <message>
         <source>Screen Resolution: Not detected</source>
-        <translation>Screen Resolution: Not detected</translation>
+        <translation type="vanished">Screen Resolution: Not detected</translation>
     </message>
     <message>
         <source>Refresh Rates: Not detected</source>
-        <translation>Refresh Rates: Not detected</translation>
+        <translation type="vanished">Refresh Rates: Not detected</translation>
     </message>
     <message>
         <source>Display Orientation: Not detected</source>
-        <translation>Display Orientation: Not detected</translation>
+        <translation type="vanished">Display Orientation: Not detected</translation>
     </message>
     <message>
         <source>Connected Displays:
 </source>
-        <translation>Connected Displays:
+        <translation type="vanished">Connected Displays:
 </translation>
     </message>
     <message>
         <source>Screen Resolution:
 </source>
-        <translation>Screen Resolution:
+        <translation type="vanished">Screen Resolution:
 </translation>
     </message>
     <message>
         <source>Refresh Rates:
 </source>
-        <translation>Refresh Rates:
+        <translation type="vanished">Refresh Rates:
 </translation>
     </message>
     <message>
         <source>Display Orientation:
 </source>
-        <translation>Display Orientation:
+        <translation type="vanished">Display Orientation:
 </translation>
     </message>
     <message>
         <source>Display Orientation:
 Normal (default)</source>
-        <translation>Display Orientation:
+        <translation type="vanished">Display Orientation:
 Normal (default)</translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>Resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh Rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zoom Level</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Physical Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Manufacturer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Orientation</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1066,66 +2298,66 @@ Normal (default)</translation>
     </message>
     <message>
         <source>Storage Devices and Disk Information</source>
-        <translation>Storage Devices and Disk Information</translation>
+        <translation type="vanished">Storage Devices and Disk Information</translation>
     </message>
     <message>
         <source>Disk Drives</source>
-        <translation>Disk Drives</translation>
+        <translation type="vanished">Disk Drives</translation>
     </message>
     <message>
         <source>Partitions</source>
-        <translation>Partitions</translation>
+        <translation type="vanished">Partitions</translation>
     </message>
     <message>
         <source>Mount Points</source>
-        <translation>Mount Points</translation>
+        <translation type="vanished">Mount Points</translation>
     </message>
     <message>
         <source>Disk Usage</source>
-        <translation>Disk Usage</translation>
+        <translation type="vanished">Disk Usage</translation>
     </message>
     <message>
         <source>Loading %1 information...</source>
-        <translation>Loading %1 information...</translation>
+        <translation type="vanished">Loading %1 information...</translation>
     </message>
     <message>
         <source>Disk Drives: Not detected</source>
-        <translation>Disk Drives: Not detected</translation>
+        <translation type="vanished">Disk Drives: Not detected</translation>
     </message>
     <message>
         <source>Partitions: Not detected</source>
-        <translation>Partitions: Not detected</translation>
+        <translation type="vanished">Partitions: Not detected</translation>
     </message>
     <message>
         <source>Mount Points: Not detected</source>
-        <translation>Mount Points: Not detected</translation>
+        <translation type="vanished">Mount Points: Not detected</translation>
     </message>
     <message>
         <source>Disk Usage: Not detected</source>
-        <translation>Disk Usage: Not detected</translation>
+        <translation type="vanished">Disk Usage: Not detected</translation>
     </message>
     <message>
         <source>Disk Drives:
 </source>
-        <translation>Disk Drives:
+        <translation type="vanished">Disk Drives:
 </translation>
     </message>
     <message>
         <source>Partitions:
 </source>
-        <translation>Partitions:
+        <translation type="vanished">Partitions:
 </translation>
     </message>
     <message>
         <source>Mount Points:
 </source>
-        <translation>Mount Points:
+        <translation type="vanished">Mount Points:
 </translation>
     </message>
     <message>
         <source>Disk Usage:
 </source>
-        <translation>Disk Usage:
+        <translation type="vanished">Disk Usage:
 </translation>
     </message>
 </context>
@@ -1137,19 +2369,19 @@ Normal (default)</translation>
     </message>
     <message>
         <source>lshw -short</source>
-        <translation>lshw -short</translation>
+        <translation type="vanished">lshw -short</translation>
     </message>
     <message>
         <source>System Hardware Summary</source>
-        <translation>System Hardware Summary</translation>
+        <translation type="vanished">System Hardware Summary</translation>
     </message>
     <message>
         <source>System Overview</source>
-        <translation>System Overview</translation>
+        <translation type="vanished">System Overview</translation>
     </message>
     <message>
         <source>Loading system information...</source>
-        <translation>Loading system information...</translation>
+        <translation type="vanished">Loading system information...</translation>
     </message>
     <message>
         <source>Processor</source>
@@ -1157,47 +2389,119 @@ Normal (default)</translation>
     </message>
     <message>
         <source>Memory</source>
-        <translation>Memory</translation>
+        <translation type="vanished">Memory</translation>
     </message>
     <message>
         <source>Storage</source>
-        <translation>Storage</translation>
+        <translation type="vanished">Storage</translation>
     </message>
     <message>
         <source>Network</source>
-        <translation>Network</translation>
+        <translation type="vanished">Network</translation>
     </message>
     <message>
         <source>Graphics</source>
-        <translation>Graphics</translation>
+        <translation type="vanished">Graphics</translation>
     </message>
     <message>
         <source>Loading %1 information...</source>
-        <translation>Loading %1 information...</translation>
+        <translation type="vanished">Loading %1 information...</translation>
     </message>
     <message>
         <source>CPU: </source>
-        <translation>CPU: </translation>
+        <translation type="vanished">CPU: </translation>
     </message>
     <message>
         <source>Memory: </source>
-        <translation>Memory: </translation>
+        <translation type="vanished">Memory: </translation>
     </message>
     <message>
         <source>Storage: </source>
-        <translation>Storage: </translation>
+        <translation type="vanished">Storage: </translation>
     </message>
     <message>
         <source>Network: </source>
-        <translation>Network: </translation>
+        <translation type="vanished">Network: </translation>
     </message>
     <message>
         <source>Graphics: </source>
-        <translation>Graphics: </translation>
+        <translation type="vanished">Graphics: </translation>
     </message>
     <message>
         <source>System: </source>
-        <translation>System: </translation>
+        <translation type="vanished">System: </translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>Computer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Manufacturer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CPU Cores</source>
+        <translation type="unfinished">CPU Cores</translation>
+    </message>
+    <message>
+        <source>Total Memory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>System Uptime</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Storage Devices</source>
+        <translation type="unfinished">Storage Devices</translation>
+    </message>
+    <message>
+        <source>Total Storage</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Graphics Cards</source>
+        <translation type="unfinished">Graphics Cards</translation>
+    </message>
+    <message>
+        <source>Display Resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh Rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Number of Screens</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ethernet Interfaces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wireless Interfaces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>USB Devices Connected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Operating System</source>
+        <translation type="unfinished">Operating System</translation>
+    </message>
+    <message>
+        <source>Kernel Version</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1216,14 +2520,58 @@ Normal (default)</translation>
     </message>
 </context>
 <context>
+    <name>WindowingGeekDialog</name>
+    <message>
+        <source>Desktop - Geek Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Desktop Environment Technical Details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <source>Save...</source>
+        <translation type="unfinished">Save...</translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation type="unfinished">Copied</translation>
+    </message>
+    <message>
+        <source>The information has been copied
+to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Desktop Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CSV Files (*.csv);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>WindowingTab</name>
     <message>
         <source>Windowing environment</source>
-        <translation>Windowing environment</translation>
+        <translation type="vanished">Windowing environment</translation>
     </message>
     <message>
         <source>Windowing Environment Information</source>
-        <translation>Windowing Environment Information</translation>
+        <translation type="vanished">Windowing Environment Information</translation>
     </message>
     <message>
         <source>Desktop Environment</source>
@@ -1231,7 +2579,7 @@ Normal (default)</translation>
     </message>
     <message>
         <source>Session Type</source>
-        <translation>Session Type</translation>
+        <translation type="vanished">Session Type</translation>
     </message>
     <message>
         <source>Display Server</source>
@@ -1243,71 +2591,103 @@ Normal (default)</translation>
     </message>
     <message>
         <source>Loading %1 information...</source>
-        <translation>Loading %1 information...</translation>
+        <translation type="vanished">Loading %1 information...</translation>
     </message>
     <message>
         <source>Desktop Environment: Not detected</source>
-        <translation>Desktop Environment: Not detected</translation>
+        <translation type="vanished">Desktop Environment: Not detected</translation>
     </message>
     <message>
         <source>Session: Not detected</source>
-        <translation>Session: Not detected</translation>
+        <translation type="vanished">Session: Not detected</translation>
     </message>
     <message>
         <source>Display Server: Not detected</source>
-        <translation>Display Server: Not detected</translation>
+        <translation type="vanished">Display Server: Not detected</translation>
     </message>
     <message>
         <source>Window Manager: Not detected</source>
-        <translation>Window Manager: Not detected</translation>
+        <translation type="vanished">Window Manager: Not detected</translation>
     </message>
     <message>
         <source>Desktop Environment: </source>
-        <translation>Desktop Environment: </translation>
+        <translation type="vanished">Desktop Environment: </translation>
     </message>
     <message>
         <source>Session: </source>
-        <translation>Session: </translation>
+        <translation type="vanished">Session: </translation>
     </message>
     <message>
         <source>Display Server: Wayland</source>
-        <translation>Display Server: Wayland</translation>
+        <translation type="vanished">Display Server: Wayland</translation>
     </message>
     <message>
         <source>Display Server: X11</source>
-        <translation>Display Server: X11</translation>
+        <translation type="vanished">Display Server: X11</translation>
     </message>
     <message>
         <source>Display Server: </source>
-        <translation>Display Server: </translation>
+        <translation type="vanished">Display Server: </translation>
     </message>
     <message>
         <source>Window Manager: </source>
-        <translation>Window Manager: </translation>
+        <translation type="vanished">Window Manager: </translation>
     </message>
     <message>
         <source>Window Manager: Mutter (GNOME)</source>
-        <translation>Window Manager: Mutter (GNOME)</translation>
+        <translation type="vanished">Window Manager: Mutter (GNOME)</translation>
     </message>
     <message>
         <source>Window Manager: KWin (KDE)</source>
-        <translation>Window Manager: KWin (KDE)</translation>
+        <translation type="vanished">Window Manager: KWin (KDE)</translation>
     </message>
     <message>
         <source>Window Manager: Xfwm4 (XFCE)</source>
-        <translation>Window Manager: Xfwm4 (XFCE)</translation>
+        <translation type="vanished">Window Manager: Xfwm4 (XFCE)</translation>
     </message>
     <message>
         <source>Window Manager: Marco (MATE)</source>
-        <translation>Window Manager: Marco (MATE)</translation>
+        <translation type="vanished">Window Manager: Marco (MATE)</translation>
     </message>
     <message>
         <source>Window Manager: Muffin (Cinnamon)</source>
-        <translation>Window Manager: Muffin (Cinnamon)</translation>
+        <translation type="vanished">Window Manager: Muffin (Cinnamon)</translation>
     </message>
     <message>
         <source>Window Manager: Openbox (LXDE)</source>
-        <translation>Window Manager: Openbox (LXDE)</translation>
+        <translation type="vanished">Window Manager: Openbox (LXDE)</translation>
+    </message>
+    <message>
+        <source>Desktop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Property</source>
+        <translation type="unfinished">Property</translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished">Value</translation>
+    </message>
+    <message>
+        <source>Session</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wayland Display</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current Resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display Scaling</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

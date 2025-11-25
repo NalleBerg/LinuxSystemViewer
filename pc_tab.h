@@ -1,36 +1,44 @@
 #ifndef PC_TAB_H
 #define PC_TAB_H
 
-#include "tab_widget_base.h"
+#include <QWidget>
 #include <QTableWidget>
 #include <QPushButton>
+#include <QDialog>
+#include <QTimer>
 
-class PCTab : public TabWidgetBase
+class PCTab : public QWidget
 {
     Q_OBJECT
 
 public:
     explicit PCTab(QWidget* parent = nullptr);
 
-protected:
-    QWidget* createUserFriendlyView() override;
-    void parseOutput(const QString& output) override;
+private slots:
+    void showGeekMode();
 
 private:
-    void setupTable(QTableWidget* table);
-    void addTableRow(QTableWidget* table, const QString& property, const QString& value);
+    void loadPCInformation();
+    QTableWidget* tableWidget;
+    QPushButton* geekButton;
+};
 
-    QTableWidget* m_pcTable;
-    QPushButton* m_refreshButton;
+// Geek Mode Dialog
+class GeekPCDialog : public QDialog
+{
+    Q_OBJECT
 
-    // Info fields
-    QString m_pcType;
-    QString m_pcName;
-    QString m_manufacturer;
-    QString m_product;
-    QString m_serial;
-    QString m_chassis;
-    QString m_family;
+public:
+    explicit GeekPCDialog(QWidget* parent = nullptr);
+
+protected:
+    void showEvent(QShowEvent* ev) override;
+    void hideEvent(QHideEvent* ev) override;
+
+private:
+    void fillTable();
+    QTableWidget* table;
+    QTimer* refreshTimer;
 };
 
 #endif // PC_TAB_H

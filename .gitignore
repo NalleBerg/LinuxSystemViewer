@@ -47,3 +47,6 @@ lsv-cli.log
 
 # Exclude the built LSV binary produced locally
 LSV/LSV
+
+# Personal scripts (not for distribution)
+golsv.sh

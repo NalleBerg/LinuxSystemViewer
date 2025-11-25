@@ -19,11 +19,13 @@ cmake -S "$ROOT_DIR" -B "$BUILD_DIR"
 echo "Building and packaging..."
 cmake --build "$BUILD_DIR" --target package -- -j2
 
-DEB="$BUILD_DIR/lsv-0.7.2.deb"
-if [ ! -f "$DEB" ]; then
-    echo "Error: .deb not found at $DEB" >&2
+# Find the generated .deb file dynamically (version may change)
+DEB=$(find "$BUILD_DIR" -maxdepth 1 -type f -name 'lsv-*.deb' -print -quit 2>/dev/null || true)
+if [ -z "$DEB" ] || [ ! -f "$DEB" ]; then
+    echo "Error: .deb not found in $BUILD_DIR" >&2
     exit 2
 fi
+echo "Found package: $DEB"
 
 echo "Listing .deb contents (top-level)..."
 dpkg-deb -c "$DEB" | sed -n '1,200p'

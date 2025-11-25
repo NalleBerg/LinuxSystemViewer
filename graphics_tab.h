@@ -1,36 +1,34 @@
 #ifndef GRAPHICS_TAB_H
 #define GRAPHICS_TAB_H
 
-#include "tab_widget_base.h"
-#include <QGroupBox>
-#include <QLabel>
-#include <QVBoxLayout>
+#include <QWidget>
+#include <QPushButton>
+#include <QTableWidget>
+#include <QDialog>
 
-class GraphicsTab : public TabWidgetBase
+class GeekGraphicsDialog : public QDialog
 {
     Q_OBJECT
+public:
+    explicit GeekGraphicsDialog(QWidget* parent = nullptr);
+    void fillTable();
 
+private:
+    QTableWidget* table;
+};
+
+class GraphicsTab : public QWidget
+{
+    Q_OBJECT
 public:
     explicit GraphicsTab(QWidget* parent = nullptr);
 
-protected:
-    QWidget* createUserFriendlyView() override;
-    void parseOutput(const QString& output) override;
+private slots:
+    void showGeekMode();
 
 private:
-    void createInfoSection(const QString& title, QGroupBox** groupBox, QLabel** contentLabel, QVBoxLayout* parentLayout);
-    
-    QGroupBox* m_graphicsCardSection;
-    QLabel* m_graphicsCardContent;
-    
-    QGroupBox* m_driverSection;
-    QLabel* m_driverContent;
-    
-    QGroupBox* m_openglSection;
-    QLabel* m_openglContent;
-    
-    QGroupBox* m_memorySection;
-    QLabel* m_memoryContent;
+    QTableWidget* tableWidget;
+    QPushButton* geekButton;
 };
 
 #endif // GRAPHICS_TAB_H

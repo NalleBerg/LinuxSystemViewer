@@ -728,8 +728,6 @@ private:
         
         if (config.name == "Summary") {
             SummaryTab* summaryTab = new SummaryTab();
-            connect(summaryTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
-            connect(summaryTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
             tabWidget = summaryTab;
         }
         else if (config.name == "Memory") {
@@ -759,20 +757,14 @@ private:
         }
         else if (config.name == "Graphics gard") {
             GraphicsTab* graphicsTab = new GraphicsTab();
-            connect(graphicsTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
-            connect(graphicsTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
             tabWidget = graphicsTab;
         }
         else if (config.name == "Screen") {
             ScreenTab* screenTab = new ScreenTab();
-            connect(screenTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
-            connect(screenTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
             tabWidget = screenTab;
         }
         else if (config.name == "Ports") {
             PortsTab* portsTab = new PortsTab();
-            connect(portsTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
-            connect(portsTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
             tabWidget = portsTab;
         }
         else if (config.name == "Peripherals") {
@@ -792,8 +784,6 @@ private:
         }
         else if (config.name == "PC Info") {
             PCTab* pcTab = new PCTab();
-            connect(pcTab, &TabWidgetBase::loadingStarted, this, &TabManager::onTabLoadingStarted);
-            connect(pcTab, &TabWidgetBase::loadingFinished, this, &TabManager::onTabLoadingFinished);
             tabWidget = pcTab;
         }
             else if (config.name == "About") {

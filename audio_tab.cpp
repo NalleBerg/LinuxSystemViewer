@@ -127,6 +127,10 @@ void AudioTab::showGeekMode()
 
 void AudioTab::testSound()
 {
+    qDebug() << "AudioTab::testSound() called!";
+    fprintf(stderr, "=== AUDIO TEST STARTING ===\n");
+    fflush(stderr);
+    
     // Create audio test dialog with checklist
     QDialog* dialog = new QDialog(this);
     dialog->setWindowTitle(tr("Audio Test"));
@@ -163,11 +167,36 @@ void AudioTab::testSound()
 
 void AudioTab::playTestSound(QListWidget* checkList, QPushButton* closeBtn)
 {
-    // Sound file paths - try install location first, fall back to source
+    // Sound file paths - try install locations first, fall back to source
     QString soundPath = "/usr/share/lsv/sounds/";
+    fprintf(stderr, "\n=== AUDIO TEST DEBUG START ===\n");
+    fprintf(stderr, "Checking path 1: %s\n", soundPath.toStdString().c_str());
+    fflush(stderr);
+    
     if (!QFile::exists(soundPath + "a440.wav")) {
-        soundPath = QCoreApplication::applicationDirPath() + "/../sounds/";
+        fprintf(stderr, "  NOT FOUND, trying path 2...\n");
+        fflush(stderr);
+        soundPath = "/usr/local/share/lsv/sounds/";
+        fprintf(stderr, "Checking path 2: %s\n", soundPath.toStdString().c_str());
+        fflush(stderr);
+    } else {
+        fprintf(stderr, "  FOUND!\n");
+        fflush(stderr);
     }
+    
+    if (!QFile::exists(soundPath + "a440.wav")) {
+        fprintf(stderr, "  NOT FOUND, trying path 3...\n");
+        fflush(stderr);
+        soundPath = QCoreApplication::applicationDirPath() + "/../sounds/";
+        fprintf(stderr, "Checking path 3: %s\n", soundPath.toStdString().c_str());
+        fflush(stderr);
+    } else {
+        fprintf(stderr, "  FOUND!\n");
+        fflush(stderr);
+    }
+    
+    fprintf(stderr, "Final sound path: %s\n", soundPath.toStdString().c_str());
+    fflush(stderr);
     
     // Test A440 Hz tone
     checkList->item(0)->setText("▶ Testing A440 Hz (musical A)...");

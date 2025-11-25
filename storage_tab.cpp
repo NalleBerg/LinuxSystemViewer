@@ -445,7 +445,7 @@ QString StorageTab::formatTextWithTruncation(const QString& text, int maxWidth, 
     
     // If text is longer than column width, it will wrap
     if (textWidth > maxWidth) {
-        QString arrow = " ↵";  // Plain black arrow
+        QString arrow = " ↳";  // Downwards arrow with tip rightwards
         int arrowWidth = fm.horizontalAdvance(arrow);
         int availableWidth = maxWidth - arrowWidth;
         

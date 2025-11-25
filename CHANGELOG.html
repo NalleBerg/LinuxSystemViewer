@@ -1,3 +1,69 @@
+<h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 0.17.0 &mdash; 2025-11-24</strong></span></h2>
+<h3>Major Redesign - Complete Tab System Overhaul</h3>
+<ul>
+<li><strong>Architecture</strong>: Eliminated external helper dependencies (lshw, lscpu, lspci, etc.) &mdash; all system information now read directly from /sys and /proc filesystems for instant loading and zero external dependencies</li>
+<li><strong>UI Pattern</strong>: Introduced consistent CPU-inspired design pattern across all tabs with 2-column property/value tables, bold first column, word wrap, ResizeToContents, and arrow (↳) for multiline values</li>
+<li><strong>Performance</strong>: Instant tab loading (no more waiting for external commands to execute)</li>
+</ul>
+<h3>Redesigned Tabs</h3>
+<ul>
+<li><strong>CPU Tab</strong>: New QWidget-based design with direct /proc/cpuinfo parsing, real-time frequency monitoring, temperature sensors, cache info; Geek mode shows all cpuinfo properties, CPU flags, and detailed cache hierarchy</li>
+<li><strong>Motherboard Tab</strong>: Complete rewrite reading from /sys/class/dmi/id/, displays board info, BIOS details, chassis type; Geek mode with all DMI properties and Copy/Save/Close buttons</li>
+<li><strong>Graphics Tab</strong>: Direct DRM subsystem access via /sys/class/drm/, GPU detection, frequency/power monitoring for all cards (not just card0); Geek mode with comprehensive GPU properties and DRM connector details</li>
+<li><strong>Screen Tab</strong>: Qt QScreen API integration + EDID parsing from /sys/class/drm/, shows resolution, refresh rate, zoom level, physical size, manufacturer (from EDID), orientation; Geek mode with all Qt screen properties, DRM connector info, and formatted EDID hex dump with proper word wrapping</li>
+<li><strong>PC Info Tab</strong>: DMI/SMBIOS information from /sys/class/dmi/id/, displays computer name, PC type (decoded from chassis), manufacturer, product, family, version, serial, SKU, UUID; Geek mode shows all DMI files, hostname, machine IDs, hostnamectl output, firmware type (UEFI vs Legacy BIOS with platform size), ACPI tables, boot cmdline, system uptime (formatted and raw)</li>
+<li><strong>Ports Tab</strong>: Direct /sys access for USB buses/devices, serial ports (ttyS*/ttyUSB*/ttyACM*), PCI USB controllers, Bluetooth adapters, network interfaces; Geek mode with comprehensive USB device properties, serial port details, PCI controller info, Bluetooth adapter info, network interface properties; Copy/Save/Close buttons with proper dialogs</li>
+<li><strong>Summary Tab</strong>: System overview aggregating key information from all subsystems &mdash; computer name, manufacturer, processor, CPU cores, total memory, system uptime (formatted as "X d, Y h, Z m"), storage devices, total storage, graphics cards, display resolution, refresh rate, number of screens, Ethernet/wireless interfaces, USB devices, OS, kernel version</li>
+</ul>
+<h3>UI/UX Improvements</h3>
+<ul>
+<li><strong>Geek Mode Dialogs</strong>: Standardized 700x500px modal dialogs with Copy (confirmation dialog), Save (CSV export with proper escaping), and Close buttons; Auto-refresh timers with show/hide event handlers</li>
+<li><strong>Copy Functionality</strong>: Right-click context menu + Ctrl+C support across all tables, timer pause during copy operations, "Copied" confirmation dialogs</li>
+<li><strong>Multiline Display</strong>: Consistent use of ↳ arrow character for line breaks in table cells, word wrap enabled, ResizeToContents for property column</li>
+<li><strong>Serial Ports</strong>: Comma-separated list with natural line breaks (word wrap) instead of arrow between every item</li>
+<li><strong>Header Colors</strong>: Standard #2c3e50 (dark blue-gray) for normal mode, #34495e for geek mode</li>
+</ul>
+<h3>Technical Changes</h3>
+<ul>
+<li><strong>Base Class Migration</strong>: Moved from TabWidgetBase to direct QWidget inheritance for 7 tabs (CPU, Motherboard, Graphics, Screen, PC Info, Ports, Summary)</li>
+<li><strong>GUI Helpers</strong>: Introduced createHeadlineWithGeek(), enableTableCopy(), applyMainLayoutDefaults(), styleGeekButton() for consistent styling</li>
+<li><strong>System Access</strong>: Direct filesystem reads from /sys/class/drm/, /sys/class/dmi/id/, /sys/bus/usb/devices/, /sys/class/tty/, /sys/bus/pci/devices/, /sys/class/bluetooth/, /sys/class/net/, /proc/cpuinfo, /proc/meminfo, /proc/uptime, /proc/version, /etc/os-release</li>
+<li><strong>Arrow Character</strong>: Standardized on ↳ (U+21B3, downwards arrow with tip rightwards) across Storage, Ports, and all tabs for multiline display consistency</li>
+<li><strong>Signal Connections</strong>: Removed TabWidgetBase::loadingStarted/loadingFinished connections for redesigned tabs in lsv.cpp</li>
+</ul>
+<h3>Internationalization</h3>
+<ul>
+<li><strong>Norwegian Translation</strong>: Updated lsv_nb.ts with 311 finished translations (69% complete) including all new Ports and Summary tab strings</li>
+<li><strong>Translation Quality</strong>: Professional Norwegian (Bokmål) translations with proper technical terminology and UI conventions</li>
+</ul>
+<h3>Bug Fixes</h3>
+<ul>
+<li><strong>GPU Frequency</strong>: Fixed Intel GPU frequency display by scanning all DRM cards instead of hardcoding card0</li>
+<li><strong>Uptime Calculation</strong>: Fixed to parse /proc/uptime as double instead of long long for accurate sub-second precision</li>
+<li><strong>Column Truncation</strong>: Fixed "USB Buses/..." truncation by using ResizeToContents for first column in all tables</li>
+<li><strong>EDID Display</strong>: Added spaces between hex bytes in EDID dump to enable proper word wrapping</li>
+</ul>
+<h3>Files Changed (Major)</h3>
+<ul>
+<li><code>cpu_tab.h/cpp</code> &mdash; complete rewrite with QWidget pattern</li>
+<li><code>motherboard_tab.h/cpp</code> &mdash; complete rewrite, DMI access</li>
+<li><code>graphics_tab.h/cpp</code> &mdash; complete rewrite, DRM subsystem</li>
+<li><code>screen_tab.h/cpp</code> &mdash; complete rewrite, Qt + EDID parsing</li>
+<li><code>screen.h</code> &mdash; new helper file for screen information</li>
+<li><code>pc_tab.h/cpp</code> &mdash; complete rewrite, DMI/SMBIOS</li>
+<li><code>ports_tab.h/cpp</code> &mdash; complete rewrite, /sys access</li>
+<li><code>summary_tab.h/cpp</code> &mdash; complete rewrite, aggregated overview</li>
+<li><code>storage_tab.cpp</code> &mdash; arrow character update</li>
+<li><code>gui_helpers.h</code> &mdash; new helper functions</li>
+<li><code>lsv.cpp</code> &mdash; removed TabWidgetBase connections</li>
+<li><code>i18n/lsv_nb.ts</code> &mdash; 311 Norwegian translations</li>
+</ul>
+<h3>Known Limitations</h3>
+<ul>
+<li>Some older tabs (Audio, Desktop, OS, Peripherals, Memory, Network, Windowing) still use TabWidgetBase pattern and external helpers &mdash; planned for redesign in v0.18.0</li>
+<li>Remaining 141 untranslated strings (31%) in Norwegian translation &mdash; to be completed in next version</li>
+</ul>
+<hr />
 <h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 0.7.2 &mdash; 2025-11-06</strong></span></h2>
 <h3>Changed</h3>
 <ul>
