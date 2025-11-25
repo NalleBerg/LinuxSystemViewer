@@ -55,3 +55,14 @@ LSV/LSV
 
 # Personal scripts (not for distribution)
 golsv.sh
+
+# Large directories not needed in repository
+i18n_pending/
+LSV/
+build_debug/
+scripts/
+tools/
+
+# Backup files
+*.old
+*.backup
