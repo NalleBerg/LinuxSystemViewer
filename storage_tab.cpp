@@ -30,6 +30,8 @@
 #include <QProcess>
 #include <QScrollBar>
 #include <QMessageBox>
+#include <QProgressBar>
+#include <algorithm>
 
 StorageTab::StorageTab(QWidget* parent)
     : TabWidgetBase(QCoreApplication::translate("StorageTab", "Storage"),
@@ -335,10 +337,17 @@ void StorageTab::applyParsedPartitions(const QVariantMap& data) {
             }
         }
         
+        // Sort partitions by device name (e.g., sda1 before sda2)
+        std::sort(diskPartitions.begin(), diskPartitions.end(), [](const QVariant& a, const QVariant& b) {
+            QString deviceA = a.toMap()["device"].toString();
+            QString deviceB = b.toMap()["device"].toString();
+            return deviceA < deviceB;
+        });
+        
         // Only create and show table if there are partitions
         if (!diskPartitions.isEmpty()) {
-            // Populate table with this disk's partitions
-            diskTable->setRowCount(diskPartitions.size());
+            // Populate table with this disk's partitions (double the rows for progress bars)
+            diskTable->setRowCount(diskPartitions.size() * 2);
             
             // Calculate column width for truncation
             int columnWidth = diskTable->columnWidth(0);
@@ -346,35 +355,72 @@ void StorageTab::applyParsedPartitions(const QVariantMap& data) {
             
             for (int i = 0; i < diskPartitions.size(); ++i) {
                 QVariantMap partition = diskPartitions[i].toMap();
+                int dataRow = i * 2;
+                int progressRow = dataRow + 1;
                 
                 // Create items with truncation detection and HTML formatting
                 QString deviceText = formatTextWithTruncation(partition["device"].toString(), columnWidth, tableFont);
                 QTableWidgetItem* deviceItem = createColoredTextItem(deviceText);
-                diskTable->setItem(i, 0, deviceItem);
+                QFont boldFont = deviceItem->font();
+                boldFont.setBold(true);
+                deviceItem->setFont(boldFont);
+                diskTable->setItem(dataRow, 0, deviceItem);
                 
                 QString sizeText = formatTextWithTruncation(partition["size"].toString(), columnWidth, tableFont);
                 QTableWidgetItem* sizeItem = createColoredTextItem(sizeText);
-                diskTable->setItem(i, 1, sizeItem);
+                diskTable->setItem(dataRow, 1, sizeItem);
                 
                 QString usedText = formatTextWithTruncation(partition["used"].toString(), columnWidth, tableFont);
                 QTableWidgetItem* usedItem = createColoredTextItem(usedText);
-                diskTable->setItem(i, 2, usedItem);
+                diskTable->setItem(dataRow, 2, usedItem);
                 
                 QString availableText = formatTextWithTruncation(partition["available"].toString(), columnWidth, tableFont);
                 QTableWidgetItem* availableItem = createColoredTextItem(availableText);
-                diskTable->setItem(i, 3, availableItem);
+                diskTable->setItem(dataRow, 3, availableItem);
                 
                 QString usePercentText = formatTextWithTruncation(partition["use_percent"].toString(), columnWidth, tableFont);
                 QTableWidgetItem* usePercentItem = createColoredTextItem(usePercentText);
-                diskTable->setItem(i, 4, usePercentItem);
+                diskTable->setItem(dataRow, 4, usePercentItem);
                 
                 QString mountText = formatTextWithTruncation(partition["mount_point"].toString(), columnWidth, tableFont);
                 QTableWidgetItem* mountItem = createColoredTextItem(mountText);
-                diskTable->setItem(i, 5, mountItem);
+                diskTable->setItem(dataRow, 5, mountItem);
                 
                 QString filesystemText = formatTextWithTruncation(partition["filesystem"].toString(), columnWidth, tableFont);
                 QTableWidgetItem* filesystemItem = createColoredTextItem(filesystemText);
-                diskTable->setItem(i, 6, filesystemItem);
+                diskTable->setItem(dataRow, 6, filesystemItem);
+                
+                // Add progress bar row below partition data
+                diskTable->setSpan(progressRow, 0, 1, 7); // Merge all columns
+                
+                // Parse the percentage
+                QString percentStr = partition["use_percent"].toString();
+                percentStr.remove('%'); // Remove % sign
+                int percent = percentStr.toInt();
+                
+                // Create widget container for centered progress bar
+                QWidget* progressWidget = new QWidget();
+                QHBoxLayout* progressLayout = new QHBoxLayout(progressWidget);
+                progressLayout->setContentsMargins(0, 4, 0, 4);
+                
+                // Add left spacer (15%)
+                progressLayout->addStretch(15);
+                
+                // Create progress bar (70% width)
+                QProgressBar* progressBar = new QProgressBar();
+                progressBar->setMinimum(0);
+                progressBar->setMaximum(100);
+                progressBar->setValue(percent);
+                progressBar->setFixedHeight(10);
+                progressBar->setFormat(QString("%1%").arg(percent));
+                progressBar->setAlignment(Qt::AlignCenter);
+                setBarColor(progressBar, percent);
+                progressLayout->addWidget(progressBar, 70); // 70% stretch
+                
+                // Add right spacer (15%)
+                progressLayout->addStretch(15);
+                
+                diskTable->setCellWidget(progressRow, 0, progressWidget);
             }
             
             // Resize table to fit content with proper row heights for multiline text
@@ -393,7 +439,7 @@ void StorageTab::applyParsedPartitions(const QVariantMap& data) {
             enableTableCopy(diskTable, refreshTimer);
         } else {
             // No partitions, just show a message or skip the table entirely
-            QLabel* noPartitionsLabel = new QLabel("No mounted partitions found for this disk");
+            QLabel* noPartitionsLabel = new QLabel("No mounted partitions found for this disk yet.");
             noPartitionsLabel->setAlignment(Qt::AlignCenter);
             noPartitionsLabel->setStyleSheet("color: #666; font-style: italic; padding: 10px;");
             diskInfoLayout->addWidget(noPartitionsLabel);
@@ -411,12 +457,13 @@ void StorageTab::applyParsedPartitions(const QVariantMap& data) {
 }
 
 QString StorageTab::formatSizeLocale(const QString& sizeStr) {
-    // Convert sizes like "238.52G" to "238,52 GB" (European locale style)
+    // Convert sizes like "238.52G" or "6,2M" to "238,52 GB" or "6,2 MB" (European locale style)
     if (sizeStr.isEmpty() || sizeStr == "-") {
         return sizeStr;
     }
     
-    QRegularExpression sizeRegex("^([0-9]+(?:\\.[0-9]+)?)([KMGTPE]?)$");
+    // Handle both . and , as decimal separators
+    QRegularExpression sizeRegex("^([0-9]+(?:[\\.,][0-9]+)?)([KMGTPE]?)$");
     QRegularExpressionMatch match = sizeRegex.match(sizeStr);
     
     if (match.hasMatch()) {
@@ -426,12 +473,12 @@ QString StorageTab::formatSizeLocale(const QString& sizeStr) {
         // Replace decimal point with comma
         number.replace('.', ',');
         
-        // Add "B" to unit if not empty
+        // Add "B" to unit if not empty, with space before
         if (!unit.isEmpty()) {
-            unit += "B";
+            return number + " " + unit + "B";
         }
         
-        return number + " " + unit;
+        return number;
     }
     
     return sizeStr;
@@ -763,4 +810,28 @@ void GeekStorageDialog::fillTable()
             addRow("Device", devName);
         }
     }
+}
+
+void StorageTab::setBarColor(QProgressBar* bar, int percent)
+{
+    QString color;
+    if (percent < 75)
+        color = "#4caf50"; // green
+    else if (percent < 90)
+        color = "#ffeb3b"; // yellow
+    else
+        color = "#f44336"; // red
+
+    bar->setStyleSheet(QString(
+        "QProgressBar {"
+        " border: 1px solid #34495e;"
+        " border-radius: 5px;"
+        " background: #eee;"
+        " text-align: center;"
+        "}"
+        "QProgressBar::chunk {"
+        " background-color: %1;"
+        " border-radius: 5px;"
+        "}"
+    ).arg(color));
 }

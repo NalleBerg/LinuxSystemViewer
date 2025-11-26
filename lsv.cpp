@@ -811,6 +811,8 @@ private:
     MultiRowTabWidget* m_tabWidget = nullptr;
 };
 
+
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -883,7 +885,16 @@ int main(int argc, char *argv[])
                 settings.setValue("language", actual);
             }
         } else {
-            appendLog(QString("i18n: No available translator for requested language '%1'").arg(effectiveLang));
+            appendLog(QString("i18n: No available translator for requested language '%1', trying system locale").arg(effectiveLang));
+            // Fallback to system locale if the saved language is invalid
+            QString sysLocale = QLocale::system().name();
+            QString sysActual = normalizeLanguageCodeToAvailable(sysLocale);
+            if (!sysActual.isEmpty()) {
+                if (tryLoadTranslatorForCode(sysActual, app, &translator)) {
+                    appendLog(QString("i18n: Loaded system locale translator '%1'").arg(sysActual));
+                    settings.setValue("language", sysActual);
+                }
+            }
         }
     }
 
@@ -1037,7 +1048,7 @@ int main(int argc, char *argv[])
 
         // Build the sudo command that authenticates and then starts the GUI
         // as a detached process so the terminal can close after auth.
-    QString sudoPrompt = QObject::tr("Please enter password to run Linux System Viewer as root");
+        QString sudoPrompt = QCoreApplication::translate("QObject", "Please enter password to run Linux System Viewer as root");
         QString escTarget = targetExe;
         escTarget.replace('\'', "'" "'" "'");
         QString inner = QString("setsid '%1' > /dev/null 2>&1 &").arg(escTarget);
@@ -1102,7 +1113,7 @@ int main(int argc, char *argv[])
             ts << "printf '\033]11;#F3F3F4\\007'\n"; // background light gray
             // Set the terminal window title to include the application
             // version so users can confirm which release they're elevating.
-            QString termTitle = QString("Linux System Viewer %1").arg(LSVVersionQString());
+            QString termTitle = QCoreApplication::translate("QObject", "Linux System Viewer %1").arg(LSVVersionQString());
             QString termTitleEsc = termTitle;
             termTitleEsc.replace('\'', "'\"'\"'");
             ts << "printf '\\033]0;" << termTitleEsc << "\\007'\n";
@@ -1148,7 +1159,9 @@ int main(int argc, char *argv[])
             ts << "  rc=$?\n";
             ts << "  echo 'sudo finished with exitcode:' $rc >> /tmp/lsv-relaunch-" << getpid() << ".log\n";
             ts << "  if [ $rc -eq 0 ]; then exit 0; fi\n";
-            ts << "  echo 'Authentication failed ('$attempts'/3)' >&2\n";
+            QString authFailedMsg = QCoreApplication::translate("QObject", "Authentication failed (%1/3)");
+            authFailedMsg.replace('"', "\\\"");
+            ts << "  printf '" << authFailedMsg.replace("%1", "'$attempts'") << "\\n' >&2\n";
             ts << "done\n";
             ts << "echo 'Giving up after 3 failed attempts' >> /tmp/lsv-relaunch-" << getpid() << ".log\n";
             ts << "exit 1\n";

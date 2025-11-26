@@ -13,6 +13,7 @@
 #include <QVariantMap>
 #include <QPushButton>
 #include <QDialog>
+#include <QProgressBar>
 #include "tab_widget_base.h"
 
 class GeekStorageDialog : public QDialog
@@ -66,7 +67,8 @@ private:
     QString formatSizeLocale(const QString& sizeStr);
     QTableWidget* createDiskTable();
     QVariantMap parseStorageData(const QString& output);
-    QString formatTextWithTruncation(const QString& text, int maxWidth, const QFont& font);
+    QString formatTextWithTruncation(const QString& text, int columnWidth, const QFont& font);
+    void setBarColor(QProgressBar* bar, int percent);
     QTableWidgetItem* createColoredTextItem(const QString& text);
 };
 

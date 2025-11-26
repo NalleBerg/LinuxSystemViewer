@@ -235,6 +235,36 @@ void GeekCpuDialog::fillTable()
         }
 
     addRow(tr("Model"), model.isEmpty() ? tr("Unknown") : model);
+
+    // Read CPU temperature from thermal zones
+    QString temperature = tr("Unknown");
+    QDir thermalDir("/sys/class/thermal");
+    QStringList thermalEntries = thermalDir.entryList(QStringList() << "thermal_zone*", QDir::Dirs);
+    for (const QString &zone : thermalEntries) {
+        QFile typeFile("/sys/class/thermal/" + zone + "/type");
+        if (typeFile.open(QIODevice::ReadOnly)) {
+            QString type = QString(typeFile.readAll()).trimmed();
+            typeFile.close();
+            
+            // Look for CPU package temperature sensor
+            if (type == "x86_pkg_temp" || type == "coretemp" || type.contains("cpu", Qt::CaseInsensitive)) {
+                QFile tempFile("/sys/class/thermal/" + zone + "/temp");
+                if (tempFile.open(QIODevice::ReadOnly)) {
+                    QString tempStr = QString(tempFile.readAll()).trimmed();
+                    bool ok;
+                    int temp = tempStr.toInt(&ok);
+                    if (ok) {
+                        // Temperature is in millidegrees Celsius
+                        temperature = QString::number(temp / 1000.0, 'f', 1) + " °C";
+                    }
+                    tempFile.close();
+                    break; // Use first matching sensor
+                }
+            }
+        }
+    }
+    addRow(tr("Temperature"), temperature);
+
     addRow(tr("Vendor"), vendor.isEmpty() ? tr("Unknown") : vendor);
     addRow(tr("CPU Cores"), cores.isEmpty() ? tr("Unknown") : cores);
     addRow(tr("CPU MHz"), cpuMHz.isEmpty() ? tr("Unknown") : cpuMHz);
@@ -354,12 +384,42 @@ void CPUTab::refreshCpuValues()
         }
     }
 
+    // Read CPU temperature
+    QString temperature = tr("Unknown");
+    QDir thermalDir("/sys/class/thermal");
+    QStringList thermalEntries = thermalDir.entryList(QStringList() << "thermal_zone*", QDir::Dirs);
+    for (const QString &zone : thermalEntries) {
+        QFile typeFile("/sys/class/thermal/" + zone + "/type");
+        if (typeFile.open(QIODevice::ReadOnly)) {
+            QString type = QString(typeFile.readAll()).trimmed();
+            typeFile.close();
+            
+            if (type == "x86_pkg_temp" || type == "coretemp" || type.contains("cpu", Qt::CaseInsensitive)) {
+                QFile tempFile("/sys/class/thermal/" + zone + "/temp");
+                if (tempFile.open(QIODevice::ReadOnly)) {
+                    QString tempStr = QString(tempFile.readAll()).trimmed();
+                    bool ok;
+                    int temp = tempStr.toInt(&ok);
+                    if (ok) {
+                        temperature = QString::number(temp / 1000.0, 'f', 1) + " °C";
+                    }
+                    tempFile.close();
+                    break;
+                }
+            }
+        }
+    }
+
     // Update only the rows which are likely to change
     for (int r = 0; r < tableWidget->rowCount(); ++r) {
         QTableWidgetItem* keyItem = tableWidget->item(r, 0);
         if (!keyItem) continue;
         QString key = keyItem->text().trimmed();
-        if (key.compare(tr("Current freq (GHz)"), Qt::CaseInsensitive) == 0) {
+        if (key.compare(tr("Temperature"), Qt::CaseInsensitive) == 0) {
+            QTableWidgetItem* val = tableWidget->item(r, 1);
+            if (val) val->setText(temperature);
+            else tableWidget->setItem(r, 1, new QTableWidgetItem(temperature));
+        } else if (key.compare(tr("Current freq (GHz)"), Qt::CaseInsensitive) == 0) {
             QTableWidgetItem* val = tableWidget->item(r, 1);
             if (val) val->setText(currentFreqGHz == unknown ? unknown : currentFreqGHz);
             else tableWidget->setItem(r, 1, new QTableWidgetItem(currentFreqGHz));

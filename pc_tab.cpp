@@ -41,7 +41,7 @@ PCTab::PCTab(QWidget* parent)
         "QHeaderView::section { background-color: #2c3e50; color: white; "
         "padding: 5px; font-weight: bold; }"
     );
-    tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
+    tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
     tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
     tableWidget->setAlternatingRowColors(true);
     tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);

@@ -3,4 +3,4 @@
 // This will automatically update the version everywhere in the application
 
 // Version string definition
-const char* LSV_VERSION = "0.17.0";
+const char* LSV_VERSION = "0.18.5";

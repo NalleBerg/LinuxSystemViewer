@@ -108,6 +108,33 @@ void loadCpuInformation(QTableWidget* table, const QJsonObject& data)
     addRowToTable(table, QStringList() << QObject::tr("Vendor") << (vendor.isEmpty() ? QObject::tr("Unknown") : vendor) << "");
     addRowToTable(table, QStringList() << QObject::tr("Model") << (model.isEmpty() ? QObject::tr("Unknown") : model) << "");
 
+    // CPU Temperature
+    QString temperature = QObject::tr("Unknown");
+    QDir thermalDir("/sys/class/thermal");
+    QStringList thermalEntries = thermalDir.entryList(QStringList() << "thermal_zone*", QDir::Dirs);
+    for (const QString &zone : thermalEntries) {
+        QFile typeFile("/sys/class/thermal/" + zone + "/type");
+        if (typeFile.open(QIODevice::ReadOnly)) {
+            QString type = QString(typeFile.readAll()).trimmed();
+            typeFile.close();
+            
+            if (type == "x86_pkg_temp" || type == "coretemp" || type.contains("cpu", Qt::CaseInsensitive)) {
+                QFile tempFile("/sys/class/thermal/" + zone + "/temp");
+                if (tempFile.open(QIODevice::ReadOnly)) {
+                    QString tempStr = QString(tempFile.readAll()).trimmed();
+                    bool ok;
+                    int temp = tempStr.toInt(&ok);
+                    if (ok) {
+                        temperature = QString::number(temp / 1000.0, 'f', 1) + " °C";
+                    }
+                    tempFile.close();
+                    break;
+                }
+            }
+        }
+    }
+    addRowToTable(table, QStringList() << QObject::tr("Temperature") << temperature << "");
+
     // Cache size and BogoMIPS
     addRowToTable(table, QStringList() << QObject::tr("Cache size") << (cacheSize.isEmpty() ? QObject::tr("Unknown") : cacheSize) << "");
     addRowToTable(table, QStringList() << QObject::tr("Bogomips") << (bogomips.isEmpty() ? QObject::tr("Unknown") : bogomips) << "");

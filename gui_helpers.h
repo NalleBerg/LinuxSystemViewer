@@ -469,7 +469,7 @@ inline QHBoxLayout* createHeadlineWithGeek(QWidget* parent, const QString& title
     QHBoxLayout* headlineLayout = new QHBoxLayout();
     QLabel* headline = new QLabel(title);
     styleHeadlineLabel(headline);
-    QPushButton* geekButton = new QPushButton(parent ? parent->tr("Geek Mode") : QStringLiteral("Geek Mode"), parent);
+    QPushButton* geekButton = new QPushButton(QCoreApplication::translate("gui_helpers", "Geek Mode"), parent);
     styleGeekButton(geekButton);
     // ensure exact height
     geekButton->setFixedHeight(22);
