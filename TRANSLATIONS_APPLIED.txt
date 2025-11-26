@@ -1,0 +1,181 @@
+========================================
+Norwegian Translations Applied
+========================================
+Date: 26. november 2025
+Total: 106 translations
+
+Please review these translations and let me know if any need adjustments.
+
+========================================
+
+SCREEN & DISPLAY
+----------------
+1. Interface → Grensesnitt
+2. Screen - Geek Mode → Skjerm - Nerdmodus
+3. Screen Technical Details → Tekniske skjermdetaljer
+4. Screen %1 Name → Skjerm %1 navn
+5. Screen %1 Manufacturer → Skjerm %1 produsent
+6. Screen %1 Model → Skjerm %1 modell
+7. Screen %1 Size (mm) → Skjerm %1 størrelse (mm)
+8. Screen %1 Size (inches) → Skjerm %1 størrelse (tommer)
+9. Screen %1 Resolution → Skjerm %1 oppløsning
+10. Screen %1 Refresh Rate → Skjerm %1 oppdateringsfrekvens
+11. Screen %1 Scale Factor → Skjerm %1 skaleringsfaktor
+12. Screen %1 Logical DPI → Skjerm %1 logisk DPI
+13. Screen %1 DPI → Skjerm %1 DPI
+14. Screen %1 Physical DPI X → Skjerm %1 fysisk DPI X
+15. Screen %1 Physical DPI Y → Skjerm %1 fysisk DPI Y
+16. Screen %1 Device Pixel Ratio → Skjerm %1 enhetspikselforhold
+17. Screen %1 Orientation → Skjerm %1 orientering
+18. Screen %1 Geometry → Skjerm %1 geometri
+19. Screen %1 Available Geometry → Skjerm %1 tilgjengelig geometri
+20. Screen %1 Depth → Skjerm %1 dybde
+21. Resolution → Oppløsning
+22. Refresh Rate → Oppdateringsfrekvens
+23. Zoom Level → Zoomnivå
+24. Physical Size → Fysisk størrelse
+25. Orientation → Orientering
+26. Display → Skjerm
+27. Wayland Display → Wayland-skjerm
+28. Current Resolution → Nåværende oppløsning
+29. Display Scaling → Skjermskalering
+
+DRM CONNECTOR
+-------------
+30. === DRM CONNECTOR INFORMATION === → === DRM TILKOBLINGSINFORMASJON ===
+31. Connector → Tilkobling
+32. %1/status → %1/status
+33. %1/enabled → %1/aktivert
+34. %1/dpms → %1/dpms
+35. %1/modes → %1/moduser
+36. %1/EDID Size → %1/EDID-størrelse
+37. %1/Manufacturer ID → %1/produsent-ID
+38. %1/Product Code → %1/produktkode
+39. %1/Serial Number → %1/serienummer
+40. %1/Manufacture Date → %1/produksjonsdato
+41. %1/Display Name → %1/skjermnavn
+42. %1/Display String → %1/skjermstreng
+43. %1/EDID (first 128 bytes hex) → %1/EDID (første 128 bytes hex)
+
+STORAGE
+-------
+44. Storage - Geek Mode → Lagring - Nerdmodus
+45. Storage Technical Details → Tekniske lagringsdetaljer
+46. Save Storage Info → Lagre lagringsinformasjon
+
+GRAPHICS
+--------
+47. Graphics → Grafikk
+48. Graphics Card → Skjermkort
+49. Device ID → Enhets-ID
+50. Driver → Driver
+51. DRI Device → DRI-enhet
+52. Framebuffer Mode → Rammebuffer-modus
+53. Virtual Resolution → Virtuell oppløsning
+54. Video Memory → Videominne
+55. Status → Status
+56. No graphics card detected → Ingen skjermkort oppdaget
+
+MEMORY
+------
+57. RAM Total → RAM totalt
+58. RAM Usage → RAM-bruk
+59. Used: %1 GB / Free: %2 GB (%3%) → Brukt: %1 GB / Ledig: %2 GB (%3%)
+60. SWAP Total → SWAP totalt
+61. SWAP Usage → SWAP-bruk
+
+MOTHERBOARD
+-----------
+62. Motherboard → Hovedkort
+63. BIOS Vendor → BIOS-leverandør
+64. BIOS Version → BIOS-versjon
+65. BIOS Date → BIOS-dato
+66. Chipset → Brikkesett
+
+PC INFO
+-------
+67. Computer Name → Datamaskin navn
+68. PC Type → PC-type
+69. Manufacturer → Produsent
+70. Product Name → Produktnavn
+71. Product Family → Produktfamilie
+72. Version → Versjon
+73. Serial Number → Serienummer
+74. SKU Number → SKU-nummer
+75. UUID → UUID
+
+PERIPHERALS
+-----------
+76. Device Type → Enhetstype
+77. Device Name → Enhetsnavn
+78. Scanning peripherals, please wait... → Skanner tilbehør, vennligst vent...
+
+NETWORK
+-------
+79. Network Technical Details → Tekniske nettverksdetaljer
+
+DESKTOP/WINDOWING
+-----------------
+80. Desktop - Geek Mode → Skrivebord - Nerdmodus
+81. Desktop Environment Technical Details → Tekniske skrivebordsdetaljer
+82. Save Desktop Info → Lagre skrivebordsinformasjon
+83. Session → Økt
+84. Desktop → Skrivebord
+
+SYSTEM
+------
+85. OS → OS
+86. Temperature → Temperatur
+87. Loading → Laster
+
+COMMON UI ELEMENTS
+------------------
+88. Property → Egenskap
+89. Value → Verdi
+90. Copy → Kopier
+91. Save... → Lagre...
+92. Copied → Kopiert
+93. Name → Navn
+94. Type → Type
+
+FILE DIALOGS
+------------
+95. Save Screen Info → Lagre skjerminformasjon
+96. CSV Files (*.csv);;All Files (*) → CSV-filer (*.csv);;Alle filer (*)
+97. CSV files (*.csv);;All files (*) → CSV-filer (*.csv);;Alle filer (*)
+
+MESSAGES
+--------
+98. The information has been copied to the clipboard. → Informasjonen er kopiert til utklippstavlen.
+
+LANGUAGE SETTINGS
+-----------------
+99. Language selection → Språkvalg
+100. Failed to write language selection to %1 → Kunne ikke skrive språkvalg til %1
+101. Current: %1\n%2 → Nåværende: %1\n%2
+102. Failed to write language selection to configuration directory → Kunne ikke skrive språkvalg til konfigurasjonskatalog
+103. Language changed → Språk endret
+104. Language saved. UI updated to the selected language. → Språk lagret. Brukergrensesnitt oppdatert til valgt språk.
+105. Failed to remove %1 → Kunne ikke fjerne %1
+106. Saved language selection removed. The application is now using English. → Lagret språkvalg fjernet. Applikasjonen bruker nå engelsk.
+
+========================================
+TRANSLATION NOTES
+========================================
+
+Technical Terms Kept:
+- DPI, DPMS, DRI, EDID, UUID, SKU, BIOS - kept as-is (standard technical terms)
+- Driver - kept in English (commonly used in Norwegian tech context)
+
+Compound Words:
+- "Skjermkort" (graphics card) - compound word as per Norwegian standard
+- "Brikkesett" (chipset) - standard Norwegian IT term
+- "Oppdateringsfrekvens" (refresh rate) - compound word
+- "Rammebuffer" (framebuffer) - adapted compound
+
+Consistency:
+- "Geek Mode" → "Nerdmodus" (consistent across all tabs)
+- "Technical Details" → "Tekniske [X]detaljer" (consistent pattern)
+- "Save [X] Info" → "Lagre [X]informasjon" (consistent pattern)
+
+========================================

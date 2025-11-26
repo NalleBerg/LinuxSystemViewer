@@ -1,0 +1,443 @@
+========================================
+Norwegian Translation - Missing Strings
+========================================
+Total: 144 unfinished translations
+
+Instructions:
+1. Provide Norwegian (Bokmål) translations for each English string
+2. Some strings already have draft translations marked with (draft)
+3. Keep technical terms like USB, BIOS, UUID, DPI as-is
+4. Format strings with %1, %2 placeholders should keep the placeholders
+5. Send me the completed translations and I'll update the file
+
+========================================
+
+1. Interface
+   English: Interface
+   Norwegian: ________________
+
+2. Screen - Geek Mode
+   English: Screen - Geek Mode
+   Norwegian: ________________
+
+3. Screen Technical Details
+   English: Screen Technical Details
+   Norwegian: ________________
+
+4. Property (draft: Egenskap)
+   English: Property
+   Norwegian: Egenskap (confirm or change)
+
+5. Value (draft: Verdi)
+   English: Value
+   Norwegian: Verdi (confirm or change)
+
+6. Copy (draft: Kopier)
+   English: Copy
+   Norwegian: Kopier (confirm or change)
+
+7. Save... (draft: Lagre...)
+   English: Save...
+   Norwegian: Lagre... (confirm or change)
+
+8. Copied (draft: Kopiert)
+   English: Copied
+   Norwegian: Kopiert (confirm or change)
+
+9. The information has been copied to the clipboard.
+   English: The information has been copied to the clipboard.
+   Norwegian (draft): Informasjonen er kopiert til utklippstavlen.
+   Norwegian: ________________ (confirm or change)
+
+10. Save Screen Info
+    English: Save Screen Info
+    Norwegian: ________________
+
+11. CSV Files (*.csv);;All Files (*)
+    English: CSV Files (*.csv);;All Files (*)
+    Norwegian (draft): CSV-filer (*.csv);;Alle filer (*)
+    Norwegian: ________________ (confirm or change)
+
+12. Screen %1 Name
+    English: Screen %1 Name
+    Norwegian: ________________
+
+13. Screen %1 Manufacturer
+    English: Screen %1 Manufacturer
+    Norwegian: ________________
+
+14. Screen %1 Model
+    English: Screen %1 Model
+    Norwegian: ________________
+
+15. Screen %1 Size (mm)
+    English: Screen %1 Size (mm)
+    Norwegian: ________________
+
+16. Screen %1 Size (inches)
+    English: Screen %1 Size (inches)
+    Norwegian: ________________
+
+17. Screen %1 Resolution
+    English: Screen %1 Resolution
+    Norwegian: ________________
+
+18. Screen %1 Refresh Rate
+    English: Screen %1 Refresh Rate
+    Norwegian: ________________
+
+19. Screen %1 Scale Factor
+    English: Screen %1 Scale Factor
+    Norwegian: ________________
+
+20. Screen %1 Logical DPI
+    English: Screen %1 Logical DPI
+    Norwegian: ________________
+
+21. Screen %1 DPI
+    English: Screen %1 DPI
+    Norwegian: ________________
+
+22. Screen %1 Physical DPI X
+    English: Screen %1 Physical DPI X
+    Norwegian: ________________
+
+23. Screen %1 Physical DPI Y
+    English: Screen %1 Physical DPI Y
+    Norwegian: ________________
+
+24. Screen %1 Device Pixel Ratio
+    English: Screen %1 Device Pixel Ratio
+    Norwegian: ________________
+
+25. Screen %1 Orientation
+    English: Screen %1 Orientation
+    Norwegian: ________________
+
+26. Screen %1 Geometry
+    English: Screen %1 Geometry
+    Norwegian: ________________
+
+27. Screen %1 Available Geometry
+    English: Screen %1 Available Geometry
+    Norwegian: ________________
+
+28. Screen %1 Depth
+    English: Screen %1 Depth
+    Norwegian: ________________
+
+29. === DRM CONNECTOR INFORMATION ===
+    English: === DRM CONNECTOR INFORMATION ===
+    Norwegian: ________________
+
+30. Connector (draft: Kontakt)
+    English: Connector
+    Norwegian: ________________ (Kontakt or change)
+
+31. %1/status
+    English: %1/status
+    Norwegian: ________________
+
+32. %1/enabled
+    English: %1/enabled
+    Norwegian: ________________
+
+33. %1/dpms
+    English: %1/dpms
+    Norwegian: ________________
+
+34. %1/modes
+    English: %1/modes
+    Norwegian: ________________
+
+35. %1/EDID Size
+    English: %1/EDID Size
+    Norwegian: ________________
+
+36. %1/Manufacturer ID
+    English: %1/Manufacturer ID
+    Norwegian: ________________
+
+37. %1/Product Code
+    English: %1/Product Code
+    Norwegian: ________________
+
+38. %1/Serial Number
+    English: %1/Serial Number
+    Norwegian: ________________
+
+39. %1/Manufacture Date
+    English: %1/Manufacture Date
+    Norwegian: ________________
+
+40. %1/Display Name
+    English: %1/Display Name
+    Norwegian: ________________
+
+41. %1/Display String
+    English: %1/Display String
+    Norwegian: ________________
+
+42. %1/EDID (first 128 bytes hex)
+    English: %1/EDID (first 128 bytes hex)
+    Norwegian: ________________
+
+43. Storage - Geek Mode
+    English: Storage - Geek Mode
+    Norwegian: ________________
+
+44. Storage Technical Details
+    English: Storage Technical Details
+    Norwegian: ________________
+
+45. Save Storage Info
+    English: Save Storage Info
+    Norwegian: ________________
+
+46. Graphics (draft: Grafikk)
+    English: Graphics
+    Norwegian: Grafikk (confirm or change)
+
+47. RAM Total
+    English: RAM Total
+    Norwegian: ________________
+
+48. RAM Usage
+    English: RAM Usage
+    Norwegian: ________________
+
+49. Used: %1 GB / Free: %2 GB (%3%)
+    English: Used: %1 GB / Free: %2 GB (%3%)
+    Norwegian: ________________
+
+50. SWAP Total
+    English: SWAP Total
+    Norwegian: ________________
+
+51. SWAP Usage
+    English: SWAP Usage
+    Norwegian: ________________
+
+52. Motherboard (draft: Hovedkort)
+    English: Motherboard
+    Norwegian: Hovedkort (confirm or change)
+
+53. Network Technical Details
+    English: Network Technical Details
+    Norwegian: ________________
+
+54. CSV files (*.csv);;All files (*)
+    English: CSV files (*.csv);;All files (*)
+    Norwegian: ________________
+
+55. OS
+    English: OS
+    Norwegian: ________________
+
+56. Computer Name
+    English: Computer Name
+    Norwegian: ________________
+
+57. PC Type
+    English: PC Type
+    Norwegian: ________________
+
+58. Manufacturer (draft: Produsent)
+    English: Manufacturer
+    Norwegian: Produsent (confirm or change)
+
+59. Product Name
+    English: Product Name
+    Norwegian: ________________
+
+60. Product Family
+    English: Product Family
+    Norwegian: ________________
+
+61. Version (draft: Versjon)
+    English: Version
+    Norwegian: Versjon (confirm or change)
+
+62. Serial Number
+    English: Serial Number
+    Norwegian: ________________
+
+63. SKU Number
+    English: SKU Number
+    Norwegian: ________________
+
+64. UUID
+    English: UUID
+    Norwegian: ________________
+
+65. Device Type
+    English: Device Type
+    Norwegian: ________________
+
+66. Device Name
+    English: Device Name
+    Norwegian: ________________
+
+67. Scanning peripherals, please wait...
+    English: Scanning peripherals, please wait...
+    Norwegian: ________________
+
+68. Loading (draft: Laster)
+    English: Loading
+    Norwegian: Laster (confirm or change)
+
+69. Temperature
+    English: Temperature
+    Norwegian: ________________
+
+70. Language selection
+    English: Language selection
+    Norwegian: ________________
+
+71. Failed to write language selection to %1
+    English: Failed to write language selection to %1
+    Norwegian: ________________
+
+72. Current: %1\n%2
+    English: Current: %1\n%2
+    Norwegian: ________________
+
+73. Failed to write language selection to configuration directory
+    English: Failed to write language selection to configuration directory
+    Norwegian: ________________
+
+74. Language changed
+    English: Language changed
+    Norwegian: ________________
+
+75. Language saved. UI updated to the selected language.
+    English: Language saved. UI updated to the selected language.
+    Norwegian: ________________
+
+76. Failed to remove %1
+    English: Failed to remove %1
+    Norwegian: ________________
+
+77. Saved language selection removed. The application is now using English.
+    English: Saved language selection removed. The application is now using English.
+    Norwegian: ________________
+
+78. Graphics Card
+    English: Graphics Card
+    Norwegian: ________________
+
+79. Device ID
+    English: Device ID
+    Norwegian: ________________
+
+80. Driver
+    English: Driver
+    Norwegian: ________________
+
+81. DRI Device
+    English: DRI Device
+    Norwegian: ________________
+
+82. Framebuffer Mode
+    English: Framebuffer Mode
+    Norwegian: ________________
+
+83. Virtual Resolution
+    English: Virtual Resolution
+    Norwegian: ________________
+
+84. Video Memory (draft: Videominne)
+    English: Video Memory
+    Norwegian: Videominne (confirm or change)
+
+85. Status
+    English: Status
+    Norwegian: ________________
+
+86. No graphics card detected
+    English: No graphics card detected
+    Norwegian: ________________
+
+87. Name
+    English: Name
+    Norwegian: ________________
+
+88. Type
+    English: Type
+    Norwegian: ________________
+
+89. BIOS Vendor
+    English: BIOS Vendor
+    Norwegian: ________________
+
+90. BIOS Version
+    English: BIOS Version
+    Norwegian: ________________
+
+91. BIOS Date
+    English: BIOS Date
+    Norwegian: ________________
+
+92. Chipset (draft: Chipsett)
+    English: Chipset
+    Norwegian: Chipsett (confirm or change)
+
+93. Resolution
+    English: Resolution
+    Norwegian: ________________
+
+94. Refresh Rate (draft: Oppdateringsfrekvens)
+    English: Refresh Rate
+    Norwegian: Oppdateringsfrekvens (confirm or change)
+
+95. Zoom Level
+    English: Zoom Level
+    Norwegian: ________________
+
+96. Physical Size
+    English: Physical Size
+    Norwegian: ________________
+
+97. Orientation
+    English: Orientation
+    Norwegian: ________________
+
+98. Desktop - Geek Mode
+    English: Desktop - Geek Mode
+    Norwegian: ________________
+
+99. Desktop Environment Technical Details
+    English: Desktop Environment Technical Details
+    Norwegian: ________________
+
+100. Save Desktop Info
+     English: Save Desktop Info
+     Norwegian: ________________
+
+101. Session
+     English: Session
+     Norwegian: ________________
+
+102. Display
+     English: Display
+     Norwegian: ________________
+
+103. Wayland Display
+     English: Wayland Display
+     Norwegian: ________________
+
+104. Current Resolution
+     English: Current Resolution
+     Norwegian: ________________
+
+105. Display Scaling
+     English: Display Scaling
+     Norwegian: ________________
+
+106. Desktop
+     English: Desktop
+     Norwegian: ________________
+
+========================================
+END OF TRANSLATION LIST
+========================================
