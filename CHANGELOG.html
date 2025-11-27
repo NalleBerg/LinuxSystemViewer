@@ -1,3 +1,48 @@
+<h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 0.18.6 &mdash; 2025-11-27</strong></span></h2>
+<h3>Internationalization</h3>
+<ul>
+<li><strong>Norwegian Translation</strong>: Complete Norwegian (Bokmål) translation with 454 finished strings (100% complete) including all UI elements, tabs, dialogs, and system messages</li>
+<li><strong>Translation Quality</strong>: Professional technical terminology, proper Norwegian conventions, and context-appropriate translations throughout the application</li>
+<li><strong>Geek Mode Translation</strong>: Fixed Geek Mode button translation by using QCoreApplication::translate for pre-QApplication contexts</li>
+<li><strong>Elevation Terminal i18n</strong>: Added internationalization support for elevation terminal prompts and messages</li>
+</ul>
+<h3>Configuration & Persistence</h3>
+<ul>
+<li><strong>Unified RC File</strong>: Fixed language RC file persistence issue where elevated instances created /root/.config/LSV/lsv_lang.rc instead of using user's ~/.config/LSV/lsv_lang.rc</li>
+<li><strong>Environment Variables</strong>: Added LSV_USER_CONFIG and LSV_USER_HOME environment variable exports through sudo elevation to preserve user configuration paths</li>
+<li><strong>Sudo Command</strong>: Modified elevation wrapper to explicitly pass DISPLAY, XAUTHORITY, LSV_USER_CONFIG, LSV_USER_HOME, and other critical variables through sudo</li>
+<li><strong>Language Fallback</strong>: Implemented system locale fallback when saved language is invalid, ensuring graceful degradation to English if needed</li>
+</ul>
+<h3>Audio Testing</h3>
+<ul>
+<li><strong>Immediate Cancellation</strong>: Implemented immediate audio test cancellation with silent playback by zeroing audio buffer on cancel request</li>
+<li><strong>ALSA Integration</strong>: Modified ALSA player to check cancel flag before each buffer write and mute output immediately when cancelled</li>
+<li><strong>Test Sound Duration</strong>: Reduced all test sounds (A440, Low C, Left, Right) from 2 seconds to 1 second for faster testing and quicker cancellation</li>
+<li><strong>Stop Button</strong>: Added Stop button to audio test dialog with immediate dialog closure on click</li>
+<li><strong>Cancel Marking</strong>: All remaining tests are marked as "✗ Cancelled" when Stop is pressed</li>
+<li><strong>Thread Safety</strong>: Proper thread-safe implementation using std::atomic for cancel flag communication between UI and audio threads</li>
+</ul>
+<h3>Technical Changes</h3>
+<ul>
+<li><code>lsv.cpp</code> &mdash; Modified langRcFilePath() to check LSV_USER_CONFIG environment variable, updated elevation wrapper to export user paths, added system locale fallback logic</li>
+<li><code>audio_tab.h/cpp</code> &mdash; Added Stop button functionality, implemented cancel flag for immediate test cancellation, modified playTestSound() and playSoundFile() to support cancellation</li>
+<li><code>alsa_player.h/cpp</code> &mdash; Updated playWavFile() signature to accept cancel flag, added buffer muting on cancellation, implemented immediate silent playback</li>
+<li><code>sounds/*.wav</code> &mdash; Regenerated all test sound files with 1-second duration (44.1kHz stereo 16-bit PCM)</li>
+<li><code>i18n/lsv_nb.ts</code> &mdash; Completed all 454 Norwegian translations with professional quality</li>
+</ul>
+<h3>Bug Fixes</h3>
+<ul>
+<li><strong>RC File Location</strong>: Fixed elevated app writing to /root/.config/ instead of user's ~/.config/LSV/</li>
+<li><strong>Environment Loss</strong>: Fixed sudo resetting environment variables by explicitly passing them in the sudo command</li>
+<li><strong>Audio Cancellation</strong>: Fixed audio test not stopping immediately by implementing buffer muting and proper ALSA cancel handling</li>
+<li><strong>Geek Button Translation</strong>: Fixed "Geek Mode" button remaining in English by using QCoreApplication::translate instead of tr()</li>
+</ul>
+<h3>Known Limitations</h3>
+<ul>
+<li>Audio cancellation has ~90ms maximum latency (one 4KB buffer at 44.1kHz), but silent playback makes it imperceptible to users</li>
+<li>ALSA backend may not immediately drop audio due to hardware buffering; silent playback workaround ensures no audible sound</li>
+</ul>
+<hr />
 <h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 0.17.0 &mdash; 2025-11-24</strong></span></h2>
 <h3>Major Redesign - Complete Tab System Overhaul</h3>
 <ul>
