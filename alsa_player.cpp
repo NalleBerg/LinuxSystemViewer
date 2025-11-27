@@ -22,7 +22,7 @@ struct WavHeader {
     uint32_t dataSize;      // Data size
 };
 
-bool AlsaPlayer::playWavFile(const std::string& filename) {
+bool AlsaPlayer::playWavFile(const std::string& filename, const bool* cancelFlag) {
     std::cout << "ALSA: Attempting to play: " << filename << std::endl;
     std::cout.flush();
     
@@ -118,12 +118,28 @@ bool AlsaPlayer::playWavFile(const std::string& filename) {
     char buffer[bufferSize];
     size_t totalRead = 0;
     
+    bool muted = false;
+    
     while (totalRead < header.dataSize && file) {
+        // Check cancel flag before each buffer
+        if (cancelFlag && *cancelFlag && !muted) {
+            std::cout << "ALSA: Cancellation requested, muting output" << std::endl;
+            std::cout.flush();
+            
+            // Mute by zeroing the buffer - sound plays silently
+            muted = true;
+        }
+        
         size_t toRead = std::min(bufferSize, static_cast<size_t>(header.dataSize - totalRead));
         file.read(buffer, toRead);
         size_t actualRead = file.gcount();
         
         if (actualRead == 0) break;
+        
+        // If muted, zero the buffer so it plays silently
+        if (muted) {
+            memset(buffer, 0, actualRead);
+        }
         
         // Write to ALSA device
         snd_pcm_sframes_t frames = actualRead / (header.bitsPerSample / 8) / header.numChannels;
@@ -141,16 +157,23 @@ bool AlsaPlayer::playWavFile(const std::string& filename) {
         totalRead += actualRead;
     }
     
-    // Drain remaining samples - this blocks until playback completes
-    std::cout << "ALSA: Draining remaining samples..." << std::endl;
-    std::cout.flush();
-    snd_pcm_nonblock(pcm_handle, 0); // Ensure blocking mode
-    err = snd_pcm_drain(pcm_handle);  // Wait for all samples to play
-    if (err < 0) {
-        std::cerr << "ALSA WARNING: Drain failed: " << snd_strerror(err) << std::endl;
-        std::cerr.flush();
-        // Drop frames instead if drain failed
-        snd_pcm_drop(pcm_handle);
+    // Check if cancelled before draining
+    if (cancelFlag && *cancelFlag) {
+        std::cout << "ALSA: Skipping drain due to cancellation" << std::endl;
+        std::cout.flush();
+        snd_pcm_drop(pcm_handle);  // Drop any remaining samples
+    } else {
+        // Drain remaining samples - this blocks until playback completes
+        std::cout << "ALSA: Draining remaining samples..." << std::endl;
+        std::cout.flush();
+        snd_pcm_nonblock(pcm_handle, 0); // Ensure blocking mode
+        err = snd_pcm_drain(pcm_handle);  // Wait for all samples to play
+        if (err < 0) {
+            std::cerr << "ALSA WARNING: Drain failed: " << snd_strerror(err) << std::endl;
+            std::cerr.flush();
+            // Drop frames instead if drain failed
+            snd_pcm_drop(pcm_handle);
+        }
     }
     
     // Close device and ensure it's fully released

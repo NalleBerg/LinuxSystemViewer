@@ -8,6 +8,8 @@
 #include <QScrollArea>
 #include <QProcess>
 #include <QProcessEnvironment>
+#include <thread>
+#include <atomic>
 #include <QFile>
 #include <QDir>
 #include <QTextStream>
@@ -150,22 +152,31 @@ void AudioTab::testSound()
     checkList->addItem("⏳ Testing Right Speaker...");
     layout->addWidget(checkList);
     
-    QPushButton* closeBtn = new QPushButton(tr("Close"));
-    closeBtn->setEnabled(false);
-    connect(closeBtn, &QPushButton::clicked, dialog, &QDialog::accept);
-    layout->addWidget(closeBtn);
+    bool cancelled = false;
+    QPushButton* stopBtn = new QPushButton(tr("Stop"));
+    connect(stopBtn, &QPushButton::clicked, [&cancelled, dialog]() {
+        cancelled = true;
+        dialog->reject();  // Close dialog immediately
+    });
+    layout->addWidget(stopBtn);
     
     dialog->show();
     QCoreApplication::processEvents();
     
     // Run tests
-    playTestSound(checkList, closeBtn);
+    playTestSound(checkList, stopBtn, &cancelled);
     
-    dialog->exec();
+    // If not cancelled, change button to Close and wait for user
+    if (!cancelled) {
+        stopBtn->setText(tr("Close"));
+        connect(stopBtn, &QPushButton::clicked, dialog, &QDialog::accept);
+        dialog->exec();
+    }
+    
     delete dialog;
 }
 
-void AudioTab::playTestSound(QListWidget* checkList, QPushButton* closeBtn)
+void AudioTab::playTestSound(QListWidget* checkList, QPushButton* stopBtn, bool* cancelFlag)
 {
     // Sound file paths - try install locations first, fall back to source
     QString soundPath = "/usr/share/lsv/sounds/";
@@ -198,45 +209,80 @@ void AudioTab::playTestSound(QListWidget* checkList, QPushButton* closeBtn)
     fprintf(stderr, "Final sound path: %s\n", soundPath.toStdString().c_str());
     fflush(stderr);
     
+    int currentTest = 0;
+    
     // Test A440 Hz tone
+    if (*cancelFlag) goto cleanup;
     checkList->item(0)->setText("▶ Testing A440 Hz (musical A)...");
     QCoreApplication::processEvents();
+    currentTest = 0;
     
-    playSoundFile(soundPath + "a440.wav");
+    playSoundFile(soundPath + "a440.wav", cancelFlag);
+    if (*cancelFlag) goto cleanup;
     checkList->item(0)->setText("✓ A440 Hz test complete");
     QCoreApplication::processEvents();
-    QThread::msleep(500);
+    
+    for (int i = 0; i < 10 && !*cancelFlag; ++i) {
+        QThread::msleep(50);
+        QCoreApplication::processEvents();
+    }
     
     // Test Low C tone
+    if (*cancelFlag) goto cleanup;
     checkList->item(1)->setText("▶ Testing Low C (261.63 Hz)...");
     QCoreApplication::processEvents();
+    currentTest = 1;
     
-    playSoundFile(soundPath + "lowc.wav");
+    playSoundFile(soundPath + "lowc.wav", cancelFlag);
+    if (*cancelFlag) goto cleanup;
     checkList->item(1)->setText("✓ Low C test complete");
     QCoreApplication::processEvents();
-    QThread::msleep(500);
+    
+    for (int i = 0; i < 10 && !*cancelFlag; ++i) {
+        QThread::msleep(50);
+        QCoreApplication::processEvents();
+    }
     
     // Test left speaker
+    if (*cancelFlag) goto cleanup;
     checkList->item(2)->setText("▶ Testing Left Speaker...");
     QCoreApplication::processEvents();
+    currentTest = 2;
     
-    playSoundFile(soundPath + "left.wav");
+    playSoundFile(soundPath + "left.wav", cancelFlag);
+    if (*cancelFlag) goto cleanup;
     checkList->item(2)->setText("✓ Left speaker test complete");
     QCoreApplication::processEvents();
-    QThread::msleep(500);
+    
+    for (int i = 0; i < 10 && !*cancelFlag; ++i) {
+        QThread::msleep(50);
+        QCoreApplication::processEvents();
+    }
     
     // Test right speaker
+    if (*cancelFlag) goto cleanup;
     checkList->item(3)->setText("▶ Testing Right Speaker...");
     QCoreApplication::processEvents();
+    currentTest = 3;
     
-    playSoundFile(soundPath + "right.wav");
+    playSoundFile(soundPath + "right.wav", cancelFlag);
+    if (*cancelFlag) goto cleanup;
     checkList->item(3)->setText("✓ Right speaker test complete");
     QCoreApplication::processEvents();
     
-    closeBtn->setEnabled(true);
+cleanup:
+    // Mark all remaining tests as cancelled
+    if (*cancelFlag) {
+        for (int i = currentTest; i < checkList->count(); ++i) {
+            QString text = checkList->item(i)->text();
+            if (!text.startsWith("✓")) {
+                checkList->item(i)->setText("✗ Cancelled");
+            }
+        }
+    }
 }
 
-void AudioTab::playSoundFile(const QString& filename)
+void AudioTab::playSoundFile(const QString& filename, bool* cancelFlag)
 {
     fprintf(stderr, "playSoundFile called with: %s\n", filename.toStdString().c_str());
     fflush(stderr);
@@ -248,22 +294,27 @@ void AudioTab::playSoundFile(const QString& filename)
         return;
     }
     
-    fprintf(stderr, "File exists, calling ALSA player...\n");
+    fprintf(stderr, "File exists, using ALSA with cancellation support...\n");
     fflush(stderr);
     
-    // Use direct ALSA API - talks to Linux audio HAL without external programs
-    bool alsaResult = AlsaPlayer::playWavFile(filename.toStdString());
-    fprintf(stderr, "ALSA player returned: %d\n", alsaResult);
+    // Run ALSA player in a separate thread, passing the cancel flag
+    std::atomic<bool> alsaFinished(false);
+    std::atomic<bool> alsaSuccess(false);
+    
+    std::thread alsaThread([&filename, &alsaFinished, &alsaSuccess, cancelFlag]() {
+        bool result = AlsaPlayer::playWavFile(filename.toStdString(), cancelFlag);
+        alsaSuccess.store(result);
+        alsaFinished.store(true);
+    });
+    
+    // Wait for ALSA to finish
+    alsaThread.join();
+    
+    fprintf(stderr, "ALSA playback completed: %d (cancelled: %d)\n", alsaSuccess.load(), *cancelFlag);
     fflush(stderr);
     
-    if (alsaResult) {
-        return; // Success
-    }
-    
-    // Fallback to system commands if ALSA fails
-    QString cmd = QString("paplay '%1' 2>/dev/null || aplay '%1' 2>/dev/null || play -q '%1' 2>/dev/null")
-                      .arg(filename);
-    system(cmd.toLocal8Bit().constData());
+    fprintf(stderr, "Sound playback finished or cancelled\n");
+    fflush(stderr);
 }
 
 void AudioTab::generateAndPlayTone(double frequency, double duration, double leftVolume, double rightVolume)

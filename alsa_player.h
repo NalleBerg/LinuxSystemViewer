@@ -8,7 +8,8 @@ class AlsaPlayer {
 public:
     // Play a WAV file using ALSA API directly
     // Returns true on success, false on failure
-    static bool playWavFile(const std::string& filename);
+    // If cancelFlag is provided and becomes true, playback stops immediately
+    static bool playWavFile(const std::string& filename, const bool* cancelFlag = nullptr);
 };
 
 #endif // ALSA_PLAYER_H

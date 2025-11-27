@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QDialog>
 #include <QListWidget>
+#include <QProcess>
 
 class AudioGeekDialog;
 
@@ -28,14 +29,15 @@ private slots:
 
 private:
     void loadAudioInfo();
-    void playTestSound(class QListWidget* checkList, class QPushButton* closeBtn);
-    void playSoundFile(const QString& filename);
+    void playTestSound(class QListWidget* checkList, class QPushButton* closeBtn, bool* cancelFlag);
+    void playSoundFile(const QString& filename, bool* cancelFlag);
     void generateAndPlayTone(double frequency, double duration, double leftVolume, double rightVolume);
     
     QTableWidget* tableWidget;
     QTimer* refreshTimer;
     QPushButton* geekButton;
     QPushButton* testSoundButton;
+    QProcess* soundProcess;
 };
 
 // --- Geek Mode Dialog ---
