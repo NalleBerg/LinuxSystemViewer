@@ -287,7 +287,16 @@ static QString langRcFilePath()
     // Use ~/.config/LSV/lsv_lang.rc (QStandardPaths::ConfigLocation) and
     // ensure the path is returned; callers that write should create the
     // directory first.
-    QString cfg = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+    // When elevated (running as root), use the original user's config path
+    // from LSV_USER_CONFIG environment variable so both elevated and
+    // non-elevated instances share the same RC file.
+    QString cfg;
+    QString envUserConfig = QString::fromLocal8Bit(qgetenv("LSV_USER_CONFIG"));
+    if (!envUserConfig.isEmpty()) {
+        cfg = envUserConfig;
+    } else {
+        cfg = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+    }
     if (cfg.isEmpty()) return QString();
     QDir d(cfg);
     QDir lsvDir(d.filePath("LSV"));
@@ -1078,6 +1087,13 @@ int main(int argc, char *argv[])
             if (!envDisplay.isEmpty()) ts << "export DISPLAY='" << envDisplay.replace('\'', "'\"'\"'") << "'\n";
             if (!envXAuth.isEmpty()) ts << "export XAUTHORITY='" << envXAuth.replace('\'', "'\"'\"'") << "'\n";
             if (!envXdg.isEmpty()) ts << "export XDG_RUNTIME_DIR='" << envXdg.replace('\'', "'\"'\"'") << "'\n";
+            
+            // Export the original user's home directory so the elevated instance
+            // can access the same language RC file as the non-elevated instance.
+            QString userHome = QDir::homePath();
+            QString userConfig = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+            if (!userHome.isEmpty()) ts << "export LSV_USER_HOME='" << userHome.replace('\'', "'\"'\"'") << "'\n";
+            if (!userConfig.isEmpty()) ts << "export LSV_USER_CONFIG='" << userConfig.replace('\'', "'\"'\"'") << "'\n";
 
             // Export the original application directory so an elevated
             // instance can still locate the original binary directory and
@@ -1155,7 +1171,18 @@ int main(int argc, char *argv[])
             ts << "echo\n";
             QString innerEsc = inner;
             innerEsc.replace('"', "\\\"");
-            ts << "  printf '%s\\n' \"$PASS\" | sudo -S -p '' sh -c \"" << innerEsc << "\"\n";
+            // Pass through important environment variables via sudo.
+            // sudo resets the environment, so we must explicitly preserve
+            // DISPLAY, XAUTHORITY, XDG_RUNTIME_DIR, LSV_USER_CONFIG, etc.
+            ts << "  printf '%s\\n' \"$PASS\" | sudo -S -p '' \\\n";
+            ts << "    DISPLAY=\"$DISPLAY\" \\\n";
+            ts << "    XAUTHORITY=\"$XAUTHORITY\" \\\n";
+            ts << "    XDG_RUNTIME_DIR=\"$XDG_RUNTIME_DIR\" \\\n";
+            ts << "    LSV_USER_HOME=\"$LSV_USER_HOME\" \\\n";
+            ts << "    LSV_USER_CONFIG=\"$LSV_USER_CONFIG\" \\\n";
+            ts << "    LSV_ORIG_APPDIR=\"$LSV_ORIG_APPDIR\" \\\n";
+            ts << "    LSV_ELEVATED=1 \\\n";
+            ts << "    sh -c \"" << innerEsc << "\"\n";
             ts << "  rc=$?\n";
             ts << "  echo 'sudo finished with exitcode:' $rc >> /tmp/lsv-relaunch-" << getpid() << ".log\n";
             ts << "  if [ $rc -eq 0 ]; then exit 0; fi\n";
