@@ -51,7 +51,7 @@ MotherboardTab::MotherboardTab(QWidget* parent)
     );
     tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
     tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
-    tableWidget->setColumnWidth(0, 200);
+    tableWidget->setColumnWidth(0, 220);  // Match CPU tab width
     tableWidget->setAlternatingRowColors(true);
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);

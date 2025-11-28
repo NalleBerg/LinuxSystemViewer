@@ -45,16 +45,16 @@ PeripheralsTab::PeripheralsTab(QWidget* parent)
     tableWidget->verticalHeader()->setVisible(false);
     tableWidget->horizontalHeader()->setStyleSheet(
         "QHeaderView::section {"
-        "  background-color: #34495e;"
+        "  background-color: #2c3e50;"
         "  color: white;"
         "  font-weight: bold;"
         "  padding: 8px;"
-        "  border: 1px solid #2c3e50;"
+        "  border: none;"
         "}"
     );
     tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
     tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
-    tableWidget->setColumnWidth(0, 200);
+    tableWidget->setColumnWidth(0, 220);  // Match CPU tab width
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectItems);
     tableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);

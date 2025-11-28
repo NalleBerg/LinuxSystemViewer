@@ -32,13 +32,19 @@ MemoryTab::MemoryTab(QWidget* parent) : QWidget(parent)
     tableWidget->setColumnCount(2);
     tableWidget->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
     tableWidget->verticalHeader()->setVisible(false);
+    
+    // Apply exact CPU tab styling
+    tableWidget->setColumnWidth(0, 220);  // Property
+    tableWidget->setColumnWidth(1, 300);  // Value
+    
+    // Style headers exactly like CPU tab
     tableWidget->horizontalHeader()->setStyleSheet(
-        "QHeaderView::section {"
-        "  background-color: #34495e;"
-        "  color: white;"
-        "  font-weight: bold;"
-        "  padding: 8px;"
-        "  border: 1px solid #2c3e50;"
+        "QHeaderView::section { "
+        "background-color: #2c3e50; "
+        "color: white; "
+        "padding: 8px; "
+        "border: none; "
+        "font-weight: bold; "
         "}"
     );
     tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);

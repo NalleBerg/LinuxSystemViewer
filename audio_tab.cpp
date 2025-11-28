@@ -66,9 +66,18 @@ AudioTab::AudioTab(QWidget* parent)
     tableWidget->setColumnCount(2);
     tableWidget->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
     tableWidget->verticalHeader()->setVisible(false);
-    tableWidget->horizontalHeader()->setStyleSheet("QHeaderView::section { background-color: #34495e; color: white; font-weight: bold; padding: 8px; border: 1px solid #2c3e50; }");
-    tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    tableWidget->horizontalHeader()->setStyleSheet(
+        "QHeaderView::section { "
+        "background-color: #2c3e50; "
+        "color: white; "
+        "padding: 8px; "
+        "border: none; "
+        "font-weight: bold; "
+        "}"
+    );
+    tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
     tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    tableWidget->setColumnWidth(0, 220);  // Match CPU tab width
 
     // Scroll area
     QScrollArea* scrollArea = new QScrollArea;
@@ -450,6 +459,7 @@ void AudioTab::loadAudioInfo()
         propItem->setFont(boldFont);
         tableWidget->setItem(row, 0, propItem);
         tableWidget->setItem(row, 1, new QTableWidgetItem(val));
+        tableWidget->resizeRowToContents(row);
     };
     
     // Detect audio server

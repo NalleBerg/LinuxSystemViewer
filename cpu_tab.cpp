@@ -37,14 +37,25 @@ CPUTab::CPUTab(QWidget* parent)
 
     // Table
     tableWidget = new QTableWidget();
-    tableWidget->setColumnCount(3);
-    tableWidget->setHorizontalHeaderLabels(getCpuHeaders());
+    tableWidget->setColumnCount(2);
+    tableWidget->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
     tableWidget->verticalHeader()->setVisible(false);
-    styleCpuTable(tableWidget);
-    // Enable copy (Ctrl+C and right-click Copy) on the user-facing table
-    // (will attach the refreshTimer so auto-updates are paused while copying)
+    // Style headers like other tabs
+    tableWidget->horizontalHeader()->setStyleSheet(
+        "QHeaderView::section { "
+        "background-color: #2c3e50; "
+        "color: white; "
+        "padding: 8px; "
+        "border: none; "
+        "font-weight: bold; "
+        "}"
+    );
     tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
     tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    tableWidget->setColumnWidth(0, 220);  // Match other tabs
+    tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tableWidget->setAlternatingRowColors(true);
 
     // Scroll area
     QScrollArea* scrollArea = new QScrollArea;

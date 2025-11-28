@@ -33,7 +33,7 @@ OSTab::OSTab(const QString& tabName, const QString& command, bool showHeader, co
     // which can cause reparenting issues during construction.
     QWidget* contentWidget = new QWidget();
     QVBoxLayout* contentLayout = new QVBoxLayout(contentWidget);
-    contentLayout->setContentsMargins(0,0,0,0);
+    applyMainLayoutDefaults(contentLayout);  // Apply exact CPU tab layout defaults
 
     // Headline and Geek button (use helper to guarantee identical placement)
     QPushButton* gb = nullptr;
@@ -46,39 +46,33 @@ OSTab::OSTab(const QString& tabName, const QString& command, bool showHeader, co
     tableWidget->setColumnCount(2);
     tableWidget->setHorizontalHeaderLabels(QStringList() << QCoreApplication::translate("OSTab", "Property") << QCoreApplication::translate("OSTab", "Value"));
     tableWidget->verticalHeader()->setVisible(false);
+    
+    // Apply exact CPU tab styling
+    tableWidget->setColumnWidth(0, 220);  // Property
+    tableWidget->setColumnWidth(1, 300);  // Value
+    
+    // Style headers exactly like CPU tab
     tableWidget->horizontalHeader()->setStyleSheet(
-        "QHeaderView::section {"
-        "  background-color: #34495e;"
-        "  color: white;"
-        "  font-weight: bold;"
-        "  padding: 8px;"
-        "  border: 1px solid #2c3e50;"
+        "QHeaderView::section { "
+        "background-color: #2c3e50; "
+        "color: white; "
+        "padding: 8px; "
+        "border: none; "
+        "font-weight: bold; "
         "}"
     );
-    tableWidget->setStyleSheet(
-        "QTableWidget {"
-        "  gridline-color: #bdc3c7;"
-        "  selection-background-color: #3498db;"
-        "  alternate-background-color: #f8f9fa;"
-        "}"
-        "QTableWidget::item {"
-        "  padding: 8px;"
-        "  border-bottom: 1px solid #ecf0f1;"
-        "}"
-    );
+    
     tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
     tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
-    tableWidget->setColumnWidth(0, 250);
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectItems);
     tableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    tableWidget->setAlternatingRowColors(true);
 
-    // Make table scrollable
+    // Scroll area with exact CPU tab settings
     QScrollArea* scrollArea = new QScrollArea;
     scrollArea->setWidget(tableWidget);
     scrollArea->setWidgetResizable(true);
-    scrollArea->setMinimumHeight(250);
+    scrollArea->setMinimumHeight(220);  // Same as CPU tab
     contentLayout->addWidget(scrollArea);
 
     // Initialize the UI widgets (but avoid starting TabWidgetBase's executeCommand which
@@ -229,6 +223,9 @@ GeekOsDialog::GeekOsDialog(QWidget* parent)
     scrollArea->setWidget(table);
     scrollArea->setWidgetResizable(true);
     scrollArea->setMinimumHeight(400);
+    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    scrollArea->setContentsMargins(0, 0, 0, 5);  // Add bottom margin
     layout->addWidget(scrollArea);
 
     // Buttons: Copy, Save, Close

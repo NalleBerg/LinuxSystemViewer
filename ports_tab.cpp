@@ -35,11 +35,17 @@ PortsTab::PortsTab(QWidget* parent)
     tableWidget->setHorizontalHeaderLabels({tr("Property"), tr("Value")});
     tableWidget->verticalHeader()->setVisible(false);
     tableWidget->horizontalHeader()->setStyleSheet(
-        "QHeaderView::section { background-color: #2c3e50; color: white; "
-        "padding: 5px; font-weight: bold; }"
+        "QHeaderView::section { "
+        "background-color: #2c3e50; "
+        "color: white; "
+        "padding: 8px; "
+        "border: none; "
+        "font-weight: bold; "
+        "}"
     );
-    tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
     tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    tableWidget->setColumnWidth(0, 220);  // Match CPU tab width
     tableWidget->setWordWrap(true);
     tableWidget->setAlternatingRowColors(true);
     tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
