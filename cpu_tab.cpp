@@ -119,6 +119,13 @@ GeekCpuDialog::GeekCpuDialog(QWidget* parent)
     buttonBox->addButton(saveBtn, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     layout->addWidget(buttonBox);
+    
+    // Fix Close button translation - apply after dialog is shown
+    QTimer::singleShot(0, [buttonBox, this]() {
+        if (auto closeBtn = buttonBox->button(QDialogButtonBox::Close)) {
+            closeBtn->setText(tr("Close"));
+        }
+    });
 
     // Enable copy on main geek table (right-click + Ctrl+C) and pause the geek dialog's refresh while copying
     enableTableCopy(table, refreshTimer);

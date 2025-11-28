@@ -118,8 +118,9 @@ GeekScreenDialog::GeekScreenDialog(QWidget* parent)
     table->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
     table->verticalHeader()->setVisible(false);
     table->horizontalHeader()->setStyleSheet("QHeaderView::section { background-color: #34495e; color: white; font-weight: bold; padding: 8px; border: 1px solid #2c3e50; }");
-    table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
     table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
+    table->setColumnWidth(0, 200);  // Set minimum width for first column
     table->setWordWrap(true);
 
     QScrollArea* scrollArea = new QScrollArea;
@@ -136,6 +137,13 @@ GeekScreenDialog::GeekScreenDialog(QWidget* parent)
     buttonBox->addButton(saveBtn, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     layout->addWidget(buttonBox);
+    
+    // Fix Close button translation - apply after dialog is shown
+    QTimer::singleShot(0, [buttonBox, this]() {
+        if (auto closeBtn = buttonBox->button(QDialogButtonBox::Close)) {
+            closeBtn->setText(tr("Close"));
+        }
+    });
 
     // Enable copy on main geek table (right-click + Ctrl+C)
     enableTableCopy(table, refreshTimer);

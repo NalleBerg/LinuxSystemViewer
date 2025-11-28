@@ -228,7 +228,7 @@ GeekOsDialog::GeekOsDialog(QWidget* parent)
     QScrollArea* scrollArea = new QScrollArea;
     scrollArea->setWidget(table);
     scrollArea->setWidgetResizable(true);
-    scrollArea->setMinimumHeight(350);
+    scrollArea->setMinimumHeight(400);
     layout->addWidget(scrollArea);
 
     // Buttons: Copy, Save, Close
@@ -239,6 +239,13 @@ GeekOsDialog::GeekOsDialog(QWidget* parent)
     buttonBox->addButton(saveBtn, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     layout->addWidget(buttonBox);
+    
+    // Fix Close button translation - apply after dialog is shown
+    QTimer::singleShot(0, [buttonBox, this]() {
+        if (auto closeBtn = buttonBox->button(QDialogButtonBox::Close)) {
+            closeBtn->setText(tr("Close"));
+        }
+    });
 
     // Enable copy on main geek table (right-click + Ctrl+C)
     enableTableCopy(table, refreshTimer);
@@ -313,8 +320,12 @@ void GeekOsDialog::fillTable()
 
     auto addRow = [&](const QString& prop, const QString& val) {
         table->insertRow(row);
-        table->setItem(row, 0, new QTableWidgetItem(prop));
-        table->setItem(row, 1, new QTableWidgetItem(val));
+        QTableWidgetItem* p = new QTableWidgetItem(prop);
+        QFont bold; bold.setBold(true); p->setFont(bold);
+        table->setItem(row, 0, p);
+        QTableWidgetItem* v = new QTableWidgetItem(val);
+        table->setItem(row, 1, v);
+        table->resizeRowToContents(row);
         row++;
     };
 

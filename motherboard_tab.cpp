@@ -113,6 +113,13 @@ GeekMotherboardDialog::GeekMotherboardDialog(QWidget* parent)
     buttonBox->addButton(saveBtn, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     layout->addWidget(buttonBox);
+    
+    // Fix Close button translation - apply after dialog is shown
+    QTimer::singleShot(0, [buttonBox, this]() {
+        if (auto closeBtn = buttonBox->button(QDialogButtonBox::Close)) {
+            closeBtn->setText(tr("Close"));
+        }
+    });
 
     // Enable copy on geek table
     enableTableCopy(table, nullptr);

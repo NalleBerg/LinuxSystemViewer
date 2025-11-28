@@ -591,6 +591,13 @@ AudioGeekDialog::AudioGeekDialog(QWidget* parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     buttonLayout->addWidget(buttonBox);
     
+    // Fix Close button translation - apply after dialog is shown
+    QTimer::singleShot(0, [buttonBox, this]() {
+        if (auto closeBtn = buttonBox->button(QDialogButtonBox::Close)) {
+            closeBtn->setText(tr("Close"));
+        }
+    });
+    
     layout->addLayout(buttonLayout);
 
     enableTableCopy(table, nullptr);

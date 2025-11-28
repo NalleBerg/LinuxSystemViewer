@@ -354,6 +354,8 @@ GeekPeripheralsDialog::GeekPeripheralsDialog(QWidget* parent)
     QPushButton* saveBtn = new QPushButton(tr("Save..."));
     buttonBox->addButton(copyBtn, QDialogButtonBox::ActionRole);
     buttonBox->addButton(saveBtn, QDialogButtonBox::ActionRole);
+    // Fix Close button translation
+    buttonBox->button(QDialogButtonBox::Close)->setText(tr("Close"));
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     
     buttonLayout->addWidget(buttonBox);
