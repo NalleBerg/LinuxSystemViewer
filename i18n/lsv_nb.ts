@@ -106,74 +106,74 @@ Klikk nedenfor for å kopiere URL‑en https://lsv.nalle.no/ til utklippstavlen.
 <context>
     <name>AudioGeekDialog</name>
     <message>
-        <location filename="../audio_tab.cpp" line="556"/>
+        <location filename="../audio_tab.cpp" line="566"/>
         <source>Audio - Geek Mode</source>
         <translation>Lyd - Geekemodus</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="561"/>
+        <location filename="../audio_tab.cpp" line="571"/>
         <source>Audio System Technical Details</source>
         <translation>Tekniske detaljer for lydsystem</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="567"/>
+        <location filename="../audio_tab.cpp" line="577"/>
         <source>Property</source>
         <translation>Egenskap</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="567"/>
+        <location filename="../audio_tab.cpp" line="577"/>
         <source>Value</source>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="582"/>
+        <location filename="../audio_tab.cpp" line="592"/>
         <source>Rescan</source>
         <translation>Skann på nytt</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="587"/>
+        <location filename="../audio_tab.cpp" line="597"/>
         <source>Copy</source>
         <translation>Kopier</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="588"/>
+        <location filename="../audio_tab.cpp" line="598"/>
         <source>Save...</source>
         <translation>Lagre...</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="597"/>
+        <location filename="../audio_tab.cpp" line="607"/>
         <source>Close</source>
         <translation type="unfinished">Lukk</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="625"/>
+        <location filename="../audio_tab.cpp" line="635"/>
         <source>Rescanning audio devices, please wait...</source>
         <translation>Skanner lydenheter på nytt, vennligst vent...</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="626"/>
+        <location filename="../audio_tab.cpp" line="636"/>
         <source>Rescanning</source>
         <translation>Skanner på nytt</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="657"/>
+        <location filename="../audio_tab.cpp" line="667"/>
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="658"/>
+        <location filename="../audio_tab.cpp" line="668"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Informasjonen er kopiert
 til utklippstavlen.</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="666"/>
+        <location filename="../audio_tab.cpp" line="676"/>
         <source>Save Audio Info</source>
         <translation>Lagre lydinformasjon</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="666"/>
+        <location filename="../audio_tab.cpp" line="676"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-filer (*.csv);;Alle filer (*)</translation>
     </message>
@@ -202,57 +202,57 @@ til utklippstavlen.</translation>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="106"/>
+        <location filename="../audio_tab.cpp" line="115"/>
         <source>Scanning audio devices, please wait...</source>
         <translation>Skanner lydenheter, vennligst vent...</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="107"/>
+        <location filename="../audio_tab.cpp" line="116"/>
         <source>Loading</source>
         <translation>Laster</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="138"/>
+        <location filename="../audio_tab.cpp" line="147"/>
         <source>Audio Test</source>
         <translation>Lydtest</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="144"/>
+        <location filename="../audio_tab.cpp" line="153"/>
         <source>Testing audio output with generated tones:</source>
         <translation>Tester lydutgang med genererte toner:</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="156"/>
+        <location filename="../audio_tab.cpp" line="165"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="171"/>
+        <location filename="../audio_tab.cpp" line="180"/>
         <source>Close</source>
         <translation>Lukk</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="484"/>
+        <location filename="../audio_tab.cpp" line="494"/>
         <source>Audio Server</source>
         <translation>Lydserver</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="492"/>
+        <location filename="../audio_tab.cpp" line="502"/>
         <source>Default Output</source>
         <translation>Standard utgang</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="501"/>
+        <location filename="../audio_tab.cpp" line="511"/>
         <source>Default Input</source>
         <translation>Standard inngang</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="518"/>
+        <location filename="../audio_tab.cpp" line="528"/>
         <source>Sound Card %1</source>
         <translation>Lydkort %1</translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="543"/>
+        <location filename="../audio_tab.cpp" line="553"/>
         <source>Playback Device %1</source>
         <translation>Avspillingsenhet %1</translation>
     </message>
@@ -270,18 +270,28 @@ til utklippstavlen.</translation>
         <translation type="vanished">Geekemodus</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="358"/>
-        <location filename="../cpu_tab.cpp" line="397"/>
+        <location filename="../cpu_tab.cpp" line="41"/>
+        <source>Property</source>
+        <translation type="unfinished">Egenskap</translation>
+    </message>
+    <message>
+        <location filename="../cpu_tab.cpp" line="41"/>
+        <source>Value</source>
+        <translation type="unfinished">Verdi</translation>
+    </message>
+    <message>
+        <location filename="../cpu_tab.cpp" line="367"/>
+        <location filename="../cpu_tab.cpp" line="406"/>
         <source>Unknown</source>
         <translation>Ukjent</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="427"/>
+        <location filename="../cpu_tab.cpp" line="436"/>
         <source>Temperature</source>
         <translation>Temperatur</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="431"/>
+        <location filename="../cpu_tab.cpp" line="440"/>
         <source>Current freq (GHz)</source>
         <translation>Gjeldende frekvens (GHz)</translation>
     </message>
@@ -297,55 +307,54 @@ til utklippstavlen.</translation>
 <context>
     <name>GeekCpuDialog</name>
     <message>
-        <location filename="../cpu_tab.cpp" line="91"/>
+        <location filename="../cpu_tab.cpp" line="102"/>
         <source>CPU - Geek Mode</source>
         <translation>CPU - Geekemodus</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="96"/>
+        <location filename="../cpu_tab.cpp" line="107"/>
         <source>CPU Technical Details</source>
         <translation>Tekniske detaljer for CPU</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="102"/>
+        <location filename="../cpu_tab.cpp" line="113"/>
         <source>Property</source>
         <translation>Egenskap</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="102"/>
+        <location filename="../cpu_tab.cpp" line="113"/>
         <source>Value</source>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="116"/>
+        <location filename="../cpu_tab.cpp" line="127"/>
         <source>Copy</source>
         <translation>Kopier</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="117"/>
+        <location filename="../cpu_tab.cpp" line="128"/>
         <source>Save...</source>
         <translation>Lagre...</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="118"/>
-        <location filename="../cpu_tab.cpp" line="128"/>
+        <location filename="../cpu_tab.cpp" line="137"/>
         <source>Close</source>
         <translation type="unfinished">Lukk</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="146"/>
+        <location filename="../cpu_tab.cpp" line="155"/>
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="147"/>
+        <location filename="../cpu_tab.cpp" line="156"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Informasjonen er kopiert
 til utklippstavlen.</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="159"/>
+        <location filename="../cpu_tab.cpp" line="168"/>
         <source>Save CPU Info</source>
         <translation>Lagre CPU‑info</translation>
     </message>
@@ -354,89 +363,89 @@ til utklippstavlen.</translation>
         <translation type="vanished">Tekstfiler (*.txt);;Alle filer (*)</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="159"/>
+        <location filename="../cpu_tab.cpp" line="168"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-filer (*.csv);;Alle filer (*)</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="246"/>
+        <location filename="../cpu_tab.cpp" line="255"/>
         <source>Model</source>
         <translation>Modell</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="246"/>
-        <location filename="../cpu_tab.cpp" line="249"/>
-        <location filename="../cpu_tab.cpp" line="277"/>
-        <location filename="../cpu_tab.cpp" line="278"/>
-        <location filename="../cpu_tab.cpp" line="279"/>
+        <location filename="../cpu_tab.cpp" line="255"/>
+        <location filename="../cpu_tab.cpp" line="258"/>
+        <location filename="../cpu_tab.cpp" line="286"/>
+        <location filename="../cpu_tab.cpp" line="287"/>
+        <location filename="../cpu_tab.cpp" line="288"/>
         <source>Unknown</source>
         <translation>Ukjent</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="275"/>
+        <location filename="../cpu_tab.cpp" line="284"/>
         <source>Temperature</source>
         <translation>Temperatur</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="277"/>
+        <location filename="../cpu_tab.cpp" line="286"/>
         <source>Vendor</source>
         <translation>Produsent</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="278"/>
+        <location filename="../cpu_tab.cpp" line="287"/>
         <source>CPU Cores</source>
         <translation>CPU‑kjerner</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="279"/>
+        <location filename="../cpu_tab.cpp" line="288"/>
         <source>CPU MHz</source>
         <translation>CPU MHz</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="282"/>
-        <location filename="../cpu_tab.cpp" line="284"/>
+        <location filename="../cpu_tab.cpp" line="291"/>
+        <location filename="../cpu_tab.cpp" line="293"/>
         <source>/proc/cpuinfo</source>
         <translation>/proc/cpuinfo</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="284"/>
+        <location filename="../cpu_tab.cpp" line="293"/>
         <source>Could not open /proc/cpuinfo</source>
         <translation>Klarte ikke åpne /proc/cpuinfo</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="293"/>
+        <location filename="../cpu_tab.cpp" line="302"/>
         <source>Logical processors</source>
         <translation>Logiske prosessorer</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="303"/>
+        <location filename="../cpu_tab.cpp" line="312"/>
         <source>Physical packages</source>
         <translation>Fysiske pakker</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="304"/>
+        <location filename="../cpu_tab.cpp" line="313"/>
         <source>Unique core ids seen (per-logical sample)</source>
         <translation>Unike kjerne‑IDer observert (per logisk sample)</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="336"/>
+        <location filename="../cpu_tab.cpp" line="345"/>
         <source>cpu%1: %2 kHz
 </source>
         <translation>cpu%1: %2 kHz
 </translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="339"/>
+        <location filename="../cpu_tab.cpp" line="348"/>
         <source>Per-core current frequencies (kHz)</source>
         <translation>Per‑kjerne gjeldende frekvenser (kHz)</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="345"/>
+        <location filename="../cpu_tab.cpp" line="354"/>
         <source>cpuinfo_max_freq</source>
         <translation>cpuinfo_max_freq</translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="350"/>
+        <location filename="../cpu_tab.cpp" line="359"/>
         <source>cpuinfo_min_freq</source>
         <translation>cpuinfo_min_freq</translation>
     </message>
@@ -474,149 +483,149 @@ til utklippstavlen.</translation>
         <translation>Lagre...</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="112"/>
+        <location filename="../graphics_tab.cpp" line="120"/>
         <source>Close</source>
         <translation type="unfinished">Lukk</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="132"/>
+        <location filename="../graphics_tab.cpp" line="137"/>
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="133"/>
+        <location filename="../graphics_tab.cpp" line="138"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Informasjonen er kopiert
 til utklippstavlen.</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="140"/>
+        <location filename="../graphics_tab.cpp" line="145"/>
         <source>Save Graphics Info</source>
         <translation>Lagre grafikkinformasjon</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="140"/>
+        <location filename="../graphics_tab.cpp" line="145"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-filer (*.csv);;Alle filer (*)</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="184"/>
+        <location filename="../graphics_tab.cpp" line="189"/>
         <source>=== PCI GRAPHICS DEVICES ===</source>
         <translation>=== PCI GRAFIKKENHETER ===</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="199"/>
+        <location filename="../graphics_tab.cpp" line="204"/>
         <source>PCI Device</source>
         <translation>PCI-enhet</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="200"/>
+        <location filename="../graphics_tab.cpp" line="205"/>
         <source>Device Class</source>
         <translation>Enhetsklasse</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="224"/>
+        <location filename="../graphics_tab.cpp" line="229"/>
         <source>Current Driver</source>
         <translation>Gjeldende driver</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="232"/>
+        <location filename="../graphics_tab.cpp" line="237"/>
         <source>uevent</source>
         <translation>uevent</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="240"/>
+        <location filename="../graphics_tab.cpp" line="245"/>
         <source>Memory Resources</source>
         <translation>Minneressurser</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="247"/>
+        <location filename="../graphics_tab.cpp" line="252"/>
         <source>=== DRM/DRI INFORMATION ===</source>
         <translation>=== DRM/DRI INFORMASJON ===</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="255"/>
+        <location filename="../graphics_tab.cpp" line="260"/>
         <source>DRM Card</source>
         <translation>DRM-kort</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="260"/>
+        <location filename="../graphics_tab.cpp" line="265"/>
         <source>Device uevent</source>
         <translation>Enhet uevent</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="270"/>
+        <location filename="../graphics_tab.cpp" line="275"/>
         <source>DRI Debug Dir</source>
         <translation>DRI-debug-katalog</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="274"/>
+        <location filename="../graphics_tab.cpp" line="279"/>
         <source>DRI Name</source>
         <translation>DRI-navn</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="280"/>
+        <location filename="../graphics_tab.cpp" line="285"/>
         <source>DRI Clients</source>
         <translation>DRI-klienter</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="287"/>
+        <location filename="../graphics_tab.cpp" line="292"/>
         <source>=== FRAMEBUFFER INFORMATION ===</source>
         <translation>=== FRAMEBUFFER INFORMASJON ===</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="293"/>
+        <location filename="../graphics_tab.cpp" line="298"/>
         <source>Framebuffer Device</source>
         <translation>Framebuffer-enhet</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="312"/>
+        <location filename="../graphics_tab.cpp" line="317"/>
         <source>=== DISPLAY CONNECTORS ===</source>
         <translation>=== SKJERMKONTAKTER ===</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="316"/>
+        <location filename="../graphics_tab.cpp" line="321"/>
         <source>Connector</source>
         <translation>Kontakt</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="339"/>
+        <location filename="../graphics_tab.cpp" line="344"/>
         <source>EDID Size</source>
         <translation>EDID-størrelse</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="340"/>
+        <location filename="../graphics_tab.cpp" line="345"/>
         <source>EDID (hex)</source>
         <translation>EDID (heks)</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="348"/>
+        <location filename="../graphics_tab.cpp" line="353"/>
         <source>=== BACKLIGHT INFORMATION ===</source>
         <translation>=== BAKGRUNNSBELYSNING INFORMASJON ===</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="352"/>
+        <location filename="../graphics_tab.cpp" line="357"/>
         <source>Backlight Device</source>
         <translation>Bakgrunnsbelysningsenhet</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="370"/>
+        <location filename="../graphics_tab.cpp" line="375"/>
         <source>=== GPU FREQUENCY/POWER ===</source>
         <translation>=== GPU FREKVENS/STRØM ===</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="381"/>
+        <location filename="../graphics_tab.cpp" line="386"/>
         <source>AMDGPU Clock Levels (%1)</source>
         <translation>AMDGPU klokkenivåer (%1)</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="396"/>
+        <location filename="../graphics_tab.cpp" line="401"/>
         <source>%1 (%2)</source>
         <translation>%1 (%2)</translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="404"/>
+        <location filename="../graphics_tab.cpp" line="409"/>
         <source>NVIDIA Power State (%1)</source>
         <translation>NVIDIA strømtilstand (%1)</translation>
     </message>
@@ -624,154 +633,154 @@ til utklippstavlen.</translation>
 <context>
     <name>GeekMemoryDialog</name>
     <message>
-        <location filename="../memory_tab.cpp" line="190"/>
+        <location filename="../memory_tab.cpp" line="196"/>
         <source>Memory - Geek Mode</source>
         <translation>Minne - Geekemodus</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="195"/>
+        <location filename="../memory_tab.cpp" line="201"/>
         <source>RAM Technical Details</source>
         <translation>RAM tekniske detaljer</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="208"/>
+        <location filename="../memory_tab.cpp" line="214"/>
         <source>Property</source>
         <translation>Egenskap</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="208"/>
+        <location filename="../memory_tab.cpp" line="214"/>
         <source>Value</source>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="249"/>
+        <location filename="../memory_tab.cpp" line="255"/>
         <source>Copy</source>
         <translation>Kopier</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="250"/>
+        <location filename="../memory_tab.cpp" line="256"/>
         <source>Save...</source>
         <translation>Lagre...</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="259"/>
+        <location filename="../memory_tab.cpp" line="265"/>
         <source>Close</source>
         <translation type="unfinished">Lukk</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="273"/>
+        <location filename="../memory_tab.cpp" line="279"/>
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="274"/>
+        <location filename="../memory_tab.cpp" line="280"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Informasjonen er kopiert
 til utklippstavlen.</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="281"/>
+        <location filename="../memory_tab.cpp" line="287"/>
         <source>Save Memory Info</source>
         <translation>Lagre minneinformasjon</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="281"/>
+        <location filename="../memory_tab.cpp" line="287"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-filer (*.csv);;Alle filer (*)</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="364"/>
+        <location filename="../memory_tab.cpp" line="370"/>
         <source>MemTotal (/proc/meminfo)</source>
         <translation>MemTotal (/proc/meminfo)</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="365"/>
+        <location filename="../memory_tab.cpp" line="371"/>
         <source>MemFree (/proc/meminfo)</source>
         <translation>MemFree (/proc/meminfo)</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="366"/>
+        <location filename="../memory_tab.cpp" line="372"/>
         <source>MemAvailable (/proc/meminfo)</source>
         <translation>MemAvailable (/proc/meminfo)</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="367"/>
+        <location filename="../memory_tab.cpp" line="373"/>
         <source>SwapTotal (/proc/meminfo)</source>
         <translation>SwapTotal (/proc/meminfo)</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="369"/>
+        <location filename="../memory_tab.cpp" line="375"/>
         <source>/proc/meminfo</source>
         <translation>/proc/meminfo</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="369"/>
+        <location filename="../memory_tab.cpp" line="375"/>
         <source>Could not open /proc/meminfo</source>
         <translation>Kunne ikke åpne /proc/meminfo</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="378"/>
+        <location filename="../memory_tab.cpp" line="384"/>
         <source>Memory block entries (/sys/devices/system/memory)</source>
         <translation>Minneblokk-oppføringer (/sys/devices/system/memory)</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="380"/>
+        <location filename="../memory_tab.cpp" line="386"/>
         <source>Memory block entries</source>
         <translation>Minneblokk-oppføringer</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="380"/>
-        <location filename="../memory_tab.cpp" line="389"/>
-        <location filename="../memory_tab.cpp" line="471"/>
+        <location filename="../memory_tab.cpp" line="386"/>
+        <location filename="../memory_tab.cpp" line="395"/>
+        <location filename="../memory_tab.cpp" line="477"/>
         <source>Not available</source>
         <translation>Ikke tilgjengelig</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="387"/>
-        <location filename="../memory_tab.cpp" line="389"/>
+        <location filename="../memory_tab.cpp" line="393"/>
+        <location filename="../memory_tab.cpp" line="395"/>
         <source>NUMA nodes (count)</source>
         <translation>NUMA-noder (antall)</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="407"/>
+        <location filename="../memory_tab.cpp" line="413"/>
         <source>DMI memory device entries (type 17)</source>
         <translation>DMI minneenhetsoppføringer (type 17)</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="407"/>
+        <location filename="../memory_tab.cpp" line="413"/>
         <source>None detected</source>
         <translation>Ingen funnet</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="424"/>
-        <location filename="../memory_tab.cpp" line="432"/>
-        <location filename="../memory_tab.cpp" line="455"/>
+        <location filename="../memory_tab.cpp" line="430"/>
+        <location filename="../memory_tab.cpp" line="438"/>
+        <location filename="../memory_tab.cpp" line="461"/>
         <source>Slot %1 (DMI entry %2)</source>
         <translation>Spor %1 (DMI oppføring %2)</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="424"/>
+        <location filename="../memory_tab.cpp" line="430"/>
         <source>Could not open raw DMI data</source>
         <translation>Kunne ikke åpne rå DMI-data</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="432"/>
+        <location filename="../memory_tab.cpp" line="438"/>
         <source>Raw DMI data too short</source>
         <translation>Rå DMI-data for kort</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="457"/>
+        <location filename="../memory_tab.cpp" line="463"/>
         <source>Slot %1 - String %2</source>
         <translation>Spor %1 - Streng %2</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="465"/>
+        <location filename="../memory_tab.cpp" line="471"/>
         <source>Slot %1 - formatted bytes (hex)</source>
         <translation>Spor %1 - formaterte bytes (heks)</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="471"/>
+        <location filename="../memory_tab.cpp" line="477"/>
         <source>DMI memory device entries</source>
         <translation>DMI minneenhetsoppføringer</translation>
     </message>
@@ -788,10 +797,10 @@ til utklippstavlen.</translation>
         <translation type="vanished">Maks modulstørrelse</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="364"/>
-        <location filename="../memory_tab.cpp" line="365"/>
-        <location filename="../memory_tab.cpp" line="366"/>
-        <location filename="../memory_tab.cpp" line="367"/>
+        <location filename="../memory_tab.cpp" line="370"/>
+        <location filename="../memory_tab.cpp" line="371"/>
+        <location filename="../memory_tab.cpp" line="372"/>
+        <location filename="../memory_tab.cpp" line="373"/>
         <source>Unknown</source>
         <translation>Ukjent</translation>
     </message>
@@ -853,74 +862,74 @@ til utklippstavlen.</translation>
         <translation>Lagre...</translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="112"/>
+        <location filename="../motherboard_tab.cpp" line="120"/>
         <source>Close</source>
         <translation type="unfinished">Lukk</translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="133"/>
+        <location filename="../motherboard_tab.cpp" line="138"/>
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="134"/>
+        <location filename="../motherboard_tab.cpp" line="139"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Informasjonen er kopiert
 til utklippstavlen.</translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="142"/>
+        <location filename="../motherboard_tab.cpp" line="147"/>
         <source>Save Motherboard Info</source>
         <translation>Lagre hovedkortinformasjon</translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="142"/>
+        <location filename="../motherboard_tab.cpp" line="147"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-filer (*.csv);;Alle filer (*)</translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="195"/>
+        <location filename="../motherboard_tab.cpp" line="200"/>
         <source>=== BASEBOARD (DMI Type 2) ===</source>
         <translation>=== HOVEDKORT (DMI Type 2) ===</translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="235"/>
+        <location filename="../motherboard_tab.cpp" line="240"/>
         <source>=== SYSTEM (DMI Type 1) ===</source>
         <translation>=== SYSTEM (DMI Type 1) ===</translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="262"/>
+        <location filename="../motherboard_tab.cpp" line="267"/>
         <source>=== BIOS (DMI Type 0) ===</source>
         <translation>=== BIOS (DMI Type 0) ===</translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="302"/>
+        <location filename="../motherboard_tab.cpp" line="307"/>
         <source>=== CHASSIS (DMI Type 3) ===</source>
         <translation>=== CHASSIS (DMI Type 3) ===</translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="329"/>
+        <location filename="../motherboard_tab.cpp" line="334"/>
         <source>=== LSHW BUS OUTPUT ===</source>
         <translation>=== LSHW BUSS-UTDATA ===</translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="330"/>
+        <location filename="../motherboard_tab.cpp" line="335"/>
         <source>Full lshw -C bus output</source>
         <translation>Fullstendig lshw -C buss-utdata</translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="340"/>
+        <location filename="../motherboard_tab.cpp" line="345"/>
         <source>=== CHIPSET &amp; BRIDGES ===</source>
         <translation>=== CHIPSETT &amp; BROER ===</translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="360"/>
+        <location filename="../motherboard_tab.cpp" line="365"/>
         <source>=== USB CONTROLLERS ===</source>
         <translation>=== USB-KONTROLLERE ===</translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="369"/>
+        <location filename="../motherboard_tab.cpp" line="374"/>
         <source>USB Controller %1</source>
         <translation>USB-kontroller %1</translation>
     </message>
@@ -928,59 +937,59 @@ til utklippstavlen.</translation>
 <context>
     <name>GeekOsDialog</name>
     <message>
-        <location filename="../os_tab.cpp" line="211"/>
+        <location filename="../os_tab.cpp" line="205"/>
         <source>OS - Geek Mode</source>
         <translation>OS - Geekemodus</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="216"/>
+        <location filename="../os_tab.cpp" line="210"/>
         <source>OS Technical Details</source>
         <translation>Tekniske detaljer for OS</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="222"/>
+        <location filename="../os_tab.cpp" line="216"/>
         <source>Property</source>
         <translation>Egenskap</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="222"/>
+        <location filename="../os_tab.cpp" line="216"/>
         <source>Value</source>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="236"/>
+        <location filename="../os_tab.cpp" line="233"/>
         <source>Copy</source>
         <translation>Kopier</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="237"/>
+        <location filename="../os_tab.cpp" line="234"/>
         <source>Save...</source>
         <translation>Lagre...</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="238"/>
+        <location filename="../os_tab.cpp" line="243"/>
         <source>Close</source>
         <translation type="unfinished">Lukk</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="259"/>
+        <location filename="../os_tab.cpp" line="261"/>
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="260"/>
+        <location filename="../os_tab.cpp" line="262"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Informasjonen er kopiert
 til utklippstavlen.</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="268"/>
+        <location filename="../os_tab.cpp" line="270"/>
         <source>Save OS Info</source>
         <translation>Lagre OS-informasjon</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="268"/>
+        <location filename="../os_tab.cpp" line="270"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-filer (*.csv);;Alle filer (*)</translation>
     </message>
@@ -988,99 +997,99 @@ til utklippstavlen.</translation>
 <context>
     <name>GeekPCDialog</name>
     <message>
-        <location filename="../pc_tab.cpp" line="154"/>
+        <location filename="../pc_tab.cpp" line="161"/>
         <source>PC Info - Geek Mode</source>
         <translation>PC-info - Geekemodus</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="159"/>
+        <location filename="../pc_tab.cpp" line="166"/>
         <source>PC Technical Details</source>
         <translation>Tekniske detaljer for PC</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="165"/>
+        <location filename="../pc_tab.cpp" line="172"/>
         <source>Property</source>
         <translation>Egenskap</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="165"/>
+        <location filename="../pc_tab.cpp" line="172"/>
         <source>Value</source>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="180"/>
+        <location filename="../pc_tab.cpp" line="187"/>
         <source>Copy</source>
         <translation>Kopier</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="181"/>
+        <location filename="../pc_tab.cpp" line="188"/>
         <source>Save...</source>
         <translation>Lagre...</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="182"/>
+        <location filename="../pc_tab.cpp" line="197"/>
         <source>Close</source>
         <translation type="unfinished">Lukk</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="203"/>
+        <location filename="../pc_tab.cpp" line="215"/>
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="204"/>
+        <location filename="../pc_tab.cpp" line="216"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Informasjonen er kopiert
 til utklippstavlen.</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="212"/>
+        <location filename="../pc_tab.cpp" line="224"/>
         <source>Save PC Info</source>
         <translation>Lagre PC-informasjon</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="212"/>
+        <location filename="../pc_tab.cpp" line="224"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-filer (*.csv);;Alle filer (*)</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="280"/>
+        <location filename="../pc_tab.cpp" line="292"/>
         <source>=== DMI/SMBIOS INFORMATION ===</source>
         <translation>=== DMI/SMBIOS INFORMASJON ===</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="299"/>
+        <location filename="../pc_tab.cpp" line="311"/>
         <source>=== HOSTNAME INFORMATION ===</source>
         <translation>=== VERTSNAVN INFORMASJON ===</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="316"/>
+        <location filename="../pc_tab.cpp" line="328"/>
         <source>=== MACHINE ID ===</source>
         <translation>=== MASKIN-ID ===</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="332"/>
+        <location filename="../pc_tab.cpp" line="344"/>
         <source>=== HOSTNAMECTL OUTPUT ===</source>
         <translation>=== HOSTNAMECTL UTDATA ===</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="351"/>
+        <location filename="../pc_tab.cpp" line="363"/>
         <source>=== FIRMWARE/BIOS INFORMATION ===</source>
         <translation>=== FIRMWARE/BIOS INFORMASJON ===</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="369"/>
+        <location filename="../pc_tab.cpp" line="381"/>
         <source>=== ACPI INFORMATION ===</source>
         <translation>=== ACPI INFORMASJON ===</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="382"/>
+        <location filename="../pc_tab.cpp" line="394"/>
         <source>=== BOOT INFORMATION ===</source>
         <translation>=== OPPSTARTSINFORMASJON ===</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="392"/>
+        <location filename="../pc_tab.cpp" line="404"/>
         <source>=== SYSTEM UPTIME ===</source>
         <translation>=== SYSTEMETS OPPETID ===</translation>
     </message>
@@ -1088,74 +1097,74 @@ til utklippstavlen.</translation>
 <context>
     <name>GeekPeripheralsDialog</name>
     <message>
-        <location filename="../peripherals_tab.cpp" line="320"/>
+        <location filename="../peripherals_tab.cpp" line="379"/>
         <source>Peripherals - Geek Mode</source>
         <translation>Periferiutstyr - Geekemodus</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="325"/>
+        <location filename="../peripherals_tab.cpp" line="384"/>
         <source>Peripherals Technical Details</source>
         <translation>Tekniske detaljer for periferiutstyr</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="331"/>
+        <location filename="../peripherals_tab.cpp" line="390"/>
         <source>Property</source>
         <translation>Egenskap</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="331"/>
+        <location filename="../peripherals_tab.cpp" line="390"/>
         <source>Value</source>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="347"/>
+        <location filename="../peripherals_tab.cpp" line="406"/>
         <source>Rescan</source>
         <translation>Skann på nytt</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="353"/>
+        <location filename="../peripherals_tab.cpp" line="412"/>
         <source>Copy</source>
         <translation>Kopier</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="354"/>
+        <location filename="../peripherals_tab.cpp" line="413"/>
         <source>Save...</source>
         <translation>Lagre...</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="358"/>
+        <location filename="../peripherals_tab.cpp" line="417"/>
         <source>Close</source>
         <translation type="unfinished">Lukk</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="367"/>
+        <location filename="../peripherals_tab.cpp" line="426"/>
         <source>Rescanning peripherals, please wait...</source>
         <translation>Skanner periferiutstyr på nytt, vennligst vent...</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="368"/>
+        <location filename="../peripherals_tab.cpp" line="427"/>
         <source>Rescanning</source>
         <translation>Skanner på nytt</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="402"/>
+        <location filename="../peripherals_tab.cpp" line="461"/>
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="403"/>
+        <location filename="../peripherals_tab.cpp" line="462"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Informasjonen er kopiert
 til utklippstavlen.</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="411"/>
+        <location filename="../peripherals_tab.cpp" line="470"/>
         <source>Save Peripherals Info</source>
         <translation>Lagre periferiutstyr-informasjon</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="411"/>
+        <location filename="../peripherals_tab.cpp" line="470"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-filer (*.csv);;Alle filer (*)</translation>
     </message>
@@ -1163,109 +1172,109 @@ til utklippstavlen.</translation>
 <context>
     <name>GeekPortsDialog</name>
     <message>
-        <location filename="../ports_tab.cpp" line="172"/>
+        <location filename="../ports_tab.cpp" line="178"/>
         <source>Ports - Geek Mode</source>
         <translation>Porter - Geekemodus</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="177"/>
+        <location filename="../ports_tab.cpp" line="183"/>
         <source>Ports Technical Details</source>
         <translation>Tekniske detaljer for porter</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="183"/>
+        <location filename="../ports_tab.cpp" line="189"/>
         <source>Property</source>
         <translation>Egenskap</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="183"/>
+        <location filename="../ports_tab.cpp" line="189"/>
         <source>Value</source>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="198"/>
+        <location filename="../ports_tab.cpp" line="204"/>
         <source>Copy</source>
         <translation>Kopier</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="199"/>
+        <location filename="../ports_tab.cpp" line="205"/>
         <source>Save...</source>
         <translation>Lagre...</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="200"/>
+        <location filename="../ports_tab.cpp" line="214"/>
         <source>Close</source>
         <translation type="unfinished">Lukk</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="220"/>
+        <location filename="../ports_tab.cpp" line="231"/>
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="221"/>
+        <location filename="../ports_tab.cpp" line="232"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Informasjonen er kopiert
 til utklippstavlen.</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="228"/>
+        <location filename="../ports_tab.cpp" line="239"/>
         <source>Save Ports Info</source>
         <translation>Lagre porter-informasjon</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="228"/>
+        <location filename="../ports_tab.cpp" line="239"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-filer (*.csv);;Alle filer (*)</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="295"/>
+        <location filename="../ports_tab.cpp" line="306"/>
         <source>=== USB DEVICES ===</source>
         <translation>=== USB-ENHETER ===</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="303"/>
+        <location filename="../ports_tab.cpp" line="314"/>
         <source>Device</source>
         <translation>Enhet</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="327"/>
+        <location filename="../ports_tab.cpp" line="338"/>
         <source>=== SERIAL PORTS ===</source>
         <translation>=== SERIELLE PORTER ===</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="336"/>
+        <location filename="../ports_tab.cpp" line="347"/>
         <source>Serial Port</source>
         <translation>Seriell port</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="358"/>
+        <location filename="../ports_tab.cpp" line="369"/>
         <source>=== PCI USB CONTROLLERS ===</source>
         <translation>=== PCI USB-KONTROLLERE ===</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="371"/>
+        <location filename="../ports_tab.cpp" line="382"/>
         <source>PCI Device</source>
         <translation>PCI-enhet</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="401"/>
+        <location filename="../ports_tab.cpp" line="412"/>
         <source>=== BLUETOOTH ADAPTERS ===</source>
         <translation>=== BLUETOOTH-ADAPTERE ===</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="404"/>
+        <location filename="../ports_tab.cpp" line="415"/>
         <source>Bluetooth Adapter</source>
         <translation>Bluetooth-adapter</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="427"/>
+        <location filename="../ports_tab.cpp" line="438"/>
         <source>=== NETWORK INTERFACES ===</source>
         <translation>=== NETTVERKSGRENSESNITT ===</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="437"/>
+        <location filename="../ports_tab.cpp" line="448"/>
         <source>Interface</source>
         <translation>Grensesnitt</translation>
     </message>
@@ -1273,214 +1282,214 @@ til utklippstavlen.</translation>
 <context>
     <name>GeekScreenDialog</name>
     <message>
-        <location filename="../screen_tab.cpp" line="107"/>
+        <location filename="../screen_tab.cpp" line="114"/>
         <source>Screen - Geek Mode</source>
         <translation>Skjerm - Geekemodus</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="112"/>
+        <location filename="../screen_tab.cpp" line="119"/>
         <source>Screen Technical Details</source>
         <translation>Tekniske skjermdetaljer</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="118"/>
+        <location filename="../screen_tab.cpp" line="125"/>
         <source>Property</source>
         <translation>Egenskap</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="118"/>
+        <location filename="../screen_tab.cpp" line="125"/>
         <source>Value</source>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="134"/>
+        <location filename="../screen_tab.cpp" line="141"/>
         <source>Copy</source>
         <translation>Kopier</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="135"/>
+        <location filename="../screen_tab.cpp" line="142"/>
         <source>Save...</source>
         <translation>Lagre...</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="136"/>
+        <location filename="../screen_tab.cpp" line="151"/>
         <source>Close</source>
         <translation type="unfinished">Lukk</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="157"/>
+        <location filename="../screen_tab.cpp" line="169"/>
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="158"/>
+        <location filename="../screen_tab.cpp" line="170"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Informasjonen er kopiert
 til utklippstavlen.</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="166"/>
+        <location filename="../screen_tab.cpp" line="178"/>
         <source>Save Screen Info</source>
         <translation>Lagre skjerminformasjon</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="166"/>
+        <location filename="../screen_tab.cpp" line="178"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-filer (*.csv);;Alle filer (*)</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="234"/>
+        <location filename="../screen_tab.cpp" line="246"/>
         <source>=== ALL SCREENS ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="240"/>
+        <location filename="../screen_tab.cpp" line="252"/>
         <source>Screen %1 Name</source>
         <translation>Skjerm %1 navn</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="241"/>
+        <location filename="../screen_tab.cpp" line="253"/>
         <source>Screen %1 Manufacturer</source>
         <translation>Skjerm %1 produsent</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="242"/>
+        <location filename="../screen_tab.cpp" line="254"/>
         <source>Screen %1 Model</source>
         <translation>Skjerm %1 modell</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="243"/>
+        <location filename="../screen_tab.cpp" line="255"/>
         <source>Screen %1 Serial Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="246"/>
+        <location filename="../screen_tab.cpp" line="258"/>
         <source>Screen %1 Resolution</source>
         <translation>Skjerm %1 oppløsning</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="249"/>
+        <location filename="../screen_tab.cpp" line="261"/>
         <source>Screen %1 Virtual Resolution</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="251"/>
+        <location filename="../screen_tab.cpp" line="263"/>
         <source>Screen %1 Refresh Rate</source>
         <translation>Skjerm %1 oppdateringsfrekvens</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="254"/>
+        <location filename="../screen_tab.cpp" line="266"/>
         <source>Screen %1 Physical Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="256"/>
+        <location filename="../screen_tab.cpp" line="268"/>
         <source>Screen %1 DPI</source>
         <translation>Skjerm %1 DPI</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="257"/>
+        <location filename="../screen_tab.cpp" line="269"/>
         <source>Screen %1 Physical DPI X</source>
         <translation>Skjerm %1 fysisk DPI X</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="258"/>
+        <location filename="../screen_tab.cpp" line="270"/>
         <source>Screen %1 Physical DPI Y</source>
         <translation>Skjerm %1 fysisk DPI Y</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="260"/>
+        <location filename="../screen_tab.cpp" line="272"/>
         <source>Screen %1 Device Pixel Ratio</source>
         <translation>Skjerm %1 enhetspikselforhold</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="271"/>
+        <location filename="../screen_tab.cpp" line="283"/>
         <source>Screen %1 Orientation</source>
         <translation>Skjerm %1 orientering</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="274"/>
+        <location filename="../screen_tab.cpp" line="286"/>
         <source>Screen %1 Geometry</source>
         <translation>Skjerm %1 geometri</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="277"/>
+        <location filename="../screen_tab.cpp" line="289"/>
         <source>Screen %1 Available Geometry</source>
         <translation>Skjerm %1 tilgjengelig geometri</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="279"/>
+        <location filename="../screen_tab.cpp" line="291"/>
         <source>Screen %1 Depth</source>
         <translation>Skjerm %1 dybde</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="285"/>
+        <location filename="../screen_tab.cpp" line="297"/>
         <source>=== DRM CONNECTOR INFORMATION ===</source>
         <translation>=== DRM TILKOBLINGSINFORMASJON ===</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="293"/>
+        <location filename="../screen_tab.cpp" line="305"/>
         <source>Connector</source>
         <translation>Tilkobling</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="297"/>
+        <location filename="../screen_tab.cpp" line="309"/>
         <source>%1/status</source>
         <translation>%1/status</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="303"/>
+        <location filename="../screen_tab.cpp" line="315"/>
         <source>%1/enabled</source>
         <translation>%1/aktivert</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="309"/>
+        <location filename="../screen_tab.cpp" line="321"/>
         <source>%1/dpms</source>
         <translation>%1/dpms</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="317"/>
+        <location filename="../screen_tab.cpp" line="329"/>
         <source>%1/modes</source>
         <translation>%1/moduser</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="327"/>
+        <location filename="../screen_tab.cpp" line="339"/>
         <source>%1/EDID Size</source>
         <translation>%1/EDID-størrelse</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="338"/>
+        <location filename="../screen_tab.cpp" line="350"/>
         <source>%1/Manufacturer ID</source>
         <translation>%1/produsent-ID</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="344"/>
+        <location filename="../screen_tab.cpp" line="356"/>
         <source>%1/Product Code</source>
         <translation>%1/produktkode</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="354"/>
+        <location filename="../screen_tab.cpp" line="366"/>
         <source>%1/Serial Number</source>
         <translation>%1/serienummer</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="363"/>
+        <location filename="../screen_tab.cpp" line="375"/>
         <source>%1/Manufacture Date</source>
         <translation>%1/produksjonsdato</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="373"/>
+        <location filename="../screen_tab.cpp" line="385"/>
         <source>%1/Display Name</source>
         <translation>%1/skjermnavn</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="377"/>
+        <location filename="../screen_tab.cpp" line="389"/>
         <source>%1/Display String</source>
         <translation>%1/skjermstreng</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="389"/>
+        <location filename="../screen_tab.cpp" line="401"/>
         <source>%1/EDID (first 128 bytes hex)</source>
         <translation>%1/EDID (første 128 bytes hex)</translation>
     </message>
@@ -1677,28 +1686,28 @@ til utklippstavlen.</translation>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="92"/>
+        <location filename="../memory_tab.cpp" line="98"/>
         <source>RAM Total</source>
         <translation>RAM totalt</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="100"/>
+        <location filename="../memory_tab.cpp" line="106"/>
         <source>RAM Usage</source>
         <translation>RAM forbruk</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="113"/>
-        <location filename="../memory_tab.cpp" line="141"/>
+        <location filename="../memory_tab.cpp" line="119"/>
+        <location filename="../memory_tab.cpp" line="147"/>
         <source>Used: %1 GB / Free: %2 GB (%3%)</source>
         <translation>Brukt: %1 GB / Ledig: %2 GB (%3%)</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="122"/>
+        <location filename="../memory_tab.cpp" line="128"/>
         <source>SWAP Total</source>
         <translation>SWAP totalt</translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="128"/>
+        <location filename="../memory_tab.cpp" line="134"/>
         <source>SWAP Usage</source>
         <translation>SWAP forbruk</translation>
     </message>
@@ -1928,7 +1937,7 @@ til utklippstavlen.</translation>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="140"/>
+        <location filename="../os_tab.cpp" line="134"/>
         <source>uname: %1
 </source>
         <translation>uname: %1
@@ -1963,47 +1972,47 @@ til utklippstavlen.</translation>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="131"/>
+        <location filename="../pc_tab.cpp" line="138"/>
         <source>Computer Name</source>
         <translation>Datamaskin navn</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="132"/>
+        <location filename="../pc_tab.cpp" line="139"/>
         <source>PC Type</source>
         <translation>PC-type</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="133"/>
+        <location filename="../pc_tab.cpp" line="140"/>
         <source>Manufacturer</source>
         <translation>Produsent</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="134"/>
+        <location filename="../pc_tab.cpp" line="141"/>
         <source>Product Name</source>
         <translation>Produktnavn</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="135"/>
+        <location filename="../pc_tab.cpp" line="142"/>
         <source>Product Family</source>
         <translation>Produktfamilie</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="136"/>
+        <location filename="../pc_tab.cpp" line="143"/>
         <source>Version</source>
         <translation>Versjon</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="137"/>
+        <location filename="../pc_tab.cpp" line="144"/>
         <source>Serial Number</source>
         <translation>Serienummer</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="138"/>
+        <location filename="../pc_tab.cpp" line="145"/>
         <source>SKU Number</source>
         <translation>SKU-nummer</translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="139"/>
+        <location filename="../pc_tab.cpp" line="146"/>
         <source>UUID</source>
         <translation>UUID</translation>
     </message>
@@ -2012,7 +2021,7 @@ til utklippstavlen.</translation>
     <name>PeripheralsTab</name>
     <message>
         <location filename="../lsv.cpp" line="135"/>
-        <location filename="../peripherals_tab.cpp" line="33"/>
+        <location filename="../peripherals_tab.cpp" line="36"/>
         <source>Peripherals</source>
         <translation>Periferiutstyr</translation>
     </message>
@@ -2081,22 +2090,117 @@ til utklippstavlen.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="44"/>
+        <location filename="../peripherals_tab.cpp" line="47"/>
         <source>Device Type</source>
         <translation>Enhetstype</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="44"/>
+        <location filename="../peripherals_tab.cpp" line="47"/>
         <source>Device Name</source>
         <translation>Enhetsnavn</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="290"/>
+        <location filename="../peripherals_tab.cpp" line="161"/>
+        <source>Mouse/Pointing</source>
+        <translation>Mus/Pekeutstyr</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="163"/>
+        <source>Keyboard</source>
+        <translation>Tastatur</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="168"/>
+        <source>Camera</source>
+        <translation>Kamera</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="170"/>
+        <source>Camera (Disabled)</source>
+        <translation>Kamera (Deaktivert)</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="174"/>
+        <source>Printer (USB)</source>
+        <translation>Skriver (USB)</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="181"/>
+        <source>Mobile Device</source>
+        <translation>Mobilenhet</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="187"/>
+        <source>Network Adapter</source>
+        <translation>Nettverksadapter</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="195"/>
+        <source>Storage Device</source>
+        <translation>Lagringsenhet</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="201"/>
+        <source>Audio Device</source>
+        <translation>Lydenhet</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="207"/>
+        <source>Game Controller</source>
+        <translation>Spillkontroller</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="209"/>
+        <source>Scanner</source>
+        <translation>Skanner</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="213"/>
+        <source>Drawing Tablet</source>
+        <translation>Tegnetavle</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="216"/>
+        <source>Wireless Receiver</source>
+        <translation>Trådløs mottaker</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="218"/>
+        <source>USB Hub</source>
+        <translation>USB-hub</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="221"/>
+        <source>Card Reader</source>
+        <translation>Kortleser</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="226"/>
+        <source>Serial Adapter</source>
+        <translation>Serieadapter</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="229"/>
+        <source>USB Device</source>
+        <translation>USB-enhet</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="253"/>
+        <source>Printer (Network/CUPS)</source>
+        <translation>Skriver (Nettverk/CUPS)</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="300"/>
+        <source>External Display</source>
+        <translation>Ekstern skjerm</translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="349"/>
         <source>Scanning peripherals, please wait...</source>
         <translation>Skanner tilbehør, vennligst vent...</translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="291"/>
+        <location filename="../peripherals_tab.cpp" line="350"/>
         <source>Loading</source>
         <translation>Laster</translation>
     </message>
@@ -2128,37 +2232,37 @@ til utklippstavlen.</translation>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="103"/>
+        <location filename="../ports_tab.cpp" line="109"/>
         <source>USB Buses/Hubs</source>
         <translation>USB-busser/huber</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="104"/>
+        <location filename="../ports_tab.cpp" line="110"/>
         <source>USB Devices Connected</source>
         <translation>USB-enheter tilkoblet</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="113"/>
+        <location filename="../ports_tab.cpp" line="119"/>
         <source>Serial Ports</source>
         <translation>Serielle porter</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="135"/>
+        <location filename="../ports_tab.cpp" line="141"/>
         <source>USB Controllers (PCI)</source>
         <translation>USB-kontrollere (PCI)</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="142"/>
+        <location filename="../ports_tab.cpp" line="148"/>
         <source>Bluetooth Adapters</source>
         <translation>Bluetooth-adaptere</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="155"/>
+        <location filename="../ports_tab.cpp" line="161"/>
         <source>Ethernet Ports</source>
         <translation>Ethernet-porter</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="156"/>
+        <location filename="../ports_tab.cpp" line="162"/>
         <source>Wireless Adapters</source>
         <translation>Trådløse adaptere</translation>
     </message>
@@ -2323,92 +2427,91 @@ Ingen seriecontrollere funnet</translation>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="26"/>
         <source>Unit</source>
-        <translation>Enhet</translation>
+        <translation type="vanished">Enhet</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="61"/>
+        <location filename="../cpu.h" line="76"/>
         <source>Error</source>
         <translation>Feil</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="61"/>
+        <location filename="../cpu.h" line="76"/>
         <source>Could not read /proc/cpuinfo</source>
         <translation>Kunne ikke lese /proc/cpuinfo</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="101"/>
+        <location filename="../cpu.h" line="116"/>
         <source>Total number of processors</source>
         <translation>Totalt antall prosessorer</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="105"/>
+        <location filename="../cpu.h" line="120"/>
         <source>Number of processor (Physical)</source>
         <translation>Antall prosessorer (fysisk)</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="108"/>
+        <location filename="../cpu.h" line="123"/>
         <location filename="../graphics.h" line="159"/>
         <source>Vendor</source>
         <translation>Produsent</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="108"/>
-        <location filename="../cpu.h" line="109"/>
-        <location filename="../cpu.h" line="112"/>
-        <location filename="../cpu.h" line="139"/>
-        <location filename="../cpu.h" line="140"/>
-        <location filename="../cpu.h" line="143"/>
-        <location filename="../cpu.h" line="153"/>
-        <location filename="../cpu.h" line="163"/>
+        <location filename="../cpu.h" line="123"/>
+        <location filename="../cpu.h" line="124"/>
+        <location filename="../cpu.h" line="127"/>
+        <location filename="../cpu.h" line="154"/>
+        <location filename="../cpu.h" line="155"/>
+        <location filename="../cpu.h" line="158"/>
+        <location filename="../cpu.h" line="169"/>
+        <location filename="../cpu.h" line="179"/>
         <source>Unknown</source>
         <translation>Ukjent</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="109"/>
+        <location filename="../cpu.h" line="124"/>
         <source>Model</source>
         <translation>Modell</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="136"/>
+        <location filename="../cpu.h" line="151"/>
         <source>Temperature</source>
         <translation>Temperatur</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="139"/>
+        <location filename="../cpu.h" line="154"/>
         <source>Cache size</source>
         <translation>Cache‑størrelse</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="140"/>
+        <location filename="../cpu.h" line="155"/>
         <source>Bogomips</source>
         <translation>Bogomips</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="143"/>
+        <location filename="../cpu.h" line="159"/>
         <source>Current freq (GHz)</source>
         <translation>Gjeldende frekvens (GHz)</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="151"/>
-        <location filename="../cpu.h" line="153"/>
+        <location filename="../cpu.h" line="167"/>
+        <location filename="../cpu.h" line="169"/>
         <source>Max freq (GHz)</source>
         <translation>Max frekvens (GHz)</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="161"/>
-        <location filename="../cpu.h" line="163"/>
+        <location filename="../cpu.h" line="177"/>
+        <location filename="../cpu.h" line="179"/>
         <source>Min Freq (GHz)</source>
         <translation>Min frekvens (GHz)</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="172"/>
+        <location filename="../cpu.h" line="188"/>
         <source>Error reading CPU information</source>
         <translation>Feil ved lesing av CPU‑informasjon</translation>
     </message>
     <message>
-        <location filename="../cpu.h" line="192"/>
+        <location filename="../cpu.h" line="208"/>
         <source>Unknown CPU</source>
         <translation>Ukjent CPU</translation>
     </message>
@@ -2824,32 +2927,32 @@ Normal (standard)</translation>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="82"/>
+        <location filename="../screen_tab.cpp" line="89"/>
         <source>Resolution</source>
         <translation>Oppløsning</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="83"/>
+        <location filename="../screen_tab.cpp" line="90"/>
         <source>Refresh Rate</source>
         <translation>Oppdateringsfrekvens</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="84"/>
+        <location filename="../screen_tab.cpp" line="91"/>
         <source>Zoom Level</source>
         <translation>Zoomnivå</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="85"/>
+        <location filename="../screen_tab.cpp" line="92"/>
         <source>Physical Size</source>
         <translation>Fysisk størrelse</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="89"/>
+        <location filename="../screen_tab.cpp" line="96"/>
         <source>Manufacturer</source>
         <translation>Produsent</translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="92"/>
+        <location filename="../screen_tab.cpp" line="99"/>
         <source>Orientation</source>
         <translation>Orientering</translation>
     </message>
@@ -2963,87 +3066,87 @@ Normal (standard)</translation>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="96"/>
+        <location filename="../summary_tab.cpp" line="102"/>
         <source>Computer</source>
         <translation>Datamaskin</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="101"/>
+        <location filename="../summary_tab.cpp" line="107"/>
         <source>Manufacturer</source>
         <translation>Produsent</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="123"/>
+        <location filename="../summary_tab.cpp" line="129"/>
         <source>Processor</source>
         <translation>Prosessor</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="124"/>
+        <location filename="../summary_tab.cpp" line="130"/>
         <source>CPU Cores</source>
         <translation>CPU‑kjerner</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="137"/>
+        <location filename="../summary_tab.cpp" line="143"/>
         <source>Total Memory</source>
         <translation>Totalt minne</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="158"/>
+        <location filename="../summary_tab.cpp" line="164"/>
         <source>System Uptime</source>
         <translation>Systemets oppetid</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="182"/>
+        <location filename="../summary_tab.cpp" line="188"/>
         <source>Storage Devices</source>
         <translation>Lagringsenheter</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="183"/>
+        <location filename="../summary_tab.cpp" line="189"/>
         <source>Total Storage</source>
         <translation>Total lagring</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="226"/>
+        <location filename="../summary_tab.cpp" line="232"/>
         <source>Graphics Cards</source>
         <translation>Grafikkort</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="237"/>
+        <location filename="../summary_tab.cpp" line="243"/>
         <source>Display Resolution</source>
         <translation>Skjermoppløsning</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="238"/>
+        <location filename="../summary_tab.cpp" line="244"/>
         <source>Refresh Rate</source>
         <translation>Oppdateringsfrekvens</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="241"/>
+        <location filename="../summary_tab.cpp" line="247"/>
         <source>Number of Screens</source>
         <translation>Antall skjermer</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="257"/>
+        <location filename="../summary_tab.cpp" line="263"/>
         <source>Ethernet Interfaces</source>
         <translation>Ethernet-grensesnitt</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="258"/>
+        <location filename="../summary_tab.cpp" line="264"/>
         <source>Wireless Interfaces</source>
         <translation>Trådløse grensesnitt</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="275"/>
+        <location filename="../summary_tab.cpp" line="281"/>
         <source>USB Devices Connected</source>
         <translation>USB-enheter tilkoblet</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="298"/>
+        <location filename="../summary_tab.cpp" line="304"/>
         <source>Operating System</source>
         <translation>Operativsystem</translation>
     </message>
     <message>
-        <location filename="../summary_tab.cpp" line="310"/>
+        <location filename="../summary_tab.cpp" line="316"/>
         <source>Kernel Version</source>
         <translation>Kjerneversjon</translation>
     </message>
@@ -3114,59 +3217,59 @@ Normal (standard)</translation>
 <context>
     <name>WindowingGeekDialog</name>
     <message>
-        <location filename="../windowing_tab.cpp" line="243"/>
+        <location filename="../windowing_tab.cpp" line="253"/>
         <source>Desktop - Geek Mode</source>
         <translation>Skrivebord - Geekemodus</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="248"/>
+        <location filename="../windowing_tab.cpp" line="258"/>
         <source>Desktop Environment Technical Details</source>
         <translation>Tekniske skrivebordsdetaljer</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="254"/>
+        <location filename="../windowing_tab.cpp" line="264"/>
         <source>Property</source>
         <translation>Egenskap</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="254"/>
+        <location filename="../windowing_tab.cpp" line="264"/>
         <source>Value</source>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="268"/>
+        <location filename="../windowing_tab.cpp" line="278"/>
         <source>Copy</source>
         <translation>Kopier</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="269"/>
+        <location filename="../windowing_tab.cpp" line="279"/>
         <source>Save...</source>
         <translation>Lagre...</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="278"/>
+        <location filename="../windowing_tab.cpp" line="288"/>
         <source>Close</source>
         <translation type="unfinished">Lukk</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="301"/>
+        <location filename="../windowing_tab.cpp" line="311"/>
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="302"/>
+        <location filename="../windowing_tab.cpp" line="312"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Informasjonen er kopiert
 til utklippstavlen.</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="310"/>
+        <location filename="../windowing_tab.cpp" line="320"/>
         <source>Save Desktop Info</source>
         <translation>Lagre skrivebordsinformasjon</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="310"/>
+        <location filename="../windowing_tab.cpp" line="320"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-filer (*.csv);;Alle filer (*)</translation>
     </message>
@@ -3183,7 +3286,7 @@ til utklippstavlen.</translation>
     </message>
     <message>
         <location filename="../windowing_tab.cpp" line="27"/>
-        <location filename="../windowing_tab.cpp" line="108"/>
+        <location filename="../windowing_tab.cpp" line="118"/>
         <source>Desktop Environment</source>
         <translation>Skrivebordsmiljø</translation>
     </message>
@@ -3202,40 +3305,40 @@ til utklippstavlen.</translation>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="119"/>
+        <location filename="../windowing_tab.cpp" line="129"/>
         <source>Display Server</source>
         <translation>Visningsserver</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="124"/>
+        <location filename="../windowing_tab.cpp" line="134"/>
         <source>Session</source>
         <translation>Økt</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="178"/>
+        <location filename="../windowing_tab.cpp" line="188"/>
         <source>Window Manager</source>
         <translation>Vindu‑behandler</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="183"/>
+        <location filename="../windowing_tab.cpp" line="193"/>
         <source>Display</source>
         <translation>Skjerm</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="188"/>
+        <location filename="../windowing_tab.cpp" line="198"/>
         <source>Wayland Display</source>
         <translation>Wayland-skjerm</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="205"/>
+        <location filename="../windowing_tab.cpp" line="215"/>
         <source>Current Resolution</source>
         <translation>Nåværende oppløsning</translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="216"/>
-        <location filename="../windowing_tab.cpp" line="223"/>
         <location filename="../windowing_tab.cpp" line="226"/>
-        <location filename="../windowing_tab.cpp" line="228"/>
+        <location filename="../windowing_tab.cpp" line="233"/>
+        <location filename="../windowing_tab.cpp" line="236"/>
+        <location filename="../windowing_tab.cpp" line="238"/>
         <source>Display Scaling</source>
         <translation>Skjermskalering</translation>
     </message>

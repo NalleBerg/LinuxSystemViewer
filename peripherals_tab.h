@@ -36,6 +36,9 @@ private:
 
     void showGeekMode();
     void refreshPeripherals();
+    
+    // Helper function to test camera accessibility
+    bool isCameraAccessible(const QString& deviceName);
 };
 
 #endif // PERIPHERALS_TAB_H

@@ -23,7 +23,10 @@
 #include <QProgressDialog>
 #include <QApplication>
 #include <QEventLoop>
+#include <QDir>
 #include "gui_helpers.h"
+
+#include <QDir>
 
 PeripheralsTab::PeripheralsTab(QWidget* parent)
     : QWidget(parent)
@@ -80,6 +83,32 @@ PeripheralsTab::PeripheralsTab(QWidget* parent)
     refreshTimer->start();
 }
 
+// Test if a camera device is actually accessible
+bool PeripheralsTab::isCameraAccessible(const QString& deviceName)
+{
+    Q_UNUSED(deviceName);
+    
+    // Check if any video devices exist and are accessible
+    QDir videoDir("/dev");
+    QStringList videoDevices = videoDir.entryList(QStringList() << "video*", QDir::System);
+    
+    for (const QString& device : videoDevices) {
+        QString devicePath = "/dev/" + device;
+        
+        // Try to access the camera device with a quick test
+        QProcess testProcess;
+        testProcess.start("timeout", QStringList() << "1s" << "cat" << devicePath);
+        testProcess.waitForFinished(1500); // Wait max 1.5 seconds
+        
+        // If the process exits successfully (not permission denied), camera is accessible
+        if (testProcess.exitCode() == 0 || testProcess.exitCode() == 124) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
 void PeripheralsTab::refreshPeripherals()
 {
     tableWidget->setRowCount(0);
@@ -129,28 +158,33 @@ void PeripheralsTab::refreshPeripherals()
                 if (deviceName.contains("mouse", Qt::CaseInsensitive) ||
                     deviceName.contains("trackpad", Qt::CaseInsensitive) ||
                     deviceName.contains("trackpoint", Qt::CaseInsensitive)) {
-                    type = "Mouse/Pointing";
+                    type = tr("Mouse/Pointing");
                 } else if (deviceName.contains("keyboard", Qt::CaseInsensitive)) {
-                    type = "Keyboard";
+                    type = tr("Keyboard");
                 } else if (deviceName.contains("camera", Qt::CaseInsensitive) ||
                            deviceName.contains("webcam", Qt::CaseInsensitive)) {
-                    type = "Camera";
+                    // Test if camera is actually accessible
+                    if (isCameraAccessible(deviceName)) {
+                        type = tr("Camera");
+                    } else {
+                        type = tr("Camera (Disabled)");
+                    }
                 } else if (deviceName.contains("printer", Qt::CaseInsensitive) ||
                            deviceName.contains("print", Qt::CaseInsensitive)) {
-                    type = "Printer (USB)";
+                    type = tr("Printer (USB)");
                 } else if (deviceName.contains("phone", Qt::CaseInsensitive) ||
                            deviceName.contains("android", Qt::CaseInsensitive) ||
                            deviceName.contains("iphone", Qt::CaseInsensitive) ||
                            deviceName.contains("mobile", Qt::CaseInsensitive) ||
                            deviceName.contains("samsung", Qt::CaseInsensitive) ||
                            deviceName.contains("apple", Qt::CaseInsensitive)) {
-                    type = "Mobile Device";
+                    type = tr("Mobile Device");
                 } else if (deviceName.contains("ethernet", Qt::CaseInsensitive) ||
                            deviceName.contains("network", Qt::CaseInsensitive) ||
                            deviceName.contains("wireless", Qt::CaseInsensitive) ||
                            deviceName.contains("wifi", Qt::CaseInsensitive) ||
                            deviceName.contains("wlan", Qt::CaseInsensitive)) {
-                    type = "Network Adapter";
+                    type = tr("Network Adapter");
                 } else if (deviceName.contains("bluetooth", Qt::CaseInsensitive)) {
                     // Skip Bluetooth adapters - they are typically built-in
                     continue;
@@ -158,16 +192,41 @@ void PeripheralsTab::refreshPeripherals()
                            deviceName.contains("mass storage", Qt::CaseInsensitive) ||
                            deviceName.contains("flash", Qt::CaseInsensitive) ||
                            deviceName.contains("disk", Qt::CaseInsensitive)) {
-                    type = "Storage Device";
+                    type = tr("Storage Device");
                 } else if (deviceName.contains("audio", Qt::CaseInsensitive) ||
                            deviceName.contains("sound", Qt::CaseInsensitive) ||
                            deviceName.contains("speaker", Qt::CaseInsensitive) ||
                            deviceName.contains("headset", Qt::CaseInsensitive) ||
                            deviceName.contains("headphone", Qt::CaseInsensitive)) {
-                    type = "Audio Device";
+                    type = tr("Audio Device");
+                } else if (deviceName.contains("gamepad", Qt::CaseInsensitive) ||
+                           deviceName.contains("joystick", Qt::CaseInsensitive) ||
+                           deviceName.contains("controller", Qt::CaseInsensitive) ||
+                           deviceName.contains("xbox", Qt::CaseInsensitive) ||
+                           deviceName.contains("playstation", Qt::CaseInsensitive)) {
+                    type = tr("Game Controller");
+                } else if (deviceName.contains("scanner", Qt::CaseInsensitive)) {
+                    type = tr("Scanner");
+                } else if (deviceName.contains("tablet", Qt::CaseInsensitive) ||
+                           deviceName.contains("wacom", Qt::CaseInsensitive) ||
+                           deviceName.contains("digitizer", Qt::CaseInsensitive)) {
+                    type = tr("Drawing Tablet");
+                } else if (deviceName.contains("receiver", Qt::CaseInsensitive) ||
+                           deviceName.contains("unifying", Qt::CaseInsensitive)) {
+                    type = tr("Wireless Receiver");
+                } else if (deviceName.contains("hub", Qt::CaseInsensitive)) {
+                    type = tr("USB Hub");
+                } else if (deviceName.contains("card reader", Qt::CaseInsensitive) ||
+                           deviceName.contains("card", Qt::CaseInsensitive)) {
+                    type = tr("Card Reader");
+                } else if (deviceName.contains("serial", Qt::CaseInsensitive) ||
+                           deviceName.contains("ftdi", Qt::CaseInsensitive) ||
+                           deviceName.contains("ch340", Qt::CaseInsensitive) ||
+                           deviceName.contains("cp210", Qt::CaseInsensitive)) {
+                    type = tr("Serial Adapter");
                 } else {
                     // Show other USB devices
-                    type = "USB Device";
+                    type = tr("USB Device");
                 }
                 
                 addRow(type, deviceName + " [" + deviceId + "]");
@@ -191,7 +250,7 @@ void PeripheralsTab::refreshPeripherals()
                 if (printerMatch.hasMatch()) {
                     QString printerName = printerMatch.captured(1);
                     QString status = printerMatch.captured(2);
-                    addRow("Printer (Network/CUPS)", printerName + " - " + status);
+                    addRow(tr("Printer (Network/CUPS)"), printerName + " - " + status);
                 }
             }
         }
@@ -238,7 +297,7 @@ void PeripheralsTab::refreshPeripherals()
                         if (!resolution.isEmpty()) {
                             displayInfo += " (" + resolution + ")";
                         }
-                        addRow("External Display", displayInfo);
+                        addRow(tr("External Display"), displayInfo);
                     }
                 }
             }
