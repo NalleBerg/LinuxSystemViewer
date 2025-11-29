@@ -314,13 +314,26 @@ void StorageTab::applyParsedPartitions(const QVariantMap& data) {
         QString secondLine = QString("Name: %1")
                            .arg(diskData["device_name"].toString());
         
-        // Create label with two centered lines
+        // Create styled header with blue background like Network tab
         QLabel* diskLabel = new QLabel(firstLine + "\n" + secondLine);
         QFont font = diskLabel->font();
         font.setBold(true);
+        font.setPointSize(font.pointSize() + 1);
         diskLabel->setFont(font);
         diskLabel->setAlignment(Qt::AlignCenter);
         diskLabel->setWordWrap(true);
+        
+        // Apply blue background styling to match Network tab
+        diskLabel->setStyleSheet(
+            "QLabel {"
+            "    background-color: #3498db;"
+            "    color: white;"
+            "    padding: 8px;"
+            "    margin: 2px;"
+            "    border-radius: 4px;"
+            "}"
+        );
+        
         diskInfoLayout->addWidget(diskLabel);
         diskLabels.append(diskLabel);
         

@@ -214,8 +214,33 @@ void loadLiveStorageInformation(QTableWidget* table)
             int row = table->rowCount();
             table->insertRow(row);
             
-            // Property name (device)
-            QString propertyName = QString("Disk: %1").arg(device);
+            // Create device header with consistent styling (merged columns, centered, bold)
+            QString headerText = QString("%1").arg(device);
+            
+            QTableWidgetItem* headerItem = new QTableWidgetItem(headerText);
+            QFont headerFont;
+            headerFont.setBold(true);
+            headerFont.setPointSize(headerFont.pointSize() + 1);
+            headerItem->setFont(headerFont);
+            headerItem->setTextAlignment(Qt::AlignCenter);
+            
+            // Set background color to match Network tab headers
+            headerItem->setBackground(QBrush(QColor("#3498db")));
+            headerItem->setForeground(QBrush(QColor("white")));
+            
+            table->setItem(row, 0, headerItem);
+            table->setItem(row, 1, new QTableWidgetItem(""));
+            table->setItem(row, 2, new QTableWidgetItem(""));
+            table->setItem(row, 3, new QTableWidgetItem(""));
+            table->setSpan(row, 0, 1, 4); // Merge all columns
+            table->resizeRowToContents(row);
+            
+            // Add spacer row for better separation
+            row = table->rowCount();
+            table->insertRow(row);
+            
+            // Property name (device details)
+            QString propertyName = QString("  Storage Details");
             QTableWidgetItem* propertyItem = new QTableWidgetItem(propertyName);
             propertyItem->setForeground(QColor(44, 62, 80));
             propertyItem->setFont(QFont(propertyItem->font().family(), propertyItem->font().pointSize(), QFont::Bold));
