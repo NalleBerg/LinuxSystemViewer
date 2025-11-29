@@ -256,7 +256,11 @@ private:
         
         auto addRow = [&](const QString& property, const QString& value) {
             table->insertRow(row);
-            table->setItem(row, 0, new QTableWidgetItem(property));
+            QTableWidgetItem* propItem = new QTableWidgetItem(property);
+            QFont boldFont;
+            boldFont.setBold(true);
+            propItem->setFont(boldFont);
+            table->setItem(row, 0, propItem);
             table->setItem(row, 1, new QTableWidgetItem(value));
             row++;
         };
