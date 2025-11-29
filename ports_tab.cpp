@@ -109,14 +109,89 @@ void PortsTab::loadPortsInformation()
     addRow(tr("USB Buses/Hubs"), QString::number(usbHubCount));
     addRow(tr("USB Devices Connected"), QString::number(usbDeviceCount));
     
-    // Count serial ports
-    int serialCount = 0;
+    // Enhanced TTY/Serial device detection (only show connected hardware)
+    QStringList connectedSerialDevices;
     QDir serialDir("/sys/class/tty");
     if (serialDir.exists()) {
-        QStringList serials = serialDir.entryList(QStringList() << "ttyS*" << "ttyUSB*" << "ttyACM*", QDir::Dirs);
-        serialCount = serials.count();
-        if (serialCount > 0) {
-            addRow(tr("Serial Ports"), serials.join(", "));
+        QStringList serials = serialDir.entryList(QStringList() << "ttyUSB*" << "ttyACM*", QDir::Dirs);
+        
+        for (const QString& ttyDev : serials) {
+            QString devicePath = QString("/sys/class/tty/%1/device").arg(ttyDev);
+            QDir deviceDir(devicePath);
+            
+            if (deviceDir.exists()) {
+                QString realDeviceName = ttyDev;
+                
+                // Check for USB serial device info
+                QString vendorPath = devicePath + "/../idVendor";
+                QString productPath = devicePath + "/../idProduct";
+                QString manufacturerPath = devicePath + "/../manufacturer";
+                QString productNamePath = devicePath + "/../product";
+                
+                QFile vendorFile(vendorPath);
+                QFile productFile(productPath);
+                QFile manufacturerFile(manufacturerPath);
+                QFile productNameFile(productNamePath);
+                
+                QString vendor, product, manufacturer, productName;
+                
+                if (vendorFile.open(QIODevice::ReadOnly)) {
+                    vendor = QString::fromLatin1(vendorFile.readAll()).trimmed();
+                    vendorFile.close();
+                }
+                if (productFile.open(QIODevice::ReadOnly)) {
+                    product = QString::fromLatin1(productFile.readAll()).trimmed();
+                    productFile.close();
+                }
+                if (manufacturerFile.open(QIODevice::ReadOnly)) {
+                    manufacturer = QString::fromLatin1(manufacturerFile.readAll()).trimmed();
+                    manufacturerFile.close();
+                }
+                if (productNameFile.open(QIODevice::ReadOnly)) {
+                    productName = QString::fromLatin1(productNameFile.readAll()).trimmed();
+                    productNameFile.close();
+                }
+                
+                // Map known vendor/product combinations to friendly names
+                if (vendor == "2341") { // Arduino
+                    if (product == "0043" || product == "0001") {
+                        realDeviceName = "Arduino Uno R3 (USB Serial)";
+                    } else if (product == "8036") {
+                        realDeviceName = "Arduino Leonardo (USB Serial)";
+                    } else if (product == "0042") {
+                        realDeviceName = "Arduino Mega 2560 (USB Serial)";
+                    } else {
+                        realDeviceName = "Arduino Board (USB Serial)";
+                    }
+                } else if (vendor == "1a86") { // CH340/CH341 (common on Arduino clones)
+                    realDeviceName = "Arduino Compatible (CH340 USB Serial)";
+                } else if (vendor == "0403") { // FTDI
+                    if (product == "6001") {
+                        realDeviceName = "FTDI USB Serial Adapter";
+                    } else {
+                        realDeviceName = "FTDI USB to Serial";
+                    }
+                } else if (vendor == "10c4") { // Silicon Labs
+                    realDeviceName = "Silicon Labs USB to UART Bridge";
+                } else if (vendor == "067b") { // Prolific
+                    realDeviceName = "Prolific USB to Serial Adapter";
+                } else if (vendor == "2e8a") { // Raspberry Pi Foundation
+                    realDeviceName = "Raspberry Pi Pico (MicroPython)";
+                } else if (!manufacturer.isEmpty() && !productName.isEmpty()) {
+                    realDeviceName = QString("%1 %2").arg(manufacturer, productName);
+                } else if (!productName.isEmpty()) {
+                    realDeviceName = productName;
+                }
+                
+                connectedSerialDevices.append(QString("%1 (/dev/%2)").arg(realDeviceName, ttyDev));
+            }
+        }
+    }
+    
+    // Add serial devices to the table
+    if (!connectedSerialDevices.isEmpty()) {
+        for (const QString& device : connectedSerialDevices) {
+            addRow(tr("Serial Device"), device);
         }
     }
     
