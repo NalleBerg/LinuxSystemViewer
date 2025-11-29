@@ -1,3 +1,47 @@
+<h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 0.19.6 &mdash; 2025-11-29</strong></span></h2>
+<h3>Network Tab Redesign</h3>
+<ul>
+<li><strong>Storage-Style Layout</strong>: Complete redesign to match Storage tab structure with blue headers and separate tables per network device instead of single large table</li>
+<li><strong>Device Headers</strong>: Blue device headers (#3498db) with centered device names and status (Active/Inactive) spanning full width for visual clarity</li>
+<li><strong>Real Device Names</strong>: Enhanced device detection showing meaningful names like "Broadcom 802.11ac Wireless Network Adapter" and "Realtek RTL8811CU 802.11ac USB WiFi Adapter" instead of interface names</li>
+<li><strong>Page Scrolling</strong>: Fixed individual table scrolling to proper page-level scrolling for better navigation experience</li>
+<li><strong>Gateway Information</strong>: Added default gateway display for active network interfaces</li>
+</ul>
+<h3>Enhanced USB Device Detection</h3>
+<ul>
+<li><strong>Direct /sys Access</strong>: Improved USB WiFi detection by reading vendor/product IDs from correct path (/sys/class/net/wlx*/device/../idVendor) without helper applications</li>
+<li><strong>Vendor Mapping</strong>: Added comprehensive USB vendor/product ID mapping for Realtek (0bda:c811 → RTL8811CU), Broadcom, Intel, and other wireless controllers</li>
+<li><strong>Fallback Detection</strong>: Enhanced fallback device identification using MAC address patterns and modalias information</li>
+</ul>
+<h3>Ports Tab - Smart TTY Detection</h3>
+<ul>
+<li><strong>Hardware-Only TTYs</strong>: Intelligent detection showing only TTY devices with actual connected hardware (Arduino, FTDI, USB-to-serial) to avoid cluttering normal view</li>
+<li><strong>Arduino Support</strong>: Specific detection for Arduino Uno R3 (vendor 2341), Leonardo, Mega 2560, and Arduino-compatible boards with CH340/CH341 chips</li>
+<li><strong>USB Serial Devices</strong>: Detection for FTDI (0403), Silicon Labs (10c4), Prolific (067b), and Raspberry Pi Pico (2e8a) with meaningful device names</li>
+<li><strong>Device Path Display</strong>: Shows both friendly name and device path (e.g., "Arduino Uno R3 (USB Serial) (/dev/ttyUSB0)")</li>
+<li><strong>Geek Mode Compatibility</strong>: Virtual TTYs and all system devices still accessible in Geek Mode for technical users</li>
+</ul>
+<h3>Technical Changes</h3>
+<ul>
+<li><code>network_tab.h/cpp</code> &mdash; Complete redesign to Storage-style layout with QScrollArea, QVBoxLayout, and per-device QTableWidget containers</li>
+<li><code>network.h</code> &mdash; Enhanced device detection logic with improved USB device identification and vendor ID mapping</li>
+<li><code>ports_tab.cpp</code> &mdash; Added intelligent TTY detection with USB serial device identification and meaningful device naming</li>
+<li><code>storage.h/storage_tab.cpp</code> &mdash; Refined blue header styling and layout consistency</li>
+<li><code>version.cpp</code> &mdash; Version bumped to 0.19.6</li>
+</ul>
+<h3>Bug Fixes</h3>
+<ul>
+<li><strong>USB WiFi Detection</strong>: Fixed incorrect path for USB device vendor/product ID reading causing generic "USB WiFi Adapter" names</li>
+<li><strong>Table Scrolling</strong>: Fixed individual table scrollbars in Network tab by implementing proper page-level scrolling</li>
+<li><strong>Header Styling</strong>: Corrected Property/Value header styling inconsistency in Network tab to match Storage tab formatting</li>
+<li><strong>Layout Spacing</strong>: Fixed spacing between device sections for proper visual separation</li>
+</ul>
+<h3>Known Limitations</h3>
+<ul>
+<li>TTY device detection requires actual hardware connection; virtual or inactive TTYs won't appear in normal view (available in Geek Mode)</li>
+<li>Some USB serial devices may require udev rules for proper device naming, though basic detection remains functional</li>
+</ul>
+<hr />
 <h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 0.18.6 &mdash; 2025-11-27</strong></span></h2>
 <h3>Internationalization</h3>
 <ul>
