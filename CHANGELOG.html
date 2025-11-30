@@ -1,3 +1,40 @@
+<h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 0.20.0 &mdash; 2025-11-30</strong></span></h2>
+<h3>Norwegian Translation Completion</h3>
+<ul>
+<li><strong>Network Tab Translation</strong>: Complete Norwegian translations for all Network tab strings including table headers, device detection, and interface information</li>
+<li><strong>Storage Tab Translation</strong>: Full Norwegian translation of Storage tab table headers ("Enhet", "Størrelse", "Brukt", "Tilgjengelig", "Bruk%", "Montering", "Filsystem")</li>
+<li><strong>Blue Header Translation</strong>: Added translatable device headers in Storage tab with Norwegian translations for "Disk:", "Navn:", and size information</li>
+<li><strong>Translation Quality</strong>: Professional Norwegian (Bokmål) translations with shortened "Montering" instead of "Monteringspunkt" for better column fit</li>
+</ul>
+<h3>User Interface Improvements</h3>
+<ul>
+<li><strong>Window Height Increase</strong>: Increased default window height from 456 to 516 pixels (equivalent to ~2 table rows) for better Summary tab display without scrolling</li>
+<li><strong>Version in Title Bar</strong>: Restored version number display in window title showing "Linux System Viewer V. 0.20.0" that persists through language changes</li>
+<li><strong>Adaptive Height Logic</strong>: Enhanced window sizing to accommodate larger content while respecting desktop panel margins and screen limitations</li>
+</ul>
+<h3>Technical Changes</h3>
+<ul>
+<li><code>storage_tab.cpp</code> &mdash; Added tr() calls for table headers and blue device header strings, enhanced internationalization support</li>
+<li><code>network_tab.h</code> &mdash; Complete tr() implementation for all Network tab translatable strings</li>
+<li><code>lsv.cpp</code> &mdash; Updated window height to 516 pixels and fixed version number persistence in title bar through language changes</li>
+<li><code>i18n/lsv_nb.ts</code> &mdash; Added 488+ finished Norwegian translations with professional quality technical terminology</li>
+<li><code>version.cpp</code> &mdash; Version bumped to 0.20.0</li>
+</ul>
+<h3>Bug Fixes</h3>
+<ul>
+<li><strong>Column Width Issues</strong>: Fixed "Monteringspunkt" truncation by using shorter "Montering" translation that fits properly in table columns</li>
+<li><strong>Untranslated Headers</strong>: Fixed Storage tab blue device headers remaining in English by adding proper tr() calls and translations</li>
+<li><strong>Version Display Loss</strong>: Fixed window title losing version number when changing languages by updating language change handler</li>
+<li><strong>Summary Tab Scrolling</strong>: Fixed Summary tab requiring vertical scrolling by increasing window height appropriately</li>
+</ul>
+<h3>Translation Statistics</h3>
+<ul>
+<li>Norwegian (Bokmål): 488 finished translations, 14 unfinished (97.2% complete)</li>
+<li>Storage tab: 100% translated (table headers, blue headers, geek mode dialogs)</li>
+<li>Network tab: 100% translated (device detection, interface information, status messages)</li>
+<li>Window and UI elements: Complete translation coverage with proper technical terminology</li>
+</ul>
+<hr />
 <h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 0.19.6 &mdash; 2025-11-29</strong></span></h2>
 <h3>Network Tab Redesign</h3>
 <ul>

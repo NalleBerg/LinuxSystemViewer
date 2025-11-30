@@ -3,7 +3,7 @@
 
 Official project home & binaries: https://lsv.nalle.no/
 
-**Current version: 0.19.6**
+**Current version: 0.20.0**
 
 Linux System Viewer (LSV) is a lightweight, focused Qt6-based GUI tool that presents
 detailed system hardware and software information on Linux. It provides both a
@@ -19,13 +19,13 @@ memory, storage, network, graphics, audio, and more.
 - Sound testing: built-in audio hardware testing using ALSA with immediate cancellation
 - Developer-friendly: optional debug logger for safe troubleshooting (disabled by default)
 
-**Recent changes (v0.19.6):**
-- Network tab redesigned with Storage-style blue headers and separate tables per device
-- Enhanced USB device detection showing real names like "Realtek RTL8811CU 802.11ac USB WiFi Adapter"
-- Smart TTY detection in Ports tab showing only connected hardware (Arduino, FTDI, Pi Pico)
-- Fixed network table scrolling to page-level instead of individual table scrolling
-- Direct /sys filesystem access for USB vendor/product identification (no helper apps)
-- Added default gateway information display for active network interfaces
+**Recent changes (v0.20.0):**
+- Complete Norwegian translations for Network and Storage tabs with proper table headers
+- Fixed Storage tab column headers: "Enhet", "Størrelse", "Brukt", "Tilgjengelig", "Bruk%", "Montering", "Filsystem"
+- Added translatable blue device headers in Storage tab ("Disk:", "Navn:", etc.)
+- Increased window height from 456 to 516 pixels for better Summary tab display without scrolling
+- Restored version number in window title bar showing "Linux System Viewer V. 0.20.0"
+- Enhanced Network tab with complete tr() internationalization support
 
 **Configuration:**
 - Language selection is stored in `~/.config/LSV/lsv_lang.rc`
