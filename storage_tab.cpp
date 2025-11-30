@@ -87,7 +87,7 @@ QWidget* StorageTab::createUserFriendlyView() {
 QTableWidget* StorageTab::createDiskTable() {
     QTableWidget* table = new QTableWidget();
     table->setColumnCount(7);
-    QStringList headers = {"Device", "Size", "Used", "Available", "Use%", "Mount Point", "Filesystem"};
+    QStringList headers = {tr("Device"), tr("Size"), tr("Used"), tr("Available"), tr("Use%"), tr("Mount Point"), tr("Filesystem")};
     table->setHorizontalHeaderLabels(headers);
     
     // Apply CPU-style header formatting
@@ -305,13 +305,13 @@ void StorageTab::applyParsedPartitions(const QVariantMap& data) {
         QString formattedSize = formatSizeLocale(sizeText);
         
         // Create first line: Disk: sdb - Type: USB - Total size: 29.82 GB
-        QString firstLine = QString("Disk: %1 - Type: %2 - Total size: %3")
+        QString firstLine = QString(tr("Disk: %1 - Type: %2 - Total size: %3"))
                            .arg(diskName)
                            .arg(diskData["transport"].toString())
                            .arg(formattedSize);
         
         // Create second line: Name: Corsair Survivor 3.0
-        QString secondLine = QString("Name: %1")
+        QString secondLine = QString(tr("Name: %1"))
                            .arg(diskData["device_name"].toString());
         
         // Create styled header with blue background like Network tab

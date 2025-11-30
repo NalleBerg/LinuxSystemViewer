@@ -1293,10 +1293,10 @@ int main(int argc, char *argv[])
     ForceCloseFilter* closeFilter = new ForceCloseFilter(&mainWindow, &mainWindow);
     mainWindow.installEventFilter(closeFilter);
 
-    // Set initial size (850x456) but adapt to available screen space
-    // Reduced height slightly to avoid being obscured by desktop panels.
+    // Set initial size (850x516) but adapt to available screen space
+    // Increased height to accommodate Summary tab without scrolling.
     const int INITIAL_WIDTH = 850;
-    const int INITIAL_HEIGHT = 456;
+    const int INITIAL_HEIGHT = 516;
 
     // Prefer an adaptive height: use the smaller of INITIAL_HEIGHT and
     // (available screen height - margin). This avoids the window being
@@ -1383,7 +1383,7 @@ int main(int argc, char *argv[])
         }
 
         // Update small UI bits
-        mainWindow.setWindowTitle(QObject::tr("Linux System Viewer"));
+        mainWindow.setWindowTitle(QObject::tr("Linux System Viewer V. %1").arg(LSVVersionQString()));
         if (titleLabel) titleLabel->setText(QObject::tr("Linux System Viewer"));
         if (aboutBtn) aboutBtn->setToolTip(QObject::tr("About Linux System Viewer"));
 

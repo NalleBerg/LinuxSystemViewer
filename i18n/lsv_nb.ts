@@ -266,10 +266,6 @@ til utklippstavlen.</translation>
         <translation>CPU</translation>
     </message>
     <message>
-        <source>Geek Mode</source>
-        <translation type="vanished">Geekemodus</translation>
-    </message>
-    <message>
         <location filename="../cpu_tab.cpp" line="41"/>
         <source>Property</source>
         <translation type="unfinished">Egenskap</translation>
@@ -357,10 +353,6 @@ til utklippstavlen.</translation>
         <location filename="../cpu_tab.cpp" line="168"/>
         <source>Save CPU Info</source>
         <translation>Lagre CPU‑info</translation>
-    </message>
-    <message>
-        <source>Text Files (*.txt);;All Files (*)</source>
-        <translation type="vanished">Tekstfiler (*.txt);;Alle filer (*)</translation>
     </message>
     <message>
         <location filename="../cpu_tab.cpp" line="168"/>
@@ -785,48 +777,12 @@ til utklippstavlen.</translation>
         <translation>DMI minneenhetsoppføringer</translation>
     </message>
     <message>
-        <source>RAM Slots</source>
-        <translation type="vanished">RAM‑spor</translation>
-    </message>
-    <message>
-        <source>Free Slots</source>
-        <translation type="vanished">Ledige spor</translation>
-    </message>
-    <message>
-        <source>Max Module Size</source>
-        <translation type="vanished">Maks modulstørrelse</translation>
-    </message>
-    <message>
         <location filename="../memory_tab.cpp" line="370"/>
         <location filename="../memory_tab.cpp" line="371"/>
         <location filename="../memory_tab.cpp" line="372"/>
         <location filename="../memory_tab.cpp" line="373"/>
         <source>Unknown</source>
         <translation>Ukjent</translation>
-    </message>
-    <message>
-        <source>Total Installed RAM</source>
-        <translation type="vanished">Total installert RAM</translation>
-    </message>
-    <message>
-        <source>RAM Type</source>
-        <translation type="vanished">RAM‑type</translation>
-    </message>
-    <message>
-        <source>RAM Speed</source>
-        <translation type="vanished">RAM‑hastighet</translation>
-    </message>
-    <message>
-        <source>Slot %1: %2, %3, %4</source>
-        <translation type="vanished">Slot %1: %2, %3, %4</translation>
-    </message>
-    <message>
-        <source>No Module</source>
-        <translation type="vanished">Ingen modul</translation>
-    </message>
-    <message>
-        <source>Slot %1 Info</source>
-        <translation type="vanished">Slot %1 informasjon</translation>
     </message>
 </context>
 <context>
@@ -1172,109 +1128,109 @@ til utklippstavlen.</translation>
 <context>
     <name>GeekPortsDialog</name>
     <message>
-        <location filename="../ports_tab.cpp" line="178"/>
+        <location filename="../ports_tab.cpp" line="253"/>
         <source>Ports - Geek Mode</source>
         <translation>Porter - Geekemodus</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="183"/>
+        <location filename="../ports_tab.cpp" line="258"/>
         <source>Ports Technical Details</source>
         <translation>Tekniske detaljer for porter</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="189"/>
+        <location filename="../ports_tab.cpp" line="264"/>
         <source>Property</source>
         <translation>Egenskap</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="189"/>
+        <location filename="../ports_tab.cpp" line="264"/>
         <source>Value</source>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="204"/>
+        <location filename="../ports_tab.cpp" line="279"/>
         <source>Copy</source>
         <translation>Kopier</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="205"/>
+        <location filename="../ports_tab.cpp" line="280"/>
         <source>Save...</source>
         <translation>Lagre...</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="214"/>
+        <location filename="../ports_tab.cpp" line="289"/>
         <source>Close</source>
         <translation type="unfinished">Lukk</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="231"/>
+        <location filename="../ports_tab.cpp" line="306"/>
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="232"/>
+        <location filename="../ports_tab.cpp" line="307"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Informasjonen er kopiert
 til utklippstavlen.</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="239"/>
+        <location filename="../ports_tab.cpp" line="314"/>
         <source>Save Ports Info</source>
         <translation>Lagre porter-informasjon</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="239"/>
+        <location filename="../ports_tab.cpp" line="314"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-filer (*.csv);;Alle filer (*)</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="306"/>
+        <location filename="../ports_tab.cpp" line="381"/>
         <source>=== USB DEVICES ===</source>
         <translation>=== USB-ENHETER ===</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="314"/>
+        <location filename="../ports_tab.cpp" line="389"/>
         <source>Device</source>
         <translation>Enhet</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="338"/>
+        <location filename="../ports_tab.cpp" line="413"/>
         <source>=== SERIAL PORTS ===</source>
         <translation>=== SERIELLE PORTER ===</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="347"/>
+        <location filename="../ports_tab.cpp" line="422"/>
         <source>Serial Port</source>
         <translation>Seriell port</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="369"/>
+        <location filename="../ports_tab.cpp" line="444"/>
         <source>=== PCI USB CONTROLLERS ===</source>
         <translation>=== PCI USB-KONTROLLERE ===</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="382"/>
+        <location filename="../ports_tab.cpp" line="457"/>
         <source>PCI Device</source>
         <translation>PCI-enhet</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="412"/>
+        <location filename="../ports_tab.cpp" line="487"/>
         <source>=== BLUETOOTH ADAPTERS ===</source>
         <translation>=== BLUETOOTH-ADAPTERE ===</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="415"/>
+        <location filename="../ports_tab.cpp" line="490"/>
         <source>Bluetooth Adapter</source>
         <translation>Bluetooth-adapter</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="438"/>
+        <location filename="../ports_tab.cpp" line="513"/>
         <source>=== NETWORK INTERFACES ===</source>
         <translation>=== NETTVERKSGRENSESNITT ===</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="448"/>
+        <location filename="../ports_tab.cpp" line="523"/>
         <source>Interface</source>
         <translation>Grensesnitt</translation>
     </message>
@@ -1497,139 +1453,65 @@ til utklippstavlen.</translation>
 <context>
     <name>GeekStorageDialog</name>
     <message>
-        <location filename="../storage_tab.cpp" line="575"/>
+        <location filename="../storage_tab.cpp" line="588"/>
         <source>Storage - Geek Mode</source>
         <translation>Lagring - Geekemodus</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="580"/>
+        <location filename="../storage_tab.cpp" line="593"/>
         <source>Storage Technical Details</source>
         <translation>Tekniske lagringsdetaljer</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="586"/>
+        <location filename="../storage_tab.cpp" line="599"/>
         <source>Property</source>
         <translation>Egenskap</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="586"/>
+        <location filename="../storage_tab.cpp" line="599"/>
         <source>Value</source>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="600"/>
+        <location filename="../storage_tab.cpp" line="613"/>
         <source>Copy</source>
         <translation>Kopier</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="601"/>
+        <location filename="../storage_tab.cpp" line="614"/>
         <source>Save...</source>
         <translation>Lagre...</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="610"/>
+        <location filename="../storage_tab.cpp" line="623"/>
         <source>Close</source>
-        <translation type="unfinished">Lukk</translation>
+        <translation>Lukk</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="628"/>
+        <location filename="../storage_tab.cpp" line="641"/>
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="629"/>
+        <location filename="../storage_tab.cpp" line="642"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Informasjonen er kopiert
 til utklippstavlen.</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="637"/>
+        <location filename="../storage_tab.cpp" line="650"/>
         <source>Save Storage Info</source>
         <translation>Lagre lagringsinformasjon</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="637"/>
+        <location filename="../storage_tab.cpp" line="650"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-filer (*.csv);;Alle filer (*)</translation>
     </message>
 </context>
 <context>
     <name>GraphicsTab</name>
-    <message>
-        <source>Graphics Card Information</source>
-        <translation type="vanished">Informasjon om grafikkort</translation>
-    </message>
-    <message>
-        <source>Graphics Cards</source>
-        <translation type="vanished">Grafikkort</translation>
-    </message>
-    <message>
-        <source>Graphics Drivers</source>
-        <translation type="vanished">Grafikkdrivere</translation>
-    </message>
-    <message>
-        <source>OpenGL Information</source>
-        <translation type="vanished">OpenGL‑informasjon</translation>
-    </message>
-    <message>
-        <source>Video Memory</source>
-        <translation type="vanished">Videominne</translation>
-    </message>
-    <message>
-        <source>Loading %1 information...</source>
-        <translation type="vanished">Laster %1 informasjon...</translation>
-    </message>
-    <message>
-        <source>Graphics Cards: Not detected</source>
-        <translation type="vanished">Grafikkort: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Graphics Drivers: Not detected</source>
-        <translation type="vanished">Grafikkdrivere: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>OpenGL: Not detected</source>
-        <translation type="vanished">OpenGL: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Video Memory: Not detected</source>
-        <translation type="vanished">Videominne: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Video Memory: %1</source>
-        <translation type="vanished">Videominne: %1</translation>
-    </message>
-    <message>
-        <source>NVIDIA proprietary driver (likely)</source>
-        <translation type="vanished">NVIDIA proprietærdriver (sannsynlig)</translation>
-    </message>
-    <message>
-        <source>AMD/ATI driver (AMDGPU or Radeon)</source>
-        <translation type="vanished">AMD/ATI‑driver (AMDGPU eller Radeon)</translation>
-    </message>
-    <message>
-        <source>Intel integrated graphics driver</source>
-        <translation type="vanished">Intel integrert grafikkdriver</translation>
-    </message>
-    <message>
-        <source>Graphics Cards:
-%1</source>
-        <translation type="vanished">Grafikkort:
-%1</translation>
-    </message>
-    <message>
-        <source>Graphics Drivers:
-%1</source>
-        <translation type="vanished">Grafikkdrivere:
-%1</translation>
-    </message>
-    <message>
-        <source>OpenGL Information:
-%1</source>
-        <translation type="vanished">OpenGL‑informasjon:
-%1</translation>
-    </message>
     <message>
         <location filename="../graphics_tab.cpp" line="30"/>
         <location filename="../lsv.cpp" line="132"/>
@@ -1654,26 +1536,6 @@ til utklippstavlen.</translation>
         <location filename="../memory_tab.cpp" line="22"/>
         <source>Memory</source>
         <translation>Minne</translation>
-    </message>
-    <message>
-        <source>Geek Mode</source>
-        <translation type="vanished">Geekemodus</translation>
-    </message>
-    <message>
-        <source>RAM Total: %1 GB</source>
-        <translation type="vanished">RAM totalt: %1 GB</translation>
-    </message>
-    <message>
-        <source>Used: %1 GB</source>
-        <translation type="vanished">Brukt: %1 GB</translation>
-    </message>
-    <message>
-        <source>Free: %1 GB (%2%)</source>
-        <translation type="vanished">Ledig: %1 GB (%2%)</translation>
-    </message>
-    <message>
-        <source>SWAP Total: %1 GB</source>
-        <translation type="vanished">SWAP totalt: %1 GB</translation>
     </message>
     <message>
         <location filename="../memory_tab.cpp" line="33"/>
@@ -1714,102 +1576,6 @@ til utklippstavlen.</translation>
 </context>
 <context>
     <name>MotherboardTab</name>
-    <message>
-        <source>Motherboard and System Information</source>
-        <translation type="vanished">Hovedkort og systeminformasjon</translation>
-    </message>
-    <message>
-        <source>System Board</source>
-        <translation type="vanished">Hovedkort</translation>
-    </message>
-    <message>
-        <source>Chipset</source>
-        <translation type="vanished">Chipsett</translation>
-    </message>
-    <message>
-        <source>BIOS/UEFI</source>
-        <translation type="vanished">BIOS/UEFI</translation>
-    </message>
-    <message>
-        <source>Expansion Slots</source>
-        <translation type="vanished">Ekspansjonsspor</translation>
-    </message>
-    <message>
-        <source>Loading %1 information...</source>
-        <translation type="vanished">Laster %1 informasjon...</translation>
-    </message>
-    <message>
-        <source>System Board: Not detected</source>
-        <translation type="vanished">Hovedkort: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Chipset: Not detected</source>
-        <translation type="vanished">Chipsett: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>BIOS/UEFI: Not detected</source>
-        <translation type="vanished">BIOS/UEFI: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Expansion Slots: Not detected</source>
-        <translation type="vanished">Ekspansjonsspor: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Manufacturer: %1</source>
-        <translation type="vanished">Produsent: %1</translation>
-    </message>
-    <message>
-        <source>Product: %1</source>
-        <translation type="vanished">Produkt: %1</translation>
-    </message>
-    <message>
-        <source>Version: %1</source>
-        <translation type="vanished">Versjon: %1</translation>
-    </message>
-    <message>
-        <source>Serial: %1</source>
-        <translation type="vanished">Serienummer: %1</translation>
-    </message>
-    <message>
-        <source>BIOS Vendor: %1</source>
-        <translation type="vanished">BIOS‑leverandør: %1</translation>
-    </message>
-    <message>
-        <source>BIOS Revision: %1</source>
-        <translation type="vanished">BIOS‑revisjon: %1</translation>
-    </message>
-    <message>
-        <source>Release Date: %1</source>
-        <translation type="vanished">Utgivelsesdato: %1</translation>
-    </message>
-    <message>
-        <source>Family: %1</source>
-        <translation type="vanished">Familie: %1</translation>
-    </message>
-    <message>
-        <source>System Board:
-%1</source>
-        <translation type="vanished">Hovedkort:
-%1</translation>
-    </message>
-    <message>
-        <source>Chipset:
-%1</source>
-        <translation type="vanished">Chipsett:
-%1</translation>
-    </message>
-    <message>
-        <source>BIOS/UEFI:
-%1</source>
-        <translation type="vanished">BIOS/UEFI:
-%1</translation>
-    </message>
-    <message>
-        <source>Expansion Slots:
-%1</source>
-        <translation type="vanished">Ekspansjonsspor:
-%1</translation>
-    </message>
     <message>
         <location filename="../lsv.cpp" line="138"/>
         <location filename="../motherboard_tab.cpp" line="30"/>
@@ -1882,41 +1648,64 @@ til utklippstavlen.</translation>
         <translation>CSV-filer (*.csv);;Alle filer (*)</translation>
     </message>
     <message>
-        <source>Save</source>
-        <translation type="vanished">Lagre</translation>
-    </message>
-    <message>
         <location filename="../network_geek.cpp" line="237"/>
         <source>Save network info</source>
         <translation>Lagre nettverksinformasjon</translation>
-    </message>
-    <message>
-        <source>Text files (*.txt);;All files (*)</source>
-        <translation type="vanished">Tekstfiler (*.txt);;Alle filer (*)</translation>
     </message>
 </context>
 <context>
     <name>NetworkTab</name>
     <message>
         <location filename="../lsv.cpp" line="142"/>
-        <location filename="../network_tab.h" line="19"/>
-        <location filename="../network_tab.h" line="33"/>
+        <location filename="../network_tab.h" line="37"/>
+        <location filename="../network_tab.h" line="73"/>
         <source>Network</source>
         <translation>Nettverk</translation>
     </message>
     <message>
-        <source>Geek Mode</source>
-        <translation type="vanished">Geekemodus</translation>
-    </message>
-    <message>
-        <location filename="../network_tab.h" line="39"/>
+        <location filename="../network_tab.h" line="149"/>
         <source>Property</source>
         <translation>Egenskap</translation>
     </message>
     <message>
-        <location filename="../network_tab.h" line="39"/>
+        <location filename="../network_tab.h" line="149"/>
         <source>Value</source>
         <translation>Verdi</translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="269"/>
+        <source>Interface Name</source>
+        <translation>Grensesnittnavn</translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="274"/>
+        <source>MAC Address</source>
+        <translation>MAC-adresse</translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="282"/>
+        <source>IPv4 Address</source>
+        <translation>IPv4-adresse</translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="284"/>
+        <source>IPv6 Address</source>
+        <translation>IPv6-adresse</translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="291"/>
+        <source>MTU</source>
+        <translation>MTU</translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="291"/>
+        <source>%1 bytes</source>
+        <translation>%1 bytes</translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="304"/>
+        <source>Default Gateway</source>
+        <translation>Standard gateway</translation>
     </message>
 </context>
 <context>
@@ -1956,10 +1745,6 @@ til utklippstavlen.</translation>
         <location filename="../pc_tab.cpp" line="27"/>
         <source>PC Info</source>
         <translation>PC‑info</translation>
-    </message>
-    <message>
-        <source>PC Information</source>
-        <translation type="vanished">PC‑informasjon</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="38"/>
@@ -2024,70 +1809,6 @@ til utklippstavlen.</translation>
         <location filename="../peripherals_tab.cpp" line="36"/>
         <source>Peripherals</source>
         <translation>Periferiutstyr</translation>
-    </message>
-    <message>
-        <source>Connected Peripherals and Devices</source>
-        <translation type="vanished">Tilkoblet periferi og enheter</translation>
-    </message>
-    <message>
-        <source>USB Devices</source>
-        <translation type="vanished">USB‑enheter</translation>
-    </message>
-    <message>
-        <source>Input Devices</source>
-        <translation type="vanished">Inndataenheter</translation>
-    </message>
-    <message>
-        <source>Storage Devices</source>
-        <translation type="vanished">Lagringsenheter</translation>
-    </message>
-    <message>
-        <source>Network Devices</source>
-        <translation type="vanished">Nettverksenheter</translation>
-    </message>
-    <message>
-        <source>Loading %1 information...</source>
-        <translation type="vanished">Laster %1 informasjon...</translation>
-    </message>
-    <message>
-        <source>USB Devices: Not detected</source>
-        <translation type="vanished">USB‑enheter: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Input Devices: Not detected</source>
-        <translation type="vanished">Inndataenheter: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Storage Devices: Not detected</source>
-        <translation type="vanished">Lagringsenheter: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Network Devices: Not detected</source>
-        <translation type="vanished">Nettverksenheter: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>USB Devices:
-</source>
-        <translation type="vanished">USB‑enheter:
-</translation>
-    </message>
-    <message>
-        <source>Input Devices:
-</source>
-        <translation type="vanished">Inndataenheter:
-</translation>
-    </message>
-    <message>
-        <source>Storage Devices:
-</source>
-        <translation type="vanished">Lagringsenheter:
-</translation>
-    </message>
-    <message>
-        <source>Network Devices:
-</source>
-        <translation type="vanished">Nettverksenheter:
-</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="47"/>
@@ -2214,14 +1935,6 @@ til utklippstavlen.</translation>
         <translation>Porter</translation>
     </message>
     <message>
-        <source>System Ports Information</source>
-        <translation type="vanished">System‑porter informasjon</translation>
-    </message>
-    <message>
-        <source>USB Ports</source>
-        <translation type="vanished">USB‑porter</translation>
-    </message>
-    <message>
         <location filename="../ports_tab.cpp" line="35"/>
         <source>Property</source>
         <translation>Egenskap</translation>
@@ -2242,177 +1955,37 @@ til utklippstavlen.</translation>
         <translation>USB-enheter tilkoblet</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="119"/>
-        <source>Serial Ports</source>
-        <translation>Serielle porter</translation>
+        <location filename="../ports_tab.cpp" line="194"/>
+        <source>Serial Device</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="141"/>
+        <location filename="../ports_tab.cpp" line="216"/>
         <source>USB Controllers (PCI)</source>
         <translation>USB-kontrollere (PCI)</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="148"/>
+        <location filename="../ports_tab.cpp" line="223"/>
         <source>Bluetooth Adapters</source>
         <translation>Bluetooth-adaptere</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="161"/>
+        <location filename="../ports_tab.cpp" line="236"/>
         <source>Ethernet Ports</source>
         <translation>Ethernet-porter</translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="162"/>
+        <location filename="../ports_tab.cpp" line="237"/>
         <source>Wireless Adapters</source>
         <translation>Trådløse adaptere</translation>
-    </message>
-    <message>
-        <source>PCI Ports</source>
-        <translation type="vanished">PCI‑porter</translation>
-    </message>
-    <message>
-        <source>Port Status</source>
-        <translation type="vanished">Portstatus</translation>
-    </message>
-    <message>
-        <source>Loading %1 information...</source>
-        <translation type="vanished">Laster %1 informasjon...</translation>
-    </message>
-    <message>
-        <source>USB Ports: Not detected</source>
-        <translation type="vanished">USB‑porter: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Serial Ports: Not detected</source>
-        <translation type="vanished">Serielle porter: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>PCI Ports: Not detected</source>
-        <translation type="vanished">PCI‑porter: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Port Status: Unknown</source>
-        <translation type="vanished">Portstatus: Ukjent</translation>
-    </message>
-    <message>
-        <source>USB Ports:
-</source>
-        <translation type="vanished">USB‑porter:
-</translation>
-    </message>
-    <message>
-        <source>Serial Ports:
-</source>
-        <translation type="vanished">Serielle porter:
-</translation>
-    </message>
-    <message>
-        <source>Serial Ports:
-No serial controllers detected</source>
-        <translation type="vanished">Serielle porter:
-Ingen seriecontrollere funnet</translation>
-    </message>
-    <message>
-        <source>PCI Ports:
-</source>
-        <translation type="vanished">PCI‑porter:
-</translation>
-    </message>
-    <message>
-        <source>Port Status:
-</source>
-        <translation type="vanished">Portstatus:
-</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <source>Audio</source>
-        <translation type="vanished">Lyd</translation>
-    </message>
-    <message>
-        <source>Audio System Information</source>
-        <translation type="vanished">Lydsysteminformasjon</translation>
-    </message>
-    <message>
-        <source>Audio Devices</source>
-        <translation type="vanished">Lydenheter</translation>
-    </message>
-    <message>
-        <source>Sound Cards</source>
-        <translation type="vanished">Lydkort</translation>
-    </message>
-    <message>
-        <source>Audio Server</source>
-        <translation type="vanished">Lydserver</translation>
-    </message>
-    <message>
-        <source>Playback Devices</source>
-        <translation type="vanished">Avspillingsenheter</translation>
-    </message>
-    <message>
         <location filename="../generic_tab.cpp" line="25"/>
         <source>Loading %1 information...</source>
         <translation>Laster %1 informasjon...</translation>
-    </message>
-    <message>
-        <source>Audio Devices: Not detected</source>
-        <translation type="vanished">Lydenheter: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Sound Cards: Not detected</source>
-        <translation type="vanished">Lydkort: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Audio Server: Not detected</source>
-        <translation type="vanished">Lydserver: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Playback Devices: Not detected</source>
-        <translation type="vanished">Avspillingsenheter: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Card:</source>
-        <translation type="vanished">Kort:</translation>
-    </message>
-    <message>
-        <source>Audio Server: PulseAudio (%1)</source>
-        <translation type="vanished">Lydserver: PulseAudio (%1)</translation>
-    </message>
-    <message>
-        <source>Audio Server: PulseAudio %1</source>
-        <translation type="vanished">Lydserver: PulseAudio %1</translation>
-    </message>
-    <message>
-        <source>Default: %1</source>
-        <translation type="vanished">Standard: %1</translation>
-    </message>
-    <message>
-        <source>Audio Server: PipeWire</source>
-        <translation type="vanished">Lydserver: PipeWire</translation>
-    </message>
-    <message>
-        <source>Audio Server: JACK</source>
-        <translation type="vanished">Lydserver: JACK</translation>
-    </message>
-    <message>
-        <source>Audio Devices:
-%1</source>
-        <translation type="vanished">Lydenheter:
-%1</translation>
-    </message>
-    <message>
-        <source>Sound Cards:
-%1</source>
-        <translation type="vanished">Lydkort:
-%1</translation>
-    </message>
-    <message>
-        <source>Playback Devices:
-%1</source>
-        <translation type="vanished">Avspillingsenheter:
-%1</translation>
     </message>
     <message>
         <location filename="../cpu.h" line="26"/>
@@ -2425,10 +1998,6 @@ Ingen seriecontrollere funnet</translation>
         <location filename="../graphics.h" line="27"/>
         <source>Value</source>
         <translation>Verdi</translation>
-    </message>
-    <message>
-        <source>Unit</source>
-        <translation type="vanished">Enhet</translation>
     </message>
     <message>
         <location filename="../cpu.h" line="76"/>
@@ -2523,10 +2092,6 @@ Ingen seriecontrollere funnet</translation>
         <translation>=== %1 Informasjon ===
 
 %2</translation>
-    </message>
-    <message>
-        <source>Graphics card</source>
-        <translation type="vanished">Grafikkort</translation>
     </message>
     <message>
         <location filename="../lsv.cpp" line="69"/>
@@ -2696,10 +2261,6 @@ Vennligst kjør applikasjonen som root.</translation>
         <translation>Om Linux System Viewer</translation>
     </message>
     <message>
-        <source>Motherboard</source>
-        <translation type="vanished">Hovedkort</translation>
-    </message>
-    <message>
         <location filename="../multitabs.cpp" line="19"/>
         <source>MultiRowTabWidget: Initialized</source>
         <translation>MultiRowTabWidget: Initialisert</translation>
@@ -2847,76 +2408,6 @@ Vennligst kjør applikasjonen som root.</translation>
         <translation>Skjerm</translation>
     </message>
     <message>
-        <source>Display and Monitor Information</source>
-        <translation type="vanished">Skjerm‑ og monitorinformasjon</translation>
-    </message>
-    <message>
-        <source>Connected Displays</source>
-        <translation type="vanished">Tilkoblede skjermer</translation>
-    </message>
-    <message>
-        <source>Screen Resolution</source>
-        <translation type="vanished">Skjermoppløsning</translation>
-    </message>
-    <message>
-        <source>Refresh Rates</source>
-        <translation type="vanished">Oppdateringsfrekvenser</translation>
-    </message>
-    <message>
-        <source>Display Orientation</source>
-        <translation type="vanished">Skjermorientering</translation>
-    </message>
-    <message>
-        <source>Loading %1 information...</source>
-        <translation type="vanished">Laster %1 informasjon...</translation>
-    </message>
-    <message>
-        <source>Connected Displays: Not detected</source>
-        <translation type="vanished">Tilkoblede skjermer: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Screen Resolution: Not detected</source>
-        <translation type="vanished">Skjermoppløsning: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Refresh Rates: Not detected</source>
-        <translation type="vanished">Oppdateringsfrekvens: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Display Orientation: Not detected</source>
-        <translation type="vanished">Skjermorientering: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Connected Displays:
-</source>
-        <translation type="vanished">Tilkoblede skjermer:
-</translation>
-    </message>
-    <message>
-        <source>Screen Resolution:
-</source>
-        <translation type="vanished">Skjermoppløsning:
-</translation>
-    </message>
-    <message>
-        <source>Refresh Rates:
-</source>
-        <translation type="vanished">Oppdateringsfrekvenser:
-</translation>
-    </message>
-    <message>
-        <source>Display Orientation:
-</source>
-        <translation type="vanished">Skjermorientering:
-</translation>
-    </message>
-    <message>
-        <source>Display Orientation:
-Normal (default)</source>
-        <translation type="vanished">Skjermorientering:
-Normal (standard)</translation>
-    </message>
-    <message>
         <location filename="../screen_tab.cpp" line="37"/>
         <source>Property</source>
         <translation>Egenskap</translation>
@@ -2967,68 +2458,49 @@ Normal (standard)</translation>
         <translation>Lagring</translation>
     </message>
     <message>
-        <source>Storage Devices and Disk Information</source>
-        <translation type="vanished">Lagringsenheter og diskinformasjon</translation>
+        <location filename="../storage_tab.cpp" line="90"/>
+        <source>Device</source>
+        <translation>Enhet</translation>
     </message>
     <message>
-        <source>Disk Drives</source>
-        <translation type="vanished">Diskstasjoner</translation>
+        <location filename="../storage_tab.cpp" line="90"/>
+        <source>Size</source>
+        <translation>Størrelse</translation>
     </message>
     <message>
-        <source>Partitions</source>
-        <translation type="vanished">Partisjoner</translation>
+        <location filename="../storage_tab.cpp" line="90"/>
+        <source>Used</source>
+        <translation>Brukt</translation>
     </message>
     <message>
-        <source>Mount Points</source>
-        <translation type="vanished">Monteringspunkter</translation>
+        <location filename="../storage_tab.cpp" line="90"/>
+        <source>Available</source>
+        <translation>Tilgjengelig</translation>
     </message>
     <message>
-        <source>Disk Usage</source>
-        <translation type="vanished">Diskbruk</translation>
+        <location filename="../storage_tab.cpp" line="90"/>
+        <source>Use%</source>
+        <translation>Bruk%</translation>
     </message>
     <message>
-        <source>Loading %1 information...</source>
-        <translation type="vanished">Laster %1 informasjon...</translation>
+        <location filename="../storage_tab.cpp" line="90"/>
+        <source>Mount Point</source>
+        <translation>Montering</translation>
     </message>
     <message>
-        <source>Disk Drives: Not detected</source>
-        <translation type="vanished">Diskstasjoner: Ikke funnet</translation>
+        <location filename="../storage_tab.cpp" line="90"/>
+        <source>Filesystem</source>
+        <translation>Filsystem</translation>
     </message>
     <message>
-        <source>Partitions: Not detected</source>
-        <translation type="vanished">Partisjoner: Ikke funnet</translation>
+        <location filename="../storage_tab.cpp" line="308"/>
+        <source>Disk: %1 - Type: %2 - Total size: %3</source>
+        <translation>Disk: %1 - Type: %2 - Total størrelse: %3</translation>
     </message>
     <message>
-        <source>Mount Points: Not detected</source>
-        <translation type="vanished">Monteringspunkter: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Disk Usage: Not detected</source>
-        <translation type="vanished">Diskbruk: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Disk Drives:
-</source>
-        <translation type="vanished">Diskstasjoner:
-</translation>
-    </message>
-    <message>
-        <source>Partitions:
-</source>
-        <translation type="vanished">Partisjoner:
-</translation>
-    </message>
-    <message>
-        <source>Mount Points:
-</source>
-        <translation type="vanished">Monteringspunkter:
-</translation>
-    </message>
-    <message>
-        <source>Disk Usage:
-</source>
-        <translation type="vanished">Diskbruk:
-</translation>
+        <location filename="../storage_tab.cpp" line="314"/>
+        <source>Name: %1</source>
+        <translation>Navn: %1</translation>
     </message>
 </context>
 <context>
@@ -3038,22 +2510,6 @@ Normal (standard)</translation>
         <location filename="../summary_tab.cpp" line="21"/>
         <source>Summary</source>
         <translation>Oppsummering</translation>
-    </message>
-    <message>
-        <source>lshw -short</source>
-        <translation type="vanished">lshw -short</translation>
-    </message>
-    <message>
-        <source>System Hardware Summary</source>
-        <translation type="vanished">Oppsummering av systemmaskinvare</translation>
-    </message>
-    <message>
-        <source>System Overview</source>
-        <translation type="vanished">Systemoversikt</translation>
-    </message>
-    <message>
-        <source>Loading system information...</source>
-        <translation type="vanished">Laster systeminformasjon...</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="33"/>
@@ -3150,50 +2606,6 @@ Normal (standard)</translation>
         <source>Kernel Version</source>
         <translation>Kjerneversjon</translation>
     </message>
-    <message>
-        <source>Memory</source>
-        <translation type="vanished">Minne</translation>
-    </message>
-    <message>
-        <source>Storage</source>
-        <translation type="vanished">Lagring</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation type="vanished">Nettverk</translation>
-    </message>
-    <message>
-        <source>Graphics</source>
-        <translation type="vanished">Grafikk</translation>
-    </message>
-    <message>
-        <source>Loading %1 information...</source>
-        <translation type="vanished">Laster %1 informasjon...</translation>
-    </message>
-    <message>
-        <source>CPU: </source>
-        <translation type="vanished">CPU: </translation>
-    </message>
-    <message>
-        <source>Memory: </source>
-        <translation type="vanished">Minne: </translation>
-    </message>
-    <message>
-        <source>Storage: </source>
-        <translation type="vanished">Lagring: </translation>
-    </message>
-    <message>
-        <source>Network: </source>
-        <translation type="vanished">Nettverk: </translation>
-    </message>
-    <message>
-        <source>Graphics: </source>
-        <translation type="vanished">Grafikk: </translation>
-    </message>
-    <message>
-        <source>System: </source>
-        <translation type="vanished">System: </translation>
-    </message>
 </context>
 <context>
     <name>TabWidgetBase</name>
@@ -3277,22 +2689,10 @@ til utklippstavlen.</translation>
 <context>
     <name>WindowingTab</name>
     <message>
-        <source>Windowing environment</source>
-        <translation type="vanished">Vindu‑miljø</translation>
-    </message>
-    <message>
-        <source>Windowing Environment Information</source>
-        <translation type="vanished">Informasjon om vindusmiljø</translation>
-    </message>
-    <message>
         <location filename="../windowing_tab.cpp" line="27"/>
         <location filename="../windowing_tab.cpp" line="118"/>
         <source>Desktop Environment</source>
         <translation>Skrivebordsmiljø</translation>
-    </message>
-    <message>
-        <source>Session Type</source>
-        <translation type="vanished">Sesjonstype</translation>
     </message>
     <message>
         <location filename="../windowing_tab.cpp" line="38"/>
@@ -3341,74 +2741,6 @@ til utklippstavlen.</translation>
         <location filename="../windowing_tab.cpp" line="238"/>
         <source>Display Scaling</source>
         <translation>Skjermskalering</translation>
-    </message>
-    <message>
-        <source>Loading %1 information...</source>
-        <translation type="vanished">Laster %1 informasjon...</translation>
-    </message>
-    <message>
-        <source>Desktop Environment: Not detected</source>
-        <translation type="vanished">Skrivebordsmiljø: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Session: Not detected</source>
-        <translation type="vanished">Sesjon: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Display Server: Not detected</source>
-        <translation type="vanished">Visningsserver: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Window Manager: Not detected</source>
-        <translation type="vanished">Vindu‑behandler: Ikke funnet</translation>
-    </message>
-    <message>
-        <source>Desktop Environment: </source>
-        <translation type="vanished">Skrivebordsmiljø: </translation>
-    </message>
-    <message>
-        <source>Session: </source>
-        <translation type="vanished">Sesjon: </translation>
-    </message>
-    <message>
-        <source>Display Server: Wayland</source>
-        <translation type="vanished">Visningsserver: Wayland</translation>
-    </message>
-    <message>
-        <source>Display Server: X11</source>
-        <translation type="vanished">Visningsserver: X11</translation>
-    </message>
-    <message>
-        <source>Display Server: </source>
-        <translation type="vanished">Visningsserver: </translation>
-    </message>
-    <message>
-        <source>Window Manager: </source>
-        <translation type="vanished">Vindu‑behandler: </translation>
-    </message>
-    <message>
-        <source>Window Manager: Mutter (GNOME)</source>
-        <translation type="vanished">Vindu‑behandler: Mutter (GNOME)</translation>
-    </message>
-    <message>
-        <source>Window Manager: KWin (KDE)</source>
-        <translation type="vanished">Vindu‑behandler: KWin (KDE)</translation>
-    </message>
-    <message>
-        <source>Window Manager: Xfwm4 (XFCE)</source>
-        <translation type="vanished">Vindu‑behandler: Xfwm4 (XFCE)</translation>
-    </message>
-    <message>
-        <source>Window Manager: Marco (MATE)</source>
-        <translation type="vanished">Vindu‑behandler: Marco (MATE)</translation>
-    </message>
-    <message>
-        <source>Window Manager: Muffin (Cinnamon)</source>
-        <translation type="vanished">Vindu‑behandler: Muffin (Cinnamon)</translation>
-    </message>
-    <message>
-        <source>Window Manager: Openbox (LXDE)</source>
-        <translation type="vanished">Vindu‑behandler: Openbox (LXDE)</translation>
     </message>
     <message>
         <location filename="../lsv.cpp" line="130"/>

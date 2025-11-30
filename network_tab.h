@@ -146,7 +146,7 @@ private:
             // Create table for this device
             QTableWidget* deviceTable = new QTableWidget();
             deviceTable->setColumnCount(2);
-            deviceTable->setHorizontalHeaderLabels(QStringList() << "Property" << "Value");
+            deviceTable->setHorizontalHeaderLabels(QStringList() << tr("Property") << tr("Value"));
             deviceTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Interactive);
             deviceTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
             deviceTable->setColumnWidth(0, 200);
@@ -266,12 +266,12 @@ private:
         };
         
         // Interface details
-        addRow("Interface Name", interface.name());
+        addRow(tr("Interface Name"), interface.name());
         
         // MAC Address
         QString macAddress = interface.hardwareAddress();
         if (!macAddress.isEmpty()) {
-            addRow("MAC Address", macAddress);
+            addRow(tr("MAC Address"), macAddress);
         }
         
         // IP Addresses
@@ -279,16 +279,16 @@ private:
         for (const QNetworkAddressEntry& entry : addresses) {
             QHostAddress ip = entry.ip();
             if (ip.protocol() == QAbstractSocket::IPv4Protocol) {
-                addRow("IPv4 Address", ip.toString());
+                addRow(tr("IPv4 Address"), ip.toString());
             } else if (ip.protocol() == QAbstractSocket::IPv6Protocol) {
-                addRow("IPv6 Address", ip.toString());
+                addRow(tr("IPv6 Address"), ip.toString());
             }
         }
         
         // MTU
         int mtu = interface.maximumTransmissionUnit();
         if (mtu > 0) {
-            addRow("MTU", QString("%1 bytes").arg(mtu));
+            addRow(tr("MTU"), tr("%1 bytes").arg(mtu));
         }
         
         // Get default gateway for active interfaces
@@ -301,7 +301,7 @@ private:
             QRegularExpression gwRx("default via ([0-9.]+)");
             QRegularExpressionMatch gwMatch = gwRx.match(routeOutput);
             if (gwMatch.hasMatch()) {
-                addRow("Default Gateway", gwMatch.captured(1));
+                addRow(tr("Default Gateway"), gwMatch.captured(1));
             }
         }
         
