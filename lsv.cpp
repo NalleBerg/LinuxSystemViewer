@@ -147,12 +147,13 @@ static QString translateTabName(const QString &name)
 static QMap<QString, QString> shippedLanguageDisplayNames()
 {
     QMap<QString, QString> m;
-    // Ship English (UK), German, Spanish, French, Norwegian Bokmål, and Icelandic in the UI list.
+    // Ship English (UK), German, Spanish, French, Norwegian Bokmål, Icelandic, and Greek in the UI list.
     // The repository and packaging contain these translators
     // and the application presents these languages to users.
     m.insert("en_GB", "English (UK)");
     m.insert("en", "English (UK)");
     m.insert("de", "Deutsch");
+    m.insert("el", "Ελληνικά");
     m.insert("es", "Español");
     m.insert("fr", "Français");
     m.insert("nb", "Norsk (Bokmål)");
@@ -1484,9 +1485,9 @@ int main(int argc, char *argv[])
     QObject::connect(changeLangAct, &QAction::triggered, [&mainWindow, &settings, &applyLanguage]() {
         QMap<QString, QString> names = shippedLanguageDisplayNames();
         // All supported languages sorted alphabetically by display name:
-        // Deutsch, English (UK), Español, Français, Íslenska, Norsk (Bokmål)
+        // Deutsch, Ελληνικά, English (UK), Español, Français, Íslenska, Norsk (Bokmål)
         QStringList codes;
-        codes << "de" << "en_GB" << "es" << "fr" << "is" << "nb";
+        codes << "de" << "el" << "en_GB" << "es" << "fr" << "is" << "nb";
         QStringList choices;
         for (const QString &c : codes) choices << names.value(c, c);
 
