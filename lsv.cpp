@@ -147,16 +147,16 @@ static QString translateTabName(const QString &name)
 static QMap<QString, QString> shippedLanguageDisplayNames()
 {
     QMap<QString, QString> m;
-    // Ship only English (UK) and Norwegian Bokmål in the UI list.
-    // The repository and packaging contain only these two translators
-    // and the application should not present other languages here.
+    // Ship English (UK), German, Spanish, French, Norwegian Bokmål, and Icelandic in the UI list.
+    // The repository and packaging contain these translators
+    // and the application presents these languages to users.
     m.insert("en_GB", "English (UK)");
     m.insert("en", "English (UK)");
+    m.insert("de", "Deutsch");
+    m.insert("es", "Español");
+    m.insert("fr", "Français");
     m.insert("nb", "Norsk (Bokmål)");
-    // Only present English (UK) and Norwegian Bokmål in the shipped
-    // language list shown to users. Icelandic translations are not
-    // included in the default published chooser (they live in
-    // i18n_pending for now).
+    m.insert("is", "Íslenska");
     return m;
 }
 
@@ -840,7 +840,12 @@ int main(int argc, char *argv[])
     // the authoritative language choice for this run/location. Do not
     // fall back to any other location.
     QString rcPrimary = readLangRcPrimary();
-    if (!rcPrimary.isEmpty()) savedLang = rcPrimary;
+    if (!rcPrimary.isEmpty()) {
+        savedLang = rcPrimary;
+    } else {
+        // If no primary RC, check user settings
+        savedLang = settings.value("language", QString()).toString();
+    }
 
     // Discover shipped languages and build a CLI-friendly list
     QStringList shipped = discoverShippedLanguageCodes();
@@ -1401,7 +1406,8 @@ int main(int argc, char *argv[])
             QLabel* indicator = mb->findChild<QLabel*>("langIndicator");
                 if (indicator) {
                     QMap<QString, QString> names2 = shippedLanguageDisplayNames();
-                    QString display = names2.value(settings.value("language", QString("en")).toString(), code);
+                    QString currentLang = settings.value("language", QString("en")).toString();
+                    QString display = names2.value(currentLang, currentLang);
                     indicator->setText(display);
                 }
         }
@@ -1477,9 +1483,10 @@ int main(int argc, char *argv[])
 
     QObject::connect(changeLangAct, &QAction::triggered, [&mainWindow, &settings, &applyLanguage]() {
         QMap<QString, QString> names = shippedLanguageDisplayNames();
-        // For the published build only offer English (UK) and Norwegian Bokmål
+        // All supported languages sorted alphabetically by display name:
+        // Deutsch, English (UK), Español, Français, Íslenska, Norsk (Bokmål)
         QStringList codes;
-        codes << "en_GB" << "nb";
+        codes << "de" << "en_GB" << "es" << "fr" << "is" << "nb";
         QStringList choices;
         for (const QString &c : codes) choices << names.value(c, c);
 
@@ -1494,13 +1501,6 @@ int main(int argc, char *argv[])
 
         bool ok = false;
         QString labelText = QObject::tr("Language:");
-        // If current language is not one of the visible choices, show it
-        // in the label so the user knows what is currently active.
-        if (!codes.contains(curLang)) {
-            QMap<QString, QString> namesLocal = shippedLanguageDisplayNames();
-            QString curName = namesLocal.value(curLang, curLang);
-            labelText = QObject::tr("Current: %1\n%2").arg(curName, QObject::tr("Language:"));
-        }
         QString pick = QInputDialog::getItem(nullptr, QObject::tr("Choose language"), labelText, choices, defaultIndex, false, &ok);
         if (!ok || pick.isEmpty()) return;
         int idx = choices.indexOf(pick);

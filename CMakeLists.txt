@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(LSV VERSION 0.18.6)
+project(LSV VERSION 0.20.0)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -90,10 +90,7 @@ set(LSV_I18N_FILES)
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/i18n")
     file(GLOB QM_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/i18n "${CMAKE_CURRENT_SOURCE_DIR}/i18n/*.qm")
     if(QM_FILES)
-        # Exclude work-in-progress translations from the release bundle.
-        # Icelandic is placed in i18n_pending for now and must not be
-        # embedded into the release resources.
-        list(REMOVE_ITEM QM_FILES "lsv_is.qm")
+        # Include all available translations in the release bundle
         foreach(qm ${QM_FILES})
             list(APPEND LSV_I18N_FILES "i18n/${qm}")
         endforeach()
