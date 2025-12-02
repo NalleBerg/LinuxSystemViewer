@@ -97,7 +97,40 @@ OSTab::OSTab(const QString& tabName, const QString& command, bool showHeader, co
                 QString k = line.section('=', 0, 0).trimmed();
                 QString v = line.section('=', 1).trimmed();
                 if (v.startsWith('"') && v.endsWith('"')) v = v.mid(1, v.size()-2);
-                osOutput += QString("%1: %2\n").arg(k, v);
+                
+                // Translate standard os-release property names for normal users
+                QString translatedKey = k;
+                if (k == "NAME") {
+                    translatedKey = tr("Distribution Name");
+                } else if (k == "VERSION") {
+                    translatedKey = tr("Distribution Version");
+                } else if (k == "ID") {
+                    translatedKey = tr("Distribution ID");
+                } else if (k == "VERSION_ID") {
+                    translatedKey = tr("Version ID");
+                } else if (k == "PRETTY_NAME") {
+                    translatedKey = tr("Full Name");
+                } else if (k == "VERSION_CODENAME") {
+                    translatedKey = tr("Version Codename");
+                } else if (k == "UBUNTU_CODENAME") {
+                    translatedKey = tr("Ubuntu Codename");
+                } else if (k == "HOME_URL") {
+                    translatedKey = tr("Home Page");
+                } else if (k == "SUPPORT_URL") {
+                    translatedKey = tr("Support Page");
+                } else if (k == "BUG_REPORT_URL") {
+                    translatedKey = tr("Bug Report Page");
+                } else if (k == "PRIVACY_POLICY_URL") {
+                    translatedKey = tr("Privacy Policy");
+                } else if (k == "BUILD_ID") {
+                    translatedKey = tr("Build ID");
+                } else if (k == "VARIANT") {
+                    translatedKey = tr("Variant");
+                } else if (k == "VARIANT_ID") {
+                    translatedKey = tr("Variant ID");
+                }
+                
+                osOutput += QString("%1: %2\n").arg(translatedKey, v);
             }
         }
         osReleaseFile.close();

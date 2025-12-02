@@ -58,7 +58,7 @@ Platform: Linux</source>
     <message>
         <location filename="../about_tab.cpp" line="641"/>
         <source>Open Web Page</source>
-        <translation type="unfinished"></translation>
+        <translation>Opna vefsíðu</translation>
     </message>
     <message>
         <location filename="../about_tab.cpp" line="645"/>
@@ -70,17 +70,17 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</sou
     <message>
         <location filename="../about_tab.cpp" line="651"/>
         <source>Copy URL</source>
-        <translation type="unfinished"></translation>
+        <translation>Afrita vefslóð</translation>
     </message>
     <message>
         <location filename="../about_tab.cpp" line="664"/>
         <source>Copied</source>
-        <translation type="unfinished"></translation>
+        <translation>Afritað</translation>
     </message>
     <message>
         <location filename="../about_tab.cpp" line="664"/>
         <source>The URL was copied to the clipboard!</source>
-        <translation type="unfinished"></translation>
+        <translation>Vefslóðin var afrituð á klippispjöld!</translation>
     </message>
     <message>
         <location filename="../about_tab.cpp" line="696"/>
@@ -90,12 +90,12 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</sou
     <message>
         <location filename="../about_tab.cpp" line="699"/>
         <source>GNU GPL v2</source>
-        <translation type="unfinished"></translation>
+        <translation>GNU GPL 2. útgáfa</translation>
     </message>
     <message>
         <location filename="../lsv.cpp" line="141"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Um</translation>
     </message>
 </context>
 <context>
@@ -103,37 +103,37 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</sou
     <message>
         <location filename="../audio_tab.cpp" line="566"/>
         <source>Audio - Geek Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Hljóð - Tæknihamur</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="571"/>
         <source>Audio System Technical Details</source>
-        <translation type="unfinished"></translation>
+        <translation>Tæknilegar upplýsingar hljóðkerfis</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="577"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation>Eiginleiki</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="577"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation>Gildi</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="592"/>
         <source>Rescan</source>
-        <translation type="unfinished"></translation>
+        <translation>Endurskanna</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="597"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Afrita</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="598"/>
         <source>Save...</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista...</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="607"/>
@@ -143,33 +143,34 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</sou
     <message>
         <location filename="../audio_tab.cpp" line="635"/>
         <source>Rescanning audio devices, please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>Endurskanna hljóðtæki, vinsamlegast bikið...</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="636"/>
         <source>Rescanning</source>
-        <translation type="unfinished"></translation>
+        <translation>Endurskanna</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="667"/>
         <source>Copied</source>
-        <translation type="unfinished"></translation>
+        <translation>Afritað</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="668"/>
         <source>The information has been copied
 to the clipboard.</source>
-        <translation type="unfinished"></translation>
+        <translation>Upplýsingarnar hafa verið afritaðar
+á klippispjöld.</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="676"/>
         <source>Save Audio Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista hljóðupplýsingar</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="676"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>CSV skjöl (*.csv);;Öll skjöl (*)</translation>
     </message>
 </context>
 <context>
@@ -183,57 +184,57 @@ to the clipboard.</source>
     <message>
         <location filename="../audio_tab.cpp" line="55"/>
         <source>Sound-test</source>
-        <translation type="unfinished"></translation>
+        <translation>Hljóðprófun</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="67"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation>Eiginleiki</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="67"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation>Gildi</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="115"/>
         <source>Scanning audio devices, please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>Skanna hljóðtæki, vinsamlegast bíðið...</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="116"/>
         <source>Loading</source>
-        <translation type="unfinished"></translation>
+        <translation>Hleð</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="147"/>
         <source>Audio Test</source>
-        <translation type="unfinished"></translation>
+        <translation>Hljóðprófun</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="153"/>
         <source>Testing audio output with generated tones:</source>
-        <translation type="unfinished"></translation>
+        <translation>Prófa hljóðúttak með búnnum tónum:</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="165"/>
         <source>Stop</source>
-        <translation type="unfinished"></translation>
+        <translation>Stoppa</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="180"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="494"/>
         <source>Audio Server</source>
-        <translation type="unfinished"></translation>
+        <translation>Hljóðþjónn</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="502"/>
         <source>Default Output</source>
-        <translation type="unfinished"></translation>
+        <translation>Sjálfgefið úttak</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="511"/>
@@ -243,12 +244,12 @@ to the clipboard.</source>
     <message>
         <location filename="../audio_tab.cpp" line="528"/>
         <source>Sound Card %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Hljóðkort %1</translation>
     </message>
     <message>
         <location filename="../audio_tab.cpp" line="553"/>
         <source>Playback Device %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Spiölúnarstæki %1</translation>
     </message>
 </context>
 <context>
@@ -257,23 +258,23 @@ to the clipboard.</source>
         <location filename="../cpu_tab.cpp" line="30"/>
         <location filename="../lsv.cpp" line="137"/>
         <source>CPU</source>
-        <translation type="unfinished"></translation>
+        <translation>Örgjörvi</translation>
     </message>
     <message>
         <location filename="../cpu_tab.cpp" line="41"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation>Eiginleiki</translation>
     </message>
     <message>
         <location filename="../cpu_tab.cpp" line="41"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation>Gildi</translation>
     </message>
     <message>
         <location filename="../cpu_tab.cpp" line="367"/>
         <location filename="../cpu_tab.cpp" line="406"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>Óþekkt</translation>
     </message>
     <message>
         <location filename="../cpu_tab.cpp" line="436"/>
@@ -309,32 +310,32 @@ to the clipboard.</source>
     <message>
         <location filename="../cpu_tab.cpp" line="113"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
         <location filename="../cpu_tab.cpp" line="113"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
     <message>
         <location filename="../cpu_tab.cpp" line="127"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Afrita</translation>
     </message>
     <message>
         <location filename="../cpu_tab.cpp" line="128"/>
         <source>Save...</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista...</translation>
     </message>
     <message>
         <location filename="../cpu_tab.cpp" line="137"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../cpu_tab.cpp" line="155"/>
         <source>Copied</source>
-        <translation type="unfinished"></translation>
+        <translation>Afritað</translation>
     </message>
     <message>
         <location filename="../cpu_tab.cpp" line="156"/>
@@ -350,12 +351,12 @@ to the clipboard.</source>
     <message>
         <location filename="../cpu_tab.cpp" line="168"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>CSV skjöl (*.csv);;Öll skjöl (*)</translation>
     </message>
     <message>
         <location filename="../cpu_tab.cpp" line="255"/>
         <source>Model</source>
-        <translation type="unfinished"></translation>
+        <translation>Tegund</translation>
     </message>
     <message>
         <location filename="../cpu_tab.cpp" line="255"/>
@@ -364,7 +365,7 @@ to the clipboard.</source>
         <location filename="../cpu_tab.cpp" line="287"/>
         <location filename="../cpu_tab.cpp" line="288"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Óþekkt</translation>
     </message>
     <message>
         <location filename="../cpu_tab.cpp" line="284"/>
@@ -379,7 +380,7 @@ to the clipboard.</source>
     <message>
         <location filename="../cpu_tab.cpp" line="287"/>
         <source>CPU Cores</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Örgjörva kjarnar</translation>
     </message>
     <message>
         <location filename="../cpu_tab.cpp" line="288"/>
@@ -449,32 +450,32 @@ to the clipboard.</source>
     <message>
         <location filename="../graphics_tab.cpp" line="95"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
         <location filename="../graphics_tab.cpp" line="95"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
     <message>
         <location filename="../graphics_tab.cpp" line="110"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Afrita</translation>
     </message>
     <message>
         <location filename="../graphics_tab.cpp" line="111"/>
         <source>Save...</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista...</translation>
     </message>
     <message>
         <location filename="../graphics_tab.cpp" line="120"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../graphics_tab.cpp" line="137"/>
         <source>Copied</source>
-        <translation type="unfinished"></translation>
+        <translation>Afritað</translation>
     </message>
     <message>
         <location filename="../graphics_tab.cpp" line="138"/>
@@ -495,27 +496,27 @@ to the clipboard.</source>
     <message>
         <location filename="../graphics_tab.cpp" line="189"/>
         <source>=== PCI GRAPHICS DEVICES ===</source>
-        <translation type="unfinished"></translation>
+        <translation>=== PCI SKJÁKORT ===</translation>
     </message>
     <message>
         <location filename="../graphics_tab.cpp" line="204"/>
         <source>PCI Device</source>
-        <translation type="unfinished"></translation>
+        <translation>PCI tæki</translation>
     </message>
     <message>
         <location filename="../graphics_tab.cpp" line="205"/>
         <source>Device Class</source>
-        <translation type="unfinished"></translation>
+        <translation>Tækisteig</translation>
     </message>
     <message>
         <location filename="../graphics_tab.cpp" line="229"/>
         <source>Current Driver</source>
-        <translation type="unfinished"></translation>
+        <translation>Núverandi rekill</translation>
     </message>
     <message>
         <location filename="../graphics_tab.cpp" line="237"/>
         <source>uevent</source>
-        <translation type="unfinished"></translation>
+        <translation>uevent</translation>
     </message>
     <message>
         <location filename="../graphics_tab.cpp" line="245"/>
@@ -525,17 +526,17 @@ to the clipboard.</source>
     <message>
         <location filename="../graphics_tab.cpp" line="252"/>
         <source>=== DRM/DRI INFORMATION ===</source>
-        <translation type="unfinished"></translation>
+        <translation>=== DRM/DRI UPPLÝSINGAR ===</translation>
     </message>
     <message>
         <location filename="../graphics_tab.cpp" line="260"/>
         <source>DRM Card</source>
-        <translation type="unfinished"></translation>
+        <translation>DRM kort</translation>
     </message>
     <message>
         <location filename="../graphics_tab.cpp" line="265"/>
         <source>Device uevent</source>
-        <translation type="unfinished"></translation>
+        <translation>Tæki uevent</translation>
     </message>
     <message>
         <location filename="../graphics_tab.cpp" line="275"/>
@@ -628,32 +629,32 @@ to the clipboard.</source>
     <message>
         <location filename="../memory_tab.cpp" line="214"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
         <location filename="../memory_tab.cpp" line="214"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
     <message>
         <location filename="../memory_tab.cpp" line="255"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Afrita</translation>
     </message>
     <message>
         <location filename="../memory_tab.cpp" line="256"/>
         <source>Save...</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista...</translation>
     </message>
     <message>
         <location filename="../memory_tab.cpp" line="265"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../memory_tab.cpp" line="279"/>
         <source>Copied</source>
-        <translation type="unfinished"></translation>
+        <translation>Afritað</translation>
     </message>
     <message>
         <location filename="../memory_tab.cpp" line="280"/>
@@ -664,12 +665,12 @@ to the clipboard.</source>
     <message>
         <location filename="../memory_tab.cpp" line="287"/>
         <source>Save Memory Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista minnisupp­singar</translation>
     </message>
     <message>
         <location filename="../memory_tab.cpp" line="287"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>CSV skjöl (*.csv);;Öll skjöl (*)</translation>
     </message>
     <message>
         <location filename="../memory_tab.cpp" line="370"/>
@@ -682,7 +683,7 @@ to the clipboard.</source>
         <location filename="../memory_tab.cpp" line="372"/>
         <location filename="../memory_tab.cpp" line="373"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Óþekkt</translation>
     </message>
     <message>
         <location filename="../memory_tab.cpp" line="371"/>
@@ -790,32 +791,32 @@ to the clipboard.</source>
     <message>
         <location filename="../motherboard_tab.cpp" line="95"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
         <location filename="../motherboard_tab.cpp" line="95"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
     <message>
         <location filename="../motherboard_tab.cpp" line="110"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Afrita</translation>
     </message>
     <message>
         <location filename="../motherboard_tab.cpp" line="111"/>
         <source>Save...</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista...</translation>
     </message>
     <message>
         <location filename="../motherboard_tab.cpp" line="120"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../motherboard_tab.cpp" line="138"/>
         <source>Copied</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Afritað</translation>
     </message>
     <message>
         <location filename="../motherboard_tab.cpp" line="139"/>
@@ -882,58 +883,58 @@ to the clipboard.</source>
 <context>
     <name>GeekOsDialog</name>
     <message>
-        <location filename="../os_tab.cpp" line="205"/>
+        <location filename="../os_tab.cpp" line="238"/>
         <source>OS - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="210"/>
+        <location filename="../os_tab.cpp" line="243"/>
         <source>OS Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="216"/>
+        <location filename="../os_tab.cpp" line="249"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="216"/>
+        <location filename="../os_tab.cpp" line="249"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="233"/>
+        <location filename="../os_tab.cpp" line="266"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Afrita</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="234"/>
+        <location filename="../os_tab.cpp" line="267"/>
         <source>Save...</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista...</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="243"/>
+        <location filename="../os_tab.cpp" line="276"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Loka</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="261"/>
+        <location filename="../os_tab.cpp" line="294"/>
         <source>Copied</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Afritað</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="262"/>
+        <location filename="../os_tab.cpp" line="295"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="270"/>
+        <location filename="../os_tab.cpp" line="303"/>
         <source>Save OS Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="270"/>
+        <location filename="../os_tab.cpp" line="303"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -953,32 +954,32 @@ to the clipboard.</source>
     <message>
         <location filename="../pc_tab.cpp" line="172"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="172"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="187"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Afrita</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="188"/>
         <source>Save...</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista...</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="197"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="215"/>
         <source>Copied</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Afritað</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="216"/>
@@ -1042,73 +1043,74 @@ to the clipboard.</source>
     <message>
         <location filename="../peripherals_tab.cpp" line="379"/>
         <source>Peripherals - Geek Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Jaðartæki - Tæknihamur</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="384"/>
         <source>Peripherals Technical Details</source>
-        <translation type="unfinished"></translation>
+        <translation>Tæknilegar upplýsingar um jaðartæki</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="390"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation>Eiginleiki</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="390"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation>Gildi</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="406"/>
         <source>Rescan</source>
-        <translation type="unfinished"></translation>
+        <translation>Endurskanna</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="412"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Afrita</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="413"/>
         <source>Save...</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista...</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="417"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="426"/>
         <source>Rescanning peripherals, please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>Endurskanna jaðartæki, vinsamlegast bíðið...</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="427"/>
         <source>Rescanning</source>
-        <translation type="unfinished"></translation>
+        <translation>Endurskanna</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="461"/>
         <source>Copied</source>
-        <translation type="unfinished"></translation>
+        <translation>Afritað</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="462"/>
         <source>The information has been copied
 to the clipboard.</source>
-        <translation type="unfinished"></translation>
+        <translation>Upplýsingarnar hafa verið afritaðar
+á klemmuspjöld.</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="470"/>
         <source>Save Peripherals Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista upplýsingar um jaðartæki</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="470"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>CSV skrár (*.csv);;Allar skrár (*)</translation>
     </message>
 </context>
 <context>
@@ -1126,32 +1128,32 @@ to the clipboard.</source>
     <message>
         <location filename="../ports_tab.cpp" line="264"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
         <location filename="../ports_tab.cpp" line="264"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
     <message>
         <location filename="../ports_tab.cpp" line="279"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Afrita</translation>
     </message>
     <message>
         <location filename="../ports_tab.cpp" line="280"/>
         <source>Save...</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista...</translation>
     </message>
     <message>
         <location filename="../ports_tab.cpp" line="289"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../ports_tab.cpp" line="306"/>
         <source>Copied</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Afritað</translation>
     </message>
     <message>
         <location filename="../ports_tab.cpp" line="307"/>
@@ -1177,7 +1179,7 @@ to the clipboard.</source>
     <message>
         <location filename="../ports_tab.cpp" line="389"/>
         <source>Device</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tæki</translation>
     </message>
     <message>
         <location filename="../ports_tab.cpp" line="413"/>
@@ -1197,7 +1199,7 @@ to the clipboard.</source>
     <message>
         <location filename="../ports_tab.cpp" line="457"/>
         <source>PCI Device</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">PCI tæki</translation>
     </message>
     <message>
         <location filename="../ports_tab.cpp" line="487"/>
@@ -1235,32 +1237,32 @@ to the clipboard.</source>
     <message>
         <location filename="../screen_tab.cpp" line="125"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
         <location filename="../screen_tab.cpp" line="125"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
     <message>
         <location filename="../screen_tab.cpp" line="141"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Afrita</translation>
     </message>
     <message>
         <location filename="../screen_tab.cpp" line="142"/>
         <source>Save...</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista...</translation>
     </message>
     <message>
         <location filename="../screen_tab.cpp" line="151"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../screen_tab.cpp" line="169"/>
         <source>Copied</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Afritað</translation>
     </message>
     <message>
         <location filename="../screen_tab.cpp" line="170"/>
@@ -1449,32 +1451,32 @@ to the clipboard.</source>
     <message>
         <location filename="../storage_tab.cpp" line="599"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
         <location filename="../storage_tab.cpp" line="599"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
     <message>
         <location filename="../storage_tab.cpp" line="613"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Afrita</translation>
     </message>
     <message>
         <location filename="../storage_tab.cpp" line="614"/>
         <source>Save...</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista...</translation>
     </message>
     <message>
         <location filename="../storage_tab.cpp" line="623"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../storage_tab.cpp" line="641"/>
         <source>Copied</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Afritað</translation>
     </message>
     <message>
         <location filename="../storage_tab.cpp" line="642"/>
@@ -1504,12 +1506,12 @@ to the clipboard.</source>
     <message>
         <location filename="../graphics_tab.cpp" line="41"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation>Eiginleiki</translation>
     </message>
     <message>
         <location filename="../graphics_tab.cpp" line="41"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation>Gildi</translation>
     </message>
 </context>
 <context>
@@ -1523,17 +1525,17 @@ to the clipboard.</source>
     <message>
         <location filename="../memory_tab.cpp" line="33"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation>Eiginleiki</translation>
     </message>
     <message>
         <location filename="../memory_tab.cpp" line="33"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation>Gildi</translation>
     </message>
     <message>
         <location filename="../memory_tab.cpp" line="98"/>
         <source>RAM Total</source>
-        <translation type="unfinished"></translation>
+        <translation>Vinnsluminni samtals</translation>
     </message>
     <message>
         <location filename="../memory_tab.cpp" line="106"/>
@@ -1549,12 +1551,12 @@ to the clipboard.</source>
     <message>
         <location filename="../memory_tab.cpp" line="128"/>
         <source>SWAP Total</source>
-        <translation type="unfinished"></translation>
+        <translation>Skiptiminni samtals</translation>
     </message>
     <message>
         <location filename="../memory_tab.cpp" line="134"/>
         <source>SWAP Usage</source>
-        <translation type="unfinished"></translation>
+        <translation>Skiptiminni notkun</translation>
     </message>
 </context>
 <context>
@@ -1563,17 +1565,17 @@ to the clipboard.</source>
         <location filename="../lsv.cpp" line="138"/>
         <location filename="../motherboard_tab.cpp" line="30"/>
         <source>Motherboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Móðurborð</translation>
     </message>
     <message>
         <location filename="../motherboard_tab.cpp" line="41"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
         <location filename="../motherboard_tab.cpp" line="41"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
 </context>
 <context>
@@ -1591,32 +1593,32 @@ to the clipboard.</source>
     <message>
         <location filename="../network_geek.cpp" line="37"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
         <location filename="../network_geek.cpp" line="37"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
     <message>
         <location filename="../network_geek.cpp" line="51"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Afrita</translation>
     </message>
     <message>
         <location filename="../network_geek.cpp" line="52"/>
         <source>Save...</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista...</translation>
     </message>
     <message>
         <location filename="../network_geek.cpp" line="61"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../network_geek.cpp" line="228"/>
         <source>Copied</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Afritað</translation>
     </message>
     <message>
         <location filename="../network_geek.cpp" line="229"/>
@@ -1642,37 +1644,37 @@ to the clipboard.</source>
         <location filename="../network_tab.h" line="37"/>
         <location filename="../network_tab.h" line="73"/>
         <source>Network</source>
-        <translation>Net</translation>
+        <translation>Netkerfi</translation>
     </message>
     <message>
         <location filename="../network_tab.h" line="149"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation>Eiginleiki</translation>
     </message>
     <message>
         <location filename="../network_tab.h" line="149"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation>Gildi</translation>
     </message>
     <message>
         <location filename="../network_tab.h" line="269"/>
         <source>Interface Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Tengiheiti</translation>
     </message>
     <message>
         <location filename="../network_tab.h" line="274"/>
         <source>MAC Address</source>
-        <translation type="unfinished"></translation>
+        <translation>MAC vistfang</translation>
     </message>
     <message>
         <location filename="../network_tab.h" line="282"/>
         <source>IPv4 Address</source>
-        <translation type="unfinished"></translation>
+        <translation>IPv4 vistfang</translation>
     </message>
     <message>
         <location filename="../network_tab.h" line="284"/>
         <source>IPv6 Address</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">IPv4 vistfang {6 ?}</translation>
     </message>
     <message>
         <location filename="../network_tab.h" line="291"/>
@@ -1695,28 +1697,99 @@ to the clipboard.</source>
     <message>
         <location filename="../lsv.cpp" line="126"/>
         <source>OS</source>
-        <translation type="unfinished"></translation>
+        <translation>Styðrikerfi</translation>
     </message>
     <message>
         <location filename="../os_tab.cpp" line="40"/>
         <source>Operating System</source>
-        <translation type="unfinished"></translation>
+        <translation>Stýrikerfi</translation>
     </message>
     <message>
         <location filename="../os_tab.cpp" line="47"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation>Eiginleiki</translation>
     </message>
     <message>
         <location filename="../os_tab.cpp" line="47"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation>Gildi</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="134"/>
+        <location filename="../os_tab.cpp" line="104"/>
+        <source>Distribution Name</source>
+        <translation>Dreifingarnafn</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="106"/>
+        <source>Distribution Version</source>
+        <translation>Dreifingarútgáfa</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="108"/>
+        <source>Distribution ID</source>
+        <translation>Dreifingarkóði</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="110"/>
+        <source>Version ID</source>
+        <translation>Útgáfukóði</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="112"/>
+        <source>Full Name</source>
+        <translation>Fullt nafn</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="114"/>
+        <source>Version Codename</source>
+        <translation>Útgáfunafn</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="116"/>
+        <source>Ubuntu Codename</source>
+        <translation>Ubuntu nöfn</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="118"/>
+        <source>Home Page</source>
+        <translation>Heimasíða</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="120"/>
+        <source>Support Page</source>
+        <translation>Stuðningssíða</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="122"/>
+        <source>Bug Report Page</source>
+        <translation>Villuskýrslasíða</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="124"/>
+        <source>Privacy Policy</source>
+        <translation>Persónuverndarstefna</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="126"/>
+        <source>Build ID</source>
+        <translation>Smíðakóði</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="128"/>
+        <source>Variant</source>
+        <translation>Afbrigði</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="130"/>
+        <source>Variant ID</source>
+        <translation>Afbrigðakóði</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="167"/>
         <source>uname: %1
 </source>
-        <translation type="unfinished"></translation>
+        <translation>uname: %1
+</translation>
     </message>
 </context>
 <context>
@@ -1725,62 +1798,62 @@ to the clipboard.</source>
         <location filename="../lsv.cpp" line="140"/>
         <location filename="../pc_tab.cpp" line="27"/>
         <source>PC Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Tölvu upplýsingar</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="38"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation>Eiginleiki</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="38"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation>Gildi</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="138"/>
         <source>Computer Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Tölvuheiti</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="139"/>
         <source>PC Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Tölvutýpa</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="140"/>
         <source>Manufacturer</source>
-        <translation type="unfinished"></translation>
+        <translation>Framleiðandi</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="141"/>
         <source>Product Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Afurlarheiti</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="142"/>
         <source>Product Family</source>
-        <translation type="unfinished"></translation>
+        <translation>Afurlaætt</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="143"/>
         <source>Version</source>
-        <translation type="unfinished"></translation>
+        <translation>Útgáfa</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="144"/>
         <source>Serial Number</source>
-        <translation type="unfinished"></translation>
+        <translation>Raðnúmer</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="145"/>
         <source>SKU Number</source>
-        <translation type="unfinished"></translation>
+        <translation>SKU númer</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="146"/>
         <source>UUID</source>
-        <translation type="unfinished"></translation>
+        <translation>UUID</translation>
     </message>
 </context>
 <context>
@@ -1789,122 +1862,122 @@ to the clipboard.</source>
         <location filename="../lsv.cpp" line="135"/>
         <location filename="../peripherals_tab.cpp" line="36"/>
         <source>Peripherals</source>
-        <translation type="unfinished"></translation>
+        <translation>Jaðartæki</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="47"/>
         <source>Device Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Tækistýpa</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="47"/>
         <source>Device Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Tækisnafn</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="161"/>
         <source>Mouse/Pointing</source>
-        <translation type="unfinished"></translation>
+        <translation>Mús/Bendiltæki</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="163"/>
         <source>Keyboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Lyklaborð</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="168"/>
         <source>Camera</source>
-        <translation type="unfinished"></translation>
+        <translation>Myndavél</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="170"/>
         <source>Camera (Disabled)</source>
-        <translation type="unfinished"></translation>
+        <translation>Myndavél (afgerð)</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="174"/>
         <source>Printer (USB)</source>
-        <translation type="unfinished"></translation>
+        <translation>Prentari (USB)</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="181"/>
         <source>Mobile Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Færilegt tæki</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="187"/>
         <source>Network Adapter</source>
-        <translation type="unfinished"></translation>
+        <translation>Netmillistykki</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="195"/>
         <source>Storage Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Geymslumiðill</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="201"/>
         <source>Audio Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Hljóðtæki</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="207"/>
         <source>Game Controller</source>
-        <translation type="unfinished"></translation>
+        <translation>Tölvuleikjastjorn</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="209"/>
         <source>Scanner</source>
-        <translation type="unfinished"></translation>
+        <translation>Skanni</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="213"/>
         <source>Drawing Tablet</source>
-        <translation type="unfinished"></translation>
+        <translation>Teiknitafla</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="216"/>
         <source>Wireless Receiver</source>
-        <translation type="unfinished"></translation>
+        <translation>Þáðlaus viðtakari</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="218"/>
         <source>USB Hub</source>
-        <translation type="unfinished"></translation>
+        <translation>USB miðstöð</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="221"/>
         <source>Card Reader</source>
-        <translation type="unfinished"></translation>
+        <translation>Kortalesari</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="226"/>
         <source>Serial Adapter</source>
-        <translation type="unfinished"></translation>
+        <translation>Raðmillistykki</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="229"/>
         <source>USB Device</source>
-        <translation type="unfinished"></translation>
+        <translation>USB tæki</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="253"/>
         <source>Printer (Network/CUPS)</source>
-        <translation type="unfinished"></translation>
+        <translation>Prentari (Net/CUPS)</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="300"/>
         <source>External Display</source>
-        <translation type="unfinished"></translation>
+        <translation>Ytri skjár</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="349"/>
         <source>Scanning peripherals, please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>Skanna jaðartæki, vinsamlegast bíðið...</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="350"/>
         <source>Loading</source>
-        <translation type="unfinished"></translation>
+        <translation>Hleð</translation>
     </message>
 </context>
 <context>
@@ -1913,17 +1986,17 @@ to the clipboard.</source>
         <location filename="../lsv.cpp" line="134"/>
         <location filename="../ports_tab.cpp" line="24"/>
         <source>Ports</source>
-        <translation type="unfinished"></translation>
+        <translation>Gstjar</translation>
     </message>
     <message>
         <location filename="../ports_tab.cpp" line="35"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
         <location filename="../ports_tab.cpp" line="35"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
     <message>
         <location filename="../ports_tab.cpp" line="109"/>
@@ -1933,7 +2006,7 @@ to the clipboard.</source>
     <message>
         <location filename="../ports_tab.cpp" line="110"/>
         <source>USB Devices Connected</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">USB tæki tengd</translation>
     </message>
     <message>
         <location filename="../ports_tab.cpp" line="194"/>
@@ -1967,13 +2040,13 @@ to the clipboard.</source>
         <location filename="../cpu.h" line="26"/>
         <location filename="../graphics.h" line="27"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
         <location filename="../cpu.h" line="26"/>
         <location filename="../graphics.h" line="27"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
     <message>
         <location filename="../cpu.h" line="76"/>
@@ -2011,12 +2084,12 @@ to the clipboard.</source>
         <location filename="../cpu.h" line="169"/>
         <location filename="../cpu.h" line="179"/>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Óþekkt</translation>
     </message>
     <message>
         <location filename="../cpu.h" line="124"/>
         <source>Model</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tegund</translation>
     </message>
     <message>
         <location filename="../cpu.h" line="151"/>
@@ -2111,17 +2184,17 @@ to the clipboard.</source>
     <message>
         <location filename="../graphics.h" line="235"/>
         <source>Status</source>
-        <translation type="unfinished"></translation>
+        <translation>Staða</translation>
     </message>
     <message>
         <location filename="../graphics.h" line="235"/>
         <source>No graphics card detected</source>
-        <translation type="unfinished"></translation>
+        <translation>Ekkert skjákort fannst</translation>
     </message>
     <message>
         <location filename="../gui_helpers.h" line="554"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Afrita</translation>
     </message>
     <message>
         <location filename="../lsv.cpp" line="69"/>
@@ -2147,141 +2220,134 @@ to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="612"/>
+        <location filename="../lsv.cpp" line="613"/>
         <source>Cleaning up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="614"/>
+        <location filename="../lsv.cpp" line="615"/>
         <source>Cleaning up temporary files...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1054"/>
+        <location filename="../lsv.cpp" line="1060"/>
         <source>Cannot elevate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1054"/>
+        <location filename="../lsv.cpp" line="1060"/>
         <source>No terminal emulator found to prompt for a password.
 Please run the application as root.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1060"/>
+        <location filename="../lsv.cpp" line="1066"/>
         <source>Please enter password to run Linux System Viewer as root</source>
         <translation>Vinsamlegast sláðu inn lykilorð til að keyra Linux System Viewer sem stjórnandi</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1132"/>
+        <location filename="../lsv.cpp" line="1138"/>
         <source>Linux System Viewer %1</source>
         <translation>Linux System Viewer %1</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1189"/>
+        <location filename="../lsv.cpp" line="1195"/>
         <source>Authentication failed (%1/3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1223"/>
+        <location filename="../lsv.cpp" line="1229"/>
         <source>Elevation failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1223"/>
+        <location filename="../lsv.cpp" line="1229"/>
         <source>Failed to start a terminal to request sudo password. Please run the application as root.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1265"/>
-        <location filename="../lsv.cpp" line="1504"/>
+        <location filename="../lsv.cpp" line="1271"/>
+        <location filename="../lsv.cpp" line="1505"/>
         <source>Choose language</source>
         <translation>Veldu tungumál</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1265"/>
-        <location filename="../lsv.cpp" line="1496"/>
-        <location filename="../lsv.cpp" line="1502"/>
+        <location filename="../lsv.cpp" line="1271"/>
+        <location filename="../lsv.cpp" line="1504"/>
         <source>Language:</source>
         <translation>Tungumál:</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1276"/>
-        <location filename="../lsv.cpp" line="1512"/>
+        <location filename="../lsv.cpp" line="1282"/>
+        <location filename="../lsv.cpp" line="1513"/>
         <source>Language selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1276"/>
+        <location filename="../lsv.cpp" line="1282"/>
         <source>Failed to write language selection to %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1289"/>
-        <location filename="../lsv.cpp" line="1386"/>
+        <location filename="../lsv.cpp" line="1295"/>
+        <location filename="../lsv.cpp" line="1392"/>
         <source>Linux System Viewer V. %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1334"/>
-        <location filename="../lsv.cpp" line="1387"/>
+        <location filename="../lsv.cpp" line="1340"/>
+        <location filename="../lsv.cpp" line="1393"/>
         <source>Linux System Viewer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Linux System Viewer</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1353"/>
-        <location filename="../lsv.cpp" line="1388"/>
+        <location filename="../lsv.cpp" line="1359"/>
+        <location filename="../lsv.cpp" line="1394"/>
         <source>About Linux System Viewer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1395"/>
-        <location filename="../lsv.cpp" line="1457"/>
+        <location filename="../lsv.cpp" line="1401"/>
+        <location filename="../lsv.cpp" line="1464"/>
         <source>Language</source>
         <translation>Tungumál</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1397"/>
-        <location filename="../lsv.cpp" line="1459"/>
+        <location filename="../lsv.cpp" line="1403"/>
+        <location filename="../lsv.cpp" line="1466"/>
         <source>Change language...</source>
         <translation>Breyta tungumáli...</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1399"/>
-        <location filename="../lsv.cpp" line="1461"/>
-        <location filename="../lsv.cpp" line="1529"/>
-        <location filename="../lsv.cpp" line="1540"/>
+        <location filename="../lsv.cpp" line="1405"/>
+        <location filename="../lsv.cpp" line="1468"/>
+        <location filename="../lsv.cpp" line="1530"/>
+        <location filename="../lsv.cpp" line="1541"/>
         <source>Reset language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1502"/>
-        <source>Current: %1
-%2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../lsv.cpp" line="1512"/>
+        <location filename="../lsv.cpp" line="1513"/>
         <source>Failed to write language selection to configuration directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1522"/>
+        <location filename="../lsv.cpp" line="1523"/>
         <source>Language changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1522"/>
+        <location filename="../lsv.cpp" line="1523"/>
         <source>Language saved. UI updated to the selected language.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1529"/>
+        <location filename="../lsv.cpp" line="1530"/>
         <source>Failed to remove %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1540"/>
+        <location filename="../lsv.cpp" line="1541"/>
         <source>Saved language selection removed. The application is now using English.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2289,28 +2355,28 @@ Please run the application as root.</source>
         <location filename="../mainboard.h" line="117"/>
         <location filename="../mainboard.h" line="119"/>
         <source>Manufacturer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Framleiðandi</translation>
     </message>
     <message>
         <location filename="../mainboard.h" line="123"/>
         <location filename="../mainboard.h" line="125"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Heiti</translation>
     </message>
     <message>
         <location filename="../mainboard.h" line="129"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Tegund</translation>
     </message>
     <message>
         <location filename="../mainboard.h" line="133"/>
         <source>Version</source>
-        <translation type="unfinished"></translation>
+        <translation>Útgáfa</translation>
     </message>
     <message>
         <location filename="../mainboard.h" line="137"/>
         <source>Serial Number</source>
-        <translation type="unfinished"></translation>
+        <translation>Raðnúmer</translation>
     </message>
     <message>
         <location filename="../mainboard.h" line="161"/>
@@ -2379,17 +2445,17 @@ Please run the application as root.</source>
         <location filename="../lsv.cpp" line="133"/>
         <location filename="../screen_tab.cpp" line="26"/>
         <source>Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Skjár</translation>
     </message>
     <message>
         <location filename="../screen_tab.cpp" line="37"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
         <location filename="../screen_tab.cpp" line="37"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
     <message>
         <location filename="../screen_tab.cpp" line="89"/>
@@ -2399,7 +2465,7 @@ Please run the application as root.</source>
     <message>
         <location filename="../screen_tab.cpp" line="90"/>
         <source>Refresh Rate</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Endurnýjunartíðni</translation>
     </message>
     <message>
         <location filename="../screen_tab.cpp" line="91"/>
@@ -2414,7 +2480,7 @@ Please run the application as root.</source>
     <message>
         <location filename="../screen_tab.cpp" line="96"/>
         <source>Manufacturer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Framleiðandi</translation>
     </message>
     <message>
         <location filename="../screen_tab.cpp" line="99"/>
@@ -2454,17 +2520,17 @@ Please run the application as root.</source>
     <message>
         <location filename="../storage_tab.cpp" line="90"/>
         <source>Use%</source>
-        <translation type="unfinished"></translation>
+        <translation>Notkun%</translation>
     </message>
     <message>
         <location filename="../storage_tab.cpp" line="90"/>
         <source>Mount Point</source>
-        <translation type="unfinished"></translation>
+        <translation>Tengipunktur</translation>
     </message>
     <message>
         <location filename="../storage_tab.cpp" line="90"/>
         <source>Filesystem</source>
-        <translation type="unfinished"></translation>
+        <translation>Skráarkerfi</translation>
     </message>
     <message>
         <location filename="../storage_tab.cpp" line="308"/>
@@ -2513,72 +2579,72 @@ Please run the application as root.</source>
     <message>
         <location filename="../summary_tab.cpp" line="130"/>
         <source>CPU Cores</source>
-        <translation type="unfinished"></translation>
+        <translation>Örgjörva kjarnar</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="143"/>
         <source>Total Memory</source>
-        <translation type="unfinished"></translation>
+        <translation>Heildarminni</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="164"/>
         <source>System Uptime</source>
-        <translation type="unfinished"></translation>
+        <translation>Kerfisrekstrartími</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="188"/>
         <source>Storage Devices</source>
-        <translation type="unfinished"></translation>
+        <translation>Geymsluttæki</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="189"/>
         <source>Total Storage</source>
-        <translation type="unfinished"></translation>
+        <translation>Heildargeymsla</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="232"/>
         <source>Graphics Cards</source>
-        <translation type="unfinished"></translation>
+        <translation>Skjákort</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="243"/>
         <source>Display Resolution</source>
-        <translation type="unfinished"></translation>
+        <translation>Skjáupplæsing</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="244"/>
         <source>Refresh Rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Endurnýjunartíðni</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="247"/>
         <source>Number of Screens</source>
-        <translation type="unfinished"></translation>
+        <translation>Fjöldi skjáa</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="263"/>
         <source>Ethernet Interfaces</source>
-        <translation type="unfinished"></translation>
+        <translation>Ethernet tengi</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="264"/>
         <source>Wireless Interfaces</source>
-        <translation type="unfinished"></translation>
+        <translation>Þáðlausanet tengi</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="281"/>
         <source>USB Devices Connected</source>
-        <translation type="unfinished"></translation>
+        <translation>USB tæki tengd</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="304"/>
         <source>Operating System</source>
-        <translation type="unfinished"></translation>
+        <translation>Stýðrikerfi</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="316"/>
         <source>Kernel Version</source>
-        <translation type="unfinished"></translation>
+        <translation>Kjarnaútgáfa</translation>
     </message>
 </context>
 <context>
@@ -2615,32 +2681,32 @@ Please run the application as root.</source>
     <message>
         <location filename="../windowing_tab.cpp" line="264"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
         <location filename="../windowing_tab.cpp" line="264"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
     <message>
         <location filename="../windowing_tab.cpp" line="278"/>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Afrita</translation>
     </message>
     <message>
         <location filename="../windowing_tab.cpp" line="279"/>
         <source>Save...</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista...</translation>
     </message>
     <message>
         <location filename="../windowing_tab.cpp" line="288"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Loka</translation>
     </message>
     <message>
         <location filename="../windowing_tab.cpp" line="311"/>
         <source>Copied</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Afritað</translation>
     </message>
     <message>
         <location filename="../windowing_tab.cpp" line="312"/>
@@ -2664,7 +2730,7 @@ to the clipboard.</source>
     <message>
         <location filename="../lsv.cpp" line="130"/>
         <source>Desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>Skjáborð</translation>
     </message>
     <message>
         <location filename="../windowing_tab.cpp" line="27"/>
@@ -2675,12 +2741,12 @@ to the clipboard.</source>
     <message>
         <location filename="../windowing_tab.cpp" line="38"/>
         <source>Property</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eiginleiki</translation>
     </message>
     <message>
         <location filename="../windowing_tab.cpp" line="38"/>
         <source>Value</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gildi</translation>
     </message>
     <message>
         <location filename="../windowing_tab.cpp" line="129"/>
@@ -2726,7 +2792,7 @@ to the clipboard.</source>
     <message>
         <location filename="../gui_helpers.h" line="472"/>
         <source>Geek Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Tæknihamur</translation>
     </message>
 </context>
 </TS>

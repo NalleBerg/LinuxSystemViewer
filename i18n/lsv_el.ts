@@ -173,8 +173,8 @@ to the clipboard.</source>
 <context>
     <name>AudioTab</name>
     <message>
-        <location filename="../lsv.cpp" line="131"/>
         <location filename="../audio_tab.cpp" line="50"/>
+        <location filename="../lsv.cpp" line="131"/>
         <source>Audio</source>
         <translation type="unfinished"></translation>
     </message>
@@ -252,8 +252,8 @@ to the clipboard.</source>
 <context>
     <name>CPUTab</name>
     <message>
-        <location filename="../lsv.cpp" line="137"/>
         <location filename="../cpu_tab.cpp" line="30"/>
+        <location filename="../lsv.cpp" line="137"/>
         <source>CPU</source>
         <translation type="unfinished"></translation>
     </message>
@@ -281,6 +281,14 @@ to the clipboard.</source>
     <message>
         <location filename="../cpu_tab.cpp" line="440"/>
         <source>Current freq (GHz)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CtrlWHandler</name>
+    <message>
+        <location filename="../ctrlw.cpp" line="161"/>
+        <source>Quit?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -872,58 +880,58 @@ to the clipboard.</source>
 <context>
     <name>GeekOsDialog</name>
     <message>
-        <location filename="../os_tab.cpp" line="205"/>
+        <location filename="../os_tab.cpp" line="238"/>
         <source>OS - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="210"/>
+        <location filename="../os_tab.cpp" line="243"/>
         <source>OS Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="216"/>
+        <location filename="../os_tab.cpp" line="249"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="216"/>
+        <location filename="../os_tab.cpp" line="249"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="233"/>
+        <location filename="../os_tab.cpp" line="266"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="234"/>
+        <location filename="../os_tab.cpp" line="267"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="243"/>
+        <location filename="../os_tab.cpp" line="276"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="261"/>
+        <location filename="../os_tab.cpp" line="294"/>
         <source>Copied</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="262"/>
+        <location filename="../os_tab.cpp" line="295"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="270"/>
+        <location filename="../os_tab.cpp" line="303"/>
         <source>Save OS Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="270"/>
+        <location filename="../os_tab.cpp" line="303"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1486,8 +1494,8 @@ to the clipboard.</source>
 <context>
     <name>GraphicsTab</name>
     <message>
-        <location filename="../lsv.cpp" line="132"/>
         <location filename="../graphics_tab.cpp" line="30"/>
+        <location filename="../lsv.cpp" line="132"/>
         <source>Graphics</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1567,10 +1575,116 @@ to the clipboard.</source>
     </message>
 </context>
 <context>
+    <name>NetworkGeekDialog</name>
+    <message>
+        <location filename="../network_geek.cpp" line="27"/>
+        <source>Network - Geek Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_geek.cpp" line="32"/>
+        <source>Network Technical Details</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_geek.cpp" line="37"/>
+        <source>Property</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_geek.cpp" line="37"/>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_geek.cpp" line="51"/>
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_geek.cpp" line="52"/>
+        <source>Save...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_geek.cpp" line="61"/>
+        <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_geek.cpp" line="228"/>
+        <source>Copied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_geek.cpp" line="229"/>
+        <source>The information has been copied
+to the clipboard.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_geek.cpp" line="237"/>
+        <source>Save network info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_geek.cpp" line="237"/>
+        <source>CSV files (*.csv);;All files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>NetworkTab</name>
     <message>
         <location filename="../lsv.cpp" line="142"/>
+        <location filename="../network_tab.h" line="37"/>
+        <location filename="../network_tab.h" line="73"/>
         <source>Network</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="149"/>
+        <source>Property</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="149"/>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="269"/>
+        <source>Interface Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="274"/>
+        <source>MAC Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="282"/>
+        <source>IPv4 Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="284"/>
+        <source>IPv6 Address</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="291"/>
+        <source>MTU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="291"/>
+        <source>%1 bytes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="304"/>
+        <source>Default Gateway</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1597,7 +1711,77 @@ to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="134"/>
+        <location filename="../os_tab.cpp" line="104"/>
+        <source>Distribution Name</source>
+        <translation>Όνομα Διανομής</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="106"/>
+        <source>Distribution Version</source>
+        <translation>Έκδοση Διανομής</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="108"/>
+        <source>Distribution ID</source>
+        <translation>Αναγνωριστικό Διανομής</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="110"/>
+        <source>Version ID</source>
+        <translation>Αναγνωριστικό Έκδοσης</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="112"/>
+        <source>Full Name</source>
+        <translation>Πλήρες Όνομα</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="114"/>
+        <source>Version Codename</source>
+        <translation>Κωδικό Όνομα Έκδοσης</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="116"/>
+        <source>Ubuntu Codename</source>
+        <translation>Κωδικό Όνομα Ubuntu</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="118"/>
+        <source>Home Page</source>
+        <translation>Αρχική Σελίδα</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="120"/>
+        <source>Support Page</source>
+        <translation>Σελίδα Υποστήριξης</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="122"/>
+        <source>Bug Report Page</source>
+        <translation>Σελίδα Αναφοράς Σφαλμάτων</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="124"/>
+        <source>Privacy Policy</source>
+        <translation>Πολιτική Απορρήτου</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="126"/>
+        <source>Build ID</source>
+        <translation>Αναγνωριστικό Κατασκευής</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="128"/>
+        <source>Variant</source>
+        <translation>Παραλλαγή</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="130"/>
+        <source>Variant ID</source>
+        <translation>Αναγνωριστικό Παραλλαγής</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="167"/>
         <source>uname: %1
 </source>
         <translation type="unfinished"></translation>
@@ -1871,134 +2055,134 @@ to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="612"/>
+        <location filename="../lsv.cpp" line="613"/>
         <source>Cleaning up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="614"/>
+        <location filename="../lsv.cpp" line="615"/>
         <source>Cleaning up temporary files...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1059"/>
+        <location filename="../lsv.cpp" line="1060"/>
         <source>Cannot elevate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1059"/>
+        <location filename="../lsv.cpp" line="1060"/>
         <source>No terminal emulator found to prompt for a password.
 Please run the application as root.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1065"/>
+        <location filename="../lsv.cpp" line="1066"/>
         <source>Please enter password to run Linux System Viewer as root</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1137"/>
+        <location filename="../lsv.cpp" line="1138"/>
         <source>Linux System Viewer %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1194"/>
+        <location filename="../lsv.cpp" line="1195"/>
         <source>Authentication failed (%1/3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1228"/>
+        <location filename="../lsv.cpp" line="1229"/>
         <source>Elevation failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1228"/>
+        <location filename="../lsv.cpp" line="1229"/>
         <source>Failed to start a terminal to request sudo password. Please run the application as root.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1270"/>
-        <location filename="../lsv.cpp" line="1504"/>
+        <location filename="../lsv.cpp" line="1271"/>
+        <location filename="../lsv.cpp" line="1505"/>
         <source>Choose language</source>
         <translation>Επιλογή γλώσσας</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1270"/>
-        <location filename="../lsv.cpp" line="1503"/>
+        <location filename="../lsv.cpp" line="1271"/>
+        <location filename="../lsv.cpp" line="1504"/>
         <source>Language:</source>
         <translation>Γλώσσα:</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1281"/>
-        <location filename="../lsv.cpp" line="1512"/>
+        <location filename="../lsv.cpp" line="1282"/>
+        <location filename="../lsv.cpp" line="1513"/>
         <source>Language selection</source>
         <translation>Επιλογή γλώσσας</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1281"/>
+        <location filename="../lsv.cpp" line="1282"/>
         <source>Failed to write language selection to %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1294"/>
-        <location filename="../lsv.cpp" line="1391"/>
+        <location filename="../lsv.cpp" line="1295"/>
+        <location filename="../lsv.cpp" line="1392"/>
         <source>Linux System Viewer V. %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1339"/>
-        <location filename="../lsv.cpp" line="1392"/>
+        <location filename="../lsv.cpp" line="1340"/>
+        <location filename="../lsv.cpp" line="1393"/>
         <source>Linux System Viewer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1358"/>
-        <location filename="../lsv.cpp" line="1393"/>
+        <location filename="../lsv.cpp" line="1359"/>
+        <location filename="../lsv.cpp" line="1394"/>
         <source>About Linux System Viewer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1400"/>
-        <location filename="../lsv.cpp" line="1463"/>
+        <location filename="../lsv.cpp" line="1401"/>
+        <location filename="../lsv.cpp" line="1464"/>
         <source>Language</source>
         <translation>Γλώσσα</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1402"/>
-        <location filename="../lsv.cpp" line="1465"/>
+        <location filename="../lsv.cpp" line="1403"/>
+        <location filename="../lsv.cpp" line="1466"/>
         <source>Change language...</source>
         <translation>Αλλαγή γλώσσας...</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1404"/>
-        <location filename="../lsv.cpp" line="1467"/>
-        <location filename="../lsv.cpp" line="1529"/>
-        <location filename="../lsv.cpp" line="1540"/>
+        <location filename="../lsv.cpp" line="1405"/>
+        <location filename="../lsv.cpp" line="1468"/>
+        <location filename="../lsv.cpp" line="1530"/>
+        <location filename="../lsv.cpp" line="1541"/>
         <source>Reset language</source>
         <translation>Επαναφορά γλώσσας</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1512"/>
+        <location filename="../lsv.cpp" line="1513"/>
         <source>Failed to write language selection to configuration directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1522"/>
+        <location filename="../lsv.cpp" line="1523"/>
         <source>Language changed</source>
         <translation>Η γλώσσα άλλαξε</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1522"/>
+        <location filename="../lsv.cpp" line="1523"/>
         <source>Language saved. UI updated to the selected language.</source>
         <translation>Η γλώσσα αποθηκεύτηκε. Η διεπαφή ενημερώθηκε στην επιλεγμένη γλώσσα.</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1529"/>
+        <location filename="../lsv.cpp" line="1530"/>
         <source>Failed to remove %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1540"/>
+        <location filename="../lsv.cpp" line="1541"/>
         <source>Saved language selection removed. The application is now using English.</source>
         <translation>Η αποθηκευμένη επιλογή γλώσσας αφαιρέθηκε. Η εφαρμογή χρησιμοποιεί τώρα αγγλικά.</translation>
     </message>
@@ -2052,6 +2236,201 @@ Please run the application as root.</source>
         <source>=== %1 Information ===
 
 %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="26"/>
+        <location filename="../graphics.h" line="27"/>
+        <source>Property</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="26"/>
+        <location filename="../graphics.h" line="27"/>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="76"/>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="76"/>
+        <source>Could not read /proc/cpuinfo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="116"/>
+        <source>Total number of processors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="120"/>
+        <source>Number of processor (Physical)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="123"/>
+        <location filename="../graphics.h" line="159"/>
+        <source>Vendor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="123"/>
+        <location filename="../cpu.h" line="124"/>
+        <location filename="../cpu.h" line="127"/>
+        <location filename="../cpu.h" line="154"/>
+        <location filename="../cpu.h" line="155"/>
+        <location filename="../cpu.h" line="158"/>
+        <location filename="../cpu.h" line="169"/>
+        <location filename="../cpu.h" line="179"/>
+        <source>Unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="124"/>
+        <source>Model</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="151"/>
+        <source>Temperature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="154"/>
+        <source>Cache size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="155"/>
+        <source>Bogomips</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="159"/>
+        <source>Current freq (GHz)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="167"/>
+        <location filename="../cpu.h" line="169"/>
+        <source>Max freq (GHz)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="177"/>
+        <location filename="../cpu.h" line="179"/>
+        <source>Min Freq (GHz)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="188"/>
+        <source>Error reading CPU information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="208"/>
+        <source>Unknown CPU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../graphics.h" line="163"/>
+        <source>Graphics Card</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../graphics.h" line="165"/>
+        <source>Device ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../graphics.h" line="169"/>
+        <source>Driver</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../graphics.h" line="178"/>
+        <source>DRI Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../graphics.h" line="195"/>
+        <source>Framebuffer Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../graphics.h" line="205"/>
+        <source>Virtual Resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../graphics.h" line="227"/>
+        <location filename="../graphics.h" line="229"/>
+        <source>Video Memory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../graphics.h" line="235"/>
+        <source>Status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../graphics.h" line="235"/>
+        <source>No graphics card detected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gui_helpers.h" line="554"/>
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="117"/>
+        <location filename="../mainboard.h" line="119"/>
+        <source>Manufacturer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="123"/>
+        <location filename="../mainboard.h" line="125"/>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="129"/>
+        <source>Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="133"/>
+        <source>Version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="137"/>
+        <source>Serial Number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="161"/>
+        <source>BIOS Vendor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="164"/>
+        <source>BIOS Version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="167"/>
+        <source>BIOS Date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="183"/>
+        <source>Chipset</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2400,6 +2779,14 @@ to the clipboard.</source>
         <location filename="../windowing_tab.cpp" line="236"/>
         <location filename="../windowing_tab.cpp" line="238"/>
         <source>Display Scaling</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>gui_helpers</name>
+    <message>
+        <location filename="../gui_helpers.h" line="472"/>
+        <source>Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

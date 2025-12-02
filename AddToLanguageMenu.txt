@@ -1,0 +1,54 @@
+How to Add a New Language to the Language Menu
+==============================================
+
+When adding a new language (e.g., Greek 'el'), you need to modify TWO places:
+
+1. LANGUAGE DISPLAY NAMES (Function: shippedLanguageDisplayNames)
+   File: lsv.cpp, around line 147-160
+   
+   Add the language code and native display name to the QMap:
+   
+   Example:
+   m.insert("el", "Ελληνικά");
+   
+   This function provides the mapping from language codes to display names.
+
+2. GUI LANGUAGE CHOOSER DIALOG (Hardcoded list in changeLangAct lambda)
+   File: lsv.cpp, around line 1490
+   
+   Add the language code to the hardcoded QStringList:
+   
+   Example:
+   codes << "de" << "el" << "en_GB" << "es" << "fr" << "is" << "nb";
+   
+   This is the CRITICAL step that was missed initially. The GUI dialog uses
+   this hardcoded list, NOT the discovery mechanism.
+
+3. CREATE TRANSLATION FILES
+   Run: lupdate lsv.cpp multitabs.cpp *_tab.cpp tab_widget_base.cpp -ts i18n/lsv_XX.ts
+   Where XX is your language code (e.g., el for Greek)
+
+4. TRANSLATE KEY INTERFACE ELEMENTS
+   Edit i18n/lsv_XX.ts and translate at minimum:
+   - "Language" 
+   - "Choose language"
+   - "Change language..."
+   - "Reset language"
+   - Language change success messages
+
+5. COMPILE TRANSLATION
+   Run: lrelease i18n/lsv_XX.ts
+
+6. REBUILD APPLICATION
+   CMake automatically detects .qm files, so just:
+   Run: make clean && make
+
+GOTCHA: The GUI language menu uses a separate hardcoded list from the
+discovery mechanism. Both the shippedLanguageDisplayNames() function AND
+the hardcoded list in the changeLangAct lambda must be updated!
+
+The discovery mechanism (discoverShippedLanguageCodes) is used for CLI
+and internal validation, but the GUI dropdown uses the hardcoded list.
+
+Remember: Languages appear in the dropdown in the order specified in the
+hardcoded codes list, so maintain alphabetical order by display name.

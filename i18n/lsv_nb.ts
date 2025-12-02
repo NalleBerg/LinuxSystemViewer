@@ -893,59 +893,59 @@ til utklippstavlen.</translation>
 <context>
     <name>GeekOsDialog</name>
     <message>
-        <location filename="../os_tab.cpp" line="205"/>
+        <location filename="../os_tab.cpp" line="238"/>
         <source>OS - Geek Mode</source>
         <translation>OS - Geekemodus</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="210"/>
+        <location filename="../os_tab.cpp" line="243"/>
         <source>OS Technical Details</source>
         <translation>Tekniske detaljer for OS</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="216"/>
+        <location filename="../os_tab.cpp" line="249"/>
         <source>Property</source>
         <translation>Egenskap</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="216"/>
+        <location filename="../os_tab.cpp" line="249"/>
         <source>Value</source>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="233"/>
+        <location filename="../os_tab.cpp" line="266"/>
         <source>Copy</source>
         <translation>Kopier</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="234"/>
+        <location filename="../os_tab.cpp" line="267"/>
         <source>Save...</source>
         <translation>Lagre...</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="243"/>
+        <location filename="../os_tab.cpp" line="276"/>
         <source>Close</source>
         <translation type="unfinished">Lukk</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="261"/>
+        <location filename="../os_tab.cpp" line="294"/>
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="262"/>
+        <location filename="../os_tab.cpp" line="295"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Informasjonen er kopiert
 til utklippstavlen.</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="270"/>
+        <location filename="../os_tab.cpp" line="303"/>
         <source>Save OS Info</source>
         <translation>Lagre OS-informasjon</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="270"/>
+        <location filename="../os_tab.cpp" line="303"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-filer (*.csv);;Alle filer (*)</translation>
     </message>
@@ -1726,7 +1726,77 @@ til utklippstavlen.</translation>
         <translation>Verdi</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="134"/>
+        <location filename="../os_tab.cpp" line="104"/>
+        <source>Distribution Name</source>
+        <translation>Distribusjonsnavn</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="106"/>
+        <source>Distribution Version</source>
+        <translation>Distribusjonsversjon</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="108"/>
+        <source>Distribution ID</source>
+        <translation>Distribusjons-ID</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="110"/>
+        <source>Version ID</source>
+        <translation>Versjons-ID</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="112"/>
+        <source>Full Name</source>
+        <translation>Fullt navn</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="114"/>
+        <source>Version Codename</source>
+        <translation>Versjonskode</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="116"/>
+        <source>Ubuntu Codename</source>
+        <translation>Ubuntu kodenavn</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="118"/>
+        <source>Home Page</source>
+        <translation>Hjemmeside</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="120"/>
+        <source>Support Page</source>
+        <translation>Støtteside</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="122"/>
+        <source>Bug Report Page</source>
+        <translation>Feilrapportside</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="124"/>
+        <source>Privacy Policy</source>
+        <translation>Personvernregler</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="126"/>
+        <source>Build ID</source>
+        <translation>Bygg-ID</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="128"/>
+        <source>Variant</source>
+        <translation>Variant</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="130"/>
+        <source>Variant ID</source>
+        <translation>Variant-ID</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="167"/>
         <source>uname: %1
 </source>
         <translation>uname: %1
@@ -2120,143 +2190,141 @@ til utklippstavlen.</translation>
         <translation>Vennligst installer en polkit‑autentiseringsagent for skrivebordet ditt (policykit-1-gnome, mate-polkit, polkit-kde) og logg ut/inn.</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="612"/>
+        <location filename="../lsv.cpp" line="613"/>
         <source>Cleaning up</source>
         <translation>Rydder opp</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="614"/>
+        <location filename="../lsv.cpp" line="615"/>
         <source>Cleaning up temporary files...</source>
         <translation>Rydder opp midlertidige filer...</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1054"/>
+        <location filename="../lsv.cpp" line="1060"/>
         <source>Cannot elevate</source>
         <translation>Kan ikke opphøye rettigheter</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1054"/>
+        <location filename="../lsv.cpp" line="1060"/>
         <source>No terminal emulator found to prompt for a password.
 Please run the application as root.</source>
         <translation>Ingen terminalemulator funnet for å be om passord.
 Vennligst kjør applikasjonen som root.</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1060"/>
+        <location filename="../lsv.cpp" line="1066"/>
         <source>Please enter password to run Linux System Viewer as root</source>
         <translation>Vennligst oppgi passord for å kjøre Linux System Viewer som root</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1132"/>
+        <location filename="../lsv.cpp" line="1138"/>
         <source>Linux System Viewer %1</source>
         <translation>Linux System Viewer %1</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1189"/>
+        <location filename="../lsv.cpp" line="1195"/>
         <source>Authentication failed (%1/3)</source>
         <translation>Autentisering mislyktes (%1/3)</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1223"/>
+        <location filename="../lsv.cpp" line="1229"/>
         <source>Elevation failed</source>
         <translation>Opphøyelse mislyktes</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1223"/>
+        <location filename="../lsv.cpp" line="1229"/>
         <source>Failed to start a terminal to request sudo password. Please run the application as root.</source>
         <translation>Kunne ikke starte terminal for å be om sudo‑passord. Vennligst kjør applikasjonen som root.</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1265"/>
-        <location filename="../lsv.cpp" line="1504"/>
+        <location filename="../lsv.cpp" line="1271"/>
+        <location filename="../lsv.cpp" line="1505"/>
         <source>Choose language</source>
         <translation>Velg språk</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1265"/>
-        <location filename="../lsv.cpp" line="1496"/>
-        <location filename="../lsv.cpp" line="1502"/>
+        <location filename="../lsv.cpp" line="1271"/>
+        <location filename="../lsv.cpp" line="1504"/>
         <source>Language:</source>
         <translation>Språk:</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1276"/>
-        <location filename="../lsv.cpp" line="1512"/>
+        <location filename="../lsv.cpp" line="1282"/>
+        <location filename="../lsv.cpp" line="1513"/>
         <source>Language selection</source>
         <translation>Språkvalg</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1276"/>
+        <location filename="../lsv.cpp" line="1282"/>
         <source>Failed to write language selection to %1</source>
         <translation>Kunne ikke skrive språkvalg til %1</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1395"/>
-        <location filename="../lsv.cpp" line="1457"/>
+        <location filename="../lsv.cpp" line="1401"/>
+        <location filename="../lsv.cpp" line="1464"/>
         <source>Language</source>
         <translation>Språk</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1397"/>
-        <location filename="../lsv.cpp" line="1459"/>
+        <location filename="../lsv.cpp" line="1403"/>
+        <location filename="../lsv.cpp" line="1466"/>
         <source>Change language...</source>
         <translation>Skift språk</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1399"/>
-        <location filename="../lsv.cpp" line="1461"/>
-        <location filename="../lsv.cpp" line="1529"/>
-        <location filename="../lsv.cpp" line="1540"/>
+        <location filename="../lsv.cpp" line="1405"/>
+        <location filename="../lsv.cpp" line="1468"/>
+        <location filename="../lsv.cpp" line="1530"/>
+        <location filename="../lsv.cpp" line="1541"/>
         <source>Reset language</source>
         <translation>Tilbakestill språk</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1502"/>
         <source>Current: %1
 %2</source>
-        <translation>Nåværende: %1
+        <translation type="vanished">Nåværende: %1
 %2</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1512"/>
+        <location filename="../lsv.cpp" line="1513"/>
         <source>Failed to write language selection to configuration directory</source>
         <translation>Kunne ikke skrive språkvalg til konfigurasjonskatalog</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1522"/>
+        <location filename="../lsv.cpp" line="1523"/>
         <source>Language changed</source>
         <translation>Språk endret</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1522"/>
+        <location filename="../lsv.cpp" line="1523"/>
         <source>Language saved. UI updated to the selected language.</source>
         <translation>Språk lagret. Brukergrensesnitt oppdatert til valgt språk.</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1529"/>
+        <location filename="../lsv.cpp" line="1530"/>
         <source>Failed to remove %1</source>
         <translation>Kunne ikke fjerne %1</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1540"/>
+        <location filename="../lsv.cpp" line="1541"/>
         <source>Saved language selection removed. The application is now using English.</source>
         <translation>Lagret språkvalg fjernet. Applikasjonen bruker nå engelsk.</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1289"/>
+        <location filename="../lsv.cpp" line="1295"/>
+        <location filename="../lsv.cpp" line="1392"/>
         <source>Linux System Viewer V. %1</source>
         <translation>Linux System Viewer v. %1</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1334"/>
-        <location filename="../lsv.cpp" line="1386"/>
-        <location filename="../lsv.cpp" line="1387"/>
+        <location filename="../lsv.cpp" line="1340"/>
+        <location filename="../lsv.cpp" line="1393"/>
         <source>Linux System Viewer</source>
         <translation>Linux System Viewer</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1353"/>
-        <location filename="../lsv.cpp" line="1388"/>
+        <location filename="../lsv.cpp" line="1359"/>
+        <location filename="../lsv.cpp" line="1394"/>
         <source>About Linux System Viewer</source>
         <translation>Om Linux System Viewer</translation>
     </message>
