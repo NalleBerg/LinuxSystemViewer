@@ -1,12 +1,19 @@
 #include "audio_tab.h"
 #include "gui_helpers.h"
 #include "alsa_player.h"
+#include "geek_search_integration.h"
+#include <QMessageBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QHeaderView>
 #include <QScrollArea>
 #include <QProcess>
+#include <QThread>
+#include <QTimer>
+#include <QPainter>
+#include <QPropertyAnimation>
+#include <QGraphicsEffect>
 #include <QProcessEnvironment>
 #include <thread>
 #include <atomic>
@@ -111,26 +118,26 @@ void AudioTab::hideEvent(QHideEvent* ev)
 
 void AudioTab::showGeekMode()
 {
-    // Show progress dialog immediately
-    QProgressDialog* progress = new QProgressDialog(tr("Scanning audio devices, please wait..."), QString(), 0, 0, this);
-    progress->setWindowTitle(tr("Loading"));
-    progress->setWindowModality(Qt::WindowModal);
-    progress->setCancelButton(nullptr);
-    progress->setMinimumDuration(0);
-    progress->setWindowFlags(progress->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-    progress->show();
+    // Working inline dialog approach
+    QDialog* loading = new QDialog(this);
+    loading->setWindowTitle(tr("Loading"));
+    loading->setModal(true);
+    loading->setFixedSize(300, 100);
     
-    // Force multiple event processing cycles to ensure dialog renders properly
-    for (int i = 0; i < 10; ++i) {
-        QApplication::processEvents(QEventLoop::AllEvents, 50);
-    }
+    QVBoxLayout* layout = new QVBoxLayout(loading);
+    QLabel* label = new QLabel(tr("Scanning audio devices, please wait..."), loading);
+    label->setAlignment(Qt::AlignCenter);
+    layout->addWidget(label);
+    
+    loading->show();
+    QApplication::processEvents();
     
     // Create and populate dialog while progress is showing
     AudioGeekDialog dlg(this);
     
-    // Close progress dialog
-    progress->close();
-    delete progress;
+    // Close loading dialog
+    loading->close();
+    delete loading;
     
     // Show the actual geek mode dialog
     dlg.exec();
@@ -591,6 +598,10 @@ AudioGeekDialog::AudioGeekDialog(QWidget* parent)
     
     QPushButton* rescanBtn = new QPushButton(tr("Rescan"));
     buttonLayout->addWidget(rescanBtn);
+    
+    // Add search button using the integration helper
+    GeekSearchIntegration::addSearchButtonToGeekDialog(buttonLayout, this, table);
+    
     buttonLayout->addStretch();
     
     QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
@@ -631,26 +642,26 @@ void AudioGeekDialog::hideEvent(QHideEvent* ev)
 
 void AudioGeekDialog::rescan()
 {
-    // Show progress dialog
-    QProgressDialog* progress = new QProgressDialog(tr("Rescanning audio devices, please wait..."), QString(), 0, 0, this);
-    progress->setWindowTitle(tr("Rescanning"));
-    progress->setWindowModality(Qt::WindowModal);
-    progress->setCancelButton(nullptr);
-    progress->setMinimumDuration(0);
-    progress->setWindowFlags(progress->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-    progress->show();
+    // Working inline dialog approach
+    QDialog* loading = new QDialog(this);
+    loading->setWindowTitle(tr("Loading"));
+    loading->setModal(true);
+    loading->setFixedSize(300, 100);
     
-    // Force event processing
-    for (int i = 0; i < 10; ++i) {
-        QApplication::processEvents(QEventLoop::AllEvents, 50);
-    }
+    QVBoxLayout* layout = new QVBoxLayout(loading);
+    QLabel* label = new QLabel(tr("Rescanning audio devices, please wait..."), loading);
+    label->setAlignment(Qt::AlignCenter);
+    layout->addWidget(label);
+    
+    loading->show();
+    QApplication::processEvents();
     
     // Refresh the data
     fillTable();
     
-    // Close progress dialog
-    progress->close();
-    delete progress;
+    // Close loading dialog
+    loading->close();
+    delete loading;
 }
 
 void AudioGeekDialog::copyToClipboard()

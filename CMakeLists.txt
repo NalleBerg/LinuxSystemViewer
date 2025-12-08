@@ -44,6 +44,9 @@ qt6_add_executable(LSV
     network_geek.cpp
     pc_tab.cpp  
     memory_tab.cpp
+    geek_search.cpp
+    geek_search_integration.cpp
+    load_ani.cpp
 )
 
 # Link Qt libraries using keyword signature to match Qt6's internal usage

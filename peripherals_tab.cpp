@@ -1,15 +1,22 @@
 #include "peripherals_tab.h"
+#include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QHeaderView>
 #include <QScrollArea>
 #include <QTableWidgetItem>
+#include <QTableWidget>
+#include <QAbstractItemView>
+#include <QStringList>
 #include <QFont>
 #include <QProcess>
 #include <QFile>
 #include <QTextStream>
 #include <QRegularExpression>
+#include <QThread>
+#include <QTimer>
+#include <QPainter>
 #include <QTimer>
 #include <QShowEvent>
 #include <QHideEvent>
@@ -345,27 +352,27 @@ void PeripheralsTab::refreshPeripherals()
 
 void PeripheralsTab::showGeekMode()
 {
-    // Show progress dialog immediately
-    QProgressDialog* progress = new QProgressDialog(tr("Scanning peripherals, please wait..."), QString(), 0, 0, this);
-    progress->setWindowTitle(tr("Loading"));
-    progress->setWindowModality(Qt::WindowModal);
-    progress->setCancelButton(nullptr);
-    progress->setMinimumDuration(0);
-    progress->setWindowFlags(progress->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-    progress->show();
+    // Working inline dialog approach
+    QDialog* loading = new QDialog(this);
+    loading->setWindowTitle(tr("Loading"));
+    loading->setModal(true);
+    loading->setFixedSize(300, 100);
     
-    // Force multiple event processing cycles to ensure dialog renders properly
-    for (int i = 0; i < 10; ++i) {
-        QApplication::processEvents(QEventLoop::AllEvents, 50);
-    }
+    QVBoxLayout* layout = new QVBoxLayout(loading);
+    QLabel* label = new QLabel(tr("Scanning peripherals, please wait..."), loading);
+    label->setAlignment(Qt::AlignCenter);
+    layout->addWidget(label);
+    
+    loading->show();
+    QApplication::processEvents();
     
     // Create and populate dialog while progress is showing
     GeekPeripheralsDialog dlg(this);
     dlg.loadData();
     
-    // Close progress dialog
-    progress->close();
-    delete progress;
+    // Close loading dialog
+    loading->close();
+    delete loading;
     
     // Show the populated dialog
     dlg.exec();
@@ -422,26 +429,26 @@ GeekPeripheralsDialog::GeekPeripheralsDialog(QWidget* parent)
     
     // Connect Rescan button
     connect(rescanBtn, &QPushButton::clicked, [this]() {
-        // Show progress dialog while rescanning
-        QProgressDialog* progress = new QProgressDialog(tr("Rescanning peripherals, please wait..."), QString(), 0, 0, this);
-        progress->setWindowTitle(tr("Rescanning"));
-        progress->setWindowModality(Qt::WindowModal);
-        progress->setCancelButton(nullptr);
-        progress->setMinimumDuration(0);
-        progress->setWindowFlags(progress->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-        progress->show();
+        // Working inline dialog approach
+        QDialog* loading = new QDialog(this);
+        loading->setWindowTitle(tr("Loading"));
+        loading->setModal(true);
+        loading->setFixedSize(300, 100);
         
-        // Force multiple event processing cycles to ensure dialog renders properly
-        for (int i = 0; i < 10; ++i) {
-            QApplication::processEvents(QEventLoop::AllEvents, 50);
-        }
+        QVBoxLayout* layout = new QVBoxLayout(loading);
+        QLabel* label = new QLabel(tr("Rescanning peripherals, please wait..."), loading);
+        label->setAlignment(Qt::AlignCenter);
+        layout->addWidget(label);
+        
+        loading->show();
+        QApplication::processEvents();
         
         // Rescan data
         fillTable();
         
-        // Close progress dialog
-        progress->close();
-        delete progress;
+        // Close loading dialog
+        loading->close();
+        delete loading;
     });
 
     // Enable copy on main geek table (right-click + Ctrl+C)

@@ -147,17 +147,20 @@ static QString translateTabName(const QString &name)
 static QMap<QString, QString> shippedLanguageDisplayNames()
 {
     QMap<QString, QString> m;
-    // Ship English (UK), German, Spanish, French, Norwegian Bokmål, Icelandic, and Greek in the UI list.
+    // Ship English (UK), German, Spanish, French, Norwegian Bokmål, Icelandic, Greek, Danish, Finnish, and Swedish in the UI list.
     // The repository and packaging contain these translators
     // and the application presents these languages to users.
     m.insert("en_GB", "English (UK)");
     m.insert("en", "English (UK)");
+    m.insert("da", "Dansk");
     m.insert("de", "Deutsch");
     m.insert("el", "Ελληνικά");
     m.insert("es", "Español");
+    m.insert("fi", "Suomi");
     m.insert("fr", "Français");
     m.insert("nb", "Norsk (Bokmål)");
     m.insert("is", "Íslenska");
+    m.insert("sv", "Svenska");
     return m;
 }
 
@@ -826,6 +829,20 @@ private:
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    
+    // Force Qt to use a light style on Linux Mint which has dark theme by default
+    app.setStyle("Fusion");  // Use Fusion style instead of system default
+    
+    // Set light palette specifically for Mint's dark theme override
+    QPalette lightPalette;
+    lightPalette.setColor(QPalette::Window, QColor(240, 240, 240));
+    lightPalette.setColor(QPalette::WindowText, QColor(0, 0, 0));
+    lightPalette.setColor(QPalette::Base, QColor(255, 255, 255));
+    lightPalette.setColor(QPalette::Text, QColor(0, 0, 0));
+    lightPalette.setColor(QPalette::Button, QColor(240, 240, 240));
+    lightPalette.setColor(QPalette::ButtonText, QColor(0, 0, 0));
+    app.setPalette(lightPalette);
+    
     // Central version constant
     #include "version.h"
 
@@ -1485,9 +1502,9 @@ int main(int argc, char *argv[])
     QObject::connect(changeLangAct, &QAction::triggered, [&mainWindow, &settings, &applyLanguage]() {
         QMap<QString, QString> names = shippedLanguageDisplayNames();
         // All supported languages sorted alphabetically by display name:
-        // Deutsch, Ελληνικά, English (UK), Español, Français, Íslenska, Norsk (Bokmål)
+        // Dansk, Deutsch, Ελληνικά, English (UK), Español, Français, Íslenska, Norsk (Bokmål), Suomi, Svenska
         QStringList codes;
-        codes << "de" << "el" << "en_GB" << "es" << "fr" << "is" << "nb";
+        codes << "da" << "de" << "el" << "en_GB" << "es" << "fi" << "fr" << "is" << "nb" << "sv";
         QStringList choices;
         for (const QString &c : codes) choices << names.value(c, c);
 
