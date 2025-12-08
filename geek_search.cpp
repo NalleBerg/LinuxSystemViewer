@@ -8,6 +8,7 @@
 #include <QIcon>
 #include <QStyle>
 #include <QDebug>
+#include <QTimer>
 
 GeekSearchDialog::GeekSearchDialog(QWidget* parent)
     : QDialog(parent)
@@ -309,15 +310,16 @@ GeekSearchOptions GeekSearchDialog::getCurrentSearchOptions() const
 
 void GeekSearchDialog::updateSearchScopeVisibility()
 {
-    // Show search scope options only when we have multiple search results
+    // Show search scope options only when we have multiple search results (2 or more)
     // (either in table filtering mode with filtered results, or normal mode with multiple results)
     bool showScope = false;
     if (m_targetTable) {
-        // Table filtering mode - show only if we have filtered results with multiple items
-        showScope = m_isFiltered && m_currentFilteredData.size() > 1;
+        // Table filtering mode - show only if we have filtered results with 2+ items
+        // Must be actively filtered (not just initialized) and have more than 1 result
+        showScope = m_isFiltered && (m_currentFilteredData.size() >= 2);
     } else {
-        // Normal mode - show if we have searched and have multiple results
-        showScope = m_hasSearched && m_currentResults.size() > 1;
+        // Normal mode - show if we have searched and have 2+ results
+        showScope = m_hasSearched && (m_currentResults.size() >= 2);
     }
     m_searchScopeWidget->setVisible(showScope);
 }
@@ -442,11 +444,37 @@ void GeekSearchDialog::setTargetTable(QTableWidget* table)
         // Search button already has text from constructor
         // Enable Enter key in search field
         connect(m_searchEdit, &QLineEdit::returnPressed, this, &GeekSearchDialog::performSearch);
+        
+        // Stop any refresh timers in the parent dialog to prevent auto-refresh from clearing filtered results
+        if (QWidget* parentWidget = table->parentWidget()) {
+            QDialog* parentDialog = qobject_cast<QDialog*>(parentWidget->window());
+            if (parentDialog) {
+                // Find all QTimer children and stop them
+                QList<QTimer*> timers = parentDialog->findChildren<QTimer*>();
+                for (QTimer* timer : timers) {
+                    if (timer->isActive()) {
+                        qDebug() << "Stopping refresh timer in parent dialog";
+                        timer->stop();
+                        // Store the timer so we can restart it when closing
+                        m_stoppedTimers.append(timer);
+                    }
+                }
+            }
+        }
     }
 }
 
 void GeekSearchDialog::closeEvent(QCloseEvent* event)
 {
+    // Restart any timers we stopped
+    for (QTimer* timer : m_stoppedTimers) {
+        if (timer) {
+            qDebug() << "Restarting refresh timer in parent dialog";
+            timer->start();
+        }
+    }
+    m_stoppedTimers.clear();
+    
     // Reset table filtering when dialog closes - but only if table is still valid
     if (m_targetTable && m_isFiltered) {
         // Check if table parent is still valid before accessing
@@ -493,7 +521,12 @@ void GeekSearchDialog::filterTargetTable()
     }
     
     QString searchText = m_searchEdit->text();
-    if (searchText.isEmpty()) return;
+    
+    // If search is empty, reset the table to show all data
+    if (searchText.isEmpty()) {
+        resetTargetTable();
+        return;
+    }
     
     QVector<QPair<QString, QString>> dataToSearch;
     
@@ -507,16 +540,25 @@ void GeekSearchDialog::filterTargetTable()
     QVector<QPair<QString, QString>> filteredResults;
     
     // Perform search
+    qDebug() << "filterTargetTable: Searching for:" << searchText << "in" << dataToSearch.size() << "rows";
     for (const auto& item : dataToSearch) {
         if (matchesTableSearchCriteria(item.first, item.second, searchText)) {
             filteredResults.append(item);
         }
     }
+    qDebug() << "filterTargetTable: Found" << filteredResults.size() << "matching rows";
     
     // Update table with filtered results
     m_targetTable->setRowCount(filteredResults.size());
     for (int i = 0; i < filteredResults.size(); ++i) {
-        m_targetTable->setItem(i, 0, new QTableWidgetItem(filteredResults[i].first));
+        // Column 0 (Property) - bold text
+        QTableWidgetItem* propItem = new QTableWidgetItem(filteredResults[i].first);
+        QFont boldFont;
+        boldFont.setBold(true);
+        propItem->setFont(boldFont);
+        m_targetTable->setItem(i, 0, propItem);
+        
+        // Column 1 (Value) - normal text
         m_targetTable->setItem(i, 1, new QTableWidgetItem(filteredResults[i].second));
     }
     
@@ -524,7 +566,9 @@ void GeekSearchDialog::filterTargetTable()
     m_isFiltered = true;
     
     // Update search scope visibility based on result count
-    updateSearchScopeVisibility();
+    // Only show "New search/Search in results" when we have 2+ filtered results
+    bool shouldShow = (filteredResults.size() > 1);
+    m_searchScopeWidget->setVisible(shouldShow);
 }
 
 void GeekSearchDialog::resetTargetTable()
@@ -534,7 +578,14 @@ void GeekSearchDialog::resetTargetTable()
     // Restore original data
     m_targetTable->setRowCount(m_originalTableData.size());
     for (int i = 0; i < m_originalTableData.size(); ++i) {
-        m_targetTable->setItem(i, 0, new QTableWidgetItem(m_originalTableData[i].first));
+        // Column 0 (Property) - bold text
+        QTableWidgetItem* propItem = new QTableWidgetItem(m_originalTableData[i].first);
+        QFont boldFont;
+        boldFont.setBold(true);
+        propItem->setFont(boldFont);
+        m_targetTable->setItem(i, 0, propItem);
+        
+        // Column 1 (Value) - normal text
         m_targetTable->setItem(i, 1, new QTableWidgetItem(m_originalTableData[i].second));
     }
     

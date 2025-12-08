@@ -23,6 +23,7 @@
 #include <QShowEvent>
 #include <QHideEvent>
 #include "gui_helpers.h"
+#include "geek_search_integration.h"
 
 OSTab::OSTab(const QString& tabName, const QString& command, bool showHeader, const QString& headerText, QWidget* parent)
     : TabWidgetBase(tabName, QString(), showHeader, headerText, parent)
@@ -261,6 +262,14 @@ GeekOsDialog::GeekOsDialog(QWidget* parent)
     scrollArea->setContentsMargins(0, 0, 0, 5);  // Add bottom margin
     layout->addWidget(scrollArea);
 
+    // Button layout: Search on left, Copy/Save/Close on right
+    QHBoxLayout* buttonLayout = new QHBoxLayout();
+    
+    // Add search button using the integration helper
+    GeekSearchIntegration::addSearchButtonToGeekDialog(buttonLayout, this, table);
+    
+    buttonLayout->addStretch();
+    
     // Buttons: Copy, Save, Close
     QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     QPushButton* copyBtn = new QPushButton(tr("Copy"));
@@ -268,7 +277,9 @@ GeekOsDialog::GeekOsDialog(QWidget* parent)
     buttonBox->addButton(copyBtn, QDialogButtonBox::ActionRole);
     buttonBox->addButton(saveBtn, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
-    layout->addWidget(buttonBox);
+    
+    buttonLayout->addWidget(buttonBox);
+    layout->addLayout(buttonLayout);
     
     // Fix Close button translation - apply after dialog is shown
     QTimer::singleShot(0, [buttonBox, this]() {
@@ -346,23 +357,34 @@ void GeekOsDialog::hideEvent(QHideEvent* ev)
 void GeekOsDialog::fillTable()
 {
     table->setRowCount(0);
-    int row = 0;
 
     auto addRow = [&](const QString& prop, const QString& val) {
+        int row = table->rowCount();
         table->insertRow(row);
-        QTableWidgetItem* p = new QTableWidgetItem(prop);
-        QFont bold; bold.setBold(true); p->setFont(bold);
-        table->setItem(row, 0, p);
-        QTableWidgetItem* v = new QTableWidgetItem(val);
-        table->setItem(row, 1, v);
-        table->resizeRowToContents(row);
-        row++;
+        QTableWidgetItem* propItem = new QTableWidgetItem(prop);
+        QFont boldFont;
+        boldFont.setBold(true);
+        propItem->setFont(boldFont);
+        table->setItem(row, 0, propItem);
+        table->setItem(row, 1, new QTableWidgetItem(val));
+    };
+    
+    auto addSection = [&](const QString& title) {
+        int row = table->rowCount();
+        table->insertRow(row);
+        QTableWidgetItem* sectionItem = new QTableWidgetItem(title);
+        sectionItem->setBackground(QBrush(QColor("#ecf0f1")));
+        QFont boldFont = sectionItem->font();
+        boldFont.setBold(true);
+        sectionItem->setFont(boldFont);
+        table->setItem(row, 0, sectionItem);
+        table->setItem(row, 1, new QTableWidgetItem(""));
     };
 
     // Read /etc/os-release
+    addSection("=== OS Release ===");
     QFile osRelease("/etc/os-release");
     if (osRelease.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        addRow("=== OS Release ===", "");
         QTextStream in(&osRelease);
         while (!in.atEnd()) {
             QString line = in.readLine().trimmed();
@@ -377,10 +399,9 @@ void GeekOsDialog::fillTable()
     }
 
     // Get uname info
+    addSection("=== System Information ===");
     struct utsname unameData;
     if (uname(&unameData) == 0) {
-        addRow("", "");
-        addRow("=== System Information ===", "");
         addRow("System Name", unameData.sysname);
         addRow("Node Name", unameData.nodename);
         addRow("Release", unameData.release);
@@ -389,28 +410,35 @@ void GeekOsDialog::fillTable()
     }
 
     // Read /proc/version
+    addSection("=== Kernel Version ===");
     QFile procVersion("/proc/version");
     if (procVersion.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        addRow("", "");
-        addRow("=== Kernel Version ===", "");
         QString version = procVersion.readAll().trimmed();
-        addRow("", version);
+        addRow("Kernel Version", version);
         procVersion.close();
     }
 
     // Read /proc/cmdline
+    addSection("=== Kernel Command Line ===");
     QFile cmdline("/proc/cmdline");
     if (cmdline.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        addRow("", "");
-        addRow("=== Kernel Command Line ===", "");
         QString cmd = cmdline.readAll().trimmed();
-        addRow("", cmd);
+        // Split command line into individual parameters for better searching
+        QStringList params = cmd.split(' ', Qt::SkipEmptyParts);
+        for (const QString& param : params) {
+            if (param.contains('=')) {
+                QString key = param.section('=', 0, 0);
+                QString value = param.section('=', 1);
+                addRow(key, value);
+            } else {
+                addRow("Parameter", param);
+            }
+        }
         cmdline.close();
     }
 
     // Get environment variables
-    addRow("", "");
-    addRow("=== Environment ===", "");
+    addSection("=== Environment Variables ===");
     QStringList env = QProcess::systemEnvironment();
     for (const QString& e : env) {
         if (e.contains('=')) {

@@ -3,7 +3,7 @@
 
 Official project home & binaries: https://lsv.nalle.no/
 
-**Current version: 0.20.0**
+**Current version: 0.30.0**
 
 Linux System Viewer (LSV) is a lightweight, focused Qt6-based GUI tool that presents
 detailed system hardware and software information on Linux. It provides both a
@@ -13,19 +13,21 @@ memory, storage, network, graphics, audio, and more.
 **Key features:**
 - Clean, read-only design: gathers information using direct system file access (no external dependencies like lshw, dmidecode, etc.)
 - Two presentation modes: user-friendly summaries and detailed technical views
+- Universal search functionality: comprehensive search across all geek mode tabs with regex support
 - Instant loading: no external process spawning for data collection
 - Packaging: DEB and RPM packages via CPack for easy distribution
 - Internationalization: supports multiple languages with built-in translations
 - Sound testing: built-in audio hardware testing using ALSA with immediate cancellation
 - Developer-friendly: optional debug logger for safe troubleshooting (disabled by default)
 
-**Recent changes (v0.20.0):**
-- Complete Norwegian translations for Network and Storage tabs with proper table headers
-- Fixed Storage tab column headers: "Enhet", "Størrelse", "Brukt", "Tilgjengelig", "Bruk%", "Montering", "Filsystem"
-- Added translatable blue device headers in Storage tab ("Disk:", "Navn:", etc.)
-- Increased window height from 456 to 516 pixels for better Summary tab display without scrolling
-- Restored version number in window title bar showing "Linux System Viewer V. 0.20.0"
-- Enhanced Network tab with complete tr() internationalization support
+**Recent changes (v0.30.0):**
+- Added comprehensive search functionality to all geek mode tabs (Audio, Peripherals, OS, Memory, Desktop, CPU, Motherboard, Graphics, Storage, Screen, PC Info, Ports, Network)
+- Implemented "Search in Results" mode for progressive data filtering and refined discovery
+- Real-time table filtering with automatic reset on empty search for intuitive "show all" functionality
+- Smart auto-refresh management: timers automatically pause during search and resume on dialog close
+- Restructured Peripherals tab data from text blobs to individual parsed rows for better searchability
+- Consistent button layout across all geek mode dialogs: Search (left) - stretch - Copy/Save/Close (right)
+- Bold Property column formatting preserved throughout all search operations and resets
 
 **Configuration:**
 - Language selection is stored in `~/.config/LSV/lsv_lang.rc`

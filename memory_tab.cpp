@@ -14,6 +14,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include "gui_helpers.h"
+#include "geek_search_integration.h"
 
 MemoryTab::MemoryTab(QWidget* parent) : QWidget(parent)
 {
@@ -250,6 +251,14 @@ GeekMemoryDialog::GeekMemoryDialog(QWidget* parent)
 
     enableTableCopy(table, refreshTimer);
 
+    // Button layout: Search on left, Copy/Save/Close on right
+    QHBoxLayout* buttonLayout = new QHBoxLayout();
+    
+    // Add search button using the integration helper
+    GeekSearchIntegration::addSearchButtonToGeekDialog(buttonLayout, this, table);
+    
+    buttonLayout->addStretch();
+    
     QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     // Copy and Save buttons (Copy: readable UTF-8; Save: CSV)
     QPushButton* copyBtn = new QPushButton(tr("Copy"));
@@ -257,7 +266,9 @@ GeekMemoryDialog::GeekMemoryDialog(QWidget* parent)
     buttonBox->addButton(copyBtn, QDialogButtonBox::ActionRole);
     buttonBox->addButton(saveBtn, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
-    layout->addWidget(buttonBox);
+    
+    buttonLayout->addWidget(buttonBox);
+    layout->addLayout(buttonLayout);
     
     // Fix Close button translation - apply after dialog is shown
     QTimer::singleShot(0, [buttonBox, this]() {
@@ -327,9 +338,8 @@ void GeekMemoryDialog::fillTable()
 {
     table->setRowCount(0);
 
-    // Helper to add rows
-    int row = 0;
     auto addRow = [&](const QString& prop, const QString& val) {
+        int row = table->rowCount();
         table->insertRow(row);
         QTableWidgetItem* propItem = new QTableWidgetItem(prop);
         QFont boldFont;
@@ -340,11 +350,22 @@ void GeekMemoryDialog::fillTable()
         QTableWidgetItem* valItem = new QTableWidgetItem(val);
         valItem->setForeground(QColor("#1f1971"));
         table->setItem(row, 1, valItem);
-        table->resizeRowToContents(row);
-        row++;
+    };
+    
+    auto addSection = [&](const QString& title) {
+        int row = table->rowCount();
+        table->insertRow(row);
+        QTableWidgetItem* sectionItem = new QTableWidgetItem(title);
+        sectionItem->setBackground(QBrush(QColor("#ecf0f1")));
+        QFont boldFont = sectionItem->font();
+        boldFont.setBold(true);
+        sectionItem->setFont(boldFont);
+        table->setItem(row, 0, sectionItem);
+        table->setItem(row, 1, new QTableWidgetItem(""));
     };
 
     // 1) Basic memory totals from /proc/meminfo
+    addSection("=== Memory Information (/proc/meminfo) ===");
     QFile meminfo("/proc/meminfo");
     QString memContent;
     if (meminfo.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -367,35 +388,38 @@ void GeekMemoryDialog::fillTable()
         QString available = extractField("MemAvailable");
         QString swapTotal = extractField("SwapTotal");
 
-        addRow(tr("MemTotal (/proc/meminfo)"), total.isEmpty() ? tr("Unknown") : total);
-        addRow(tr("MemFree (/proc/meminfo)"), free.isEmpty() ? tr("Unknown") : free);
-        addRow(tr("MemAvailable (/proc/meminfo)"), available.isEmpty() ? tr("Unknown") : available);
-        addRow(tr("SwapTotal (/proc/meminfo)"), swapTotal.isEmpty() ? tr("Unknown") : swapTotal);
+        addRow(tr("MemTotal"), total.isEmpty() ? tr("Unknown") : total);
+        addRow(tr("MemFree"), free.isEmpty() ? tr("Unknown") : free);
+        addRow(tr("MemAvailable"), available.isEmpty() ? tr("Unknown") : available);
+        addRow(tr("SwapTotal"), swapTotal.isEmpty() ? tr("Unknown") : swapTotal);
     } else {
         addRow(tr("/proc/meminfo"), tr("Could not open /proc/meminfo"));
     }
 
     // 2) Memory blocks (hotplug) from sysfs
+    addSection("=== Memory Blocks (/sys/devices/system/memory) ===");
     QDir memDir("/sys/devices/system/memory");
     int memBlocks = 0;
     if (memDir.exists()) {
         QStringList entries = memDir.entryList(QStringList() << "memory*", QDir::Dirs | QDir::NoDotAndDotDot);
         memBlocks = entries.size();
-        addRow(tr("Memory block entries (/sys/devices/system/memory)"), QString::number(memBlocks));
+        addRow(tr("Memory block entries"), QString::number(memBlocks));
     } else {
         addRow(tr("Memory block entries"), tr("Not available"));
     }
 
     // 3) NUMA nodes
+    addSection("=== NUMA Nodes ===");
     QDir nodeDir("/sys/devices/system/node");
     if (nodeDir.exists()) {
         QStringList nodes = nodeDir.entryList(QStringList() << "node*", QDir::Dirs | QDir::NoDotAndDotDot);
-        addRow(tr("NUMA nodes (count)"), QString::number(nodes.size()));
+        addRow(tr("NUMA nodes count"), QString::number(nodes.size()));
     } else {
-        addRow(tr("NUMA nodes (count)"), tr("Not available"));
+        addRow(tr("NUMA nodes count"), tr("Not available"));
     }
 
     // 4) Try to detect DMI memory device entries (type 17) via sysfs if present
+    addSection("=== DMI Memory Devices (/sys/firmware/dmi/entries) ===");
     QDir dmiDir("/sys/firmware/dmi/entries");
     int dmiMemDevices = 0;
     if (dmiDir.exists()) {

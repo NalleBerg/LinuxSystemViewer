@@ -1,7 +1,9 @@
 #include "network_geek.h"
 #include "network.h"
+#include "geek_search_integration.h"
 
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QProcess>
@@ -46,21 +48,22 @@ NetworkGeekDialog::NetworkGeekDialog(QWidget* parent)
     scrollArea->setMinimumHeight(350);
     layout->addWidget(scrollArea);
 
-    // Buttons: Copy, Save, Close
-    QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    // Buttons: Search (left) - stretch - Copy, Save, Close (right)
+    QHBoxLayout* buttonLayout = new QHBoxLayout();
+    GeekSearchIntegration::addSearchButtonToGeekDialog(buttonLayout, this, table);
+    buttonLayout->addStretch();
+    
     QPushButton* copyBtn = new QPushButton(QCoreApplication::translate("NetworkGeekDialog", "Copy"));
     QPushButton* saveBtn = new QPushButton(QCoreApplication::translate("NetworkGeekDialog", "Save..."));
-    buttonBox->addButton(copyBtn, QDialogButtonBox::ActionRole);
-    buttonBox->addButton(saveBtn, QDialogButtonBox::ActionRole);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
-    layout->addWidget(buttonBox);
+    QPushButton* closeBtn = new QPushButton(QCoreApplication::translate("NetworkGeekDialog", "Close"));
     
-    // Fix Close button translation - apply after dialog is shown
-    QTimer::singleShot(0, [buttonBox]() {
-        if (auto closeBtn = buttonBox->button(QDialogButtonBox::Close)) {
-            closeBtn->setText(QCoreApplication::translate("NetworkGeekDialog", "Close"));
-        }
-    });
+    buttonLayout->addWidget(copyBtn);
+    buttonLayout->addWidget(saveBtn);
+    buttonLayout->addWidget(closeBtn);
+    
+    layout->addLayout(buttonLayout);
+
+    connect(closeBtn, &QPushButton::clicked, this, &QDialog::reject);
 
     // Enable copy on main geek table (right-click + Ctrl+C) and pause the geek dialog's refresh while copying
     enableTableCopy(table, timer);

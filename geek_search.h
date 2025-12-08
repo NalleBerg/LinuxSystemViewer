@@ -126,6 +126,7 @@ private:
     QVector<QPair<QString, QString>> m_originalTableData;
     QVector<QPair<QString, QString>> m_currentFilteredData;
     bool m_isFiltered;
+    QList<QTimer*> m_stoppedTimers; // Timers stopped in parent dialog
     
     // Search state
     QList<GeekSearchResult> m_allData;      // All available data

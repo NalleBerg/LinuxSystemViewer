@@ -32,6 +32,7 @@
 #include <QEventLoop>
 #include <QDir>
 #include "gui_helpers.h"
+#include "geek_search_integration.h"
 
 #include <QDir>
 
@@ -426,6 +427,9 @@ GeekPeripheralsDialog::GeekPeripheralsDialog(QWidget* parent)
     // Store rescanning label for show/hide
     this->setProperty("rescanningLabel", QVariant::fromValue(rescanningLabel));
     
+    // Add search button using the integration helper
+    GeekSearchIntegration::addSearchButtonToGeekDialog(buttonLayout, this, table);
+    
     buttonLayout->addStretch();
     
     // Right side: Copy, Save, Close buttons
@@ -512,226 +516,320 @@ void GeekPeripheralsDialog::hideEvent(QHideEvent* ev)
 void GeekPeripheralsDialog::fillTable()
 {
     table->setRowCount(0);
-    int row = 0;
 
     auto addRow = [&](const QString& prop, const QString& val){
+        int row = table->rowCount();
         table->insertRow(row);
-        QTableWidgetItem* p = new QTableWidgetItem(prop);
-        QFont bold; bold.setBold(true); p->setFont(bold);
-        table->setItem(row, 0, p);
-        QTableWidgetItem* v = new QTableWidgetItem(val);
-        table->setItem(row, 1, v);
-        table->resizeRowToContents(row);
-        ++row;
+        QTableWidgetItem* propItem = new QTableWidgetItem(prop);
+        QFont boldFont;
+        boldFont.setBold(true);
+        propItem->setFont(boldFont);
+        table->setItem(row, 0, propItem);
+        table->setItem(row, 1, new QTableWidgetItem(val));
+    };
+    
+    auto addSection = [&](const QString& title) {
+        int row = table->rowCount();
+        table->insertRow(row);
+        QTableWidgetItem* sectionItem = new QTableWidgetItem(title);
+        sectionItem->setBackground(QBrush(QColor("#ecf0f1")));
+        QFont boldFont = sectionItem->font();
+        boldFont.setBold(true);
+        sectionItem->setFont(boldFont);
+        table->setItem(row, 0, sectionItem);
+        table->setItem(row, 1, new QTableWidgetItem(""));
     };
 
-    // === USB Devices (lsusb -v) ===
+    // === USB Devices (lsusb) ===
+    addSection("=== USB Devices (lsusb) ===");
     QProcess lsusb;
-    lsusb.start("lsusb", QStringList() << "-v");
+    lsusb.start("lsusb");
     lsusb.waitForFinished(2000);
     QString usbOutput = lsusb.readAllStandardOutput();
-    QApplication::processEvents(); // Allow spinner to continue
+    QApplication::processEvents();
 
     if (!usbOutput.isEmpty()) {
-        addRow("=== USB Devices (lsusb -v) ===", "");
-        addRow("Full USB Information", usbOutput.left(30000)); // Limit to 30KB
+        QStringList lines = usbOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : lines) {
+            if (line.contains("Bus")) {
+                addRow("USB Device", line.trimmed());
+            }
+        }
     }
 
-    // === PCI Devices (lspci -vv) ===
+    // === PCI Devices (lspci) ===
+    addSection("=== PCI Devices (lspci) ===");
     QProcess lspci;
-    lspci.start("lspci", QStringList() << "-vv");
+    lspci.start("lspci");
     lspci.waitForFinished(2000);
     QString pciOutput = lspci.readAllStandardOutput();
-    QApplication::processEvents(); // Allow spinner to continue
+    QApplication::processEvents();
 
     if (!pciOutput.isEmpty()) {
-        addRow("", "");
-        addRow("=== PCI Devices (lspci -vv) ===", "");
-        addRow("Full PCI Information", pciOutput.left(30000));
+        QStringList lines = pciOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : lines) {
+            addRow("PCI Device", line.trimmed());
+        }
     }
 
     // === Input Devices (/proc/bus/input/devices) ===
+    addSection("=== Input Devices (/proc/bus/input/devices) ===");
     QFile inputFile("/proc/bus/input/devices");
     if (inputFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        addRow("", "");
-        addRow("=== Input Devices (/proc/bus/input/devices) ===", "");
-        QString inputContent = QTextStream(&inputFile).readAll();
-        addRow("Input Devices", inputContent.left(30000));
+        QTextStream in(&inputFile);
+        QString currentDevice;
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            if (line.startsWith("N: Name=")) {
+                currentDevice = line.mid(8).trimmed().remove('"');
+                addRow("Input Device", currentDevice);
+            } else if (!line.trimmed().isEmpty() && line.contains('=') && !currentDevice.isEmpty()) {
+                QStringList parts = line.split('=', Qt::SkipEmptyParts);
+                if (parts.size() >= 2) {
+                    QString key = parts[0].trimmed();
+                    QString value = parts[1].trimmed().remove('"');
+                    if (!value.isEmpty()) {
+                        addRow("  " + key, value);
+                    }
+                }
+            }
+        }
         inputFile.close();
     }
 
     // === USB Topology (usb-devices) ===
+    addSection("=== USB Topology (usb-devices) ===");
     QProcess usbDevices;
     usbDevices.start("usb-devices");
     usbDevices.waitForFinished(2000);
     QString usbDevOutput = usbDevices.readAllStandardOutput();
+    QApplication::processEvents();
 
     if (!usbDevOutput.isEmpty()) {
-        addRow("", "");
-        addRow("=== USB Topology (usb-devices) ===", "");
-        addRow("USB Device Tree", usbDevOutput.left(30000));
+        QStringList lines = usbDevOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : lines) {
+            if (line.contains(':') && !line.startsWith(" ")) {
+                QStringList parts = line.split(':', Qt::SkipEmptyParts);
+                if (parts.size() >= 2) {
+                    addRow(parts[0].trimmed(), parts[1].trimmed());
+                }
+            } else if (!line.trimmed().isEmpty()) {
+                addRow("Info", line.trimmed());
+            }
+        }
     }
 
     // === HID Devices ===
-    QFile hidrawDir("/sys/class/hidraw");
-    if (hidrawDir.exists()) {
-        addRow("", "");
-        addRow("=== HID Devices ===", "");
-        QProcess lsHid;
-        lsHid.start("bash", QStringList() << "-c" << "ls -la /sys/class/hidraw/");
-        lsHid.waitForFinished(1500);
-        QString hidOutput = lsHid.readAllStandardOutput();
-        QApplication::processEvents(); // Allow spinner to continue
-        if (!hidOutput.isEmpty()) {
-            addRow("HID Raw Devices", hidOutput);
+    addSection("=== HID Devices ===");
+    QProcess lsHid;
+    lsHid.start("bash", QStringList() << "-c" << "ls -la /sys/class/hidraw/");
+    lsHid.waitForFinished(1500);
+    QString hidOutput = lsHid.readAllStandardOutput();
+    QApplication::processEvents();
+    
+    if (!hidOutput.isEmpty()) {
+        QStringList lines = hidOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : lines) {
+            if (line.contains("hidraw")) {
+                addRow("HID Device", line.trimmed());
+            }
         }
     }
 
     // === Bluetooth Devices (if bluetoothctl available) ===
+    addSection("=== Bluetooth Devices ===");
     QProcess btctl;
     btctl.start("bluetoothctl", QStringList() << "devices");
     btctl.waitForFinished(2000);
     QString btOutput = btctl.readAllStandardOutput();
-    QApplication::processEvents(); // Allow spinner to continue
+    QApplication::processEvents();
 
     if (!btOutput.isEmpty() && !btOutput.contains("command not found")) {
-        addRow("", "");
-        addRow("=== Bluetooth Devices ===", "");
-        addRow("Bluetooth Devices", btOutput);
+        QStringList lines = btOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : lines) {
+            if (line.contains("Device")) {
+                addRow("Bluetooth Device", line.trimmed());
+            }
+        }
     }
 
     // === Network Interfaces (ip link) ===
+    addSection("=== Network Interfaces (ip link) ===");
     QProcess ipLink;
     ipLink.start("ip", QStringList() << "link" << "show");
     ipLink.waitForFinished(1000);
     QString ipOutput = ipLink.readAllStandardOutput();
+    QApplication::processEvents();
 
     if (!ipOutput.isEmpty()) {
-        addRow("", "");
-        addRow("=== Network Interfaces (ip link) ===", "");
-        addRow("Network Interfaces", ipOutput);
+        QStringList lines = ipOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : lines) {
+            QString trimmed = line.trimmed();
+            if (!trimmed.isEmpty()) {
+                addRow("Interface", trimmed);
+            }
+        }
     }
 
     // === /sys/class/net/ Network Devices ===
+    addSection("=== Network Device Classes ===");
     QProcess netDevices;
     netDevices.start("bash", QStringList() << "-c" << "ls -la /sys/class/net/");
     netDevices.waitForFinished(1000);
     QString netOutput = netDevices.readAllStandardOutput();
+    QApplication::processEvents();
 
     if (!netOutput.isEmpty()) {
-        addRow("", "");
-        addRow("=== Network Device Classes ===", "");
-        addRow("/sys/class/net/", netOutput);
+        QStringList lines = netOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : lines) {
+            if (!line.startsWith("total") && !line.trimmed().isEmpty()) {
+                addRow("Network Class", line.trimmed());
+            }
+        }
     }
 
     // === Sound Devices ===
+    addSection("=== Sound Cards (/proc/asound/cards) ===");
     QFile soundDevices("/proc/asound/cards");
     if (soundDevices.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        addRow("", "");
-        addRow("=== Sound Cards (/proc/asound/cards) ===", "");
-        QString soundContent = QTextStream(&soundDevices).readAll();
-        addRow("Sound Cards", soundContent);
+        QTextStream in(&soundDevices);
+        QString cardInfo;
+        while (!in.atEnd()) {
+            QString line = in.readLine();
+            if (!line.trimmed().isEmpty()) {
+                if (line.startsWith(" ")) {
+                    cardInfo += " " + line.trimmed();
+                } else {
+                    if (!cardInfo.isEmpty()) {
+                        addRow("Sound Card", cardInfo);
+                    }
+                    cardInfo = line.trimmed();
+                }
+            }
+        }
+        if (!cardInfo.isEmpty()) {
+            addRow("Sound Card", cardInfo);
+        }
         soundDevices.close();
     }
 
     // === Video Devices (/dev/video*) ===
+    addSection("=== Video Devices ===");
     QProcess videoDevs;
     videoDevs.start("bash", QStringList() << "-c" << "ls -la /dev/video* 2>/dev/null");
     videoDevs.waitForFinished(1000);
     QString videoOutput = videoDevs.readAllStandardOutput();
-    QApplication::processEvents(); // Allow spinner to continue
+    QApplication::processEvents();
 
     if (!videoOutput.isEmpty()) {
-        addRow("", "");
-        addRow("=== Video Devices ===", "");
-        addRow("Video Devices", videoOutput);
+        QStringList lines = videoOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : lines) {
+            addRow("Video Device", line.trimmed());
+        }
     }
 
     // === DRM Devices ===
+    addSection("=== DRM (Graphics) Devices ===");
     QProcess drmDevs;
     drmDevs.start("bash", QStringList() << "-c" << "ls -la /sys/class/drm/");
     drmDevs.waitForFinished(1000);
     QString drmOutput = drmDevs.readAllStandardOutput();
+    QApplication::processEvents();
 
     if (!drmOutput.isEmpty()) {
-        addRow("", "");
-        addRow("=== DRM (Graphics) Devices ===", "");
-        addRow("DRM Devices", drmOutput);
+        QStringList lines = drmOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : lines) {
+            if (!line.startsWith("total") && !line.trimmed().isEmpty()) {
+                addRow("DRM Device", line.trimmed());
+            }
+        }
     }
 
     // === CUPS Printers (lpstat -v) ===
+    addSection("=== CUPS Printers (lpstat -v) ===");
     QProcess lpstatV;
     lpstatV.start("lpstat", QStringList() << "-v");
     lpstatV.waitForFinished(1500);
     QString lpstatOutput = lpstatV.readAllStandardOutput();
+    QApplication::processEvents();
 
     if (!lpstatOutput.isEmpty()) {
-        addRow("", "");
-        addRow("=== CUPS Printers (lpstat -v) ===", "");
-        addRow("Printers", lpstatOutput);
+        QStringList lines = lpstatOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : lines) {
+            addRow("Printer", line.trimmed());
+        }
     }
 
     // === Printer Status (lpstat -p -d) ===
+    addSection("=== Printer Status ===");
     QProcess lpstatP;
     lpstatP.start("lpstat", QStringList() << "-p" << "-d");
     lpstatP.waitForFinished(1500);
     QString lpstatPOutput = lpstatP.readAllStandardOutput();
+    QApplication::processEvents();
 
     if (!lpstatPOutput.isEmpty()) {
-        addRow("", "");
-        addRow("=== Printer Status ===", "");
-        addRow("Status", lpstatPOutput);
+        QStringList lines = lpstatPOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : lines) {
+            addRow("Status", line.trimmed());
+        }
     }
 
     // === Display Information (xrandr) ===
+    addSection("=== Display Information (xrandr) ===");
     QProcess xrandr;
-    xrandr.start("xrandr", QStringList() << "--verbose");
+    xrandr.start("xrandr");
     xrandr.waitForFinished(1500);
     QString xrandrOutput = xrandr.readAllStandardOutput();
-    QApplication::processEvents(); // Allow spinner to continue
+    QApplication::processEvents();
 
     if (!xrandrOutput.isEmpty()) {
-        addRow("", "");
-        addRow("=== Display Information (xrandr --verbose) ===", "");
-        addRow("Displays", xrandrOutput.left(30000));
-    }
-
-    // === EDID Information (for external displays) ===
-    QProcess edid;
-    edid.start("bash", QStringList() << "-c" << "find /sys/devices -name edid -exec cat {} \\; 2>/dev/null | strings");
-    edid.waitForFinished(2000);
-    QString edidOutput = edid.readAllStandardOutput();
-
-    if (!edidOutput.isEmpty()) {
-        addRow("", "");
-        addRow("=== EDID Display Data ===", "");
-        addRow("EDID Info", edidOutput);
+        QStringList lines = xrandrOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : lines) {
+            QString trimmed = line.trimmed();
+            if (!trimmed.isEmpty()) {
+                if (line.startsWith("Screen") || line.contains("connected")) {
+                    addRow("Display", trimmed);
+                } else if (line.startsWith("   ")) {
+                    addRow("  Mode", trimmed);
+                }
+            }
+        }
     }
 
     // === MTP Devices (mtp-detect) ===
+    addSection("=== MTP Devices (Android/Mobile) ===");
     QProcess mtpDetect;
     mtpDetect.start("mtp-detect");
     mtpDetect.waitForFinished(2500);
     QString mtpOutput = mtpDetect.readAllStandardOutput();
-    QApplication::processEvents(); // Allow spinner to continue
+    QApplication::processEvents();
 
     if (!mtpOutput.isEmpty() && !mtpOutput.contains("Unable to find")) {
-        addRow("", "");
-        addRow("=== MTP Devices (Android/Mobile) ===", "");
-        addRow("MTP Devices", mtpOutput.left(30000));
+        QStringList lines = mtpOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : lines) {
+            QString trimmed = line.trimmed();
+            if (!trimmed.isEmpty() && trimmed.length() < 200) {
+                addRow("MTP Info", trimmed);
+            }
+        }
     }
 
     // === ADB Devices (if adb available) ===
+    addSection("=== ADB Devices (Android Debug Bridge) ===");
     QProcess adb;
     adb.start("adb", QStringList() << "devices" << "-l");
     adb.waitForFinished(2500);
     QString adbOutput = adb.readAllStandardOutput();
-    QApplication::processEvents(); // Allow spinner to continue
+    QApplication::processEvents();
 
     if (!adbOutput.isEmpty() && !adbOutput.contains("command not found")) {
-        addRow("", "");
-        addRow("=== ADB Devices (Android Debug Bridge) ===", "");
-        addRow("ADB Devices", adbOutput);
+        QStringList lines = adbOutput.split('\n', Qt::SkipEmptyParts);
+        for (const QString& line : lines) {
+            if (!line.startsWith("List") && !line.trimmed().isEmpty()) {
+                addRow("ADB Device", line.trimmed());
+            }
+        }
     }
 
     // === Scanners (scanimage -L) ===
