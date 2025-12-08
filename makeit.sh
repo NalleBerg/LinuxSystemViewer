@@ -83,8 +83,13 @@ if [ -d "i18n" ]; then
     # re-generation during frequent builds and handles missing lrelease more
     # gracefully.
     if ls i18n/*.ts >/dev/null 2>&1; then
-        if command -v lrelease >/dev/null 2>&1; then
+        if command -v lrelease >/dev/null 2>&1 || command -v /usr/lib/qt6/bin/lrelease >/dev/null 2>&1; then
             echo "🔤 Generating/updating .qm translation files from .ts (only when needed)..."
+            # Use the full path if the system lrelease is not found
+            LRELEASE_CMD="lrelease"
+            if ! command -v lrelease >/dev/null 2>&1; then
+                LRELEASE_CMD="/usr/lib/qt6/bin/lrelease"
+            fi
             for ts in i18n/*.ts; do
                 # If the glob didn't match any files the loop will iterate with
                 # the literal pattern on some shells; guard against that.
@@ -92,7 +97,7 @@ if [ -d "i18n" ]; then
                 qm="${ts%.ts}.qm"
                 if [ ! -f "$qm" ] || [ "$ts" -nt "$qm" ]; then
                     echo "  • Generating $qm from $ts"
-                    if ! lrelease "$ts"; then
+                    if ! $LRELEASE_CMD "$ts"; then
                         echo "❌ lrelease failed for $ts"
                         exit 1
                     fi

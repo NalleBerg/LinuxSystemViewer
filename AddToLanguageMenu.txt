@@ -52,3 +52,23 @@ and internal validation, but the GUI dropdown uses the hardcoded list.
 
 Remember: Languages appear in the dropdown in the order specified in the
 hardcoded codes list, so maintain alphabetical order by display name.
+
+static QMap<QString, QString> shippedLanguageDisplayNames()
+{
+    QMap<QString, QString> m;
+    // Ship English (UK), German, Spanish, French, Norwegian Bokmål, Icelandic, Greek, Danish, Finnish, and Swedish in the UI list.
+    // The repository and packaging contain these translators
+    // and the application presents these languages to users.
+    m.insert("en_GB", "English (UK)");
+    m.insert("en", "English (UK)");
+    m.insert("da", "Dansk");
+    m.insert("de", "Deutsch");
+    m.insert("el", "Ελληνικά");
+    m.insert("es", "Español");
+    m.insert("fi", "Suomi");
+    m.insert("fr", "Français");
+    m.insert("nb", "Norsk (Bokmål)");
+    m.insert("is", "Íslenska");
+    m.insert("sv", "Svenska");
+    return m;
+}

@@ -11,6 +11,7 @@
 #include <QProcess>
 #include <QThread>
 #include <QTimer>
+#include <QThread>
 #include <QPainter>
 #include <QPropertyAnimation>
 #include <QGraphicsEffect>
@@ -58,7 +59,15 @@ AudioTab::AudioTab(QWidget* parent)
     geekButton = gb;
     connect(geekButton, &QPushButton::clicked, this, &AudioTab::showGeekMode);
     
-    // Test Sound button - insert before Geek button
+    // Add loading indicator first
+    loadingLabel = new QLabel(tr("Loading, please wait..."), this);
+    loadingLabel->setStyleSheet("QLabel { font-weight: bold; color: #333; margin-right: 10px; }");
+    loadingLabel->hide();
+    
+    // Add loading elements to headline layout before other buttons
+    headlineLayout->insertWidget(headlineLayout->count() - 1, loadingLabel);  // Before geek button
+    
+    // Test Sound button - insert after loading indicator but before Geek button
     testSoundButton = new QPushButton(tr("Sound-test"));
     testSoundButton->setStyleSheet(geekButton->styleSheet()); // Same style as Geek button
     connect(testSoundButton, &QPushButton::clicked, this, &AudioTab::testSound);
@@ -118,29 +127,26 @@ void AudioTab::hideEvent(QHideEvent* ev)
 
 void AudioTab::showGeekMode()
 {
-    // Working inline dialog approach
-    QDialog* loading = new QDialog(this);
-    loading->setWindowTitle(tr("Loading"));
-    loading->setModal(true);
-    loading->setFixedSize(300, 100);
+    showMainTabSpinner();
     
-    QVBoxLayout* layout = new QVBoxLayout(loading);
-    QLabel* label = new QLabel(tr("Scanning audio devices, please wait..."), loading);
-    label->setAlignment(Qt::AlignCenter);
-    layout->addWidget(label);
-    
-    loading->show();
-    QApplication::processEvents();
-    
-    // Create and populate dialog while progress is showing
+    // Create and populate dialog while spinner runs
     AudioGeekDialog dlg(this);
+    // The AudioGeekDialog constructor calls fillTable automatically
     
-    // Close loading dialog
-    loading->close();
-    delete loading;
+    hideMainTabSpinner();
     
     // Show the actual geek mode dialog
     dlg.exec();
+}
+
+void AudioTab::showMainTabSpinner()
+{
+    loadingLabel->show();
+}
+
+void AudioTab::hideMainTabSpinner()
+{
+    loadingLabel->hide();
 }
 
 void AudioTab::testSound()
@@ -599,6 +605,15 @@ AudioGeekDialog::AudioGeekDialog(QWidget* parent)
     QPushButton* rescanBtn = new QPushButton(tr("Rescan"));
     buttonLayout->addWidget(rescanBtn);
     
+    // Add rescanning text label
+    QLabel* rescanningLabel = new QLabel(tr("Rescanning, please wait..."), this);
+    rescanningLabel->setStyleSheet("QLabel { font-weight: bold; color: #333; }");
+    rescanningLabel->hide();
+    buttonLayout->addWidget(rescanningLabel);
+    
+    // Store rescanning label for show/hide
+    this->setProperty("rescanningLabel", QVariant::fromValue(rescanningLabel));
+    
     // Add search button using the integration helper
     GeekSearchIntegration::addSearchButtonToGeekDialog(buttonLayout, this, table);
     
@@ -642,26 +657,28 @@ void AudioGeekDialog::hideEvent(QHideEvent* ev)
 
 void AudioGeekDialog::rescan()
 {
-    // Working inline dialog approach
-    QDialog* loading = new QDialog(this);
-    loading->setWindowTitle(tr("Loading"));
-    loading->setModal(true);
-    loading->setFixedSize(300, 100);
+    showSpinner();
     
-    QVBoxLayout* layout = new QVBoxLayout(loading);
-    QLabel* label = new QLabel(tr("Rescanning audio devices, please wait..."), loading);
-    label->setAlignment(Qt::AlignCenter);
-    layout->addWidget(label);
-    
-    loading->show();
-    QApplication::processEvents();
-    
-    // Refresh the data
+    // Refresh the data - fillTable has processEvents calls to keep spinner running
     fillTable();
     
-    // Close loading dialog
-    loading->close();
-    delete loading;
+    hideSpinner();
+}
+
+void AudioGeekDialog::showSpinner()
+{
+    // Show rescanning label
+    if (auto rescanningLabel = this->property("rescanningLabel").value<QLabel*>()) {
+        rescanningLabel->show();
+    }
+}
+
+void AudioGeekDialog::hideSpinner()
+{
+    // Hide rescanning label
+    if (auto rescanningLabel = this->property("rescanningLabel").value<QLabel*>()) {
+        rescanningLabel->hide();
+    }
 }
 
 void AudioGeekDialog::copyToClipboard()
@@ -742,6 +759,7 @@ void AudioGeekDialog::fillTable()
     pactlProc.start("pactl", QStringList() << "info");
     pactlProc.waitForFinished(2000);
     QString pactlOutput = QString::fromLocal8Bit(pactlProc.readAllStandardOutput());
+    QApplication::processEvents(); // Allow spinner to continue
     if (!pactlOutput.isEmpty()) {
         QStringList lines = pactlOutput.split('\n', Qt::SkipEmptyParts);
         for (const QString& line : lines) {
@@ -863,6 +881,7 @@ void AudioGeekDialog::fillTable()
     lshwProc.start("sh", QStringList() << "-c" << "lshw -C multimedia 2>/dev/null | grep -E '(product:|vendor:|driver:|version:|bus info:|capabilities:)'");
     lshwProc.waitForFinished(3000);
     QString lshwOutput = QString::fromLocal8Bit(lshwProc.readAllStandardOutput());
+    QApplication::processEvents(); // Allow spinner to continue
     if (!lshwOutput.isEmpty()) {
         QStringList lines = lshwOutput.split('\n', Qt::SkipEmptyParts);
         for (const QString& line : lines) {
@@ -882,9 +901,10 @@ void AudioGeekDialog::fillTable()
     QProcess lsmodProc;
     lsmodProc.start("sh", QStringList() << "-c" << "lsmod | grep -E '(snd|audio)' | awk '{print $1}'");
     lsmodProc.waitForFinished(2000);
-    QString modulesOutput = QString::fromLocal8Bit(lsmodProc.readAllStandardOutput());
-    if (!modulesOutput.isEmpty()) {
-        QStringList modules = modulesOutput.split('\n', Qt::SkipEmptyParts);
+    QString lsmodOutput = QString::fromLocal8Bit(lsmodProc.readAllStandardOutput());
+    QApplication::processEvents(); // Allow spinner to continue
+    if (!lsmodOutput.isEmpty()) {
+        QStringList modules = lsmodOutput.split('\n', Qt::SkipEmptyParts);
         for (const QString& module : modules) {
             addRow("Module", module.trimmed());
         }

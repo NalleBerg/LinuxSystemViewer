@@ -8,6 +8,8 @@
 #include <QDialog>
 #include <QListWidget>
 #include <QProcess>
+#include <QLabel>
+#include <QStringList>
 
 class AudioGeekDialog;
 
@@ -38,6 +40,17 @@ private:
     QPushButton* geekButton;
     QPushButton* testSoundButton;
     QProcess* soundProcess;
+    
+    // Loading spinner for main tab
+    QLabel* loadingLabel;
+    QLabel* spinnerLabel;
+    QTimer* spinnerTimer;
+    int spinnerIndex;
+    const QStringList spinnerChars = {"\u280b", "\u2819", "\u2839", "\u2838", "\u283c", "\u2834", "\u2826", "\u2827", "\u2807", "\u280f"};
+    
+    void showMainTabSpinner();
+    void hideMainTabSpinner();
+    void updateMainTabSpinner();
 };
 
 // --- Geek Mode Dialog ---
@@ -59,6 +72,8 @@ private slots:
 private:
     void fillTable();
     QTableWidget* table;
+    void showSpinner();
+    void hideSpinner();
 };
 
 #endif // AUDIO_TAB_H

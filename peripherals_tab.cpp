@@ -43,6 +43,14 @@ PeripheralsTab::PeripheralsTab(QWidget* parent)
     QHBoxLayout* headlineLayout = createHeadlineWithGeek(this, tr("Peripherals"), &gb);
     geekButton = gb;
     connect(geekButton, &QPushButton::clicked, this, &PeripheralsTab::showGeekMode);
+    
+    // Add loading indicator next to Geek button
+    loadingLabel = new QLabel(tr("Loading, please wait..."), this);
+    loadingLabel->setStyleSheet("QLabel { font-weight: bold; color: #333; margin-right: 10px; }");
+    loadingLabel->hide();
+    
+    // Add loading elements to headline layout
+    headlineLayout->insertWidget(headlineLayout->count() - 1, loadingLabel);  // Before geek button
 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     applyMainLayoutDefaults(mainLayout);
@@ -352,30 +360,26 @@ void PeripheralsTab::refreshPeripherals()
 
 void PeripheralsTab::showGeekMode()
 {
-    // Working inline dialog approach
-    QDialog* loading = new QDialog(this);
-    loading->setWindowTitle(tr("Loading"));
-    loading->setModal(true);
-    loading->setFixedSize(300, 100);
+    showMainTabSpinner();
     
-    QVBoxLayout* layout = new QVBoxLayout(loading);
-    QLabel* label = new QLabel(tr("Scanning peripherals, please wait..."), loading);
-    label->setAlignment(Qt::AlignCenter);
-    layout->addWidget(label);
-    
-    loading->show();
-    QApplication::processEvents();
-    
-    // Create and populate dialog while progress is showing
+    // Create dialog and load data while spinner runs
     GeekPeripheralsDialog dlg(this);
-    dlg.loadData();
+    dlg.loadData();  // This calls fillTable() which now has processEvents
     
-    // Close loading dialog
-    loading->close();
-    delete loading;
+    hideMainTabSpinner();
     
     // Show the populated dialog
     dlg.exec();
+}
+
+void PeripheralsTab::showMainTabSpinner()
+{
+    loadingLabel->show();
+}
+
+void PeripheralsTab::hideMainTabSpinner()
+{
+    loadingLabel->hide();
 }
 
 // --- GeekPeripheralsDialog ---
@@ -412,6 +416,16 @@ GeekPeripheralsDialog::GeekPeripheralsDialog(QWidget* parent)
     // Left side: Rescan button
     QPushButton* rescanBtn = new QPushButton(tr("Rescan"));
     buttonLayout->addWidget(rescanBtn);
+    
+    // Add rescanning text label
+    QLabel* rescanningLabel = new QLabel(tr("Rescanning, please wait..."), this);
+    rescanningLabel->setStyleSheet("QLabel { font-weight: bold; color: #333; }");
+    rescanningLabel->hide();
+    buttonLayout->addWidget(rescanningLabel);
+    
+    // Store rescanning label for show/hide
+    this->setProperty("rescanningLabel", QVariant::fromValue(rescanningLabel));
+    
     buttonLayout->addStretch();
     
     // Right side: Copy, Save, Close buttons
@@ -427,29 +441,8 @@ GeekPeripheralsDialog::GeekPeripheralsDialog(QWidget* parent)
     buttonLayout->addWidget(buttonBox);
     layout->addLayout(buttonLayout);
     
-    // Connect Rescan button
-    connect(rescanBtn, &QPushButton::clicked, [this]() {
-        // Working inline dialog approach
-        QDialog* loading = new QDialog(this);
-        loading->setWindowTitle(tr("Loading"));
-        loading->setModal(true);
-        loading->setFixedSize(300, 100);
-        
-        QVBoxLayout* layout = new QVBoxLayout(loading);
-        QLabel* label = new QLabel(tr("Rescanning peripherals, please wait..."), loading);
-        label->setAlignment(Qt::AlignCenter);
-        layout->addWidget(label);
-        
-        loading->show();
-        QApplication::processEvents();
-        
-        // Rescan data
-        fillTable();
-        
-        // Close loading dialog
-        loading->close();
-        delete loading;
-    });
+    // Connect Rescan button to new rescan method
+    connect(rescanBtn, &QPushButton::clicked, this, &GeekPeripheralsDialog::rescan);
 
     // Enable copy on main geek table (right-click + Ctrl+C)
     enableTableCopy(table, nullptr);
@@ -537,6 +530,7 @@ void GeekPeripheralsDialog::fillTable()
     lsusb.start("lsusb", QStringList() << "-v");
     lsusb.waitForFinished(2000);
     QString usbOutput = lsusb.readAllStandardOutput();
+    QApplication::processEvents(); // Allow spinner to continue
 
     if (!usbOutput.isEmpty()) {
         addRow("=== USB Devices (lsusb -v) ===", "");
@@ -548,6 +542,7 @@ void GeekPeripheralsDialog::fillTable()
     lspci.start("lspci", QStringList() << "-vv");
     lspci.waitForFinished(2000);
     QString pciOutput = lspci.readAllStandardOutput();
+    QApplication::processEvents(); // Allow spinner to continue
 
     if (!pciOutput.isEmpty()) {
         addRow("", "");
@@ -586,6 +581,7 @@ void GeekPeripheralsDialog::fillTable()
         lsHid.start("bash", QStringList() << "-c" << "ls -la /sys/class/hidraw/");
         lsHid.waitForFinished(1500);
         QString hidOutput = lsHid.readAllStandardOutput();
+        QApplication::processEvents(); // Allow spinner to continue
         if (!hidOutput.isEmpty()) {
             addRow("HID Raw Devices", hidOutput);
         }
@@ -596,6 +592,7 @@ void GeekPeripheralsDialog::fillTable()
     btctl.start("bluetoothctl", QStringList() << "devices");
     btctl.waitForFinished(2000);
     QString btOutput = btctl.readAllStandardOutput();
+    QApplication::processEvents(); // Allow spinner to continue
 
     if (!btOutput.isEmpty() && !btOutput.contains("command not found")) {
         addRow("", "");
@@ -642,6 +639,7 @@ void GeekPeripheralsDialog::fillTable()
     videoDevs.start("bash", QStringList() << "-c" << "ls -la /dev/video* 2>/dev/null");
     videoDevs.waitForFinished(1000);
     QString videoOutput = videoDevs.readAllStandardOutput();
+    QApplication::processEvents(); // Allow spinner to continue
 
     if (!videoOutput.isEmpty()) {
         addRow("", "");
@@ -690,6 +688,7 @@ void GeekPeripheralsDialog::fillTable()
     xrandr.start("xrandr", QStringList() << "--verbose");
     xrandr.waitForFinished(1500);
     QString xrandrOutput = xrandr.readAllStandardOutput();
+    QApplication::processEvents(); // Allow spinner to continue
 
     if (!xrandrOutput.isEmpty()) {
         addRow("", "");
@@ -714,6 +713,7 @@ void GeekPeripheralsDialog::fillTable()
     mtpDetect.start("mtp-detect");
     mtpDetect.waitForFinished(2500);
     QString mtpOutput = mtpDetect.readAllStandardOutput();
+    QApplication::processEvents(); // Allow spinner to continue
 
     if (!mtpOutput.isEmpty() && !mtpOutput.contains("Unable to find")) {
         addRow("", "");
@@ -726,6 +726,7 @@ void GeekPeripheralsDialog::fillTable()
     adb.start("adb", QStringList() << "devices" << "-l");
     adb.waitForFinished(2500);
     QString adbOutput = adb.readAllStandardOutput();
+    QApplication::processEvents(); // Allow spinner to continue
 
     if (!adbOutput.isEmpty() && !adbOutput.contains("command not found")) {
         addRow("", "");
@@ -791,5 +792,31 @@ void GeekPeripheralsDialog::fillTable()
         addRow("", "");
         addRow("=== Gamepad/Joystick Devices ===", "");
         addRow("Game Controllers", gamepadOutput);
+    }
+}
+
+void GeekPeripheralsDialog::rescan()
+{
+    showSpinner();
+    
+    // Refresh the data - fillTable now has processEvents calls to keep spinner running
+    fillTable();
+    
+    hideSpinner();
+}
+
+void GeekPeripheralsDialog::showSpinner()
+{
+    // Show rescanning label
+    if (auto rescanningLabel = this->property("rescanningLabel").value<QLabel*>()) {
+        rescanningLabel->show();
+    }
+}
+
+void GeekPeripheralsDialog::hideSpinner()
+{
+    // Hide rescanning label
+    if (auto rescanningLabel = this->property("rescanningLabel").value<QLabel*>()) {
+        rescanningLabel->hide();
     }
 }

@@ -10,7 +10,7 @@ cd "$ROOT_DIR"
 mkdir -p i18n
 
 # Languages we ship / want translators for
-LANGS=(en fr da de sv nb)
+LANGS=(en fr da de sv nb fi)
 
 # Create .ts files using lupdate (skip English since it's the source)
 for L in "${LANGS[@]}"; do
@@ -20,7 +20,7 @@ for L in "${LANGS[@]}"; do
     fi
     TSFILE="i18n/lsv_${L}.ts"
     echo "Generating $TSFILE"
-    lupdate . -ts "$TSFILE"
+    /usr/lib/qt6/bin/lupdate . -ts "$TSFILE"
 done
 
 echo "Created .ts files in i18n/ — open them in Qt Linguist and translate, then run scripts/build_translations.sh"

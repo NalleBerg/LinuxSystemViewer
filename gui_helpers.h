@@ -25,6 +25,12 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QTimer>
+#include <QDialog>
+#include <QIcon>
+#include <QColor>
+#include <QPixmap>
+#include <QTransform>
+#include <QPalette>
 
 // Search result structure
 struct SearchResult {

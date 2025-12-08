@@ -186,13 +186,20 @@ private:
         QString ifName = interface.name();
         QString deviceName = ifName;
         
-        // Enhanced USB device detection
+        // Get hardware information from PCI subsystem
+        QString sysPath = QString("/sys/class/net/%1/device").arg(ifName);
+        QString hwName = getHardwareDeviceName(sysPath);
+        if (!hwName.isEmpty()) {
+            return hwName;
+        }
+        
+        // Enhanced USB device detection (fallback for USB adapters)
         if (ifName.startsWith("wlx")) {
-            QString sysPath = QString("/sys/class/net/%1").arg(ifName);
-            QFile usbVendor(sysPath + "/device/../idVendor");
-            QFile usbProduct(sysPath + "/device/../idProduct");
-            QFile usbManufacturer(sysPath + "/device/../manufacturer");
-            QFile usbProductName(sysPath + "/device/../product");
+            QString usbSysPath = QString("/sys/class/net/%1").arg(ifName);
+            QFile usbVendor(usbSysPath + "/device/../idVendor");
+            QFile usbProduct(usbSysPath + "/device/../idProduct");
+            QFile usbManufacturer(usbSysPath + "/device/../manufacturer");
+            QFile usbProductName(usbSysPath + "/device/../product");
             
             if (usbVendor.open(QIODevice::ReadOnly) && usbProduct.open(QIODevice::ReadOnly)) {
                 QString vendor = QString::fromLatin1(usbVendor.readAll()).trimmed();
@@ -230,13 +237,133 @@ private:
                 }
             }
             return "USB WiFi Adapter";
-        } else if (ifName.startsWith("wlp")) {
-            return "Broadcom 802.11ac Wireless Network Adapter";
+        }
+        
+        // Legacy fallback patterns (should rarely be used now)
+        if (ifName.startsWith("wlp") || ifName.startsWith("wlo")) {
+            return "Wireless Network Adapter";
         } else if (ifName.startsWith("en") || ifName.startsWith("eth")) {
-            return "Ethernet Network Controller";
+            return "Ethernet Network Adapter";
         }
         
         return deviceName;
+    }
+
+    QString getHardwareDeviceName(const QString& devicePath)
+    {
+        // Read PCI vendor and device IDs
+        QFile vendorFile(devicePath + "/vendor");
+        QFile deviceFile(devicePath + "/device");
+        QFile subsysVendorFile(devicePath + "/subsystem_vendor");
+        QFile subsysDeviceFile(devicePath + "/subsystem_device");
+        
+        if (!vendorFile.open(QIODevice::ReadOnly) || !deviceFile.open(QIODevice::ReadOnly)) {
+            return QString();
+        }
+        
+        QString vendorId = QString::fromLatin1(vendorFile.readAll()).trimmed().toLower();
+        QString deviceId = QString::fromLatin1(deviceFile.readAll()).trimmed().toLower();
+        
+        // Remove 0x prefix if present
+        if (vendorId.startsWith("0x")) vendorId = vendorId.mid(2);
+        if (deviceId.startsWith("0x")) deviceId = deviceId.mid(2);
+        
+        // Get subsystem IDs for more specific identification
+        QString subsysVendorId, subsysDeviceId;
+        if (subsysVendorFile.open(QIODevice::ReadOnly) && subsysDeviceFile.open(QIODevice::ReadOnly)) {
+            subsysVendorId = QString::fromLatin1(subsysVendorFile.readAll()).trimmed().toLower();
+            subsysDeviceId = QString::fromLatin1(subsysDeviceFile.readAll()).trimmed().toLower();
+            if (subsysVendorId.startsWith("0x")) subsysVendorId = subsysVendorId.mid(2);
+            if (subsysDeviceId.startsWith("0x")) subsysDeviceId = subsysDeviceId.mid(2);
+        }
+        
+        // Map vendor:device combinations to human-readable names
+        if (vendorId == "8086") { // Intel
+            if (deviceId == "51f0") return "Intel Wi-Fi 6E AX210 160MHz";
+            if (deviceId == "51f1") return "Intel Wi-Fi 6E AX211 160MHz";
+            if (deviceId == "2725") return "Intel Wi-Fi 6 AX210 160MHz";
+            if (deviceId == "2720") return "Intel Wi-Fi 6 AX201 160MHz";
+            if (deviceId == "02f0") return "Intel Comet Lake PCH CNVi WiFi";
+            if (deviceId == "a0f0") return "Intel Wi-Fi 6 AX201";
+            if (deviceId == "34f0") return "Intel Ice Lake-LP PCH CNVi WiFi";
+            if (deviceId == "06f0") return "Intel Comet Lake PCH CNVi WiFi";
+            if (deviceId == "4df0") return "Intel Tiger Lake PCH CNVi WiFi 6E AX210";
+            if (deviceId == "4238") return "Intel Centrino Ultimate-N 6300";
+            if (deviceId == "4239") return "Intel Centrino Advanced-N 6200";
+            if (deviceId == "08b1") return "Intel Wireless 7260";
+            if (deviceId == "08b2") return "Intel Wireless 7260";
+            if (deviceId == "24f3") return "Intel Wireless 8260";
+            if (deviceId == "24f4") return "Intel Wireless 8260";
+            if (deviceId == "9df0") return "Intel Cannon Point-LP CNVi [Wireless-AC]";
+            if (deviceId == "2526") return "Intel Wireless-AC 9260";
+            if (deviceId == "271b") return "Intel Dual Band Wireless-AC 9560";
+            if (deviceId == "271c") return "Intel Dual Band Wireless-AC 9560";
+            // Ethernet controllers
+            if (deviceId == "15b7") return "Intel Ethernet Connection (2) I219-LM";
+            if (deviceId == "15b8") return "Intel Ethernet Connection (2) I219-V";
+            if (deviceId == "15d7") return "Intel Ethernet Connection (4) I219-LM";
+            if (deviceId == "15d8") return "Intel Ethernet Connection (4) I219-V";
+            if (deviceId == "15e3") return "Intel Ethernet Connection (5) I219-LM";
+            if (deviceId == "1570") return "Intel Ethernet Connection (12) I219-V";
+            // Generic Intel WiFi/Ethernet fallback
+            return QString("Intel Network Adapter (ID %1:%2)").arg(vendorId, deviceId);
+        }
+        else if (vendorId == "10ec") { // Realtek
+            if (deviceId == "8168") return "Realtek RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller";
+            if (deviceId == "8125") return "Realtek RTL8125 2.5GbE Controller";
+            if (deviceId == "8169") return "Realtek RTL8169 PCI Gigabit Ethernet Controller";
+            if (deviceId == "8139") return "Realtek RTL-8100/8101L/8139 PCI Fast Ethernet Adapter";
+            if (deviceId == "8821") return "Realtek RTL8821CE 802.11ac PCIe Wireless Network Adapter";
+            if (deviceId == "8822") return "Realtek RTL8822CE 802.11ac PCIe Wireless Network Adapter";
+            if (deviceId == "c821") return "Realtek RTL8821CE 802.11ac PCIe Wireless Network Adapter";
+            if (deviceId == "c822") return "Realtek RTL8822CE 802.11ac PCIe Wireless Network Adapter";
+            return QString("Realtek Network Adapter (ID %1:%2)").arg(vendorId, deviceId);
+        }
+        else if (vendorId == "14e4") { // Broadcom
+            if (deviceId == "43a0") return "Broadcom BCM4360 802.11ac Wireless Network Adapter";
+            if (deviceId == "43a3") return "Broadcom BCM4350 802.11ac Wireless Network Adapter";
+            if (deviceId == "4331") return "Broadcom BCM4331 802.11a/b/g/n";
+            if (deviceId == "4353") return "Broadcom BCM4353 802.11ac Wireless Network Adapter";
+            return QString("Broadcom Network Adapter (ID %1:%2)").arg(vendorId, deviceId);
+        }
+        else if (vendorId == "1969") { // Atheros/Qualcomm
+            if (deviceId == "1063") return "Atheros AR8131 Gigabit Ethernet";
+            if (deviceId == "1062") return "Atheros AR8132 Fast Ethernet";
+            if (deviceId == "2062") return "Atheros AR8152 v2.0 Fast Ethernet";
+            if (deviceId == "1073") return "Atheros AR8151 v1.0 Gigabit Ethernet";
+            return QString("Atheros Network Adapter (ID %1:%2)").arg(vendorId, deviceId);
+        }
+        else if (vendorId == "168c") { // Qualcomm Atheros WiFi
+            if (deviceId == "0042") return "Qualcomm Atheros QCA9377 802.11ac Wireless Network Adapter";
+            if (deviceId == "0032") return "Qualcomm Atheros AR9485 Wireless Network Adapter";
+            if (deviceId == "0034") return "Qualcomm Atheros AR9462 Wireless Network Adapter";
+            if (deviceId == "003e") return "Qualcomm Atheros QCA6174 802.11ac Wireless Network Adapter";
+            return QString("Qualcomm Atheros WiFi Adapter (ID %1:%2)").arg(vendorId, deviceId);
+        }
+        else if (vendorId == "11ab") { // Marvell
+            if (deviceId == "4362") return "Marvell 88W8363 [TopDog] 802.11n Wireless";
+            if (deviceId == "4320") return "Marvell 88W8363 [TopDog] 802.11n Wireless";
+            return QString("Marvell Network Adapter (ID %1:%2)").arg(vendorId, deviceId);
+        }
+        
+        // Generic fallback with vendor name
+        QString vendorName = getVendorName(vendorId);
+        return QString("%1 Network Adapter (ID %2:%3)").arg(vendorName, vendorId, deviceId);
+    }
+
+    QString getVendorName(const QString& vendorId)
+    {
+        if (vendorId == "8086") return "Intel";
+        if (vendorId == "10ec") return "Realtek";
+        if (vendorId == "14e4") return "Broadcom";
+        if (vendorId == "1969") return "Atheros";
+        if (vendorId == "168c") return "Qualcomm Atheros";
+        if (vendorId == "11ab") return "Marvell";
+        if (vendorId == "1022") return "AMD";
+        if (vendorId == "10de") return "NVIDIA";
+        if (vendorId == "1106") return "VIA";
+        if (vendorId == "1039") return "SiS";
+        return "Unknown Vendor";
     }
     
     QString getDeviceStatus(const QNetworkInterface& interface)

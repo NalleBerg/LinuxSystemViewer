@@ -880,58 +880,58 @@ to the clipboard.</source>
 <context>
     <name>GeekOsDialog</name>
     <message>
-        <location filename="../os_tab.cpp" line="205"/>
+        <location filename="../os_tab.cpp" line="238"/>
         <source>OS - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="210"/>
+        <location filename="../os_tab.cpp" line="243"/>
         <source>OS Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="216"/>
+        <location filename="../os_tab.cpp" line="249"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="216"/>
+        <location filename="../os_tab.cpp" line="249"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="233"/>
+        <location filename="../os_tab.cpp" line="266"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="234"/>
+        <location filename="../os_tab.cpp" line="267"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="243"/>
+        <location filename="../os_tab.cpp" line="276"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="261"/>
+        <location filename="../os_tab.cpp" line="294"/>
         <source>Copied</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="262"/>
+        <location filename="../os_tab.cpp" line="295"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="270"/>
+        <location filename="../os_tab.cpp" line="303"/>
         <source>Save OS Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="270"/>
+        <location filename="../os_tab.cpp" line="303"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1711,7 +1711,77 @@ to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="134"/>
+        <location filename="../os_tab.cpp" line="104"/>
+        <source>Distribution Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="106"/>
+        <source>Distribution Version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="108"/>
+        <source>Distribution ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="110"/>
+        <source>Version ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="112"/>
+        <source>Full Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="114"/>
+        <source>Version Codename</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="116"/>
+        <source>Ubuntu Codename</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="118"/>
+        <source>Home Page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="120"/>
+        <source>Support Page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="122"/>
+        <source>Bug Report Page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="124"/>
+        <source>Privacy Policy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="126"/>
+        <source>Build ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="128"/>
+        <source>Variant</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="130"/>
+        <source>Variant ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="167"/>
         <source>uname: %1
 </source>
         <translation type="unfinished"></translation>
@@ -1763,7 +1833,7 @@ to the clipboard.</source>
     <message>
         <location filename="../pc_tab.cpp" line="143"/>
         <source>Version</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Version</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="144"/>
@@ -2145,141 +2215,134 @@ to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="609"/>
+        <location filename="../lsv.cpp" line="616"/>
         <source>Cleaning up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="611"/>
+        <location filename="../lsv.cpp" line="618"/>
         <source>Cleaning up temporary files...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1051"/>
+        <location filename="../lsv.cpp" line="1063"/>
         <source>Cannot elevate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1051"/>
+        <location filename="../lsv.cpp" line="1063"/>
         <source>No terminal emulator found to prompt for a password.
 Please run the application as root.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1057"/>
+        <location filename="../lsv.cpp" line="1069"/>
         <source>Please enter password to run Linux System Viewer as root</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1129"/>
+        <location filename="../lsv.cpp" line="1141"/>
         <source>Linux System Viewer %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1186"/>
+        <location filename="../lsv.cpp" line="1198"/>
         <source>Authentication failed (%1/3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1220"/>
+        <location filename="../lsv.cpp" line="1232"/>
         <source>Elevation failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1220"/>
+        <location filename="../lsv.cpp" line="1232"/>
         <source>Failed to start a terminal to request sudo password. Please run the application as root.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1262"/>
-        <location filename="../lsv.cpp" line="1501"/>
+        <location filename="../lsv.cpp" line="1274"/>
+        <location filename="../lsv.cpp" line="1508"/>
         <source>Choose language</source>
         <translation>Choisir la langue</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1262"/>
-        <location filename="../lsv.cpp" line="1493"/>
-        <location filename="../lsv.cpp" line="1499"/>
+        <location filename="../lsv.cpp" line="1274"/>
+        <location filename="../lsv.cpp" line="1507"/>
         <source>Language:</source>
         <translation>Langue :</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1273"/>
-        <location filename="../lsv.cpp" line="1509"/>
+        <location filename="../lsv.cpp" line="1285"/>
+        <location filename="../lsv.cpp" line="1516"/>
         <source>Language selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1273"/>
+        <location filename="../lsv.cpp" line="1285"/>
         <source>Failed to write language selection to %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1286"/>
-        <location filename="../lsv.cpp" line="1383"/>
+        <location filename="../lsv.cpp" line="1298"/>
+        <location filename="../lsv.cpp" line="1395"/>
         <source>Linux System Viewer V. %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1331"/>
-        <location filename="../lsv.cpp" line="1384"/>
+        <location filename="../lsv.cpp" line="1343"/>
+        <location filename="../lsv.cpp" line="1396"/>
         <source>Linux System Viewer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1350"/>
-        <location filename="../lsv.cpp" line="1385"/>
+        <location filename="../lsv.cpp" line="1362"/>
+        <location filename="../lsv.cpp" line="1397"/>
         <source>About Linux System Viewer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1392"/>
-        <location filename="../lsv.cpp" line="1454"/>
+        <location filename="../lsv.cpp" line="1404"/>
+        <location filename="../lsv.cpp" line="1467"/>
         <source>Language</source>
         <translation>Langue</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1394"/>
-        <location filename="../lsv.cpp" line="1456"/>
+        <location filename="../lsv.cpp" line="1406"/>
+        <location filename="../lsv.cpp" line="1469"/>
         <source>Change language...</source>
         <translation>Changer de langue...</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1396"/>
-        <location filename="../lsv.cpp" line="1458"/>
-        <location filename="../lsv.cpp" line="1526"/>
-        <location filename="../lsv.cpp" line="1537"/>
+        <location filename="../lsv.cpp" line="1408"/>
+        <location filename="../lsv.cpp" line="1471"/>
+        <location filename="../lsv.cpp" line="1533"/>
+        <location filename="../lsv.cpp" line="1544"/>
         <source>Reset language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1499"/>
-        <source>Current: %1
-%2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../lsv.cpp" line="1509"/>
+        <location filename="../lsv.cpp" line="1516"/>
         <source>Failed to write language selection to configuration directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1519"/>
+        <location filename="../lsv.cpp" line="1526"/>
         <source>Language changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1519"/>
+        <location filename="../lsv.cpp" line="1526"/>
         <source>Language saved. UI updated to the selected language.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1526"/>
+        <location filename="../lsv.cpp" line="1533"/>
         <source>Failed to remove %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1537"/>
+        <location filename="../lsv.cpp" line="1544"/>
         <source>Saved language selection removed. The application is now using English.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2303,7 +2366,7 @@ Please run the application as root.</source>
     <message>
         <location filename="../mainboard.h" line="133"/>
         <source>Version</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Version</translation>
     </message>
     <message>
         <location filename="../mainboard.h" line="137"/>
