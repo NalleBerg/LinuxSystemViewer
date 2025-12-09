@@ -99,73 +99,68 @@ However click below to copy the URL https://lsv.nalle.no/ to the clipboard.</sou
 <context>
     <name>AudioGeekDialog</name>
     <message>
-        <location filename="../audio_tab.cpp" line="566"/>
+        <location filename="../audio_tab.cpp" line="579"/>
         <source>Audio - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="571"/>
+        <location filename="../audio_tab.cpp" line="584"/>
         <source>Audio System Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="577"/>
+        <location filename="../audio_tab.cpp" line="590"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="577"/>
+        <location filename="../audio_tab.cpp" line="590"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="592"/>
+        <location filename="../audio_tab.cpp" line="605"/>
         <source>Rescan</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="597"/>
+        <location filename="../audio_tab.cpp" line="609"/>
+        <source>Rescanning, please wait...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../audio_tab.cpp" line="623"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="598"/>
+        <location filename="../audio_tab.cpp" line="624"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="607"/>
+        <location filename="../audio_tab.cpp" line="633"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="635"/>
-        <source>Rescanning audio devices, please wait...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../audio_tab.cpp" line="636"/>
-        <source>Rescanning</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../audio_tab.cpp" line="667"/>
+        <location filename="../audio_tab.cpp" line="695"/>
         <source>Copied</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="668"/>
+        <location filename="../audio_tab.cpp" line="696"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="676"/>
+        <location filename="../audio_tab.cpp" line="704"/>
         <source>Save Audio Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="676"/>
+        <location filename="../audio_tab.cpp" line="704"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -173,78 +168,73 @@ to the clipboard.</source>
 <context>
     <name>AudioTab</name>
     <message>
-        <location filename="../audio_tab.cpp" line="50"/>
+        <location filename="../audio_tab.cpp" line="58"/>
         <location filename="../lsv.cpp" line="131"/>
         <source>Audio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="55"/>
+        <location filename="../audio_tab.cpp" line="63"/>
+        <source>Loading, please wait...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../audio_tab.cpp" line="71"/>
         <source>Sound-test</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="67"/>
+        <location filename="../audio_tab.cpp" line="83"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="67"/>
+        <location filename="../audio_tab.cpp" line="83"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="115"/>
-        <source>Scanning audio devices, please wait...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../audio_tab.cpp" line="116"/>
-        <source>Loading</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../audio_tab.cpp" line="147"/>
+        <location filename="../audio_tab.cpp" line="160"/>
         <source>Audio Test</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="153"/>
+        <location filename="../audio_tab.cpp" line="166"/>
         <source>Testing audio output with generated tones:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="165"/>
+        <location filename="../audio_tab.cpp" line="178"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="180"/>
+        <location filename="../audio_tab.cpp" line="193"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="494"/>
+        <location filename="../audio_tab.cpp" line="507"/>
         <source>Audio Server</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="502"/>
+        <location filename="../audio_tab.cpp" line="515"/>
         <source>Default Output</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="511"/>
+        <location filename="../audio_tab.cpp" line="524"/>
         <source>Default Input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="528"/>
+        <location filename="../audio_tab.cpp" line="541"/>
         <source>Sound Card %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../audio_tab.cpp" line="553"/>
+        <location filename="../audio_tab.cpp" line="566"/>
         <source>Playback Device %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -252,34 +242,34 @@ to the clipboard.</source>
 <context>
     <name>CPUTab</name>
     <message>
-        <location filename="../cpu_tab.cpp" line="30"/>
+        <location filename="../cpu_tab.cpp" line="31"/>
         <location filename="../lsv.cpp" line="137"/>
         <source>CPU</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="41"/>
+        <location filename="../cpu_tab.cpp" line="42"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="41"/>
+        <location filename="../cpu_tab.cpp" line="42"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="367"/>
-        <location filename="../cpu_tab.cpp" line="406"/>
+        <location filename="../cpu_tab.cpp" line="369"/>
+        <location filename="../cpu_tab.cpp" line="408"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="436"/>
+        <location filename="../cpu_tab.cpp" line="438"/>
         <source>Temperature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="440"/>
+        <location filename="../cpu_tab.cpp" line="442"/>
         <source>Current freq (GHz)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -295,139 +285,139 @@ to the clipboard.</source>
 <context>
     <name>GeekCpuDialog</name>
     <message>
-        <location filename="../cpu_tab.cpp" line="102"/>
+        <location filename="../cpu_tab.cpp" line="103"/>
         <source>CPU - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="107"/>
+        <location filename="../cpu_tab.cpp" line="108"/>
         <source>CPU Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="113"/>
+        <location filename="../cpu_tab.cpp" line="114"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="113"/>
+        <location filename="../cpu_tab.cpp" line="114"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="127"/>
+        <location filename="../cpu_tab.cpp" line="131"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="128"/>
+        <location filename="../cpu_tab.cpp" line="132"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="137"/>
+        <location filename="../cpu_tab.cpp" line="133"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="155"/>
+        <location filename="../cpu_tab.cpp" line="157"/>
         <source>Copied</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="156"/>
+        <location filename="../cpu_tab.cpp" line="158"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="168"/>
+        <location filename="../cpu_tab.cpp" line="170"/>
         <source>Save CPU Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="168"/>
+        <location filename="../cpu_tab.cpp" line="170"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="255"/>
+        <location filename="../cpu_tab.cpp" line="257"/>
         <source>Model</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="255"/>
-        <location filename="../cpu_tab.cpp" line="258"/>
-        <location filename="../cpu_tab.cpp" line="286"/>
-        <location filename="../cpu_tab.cpp" line="287"/>
+        <location filename="../cpu_tab.cpp" line="257"/>
+        <location filename="../cpu_tab.cpp" line="260"/>
         <location filename="../cpu_tab.cpp" line="288"/>
+        <location filename="../cpu_tab.cpp" line="289"/>
+        <location filename="../cpu_tab.cpp" line="290"/>
         <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="284"/>
+        <location filename="../cpu_tab.cpp" line="286"/>
         <source>Temperature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="286"/>
+        <location filename="../cpu_tab.cpp" line="288"/>
         <source>Vendor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="287"/>
+        <location filename="../cpu_tab.cpp" line="289"/>
         <source>CPU Cores</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="288"/>
+        <location filename="../cpu_tab.cpp" line="290"/>
         <source>CPU MHz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="291"/>
         <location filename="../cpu_tab.cpp" line="293"/>
+        <location filename="../cpu_tab.cpp" line="295"/>
         <source>/proc/cpuinfo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="293"/>
+        <location filename="../cpu_tab.cpp" line="295"/>
         <source>Could not open /proc/cpuinfo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="302"/>
+        <location filename="../cpu_tab.cpp" line="304"/>
         <source>Logical processors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="312"/>
+        <location filename="../cpu_tab.cpp" line="314"/>
         <source>Physical packages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="313"/>
+        <location filename="../cpu_tab.cpp" line="315"/>
         <source>Unique core ids seen (per-logical sample)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="345"/>
+        <location filename="../cpu_tab.cpp" line="347"/>
         <source>cpu%1: %2 kHz
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="348"/>
+        <location filename="../cpu_tab.cpp" line="350"/>
         <source>Per-core current frequencies (kHz)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="354"/>
+        <location filename="../cpu_tab.cpp" line="356"/>
         <source>cpuinfo_max_freq</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../cpu_tab.cpp" line="359"/>
+        <location filename="../cpu_tab.cpp" line="361"/>
         <source>cpuinfo_min_freq</source>
         <translation type="unfinished"></translation>
     </message>
@@ -435,178 +425,178 @@ to the clipboard.</source>
 <context>
     <name>GeekGraphicsDialog</name>
     <message>
-        <location filename="../graphics_tab.cpp" line="84"/>
+        <location filename="../graphics_tab.cpp" line="85"/>
         <source>Graphics - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="89"/>
+        <location filename="../graphics_tab.cpp" line="90"/>
         <source>Graphics Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="95"/>
+        <location filename="../graphics_tab.cpp" line="96"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="95"/>
+        <location filename="../graphics_tab.cpp" line="96"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="110"/>
+        <location filename="../graphics_tab.cpp" line="114"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="111"/>
+        <location filename="../graphics_tab.cpp" line="115"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="120"/>
+        <location filename="../graphics_tab.cpp" line="116"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="137"/>
+        <location filename="../graphics_tab.cpp" line="139"/>
         <source>Copied</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="138"/>
+        <location filename="../graphics_tab.cpp" line="140"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="145"/>
+        <location filename="../graphics_tab.cpp" line="147"/>
         <source>Save Graphics Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="145"/>
+        <location filename="../graphics_tab.cpp" line="147"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="189"/>
+        <location filename="../graphics_tab.cpp" line="191"/>
         <source>=== PCI GRAPHICS DEVICES ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="204"/>
+        <location filename="../graphics_tab.cpp" line="206"/>
         <source>PCI Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="205"/>
+        <location filename="../graphics_tab.cpp" line="207"/>
         <source>Device Class</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="229"/>
+        <location filename="../graphics_tab.cpp" line="231"/>
         <source>Current Driver</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="237"/>
+        <location filename="../graphics_tab.cpp" line="239"/>
         <source>uevent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="245"/>
+        <location filename="../graphics_tab.cpp" line="247"/>
         <source>Memory Resources</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="252"/>
+        <location filename="../graphics_tab.cpp" line="254"/>
         <source>=== DRM/DRI INFORMATION ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="260"/>
+        <location filename="../graphics_tab.cpp" line="262"/>
         <source>DRM Card</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="265"/>
+        <location filename="../graphics_tab.cpp" line="267"/>
         <source>Device uevent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="275"/>
+        <location filename="../graphics_tab.cpp" line="277"/>
         <source>DRI Debug Dir</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="279"/>
+        <location filename="../graphics_tab.cpp" line="281"/>
         <source>DRI Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="285"/>
+        <location filename="../graphics_tab.cpp" line="287"/>
         <source>DRI Clients</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="292"/>
+        <location filename="../graphics_tab.cpp" line="294"/>
         <source>=== FRAMEBUFFER INFORMATION ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="298"/>
+        <location filename="../graphics_tab.cpp" line="300"/>
         <source>Framebuffer Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="317"/>
+        <location filename="../graphics_tab.cpp" line="319"/>
         <source>=== DISPLAY CONNECTORS ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="321"/>
+        <location filename="../graphics_tab.cpp" line="323"/>
         <source>Connector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="344"/>
+        <location filename="../graphics_tab.cpp" line="346"/>
         <source>EDID Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="345"/>
+        <location filename="../graphics_tab.cpp" line="347"/>
         <source>EDID (hex)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="353"/>
+        <location filename="../graphics_tab.cpp" line="355"/>
         <source>=== BACKLIGHT INFORMATION ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="357"/>
+        <location filename="../graphics_tab.cpp" line="359"/>
         <source>Backlight Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="375"/>
+        <location filename="../graphics_tab.cpp" line="377"/>
         <source>=== GPU FREQUENCY/POWER ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="386"/>
+        <location filename="../graphics_tab.cpp" line="388"/>
         <source>AMDGPU Clock Levels (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="401"/>
+        <location filename="../graphics_tab.cpp" line="403"/>
         <source>%1 (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="409"/>
+        <location filename="../graphics_tab.cpp" line="411"/>
         <source>NVIDIA Power State (%1)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -614,161 +604,157 @@ to the clipboard.</source>
 <context>
     <name>GeekMemoryDialog</name>
     <message>
-        <location filename="../memory_tab.cpp" line="196"/>
+        <location filename="../memory_tab.cpp" line="197"/>
         <source>Memory - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="201"/>
+        <location filename="../memory_tab.cpp" line="202"/>
         <source>RAM Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="214"/>
+        <location filename="../memory_tab.cpp" line="215"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="214"/>
+        <location filename="../memory_tab.cpp" line="215"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="255"/>
+        <location filename="../memory_tab.cpp" line="264"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="256"/>
+        <location filename="../memory_tab.cpp" line="265"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="265"/>
+        <location filename="../memory_tab.cpp" line="276"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="279"/>
+        <location filename="../memory_tab.cpp" line="290"/>
         <source>Copied</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="280"/>
+        <location filename="../memory_tab.cpp" line="291"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="287"/>
+        <location filename="../memory_tab.cpp" line="298"/>
         <source>Save Memory Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="287"/>
+        <location filename="../memory_tab.cpp" line="298"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="370"/>
-        <source>MemTotal (/proc/meminfo)</source>
+        <location filename="../memory_tab.cpp" line="391"/>
+        <source>MemTotal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="370"/>
-        <location filename="../memory_tab.cpp" line="371"/>
-        <location filename="../memory_tab.cpp" line="372"/>
-        <location filename="../memory_tab.cpp" line="373"/>
-        <source>Unknown</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../memory_tab.cpp" line="371"/>
-        <source>MemFree (/proc/meminfo)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../memory_tab.cpp" line="372"/>
-        <source>MemAvailable (/proc/meminfo)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../memory_tab.cpp" line="373"/>
-        <source>SwapTotal (/proc/meminfo)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../memory_tab.cpp" line="375"/>
-        <source>/proc/meminfo</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../memory_tab.cpp" line="375"/>
-        <source>Could not open /proc/meminfo</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../memory_tab.cpp" line="384"/>
-        <source>Memory block entries (/sys/devices/system/memory)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../memory_tab.cpp" line="386"/>
-        <source>Memory block entries</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../memory_tab.cpp" line="386"/>
-        <location filename="../memory_tab.cpp" line="395"/>
-        <location filename="../memory_tab.cpp" line="477"/>
-        <source>Not available</source>
+        <location filename="../memory_tab.cpp" line="392"/>
+        <source>MemFree</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../memory_tab.cpp" line="393"/>
-        <location filename="../memory_tab.cpp" line="395"/>
-        <source>NUMA nodes (count)</source>
+        <source>MemAvailable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="413"/>
+        <location filename="../memory_tab.cpp" line="394"/>
+        <source>SwapTotal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../memory_tab.cpp" line="416"/>
+        <location filename="../memory_tab.cpp" line="418"/>
+        <source>NUMA nodes count</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../memory_tab.cpp" line="391"/>
+        <location filename="../memory_tab.cpp" line="392"/>
+        <location filename="../memory_tab.cpp" line="393"/>
+        <location filename="../memory_tab.cpp" line="394"/>
+        <source>Unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../memory_tab.cpp" line="396"/>
+        <source>/proc/meminfo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../memory_tab.cpp" line="396"/>
+        <source>Could not open /proc/meminfo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../memory_tab.cpp" line="406"/>
+        <location filename="../memory_tab.cpp" line="408"/>
+        <source>Memory block entries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../memory_tab.cpp" line="408"/>
+        <location filename="../memory_tab.cpp" line="418"/>
+        <location filename="../memory_tab.cpp" line="501"/>
+        <source>Not available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../memory_tab.cpp" line="437"/>
         <source>DMI memory device entries (type 17)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="413"/>
+        <location filename="../memory_tab.cpp" line="437"/>
         <source>None detected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="430"/>
-        <location filename="../memory_tab.cpp" line="438"/>
-        <location filename="../memory_tab.cpp" line="461"/>
+        <location filename="../memory_tab.cpp" line="454"/>
+        <location filename="../memory_tab.cpp" line="462"/>
+        <location filename="../memory_tab.cpp" line="485"/>
         <source>Slot %1 (DMI entry %2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="430"/>
+        <location filename="../memory_tab.cpp" line="454"/>
         <source>Could not open raw DMI data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="438"/>
+        <location filename="../memory_tab.cpp" line="462"/>
         <source>Raw DMI data too short</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="463"/>
+        <location filename="../memory_tab.cpp" line="487"/>
         <source>Slot %1 - String %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="471"/>
+        <location filename="../memory_tab.cpp" line="495"/>
         <source>Slot %1 - formatted bytes (hex)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="477"/>
+        <location filename="../memory_tab.cpp" line="501"/>
         <source>DMI memory device entries</source>
         <translation type="unfinished"></translation>
     </message>
@@ -776,103 +762,103 @@ to the clipboard.</source>
 <context>
     <name>GeekMotherboardDialog</name>
     <message>
-        <location filename="../motherboard_tab.cpp" line="84"/>
+        <location filename="../motherboard_tab.cpp" line="85"/>
         <source>Motherboard - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="89"/>
+        <location filename="../motherboard_tab.cpp" line="90"/>
         <source>Motherboard Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="95"/>
+        <location filename="../motherboard_tab.cpp" line="96"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="95"/>
+        <location filename="../motherboard_tab.cpp" line="96"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="110"/>
+        <location filename="../motherboard_tab.cpp" line="114"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="111"/>
+        <location filename="../motherboard_tab.cpp" line="115"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="120"/>
+        <location filename="../motherboard_tab.cpp" line="116"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="138"/>
+        <location filename="../motherboard_tab.cpp" line="140"/>
         <source>Copied</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="139"/>
+        <location filename="../motherboard_tab.cpp" line="141"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="147"/>
+        <location filename="../motherboard_tab.cpp" line="149"/>
         <source>Save Motherboard Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="147"/>
+        <location filename="../motherboard_tab.cpp" line="149"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="200"/>
+        <location filename="../motherboard_tab.cpp" line="202"/>
         <source>=== BASEBOARD (DMI Type 2) ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="240"/>
+        <location filename="../motherboard_tab.cpp" line="242"/>
         <source>=== SYSTEM (DMI Type 1) ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="267"/>
+        <location filename="../motherboard_tab.cpp" line="269"/>
         <source>=== BIOS (DMI Type 0) ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="307"/>
+        <location filename="../motherboard_tab.cpp" line="309"/>
         <source>=== CHASSIS (DMI Type 3) ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="334"/>
+        <location filename="../motherboard_tab.cpp" line="336"/>
         <source>=== LSHW BUS OUTPUT ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="335"/>
+        <location filename="../motherboard_tab.cpp" line="337"/>
         <source>Full lshw -C bus output</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="345"/>
+        <location filename="../motherboard_tab.cpp" line="347"/>
         <source>=== CHIPSET &amp; BRIDGES ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="365"/>
+        <location filename="../motherboard_tab.cpp" line="367"/>
         <source>=== USB CONTROLLERS ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="374"/>
+        <location filename="../motherboard_tab.cpp" line="376"/>
         <source>USB Controller %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -880,58 +866,58 @@ to the clipboard.</source>
 <context>
     <name>GeekOsDialog</name>
     <message>
-        <location filename="../os_tab.cpp" line="238"/>
+        <location filename="../os_tab.cpp" line="239"/>
         <source>OS - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="243"/>
+        <location filename="../os_tab.cpp" line="244"/>
         <source>OS Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="249"/>
+        <location filename="../os_tab.cpp" line="250"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="249"/>
+        <location filename="../os_tab.cpp" line="250"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="266"/>
+        <location filename="../os_tab.cpp" line="275"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="267"/>
+        <location filename="../os_tab.cpp" line="276"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="276"/>
+        <location filename="../os_tab.cpp" line="287"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="294"/>
+        <location filename="../os_tab.cpp" line="305"/>
         <source>Copied</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="295"/>
+        <location filename="../os_tab.cpp" line="306"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="303"/>
+        <location filename="../os_tab.cpp" line="314"/>
         <source>Save OS Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="303"/>
+        <location filename="../os_tab.cpp" line="314"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -939,98 +925,98 @@ to the clipboard.</source>
 <context>
     <name>GeekPCDialog</name>
     <message>
-        <location filename="../pc_tab.cpp" line="161"/>
+        <location filename="../pc_tab.cpp" line="162"/>
         <source>PC Info - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="166"/>
+        <location filename="../pc_tab.cpp" line="167"/>
         <source>PC Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="172"/>
+        <location filename="../pc_tab.cpp" line="173"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="172"/>
+        <location filename="../pc_tab.cpp" line="173"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="187"/>
+        <location filename="../pc_tab.cpp" line="191"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="188"/>
+        <location filename="../pc_tab.cpp" line="192"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="197"/>
+        <location filename="../pc_tab.cpp" line="193"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="215"/>
+        <location filename="../pc_tab.cpp" line="217"/>
         <source>Copied</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="216"/>
+        <location filename="../pc_tab.cpp" line="218"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="224"/>
+        <location filename="../pc_tab.cpp" line="226"/>
         <source>Save PC Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="224"/>
+        <location filename="../pc_tab.cpp" line="226"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="292"/>
+        <location filename="../pc_tab.cpp" line="294"/>
         <source>=== DMI/SMBIOS INFORMATION ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="311"/>
+        <location filename="../pc_tab.cpp" line="313"/>
         <source>=== HOSTNAME INFORMATION ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="328"/>
+        <location filename="../pc_tab.cpp" line="330"/>
         <source>=== MACHINE ID ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="344"/>
+        <location filename="../pc_tab.cpp" line="346"/>
         <source>=== HOSTNAMECTL OUTPUT ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="363"/>
+        <location filename="../pc_tab.cpp" line="365"/>
         <source>=== FIRMWARE/BIOS INFORMATION ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="381"/>
+        <location filename="../pc_tab.cpp" line="383"/>
         <source>=== ACPI INFORMATION ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="394"/>
+        <location filename="../pc_tab.cpp" line="396"/>
         <source>=== BOOT INFORMATION ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="404"/>
+        <location filename="../pc_tab.cpp" line="406"/>
         <source>=== SYSTEM UPTIME ===</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1038,73 +1024,68 @@ to the clipboard.</source>
 <context>
     <name>GeekPeripheralsDialog</name>
     <message>
-        <location filename="../peripherals_tab.cpp" line="379"/>
+        <location filename="../peripherals_tab.cpp" line="391"/>
         <source>Peripherals - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="384"/>
+        <location filename="../peripherals_tab.cpp" line="396"/>
         <source>Peripherals Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="390"/>
+        <location filename="../peripherals_tab.cpp" line="402"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="390"/>
+        <location filename="../peripherals_tab.cpp" line="402"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="406"/>
+        <location filename="../peripherals_tab.cpp" line="418"/>
         <source>Rescan</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="412"/>
+        <location filename="../peripherals_tab.cpp" line="422"/>
+        <source>Rescanning, please wait...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="437"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="413"/>
+        <location filename="../peripherals_tab.cpp" line="438"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="417"/>
+        <location filename="../peripherals_tab.cpp" line="442"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="426"/>
-        <source>Rescanning peripherals, please wait...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../peripherals_tab.cpp" line="427"/>
-        <source>Rescanning</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../peripherals_tab.cpp" line="461"/>
+        <location filename="../peripherals_tab.cpp" line="465"/>
         <source>Copied</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="462"/>
+        <location filename="../peripherals_tab.cpp" line="466"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="470"/>
+        <location filename="../peripherals_tab.cpp" line="474"/>
         <source>Save Peripherals Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="470"/>
+        <location filename="../peripherals_tab.cpp" line="474"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1112,108 +1093,108 @@ to the clipboard.</source>
 <context>
     <name>GeekPortsDialog</name>
     <message>
-        <location filename="../ports_tab.cpp" line="253"/>
+        <location filename="../ports_tab.cpp" line="254"/>
         <source>Ports - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="258"/>
+        <location filename="../ports_tab.cpp" line="259"/>
         <source>Ports Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="264"/>
+        <location filename="../ports_tab.cpp" line="265"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="264"/>
+        <location filename="../ports_tab.cpp" line="265"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="279"/>
+        <location filename="../ports_tab.cpp" line="283"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="280"/>
+        <location filename="../ports_tab.cpp" line="284"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="289"/>
+        <location filename="../ports_tab.cpp" line="285"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="306"/>
+        <location filename="../ports_tab.cpp" line="308"/>
         <source>Copied</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="307"/>
+        <location filename="../ports_tab.cpp" line="309"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="314"/>
+        <location filename="../ports_tab.cpp" line="316"/>
         <source>Save Ports Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="314"/>
+        <location filename="../ports_tab.cpp" line="316"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="381"/>
+        <location filename="../ports_tab.cpp" line="383"/>
         <source>=== USB DEVICES ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="389"/>
+        <location filename="../ports_tab.cpp" line="391"/>
         <source>Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="413"/>
+        <location filename="../ports_tab.cpp" line="415"/>
         <source>=== SERIAL PORTS ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="422"/>
+        <location filename="../ports_tab.cpp" line="424"/>
         <source>Serial Port</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="444"/>
+        <location filename="../ports_tab.cpp" line="446"/>
         <source>=== PCI USB CONTROLLERS ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="457"/>
+        <location filename="../ports_tab.cpp" line="459"/>
         <source>PCI Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="487"/>
+        <location filename="../ports_tab.cpp" line="489"/>
         <source>=== BLUETOOTH ADAPTERS ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="490"/>
+        <location filename="../ports_tab.cpp" line="492"/>
         <source>Bluetooth Adapter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="513"/>
+        <location filename="../ports_tab.cpp" line="515"/>
         <source>=== NETWORK INTERFACES ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="523"/>
+        <location filename="../ports_tab.cpp" line="525"/>
         <source>Interface</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1221,272 +1202,393 @@ to the clipboard.</source>
 <context>
     <name>GeekScreenDialog</name>
     <message>
-        <location filename="../screen_tab.cpp" line="114"/>
+        <location filename="../screen_tab.cpp" line="115"/>
         <source>Screen - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="119"/>
+        <location filename="../screen_tab.cpp" line="120"/>
         <source>Screen Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="125"/>
+        <location filename="../screen_tab.cpp" line="126"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="125"/>
+        <location filename="../screen_tab.cpp" line="126"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="141"/>
+        <location filename="../screen_tab.cpp" line="145"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="142"/>
+        <location filename="../screen_tab.cpp" line="146"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="151"/>
+        <location filename="../screen_tab.cpp" line="147"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="169"/>
+        <location filename="../screen_tab.cpp" line="171"/>
         <source>Copied</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="170"/>
+        <location filename="../screen_tab.cpp" line="172"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="178"/>
+        <location filename="../screen_tab.cpp" line="180"/>
         <source>Save Screen Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="178"/>
+        <location filename="../screen_tab.cpp" line="180"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="246"/>
+        <location filename="../screen_tab.cpp" line="248"/>
         <source>=== ALL SCREENS ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="252"/>
+        <location filename="../screen_tab.cpp" line="254"/>
         <source>Screen %1 Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="253"/>
+        <location filename="../screen_tab.cpp" line="255"/>
         <source>Screen %1 Manufacturer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="254"/>
+        <location filename="../screen_tab.cpp" line="256"/>
         <source>Screen %1 Model</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="255"/>
+        <location filename="../screen_tab.cpp" line="257"/>
         <source>Screen %1 Serial Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="258"/>
+        <location filename="../screen_tab.cpp" line="260"/>
         <source>Screen %1 Resolution</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="261"/>
+        <location filename="../screen_tab.cpp" line="263"/>
         <source>Screen %1 Virtual Resolution</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="263"/>
+        <location filename="../screen_tab.cpp" line="265"/>
         <source>Screen %1 Refresh Rate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="266"/>
+        <location filename="../screen_tab.cpp" line="268"/>
         <source>Screen %1 Physical Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="268"/>
+        <location filename="../screen_tab.cpp" line="270"/>
         <source>Screen %1 DPI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="269"/>
+        <location filename="../screen_tab.cpp" line="271"/>
         <source>Screen %1 Physical DPI X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="270"/>
+        <location filename="../screen_tab.cpp" line="272"/>
         <source>Screen %1 Physical DPI Y</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="272"/>
+        <location filename="../screen_tab.cpp" line="274"/>
         <source>Screen %1 Device Pixel Ratio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="283"/>
+        <location filename="../screen_tab.cpp" line="285"/>
         <source>Screen %1 Orientation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="286"/>
+        <location filename="../screen_tab.cpp" line="288"/>
         <source>Screen %1 Geometry</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="289"/>
+        <location filename="../screen_tab.cpp" line="291"/>
         <source>Screen %1 Available Geometry</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="291"/>
+        <location filename="../screen_tab.cpp" line="293"/>
         <source>Screen %1 Depth</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="297"/>
+        <location filename="../screen_tab.cpp" line="299"/>
         <source>=== DRM CONNECTOR INFORMATION ===</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="305"/>
+        <location filename="../screen_tab.cpp" line="307"/>
         <source>Connector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="309"/>
+        <location filename="../screen_tab.cpp" line="311"/>
         <source>%1/status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="315"/>
+        <location filename="../screen_tab.cpp" line="317"/>
         <source>%1/enabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="321"/>
+        <location filename="../screen_tab.cpp" line="323"/>
         <source>%1/dpms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="329"/>
+        <location filename="../screen_tab.cpp" line="331"/>
         <source>%1/modes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="339"/>
+        <location filename="../screen_tab.cpp" line="341"/>
         <source>%1/EDID Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="350"/>
+        <location filename="../screen_tab.cpp" line="352"/>
         <source>%1/Manufacturer ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="356"/>
+        <location filename="../screen_tab.cpp" line="358"/>
         <source>%1/Product Code</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="366"/>
+        <location filename="../screen_tab.cpp" line="368"/>
         <source>%1/Serial Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="375"/>
+        <location filename="../screen_tab.cpp" line="377"/>
         <source>%1/Manufacture Date</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="385"/>
+        <location filename="../screen_tab.cpp" line="387"/>
         <source>%1/Display Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="389"/>
+        <location filename="../screen_tab.cpp" line="391"/>
         <source>%1/Display String</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="401"/>
+        <location filename="../screen_tab.cpp" line="403"/>
         <source>%1/EDID (first 128 bytes hex)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GeekSearchDialog</name>
+    <message>
+        <location filename="../geek_search.cpp" line="19"/>
+        <source>Geek Mode Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="40"/>
+        <location filename="../geek_search.cpp" line="362"/>
+        <source>Enter search term...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="42"/>
+        <location filename="../geek_search.cpp" line="43"/>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="54"/>
+        <source>Search Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="58"/>
+        <source>Contains</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="59"/>
+        <source>Exact match</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="70"/>
+        <source>Case Sensitivity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="74"/>
+        <source>Case insensitive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="75"/>
+        <source>Case sensitive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="86"/>
+        <source>Search Scope</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="90"/>
+        <source>New search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="91"/>
+        <source>Search in results</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="102"/>
+        <source>Advanced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="104"/>
+        <source>Regular Expression (Regex)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="119"/>
+        <source>Tab</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="119"/>
+        <source>Section</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="119"/>
+        <source>Property</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="119"/>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="119"/>
+        <source>Context</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="360"/>
+        <source>Enter regular expression... (e.g., &apos;Intel.*WiFi&apos;)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="379"/>
+        <source>Search Result Details
+
+Tab: %1
+Section: %2
+Property: %3
+Value: %4
+Context: %5</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search.cpp" line="391"/>
+        <source>Result Details</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>GeekStorageDialog</name>
     <message>
-        <location filename="../storage_tab.cpp" line="588"/>
+        <location filename="../storage_tab.cpp" line="589"/>
         <source>Storage - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="593"/>
+        <location filename="../storage_tab.cpp" line="594"/>
         <source>Storage Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="599"/>
+        <location filename="../storage_tab.cpp" line="600"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="599"/>
+        <location filename="../storage_tab.cpp" line="600"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="613"/>
+        <location filename="../storage_tab.cpp" line="617"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="614"/>
+        <location filename="../storage_tab.cpp" line="618"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="623"/>
+        <location filename="../storage_tab.cpp" line="619"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="641"/>
+        <location filename="../storage_tab.cpp" line="643"/>
         <source>Copied</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="642"/>
+        <location filename="../storage_tab.cpp" line="644"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="650"/>
+        <location filename="../storage_tab.cpp" line="652"/>
         <source>Save Storage Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="650"/>
+        <location filename="../storage_tab.cpp" line="652"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1494,18 +1596,18 @@ to the clipboard.</source>
 <context>
     <name>GraphicsTab</name>
     <message>
-        <location filename="../graphics_tab.cpp" line="30"/>
+        <location filename="../graphics_tab.cpp" line="31"/>
         <location filename="../lsv.cpp" line="132"/>
         <source>Graphics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="41"/>
+        <location filename="../graphics_tab.cpp" line="42"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../graphics_tab.cpp" line="41"/>
+        <location filename="../graphics_tab.cpp" line="42"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1514,43 +1616,43 @@ to the clipboard.</source>
     <name>MemoryTab</name>
     <message>
         <location filename="../lsv.cpp" line="136"/>
-        <location filename="../memory_tab.cpp" line="22"/>
+        <location filename="../memory_tab.cpp" line="23"/>
         <source>Memory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="33"/>
+        <location filename="../memory_tab.cpp" line="34"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="33"/>
+        <location filename="../memory_tab.cpp" line="34"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="98"/>
+        <location filename="../memory_tab.cpp" line="99"/>
         <source>RAM Total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="106"/>
+        <location filename="../memory_tab.cpp" line="107"/>
         <source>RAM Usage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="119"/>
-        <location filename="../memory_tab.cpp" line="147"/>
+        <location filename="../memory_tab.cpp" line="120"/>
+        <location filename="../memory_tab.cpp" line="148"/>
         <source>Used: %1 GB / Free: %2 GB (%3%)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="128"/>
+        <location filename="../memory_tab.cpp" line="129"/>
         <source>SWAP Total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../memory_tab.cpp" line="134"/>
+        <location filename="../memory_tab.cpp" line="135"/>
         <source>SWAP Usage</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1559,17 +1661,17 @@ to the clipboard.</source>
     <name>MotherboardTab</name>
     <message>
         <location filename="../lsv.cpp" line="138"/>
-        <location filename="../motherboard_tab.cpp" line="30"/>
+        <location filename="../motherboard_tab.cpp" line="31"/>
         <source>Motherboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="41"/>
+        <location filename="../motherboard_tab.cpp" line="42"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../motherboard_tab.cpp" line="41"/>
+        <location filename="../motherboard_tab.cpp" line="42"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1577,58 +1679,58 @@ to the clipboard.</source>
 <context>
     <name>NetworkGeekDialog</name>
     <message>
-        <location filename="../network_geek.cpp" line="27"/>
+        <location filename="../network_geek.cpp" line="29"/>
         <source>Network - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_geek.cpp" line="32"/>
+        <location filename="../network_geek.cpp" line="34"/>
         <source>Network Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_geek.cpp" line="37"/>
+        <location filename="../network_geek.cpp" line="39"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_geek.cpp" line="37"/>
+        <location filename="../network_geek.cpp" line="39"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_geek.cpp" line="51"/>
+        <location filename="../network_geek.cpp" line="56"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_geek.cpp" line="52"/>
+        <location filename="../network_geek.cpp" line="57"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_geek.cpp" line="61"/>
+        <location filename="../network_geek.cpp" line="58"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_geek.cpp" line="228"/>
+        <location filename="../network_geek.cpp" line="231"/>
         <source>Copied</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_geek.cpp" line="229"/>
+        <location filename="../network_geek.cpp" line="232"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_geek.cpp" line="237"/>
+        <location filename="../network_geek.cpp" line="240"/>
         <source>Save network info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_geek.cpp" line="237"/>
+        <location filename="../network_geek.cpp" line="240"/>
         <source>CSV files (*.csv);;All files (*)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1653,37 +1755,37 @@ to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_tab.h" line="269"/>
+        <location filename="../network_tab.h" line="396"/>
         <source>Interface Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_tab.h" line="274"/>
+        <location filename="../network_tab.h" line="401"/>
         <source>MAC Address</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_tab.h" line="282"/>
+        <location filename="../network_tab.h" line="409"/>
         <source>IPv4 Address</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_tab.h" line="284"/>
+        <location filename="../network_tab.h" line="411"/>
         <source>IPv6 Address</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_tab.h" line="291"/>
+        <location filename="../network_tab.h" line="418"/>
         <source>MTU</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_tab.h" line="291"/>
+        <location filename="../network_tab.h" line="418"/>
         <source>%1 bytes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../network_tab.h" line="304"/>
+        <location filename="../network_tab.h" line="431"/>
         <source>Default Gateway</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1696,92 +1798,92 @@ to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="40"/>
+        <location filename="../os_tab.cpp" line="41"/>
         <source>Operating System</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="47"/>
+        <location filename="../os_tab.cpp" line="48"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="47"/>
+        <location filename="../os_tab.cpp" line="48"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="104"/>
+        <location filename="../os_tab.cpp" line="105"/>
         <source>Distribution Name</source>
         <translation>Όνομα Διανομής</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="106"/>
+        <location filename="../os_tab.cpp" line="107"/>
         <source>Distribution Version</source>
         <translation>Έκδοση Διανομής</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="108"/>
+        <location filename="../os_tab.cpp" line="109"/>
         <source>Distribution ID</source>
         <translation>Αναγνωριστικό Διανομής</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="110"/>
+        <location filename="../os_tab.cpp" line="111"/>
         <source>Version ID</source>
         <translation>Αναγνωριστικό Έκδοσης</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="112"/>
+        <location filename="../os_tab.cpp" line="113"/>
         <source>Full Name</source>
         <translation>Πλήρες Όνομα</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="114"/>
+        <location filename="../os_tab.cpp" line="115"/>
         <source>Version Codename</source>
         <translation>Κωδικό Όνομα Έκδοσης</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="116"/>
+        <location filename="../os_tab.cpp" line="117"/>
         <source>Ubuntu Codename</source>
         <translation>Κωδικό Όνομα Ubuntu</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="118"/>
+        <location filename="../os_tab.cpp" line="119"/>
         <source>Home Page</source>
         <translation>Αρχική Σελίδα</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="120"/>
+        <location filename="../os_tab.cpp" line="121"/>
         <source>Support Page</source>
         <translation>Σελίδα Υποστήριξης</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="122"/>
+        <location filename="../os_tab.cpp" line="123"/>
         <source>Bug Report Page</source>
         <translation>Σελίδα Αναφοράς Σφαλμάτων</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="124"/>
+        <location filename="../os_tab.cpp" line="125"/>
         <source>Privacy Policy</source>
         <translation>Πολιτική Απορρήτου</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="126"/>
+        <location filename="../os_tab.cpp" line="127"/>
         <source>Build ID</source>
         <translation>Αναγνωριστικό Κατασκευής</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="128"/>
+        <location filename="../os_tab.cpp" line="129"/>
         <source>Variant</source>
         <translation>Παραλλαγή</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="130"/>
+        <location filename="../os_tab.cpp" line="131"/>
         <source>Variant ID</source>
         <translation>Αναγνωριστικό Παραλλαγής</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="167"/>
+        <location filename="../os_tab.cpp" line="168"/>
         <source>uname: %1
 </source>
         <translation type="unfinished"></translation>
@@ -1791,62 +1893,62 @@ to the clipboard.</source>
     <name>PCTab</name>
     <message>
         <location filename="../lsv.cpp" line="140"/>
-        <location filename="../pc_tab.cpp" line="27"/>
+        <location filename="../pc_tab.cpp" line="28"/>
         <source>PC Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="38"/>
+        <location filename="../pc_tab.cpp" line="39"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="38"/>
+        <location filename="../pc_tab.cpp" line="39"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="138"/>
+        <location filename="../pc_tab.cpp" line="139"/>
         <source>Computer Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="139"/>
+        <location filename="../pc_tab.cpp" line="140"/>
         <source>PC Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="140"/>
+        <location filename="../pc_tab.cpp" line="141"/>
         <source>Manufacturer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="141"/>
+        <location filename="../pc_tab.cpp" line="142"/>
         <source>Product Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="142"/>
+        <location filename="../pc_tab.cpp" line="143"/>
         <source>Product Family</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="143"/>
+        <location filename="../pc_tab.cpp" line="144"/>
         <source>Version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="144"/>
+        <location filename="../pc_tab.cpp" line="145"/>
         <source>Serial Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="145"/>
+        <location filename="../pc_tab.cpp" line="146"/>
         <source>SKU Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pc_tab.cpp" line="146"/>
+        <location filename="../pc_tab.cpp" line="147"/>
         <source>UUID</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1855,123 +1957,118 @@ to the clipboard.</source>
     <name>PeripheralsTab</name>
     <message>
         <location filename="../lsv.cpp" line="135"/>
-        <location filename="../peripherals_tab.cpp" line="36"/>
+        <location filename="../peripherals_tab.cpp" line="44"/>
         <source>Peripherals</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="47"/>
+        <location filename="../peripherals_tab.cpp" line="49"/>
+        <source>Loading, please wait...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../peripherals_tab.cpp" line="63"/>
         <source>Device Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="47"/>
+        <location filename="../peripherals_tab.cpp" line="63"/>
         <source>Device Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="161"/>
+        <location filename="../peripherals_tab.cpp" line="177"/>
         <source>Mouse/Pointing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="163"/>
+        <location filename="../peripherals_tab.cpp" line="179"/>
         <source>Keyboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="168"/>
+        <location filename="../peripherals_tab.cpp" line="184"/>
         <source>Camera</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="170"/>
+        <location filename="../peripherals_tab.cpp" line="186"/>
         <source>Camera (Disabled)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="174"/>
+        <location filename="../peripherals_tab.cpp" line="190"/>
         <source>Printer (USB)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="181"/>
+        <location filename="../peripherals_tab.cpp" line="197"/>
         <source>Mobile Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="187"/>
+        <location filename="../peripherals_tab.cpp" line="203"/>
         <source>Network Adapter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="195"/>
+        <location filename="../peripherals_tab.cpp" line="211"/>
         <source>Storage Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="201"/>
+        <location filename="../peripherals_tab.cpp" line="217"/>
         <source>Audio Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="207"/>
+        <location filename="../peripherals_tab.cpp" line="223"/>
         <source>Game Controller</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="209"/>
+        <location filename="../peripherals_tab.cpp" line="225"/>
         <source>Scanner</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="213"/>
+        <location filename="../peripherals_tab.cpp" line="229"/>
         <source>Drawing Tablet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="216"/>
+        <location filename="../peripherals_tab.cpp" line="232"/>
         <source>Wireless Receiver</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="218"/>
+        <location filename="../peripherals_tab.cpp" line="234"/>
         <source>USB Hub</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="221"/>
+        <location filename="../peripherals_tab.cpp" line="237"/>
         <source>Card Reader</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="226"/>
+        <location filename="../peripherals_tab.cpp" line="242"/>
         <source>Serial Adapter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="229"/>
+        <location filename="../peripherals_tab.cpp" line="245"/>
         <source>USB Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="253"/>
+        <location filename="../peripherals_tab.cpp" line="269"/>
         <source>Printer (Network/CUPS)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../peripherals_tab.cpp" line="300"/>
+        <location filename="../peripherals_tab.cpp" line="316"/>
         <source>External Display</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../peripherals_tab.cpp" line="349"/>
-        <source>Scanning peripherals, please wait...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../peripherals_tab.cpp" line="350"/>
-        <source>Loading</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1979,52 +2076,52 @@ to the clipboard.</source>
     <name>PortsTab</name>
     <message>
         <location filename="../lsv.cpp" line="134"/>
-        <location filename="../ports_tab.cpp" line="24"/>
+        <location filename="../ports_tab.cpp" line="25"/>
         <source>Ports</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="35"/>
+        <location filename="../ports_tab.cpp" line="36"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="35"/>
+        <location filename="../ports_tab.cpp" line="36"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="109"/>
+        <location filename="../ports_tab.cpp" line="110"/>
         <source>USB Buses/Hubs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="110"/>
+        <location filename="../ports_tab.cpp" line="111"/>
         <source>USB Devices Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="194"/>
+        <location filename="../ports_tab.cpp" line="195"/>
         <source>Serial Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="216"/>
+        <location filename="../ports_tab.cpp" line="217"/>
         <source>USB Controllers (PCI)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="223"/>
+        <location filename="../ports_tab.cpp" line="224"/>
         <source>Bluetooth Adapters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="236"/>
+        <location filename="../ports_tab.cpp" line="237"/>
         <source>Ethernet Ports</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ports_tab.cpp" line="237"/>
+        <location filename="../ports_tab.cpp" line="238"/>
         <source>Wireless Adapters</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2055,136 +2152,112 @@ to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="613"/>
+        <location filename="../lsv.cpp" line="616"/>
         <source>Cleaning up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="615"/>
+        <location filename="../lsv.cpp" line="618"/>
         <source>Cleaning up temporary files...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1060"/>
+        <location filename="../lsv.cpp" line="1077"/>
         <source>Cannot elevate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1060"/>
+        <location filename="../lsv.cpp" line="1077"/>
         <source>No terminal emulator found to prompt for a password.
 Please run the application as root.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1066"/>
+        <location filename="../lsv.cpp" line="1083"/>
         <source>Please enter password to run Linux System Viewer as root</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1138"/>
+        <location filename="../lsv.cpp" line="1155"/>
         <source>Linux System Viewer %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1195"/>
+        <location filename="../lsv.cpp" line="1212"/>
         <source>Authentication failed (%1/3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1229"/>
+        <location filename="../lsv.cpp" line="1246"/>
         <source>Elevation failed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1229"/>
+        <location filename="../lsv.cpp" line="1246"/>
         <source>Failed to start a terminal to request sudo password. Please run the application as root.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1271"/>
-        <location filename="../lsv.cpp" line="1505"/>
+        <location filename="../lsv.cpp" line="1288"/>
+        <location filename="../lsv.cpp" line="1477"/>
         <source>Choose language</source>
         <translation>Επιλογή γλώσσας</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1271"/>
-        <location filename="../lsv.cpp" line="1504"/>
+        <location filename="../lsv.cpp" line="1288"/>
+        <location filename="../lsv.cpp" line="1476"/>
         <source>Language:</source>
         <translation>Γλώσσα:</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1282"/>
-        <location filename="../lsv.cpp" line="1513"/>
+        <location filename="../lsv.cpp" line="1299"/>
+        <location filename="../lsv.cpp" line="1485"/>
         <source>Language selection</source>
         <translation>Επιλογή γλώσσας</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1282"/>
+        <location filename="../lsv.cpp" line="1299"/>
         <source>Failed to write language selection to %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1295"/>
-        <location filename="../lsv.cpp" line="1392"/>
+        <location filename="../lsv.cpp" line="1312"/>
+        <location filename="../lsv.cpp" line="1415"/>
         <source>Linux System Viewer V. %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1340"/>
-        <location filename="../lsv.cpp" line="1393"/>
+        <location filename="../lsv.cpp" line="1357"/>
+        <location filename="../lsv.cpp" line="1416"/>
         <source>Linux System Viewer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1359"/>
-        <location filename="../lsv.cpp" line="1394"/>
+        <location filename="../lsv.cpp" line="1376"/>
+        <location filename="../lsv.cpp" line="1417"/>
         <source>About Linux System Viewer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1401"/>
-        <location filename="../lsv.cpp" line="1464"/>
+        <location filename="../lsv.cpp" line="1388"/>
+        <location filename="../lsv.cpp" line="1418"/>
         <source>Language</source>
         <translation>Γλώσσα</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1403"/>
-        <location filename="../lsv.cpp" line="1466"/>
-        <source>Change language...</source>
-        <translation>Αλλαγή γλώσσας...</translation>
-    </message>
-    <message>
-        <location filename="../lsv.cpp" line="1405"/>
-        <location filename="../lsv.cpp" line="1468"/>
-        <location filename="../lsv.cpp" line="1530"/>
-        <location filename="../lsv.cpp" line="1541"/>
-        <source>Reset language</source>
-        <translation>Επαναφορά γλώσσας</translation>
-    </message>
-    <message>
-        <location filename="../lsv.cpp" line="1513"/>
+        <location filename="../lsv.cpp" line="1485"/>
         <source>Failed to write language selection to configuration directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1523"/>
+        <location filename="../lsv.cpp" line="1494"/>
         <source>Language changed</source>
         <translation>Η γλώσσα άλλαξε</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1523"/>
+        <location filename="../lsv.cpp" line="1494"/>
         <source>Language saved. UI updated to the selected language.</source>
         <translation>Η γλώσσα αποθηκεύτηκε. Η διεπαφή ενημερώθηκε στην επιλεγμένη γλώσσα.</translation>
-    </message>
-    <message>
-        <location filename="../lsv.cpp" line="1530"/>
-        <source>Failed to remove %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../lsv.cpp" line="1541"/>
-        <source>Saved language selection removed. The application is now using English.</source>
-        <translation>Η αποθηκευμένη επιλογή γλώσσας αφαιρέθηκε. Η εφαρμογή χρησιμοποιεί τώρα αγγλικά.</translation>
     </message>
     <message>
         <location filename="../multitabs.cpp" line="19"/>
@@ -2382,7 +2455,7 @@ Please run the application as root.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gui_helpers.h" line="554"/>
+        <location filename="../gui_helpers.h" line="560"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2433,52 +2506,62 @@ Please run the application as root.</source>
         <source>Chipset</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../geek_search_integration.cpp" line="22"/>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../geek_search_integration.cpp" line="25"/>
+        <source>Search Geek mode data</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ScreenTab</name>
     <message>
         <location filename="../lsv.cpp" line="133"/>
-        <location filename="../screen_tab.cpp" line="26"/>
+        <location filename="../screen_tab.cpp" line="27"/>
         <source>Screen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="37"/>
+        <location filename="../screen_tab.cpp" line="38"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="37"/>
+        <location filename="../screen_tab.cpp" line="38"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="89"/>
+        <location filename="../screen_tab.cpp" line="90"/>
         <source>Resolution</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="90"/>
+        <location filename="../screen_tab.cpp" line="91"/>
         <source>Refresh Rate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="91"/>
+        <location filename="../screen_tab.cpp" line="92"/>
         <source>Zoom Level</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="92"/>
+        <location filename="../screen_tab.cpp" line="93"/>
         <source>Physical Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="96"/>
+        <location filename="../screen_tab.cpp" line="97"/>
         <source>Manufacturer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../screen_tab.cpp" line="99"/>
+        <location filename="../screen_tab.cpp" line="100"/>
         <source>Orientation</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2487,53 +2570,53 @@ Please run the application as root.</source>
     <name>StorageTab</name>
     <message>
         <location filename="../lsv.cpp" line="139"/>
-        <location filename="../storage_tab.cpp" line="37"/>
-        <location filename="../storage_tab.cpp" line="62"/>
+        <location filename="../storage_tab.cpp" line="38"/>
+        <location filename="../storage_tab.cpp" line="63"/>
         <source>Storage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="90"/>
+        <location filename="../storage_tab.cpp" line="91"/>
         <source>Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="90"/>
+        <location filename="../storage_tab.cpp" line="91"/>
         <source>Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="90"/>
+        <location filename="../storage_tab.cpp" line="91"/>
         <source>Used</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="90"/>
+        <location filename="../storage_tab.cpp" line="91"/>
         <source>Available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="90"/>
+        <location filename="../storage_tab.cpp" line="91"/>
         <source>Use%</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="90"/>
+        <location filename="../storage_tab.cpp" line="91"/>
         <source>Mount Point</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="90"/>
+        <location filename="../storage_tab.cpp" line="91"/>
         <source>Filesystem</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="308"/>
+        <location filename="../storage_tab.cpp" line="309"/>
         <source>Disk: %1 - Type: %2 - Total size: %3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="314"/>
+        <location filename="../storage_tab.cpp" line="315"/>
         <source>Name: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2664,58 +2747,58 @@ Please run the application as root.</source>
 <context>
     <name>WindowingGeekDialog</name>
     <message>
-        <location filename="../windowing_tab.cpp" line="253"/>
+        <location filename="../windowing_tab.cpp" line="254"/>
         <source>Desktop - Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="258"/>
+        <location filename="../windowing_tab.cpp" line="259"/>
         <source>Desktop Environment Technical Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="264"/>
+        <location filename="../windowing_tab.cpp" line="265"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="264"/>
+        <location filename="../windowing_tab.cpp" line="265"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="278"/>
+        <location filename="../windowing_tab.cpp" line="282"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="279"/>
+        <location filename="../windowing_tab.cpp" line="283"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="288"/>
+        <location filename="../windowing_tab.cpp" line="284"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="311"/>
+        <location filename="../windowing_tab.cpp" line="313"/>
         <source>Copied</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="312"/>
+        <location filename="../windowing_tab.cpp" line="314"/>
         <source>The information has been copied
 to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="320"/>
+        <location filename="../windowing_tab.cpp" line="322"/>
         <source>Save Desktop Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="320"/>
+        <location filename="../windowing_tab.cpp" line="322"/>
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2728,56 +2811,56 @@ to the clipboard.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="27"/>
-        <location filename="../windowing_tab.cpp" line="118"/>
+        <location filename="../windowing_tab.cpp" line="28"/>
+        <location filename="../windowing_tab.cpp" line="119"/>
         <source>Desktop Environment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="38"/>
+        <location filename="../windowing_tab.cpp" line="39"/>
         <source>Property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="38"/>
+        <location filename="../windowing_tab.cpp" line="39"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="129"/>
+        <location filename="../windowing_tab.cpp" line="130"/>
         <source>Display Server</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="134"/>
+        <location filename="../windowing_tab.cpp" line="135"/>
         <source>Session</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="188"/>
+        <location filename="../windowing_tab.cpp" line="189"/>
         <source>Window Manager</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="193"/>
+        <location filename="../windowing_tab.cpp" line="194"/>
         <source>Display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="198"/>
+        <location filename="../windowing_tab.cpp" line="199"/>
         <source>Wayland Display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="215"/>
+        <location filename="../windowing_tab.cpp" line="216"/>
         <source>Current Resolution</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../windowing_tab.cpp" line="226"/>
-        <location filename="../windowing_tab.cpp" line="233"/>
-        <location filename="../windowing_tab.cpp" line="236"/>
-        <location filename="../windowing_tab.cpp" line="238"/>
+        <location filename="../windowing_tab.cpp" line="227"/>
+        <location filename="../windowing_tab.cpp" line="234"/>
+        <location filename="../windowing_tab.cpp" line="237"/>
+        <location filename="../windowing_tab.cpp" line="239"/>
         <source>Display Scaling</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2785,7 +2868,7 @@ to the clipboard.</source>
 <context>
     <name>gui_helpers</name>
     <message>
-        <location filename="../gui_helpers.h" line="472"/>
+        <location filename="../gui_helpers.h" line="478"/>
         <source>Geek Mode</source>
         <translation type="unfinished"></translation>
     </message>

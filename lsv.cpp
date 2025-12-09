@@ -1384,13 +1384,19 @@ int main(int argc, char *argv[])
         about->activateWindow();
     });
 
-    // NOTE: language chooser dropdown removed from the title bar in favor
-    // of the Administration menu actions (menu is translated via QObject::tr).
+    // Language button (styled like Geek mode button) for language selection
+    QPushButton* langBtn = new QPushButton(QObject::tr("Language"));
+    langBtn->setObjectName("langBtn");
+    langBtn->setStyleSheet(
+        "QPushButton { background-color: #3498db; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 11px; min-width: 80px; max-height: 22px;}"
+        "QPushButton:hover { background-color: #2980b9; }"
+    );
+    langBtn->setFixedHeight(22);
 
     // Helper: apply a language code, reload translator and recreate tabs so
     // the whole UI updates immediately. preserveIndex indicates which tab
     // index should be selected after recreation (use -1 to ignore).
-    auto applyLanguage = [&mainWindow, &app, &translator, &settings, &titleLabel, &aboutBtn](const QString &code, int preserveIndex = -1) {
+    auto applyLanguage = [&mainWindow, &app, &translator, &settings, &titleLabel, &aboutBtn, &langBtn](const QString &code, int preserveIndex = -1) {
         // Remove any installed translator then load the requested one. Use
         // a normalized code so region variants fall back to available
         // translator files (is_IS -> is).
@@ -1409,25 +1415,13 @@ int main(int argc, char *argv[])
         mainWindow.setWindowTitle(QObject::tr("Linux System Viewer V. %1").arg(LSVVersionQString()));
         if (titleLabel) titleLabel->setText(QObject::tr("Linux System Viewer"));
         if (aboutBtn) aboutBtn->setToolTip(QObject::tr("About Linux System Viewer"));
+        if (langBtn) langBtn->setText(QObject::tr("Language"));
 
-        // Retranslate Language menu and actions so menu text updates
-        // immediately without restarting the application.
-        QMenuBar* mb = mainWindow.menuBar();
-        if (mb) {
-            QMenu* adminMenu = mb->findChild<QMenu*>("adminMenu");
-            if (adminMenu) adminMenu->setTitle(QObject::tr("Language"));
-            QAction* changeAct = mb->findChild<QAction*>("changeLangAct");
-            if (changeAct) changeAct->setText(QObject::tr("Change language..."));
-            QAction* resetAct = mb->findChild<QAction*>("resetLangAct");
-            if (resetAct) resetAct->setText(QObject::tr("Reset language"));
-            // Update the language indicator badge text as well
-            QLabel* indicator = mb->findChild<QLabel*>("langIndicator");
-                if (indicator) {
+        // No menu bar needed - language button handles selection
+        {
                     QMap<QString, QString> names2 = shippedLanguageDisplayNames();
                     QString currentLang = settings.value("language", QString("en")).toString();
                     QString display = names2.value(currentLang, currentLang);
-                    indicator->setText(display);
-                }
         }
 
         // Recreate the tab widget to ensure constructor-time tr() calls run
@@ -1462,44 +1456,8 @@ int main(int argc, char *argv[])
         }
     };
 
-    // Language changes are handled via the Language menu actions.
-
-    // Reset handled via Language menu action; no title-button required.
-
-    // Place stretches on both sides of the title so it stays centered
-    // while keeping the About button anchored to the right edge.
-    titleLayout->addStretch();
-    titleLayout->addWidget(titleLabel, 0, Qt::AlignHCenter);
-    titleLayout->addStretch();
-    titleLayout->addWidget(aboutBtn);
-    mainLayout->addLayout(titleLayout);
-
-    // Add a "Language" menu with language actions so the language
-    // chooser is reachable from the menu as well (useful on translated
-    // desktops where the title-area combo may be less discoverable).
-    QMenuBar* mb = mainWindow.menuBar();
-    QMenu* adminMenu = mb->addMenu(QObject::tr("Language"));
-    adminMenu->setObjectName("adminMenu");
-    QAction* changeLangAct = adminMenu->addAction(QObject::tr("Change language..."));
-    changeLangAct->setObjectName("changeLangAct");
-    QAction* resetLangAct = adminMenu->addAction(QObject::tr("Reset language"));
-    resetLangAct->setObjectName("resetLangAct");
-
-    // Language indicator shown in the menu bar: display current language
-    // in a small blue badge (native name). This is a non-interactive
-    // widget added as a QWidgetAction so it appears alongside the menus.
-    QMap<QString, QString> names = shippedLanguageDisplayNames();
-    QString curLang = settings.value("language", QString()).toString();
-    if (curLang.isEmpty()) curLang = "en";
-    QWidgetAction* langIndicatorAct = new QWidgetAction(mb);
-    QLabel* langIndicator = new QLabel(names.value(curLang, curLang));
-    langIndicator->setObjectName("langIndicator");
-    // Use the pleasant blue consistent with other UI accents
-    langIndicator->setStyleSheet("QLabel#langIndicator { background-color: #1E88E5; color: white; padding: 3px 8px; border-radius: 6px; font-weight: bold; }");
-    langIndicatorAct->setDefaultWidget(langIndicator);
-    mb->addAction(langIndicatorAct);
-
-    QObject::connect(changeLangAct, &QAction::triggered, [&mainWindow, &settings, &applyLanguage]() {
+    // Connect Language button to show language chooser dialog
+    QObject::connect(langBtn, &QPushButton::clicked, [&mainWindow, &settings, &applyLanguage]() {
         QMap<QString, QString> names = shippedLanguageDisplayNames();
         // All supported languages sorted alphabetically by display name:
         // Dansk, Deutsch, Ελληνικά, English (UK), Español, Français, Íslenska, Norsk (Bokmål), Suomi, Svenska
@@ -1508,10 +1466,7 @@ int main(int argc, char *argv[])
         QStringList choices;
         for (const QString &c : codes) choices << names.value(c, c);
 
-        // Preselect the currently active language where possible and show
-        // it prominently in the dialog label even when the active language
-        // is not part of the published choices (for example when the
-        // per-user RC contains 'is').
+        // Preselect the currently active language
         QString curLang = settings.value("language", QString()).toString();
         if (curLang.isEmpty()) curLang = "en_GB";
         int defaultIndex = codes.indexOf(curLang);
@@ -1536,28 +1491,12 @@ int main(int argc, char *argv[])
         int curIndex = oldTab ? oldTab->currentIndex() : -1;
         applyLanguage(toWrite, curIndex);
 
-        Q_UNUSED(code);
         QMessageBox::information(nullptr, QObject::tr("Language changed"), QObject::tr("Language saved. UI updated to the selected language."));
     });
 
-    QObject::connect(resetLangAct, &QAction::triggered, [&settings, &applyLanguage, &mainWindow]() {
-        QString rc = langRcFilePath();
-        if (!rc.isEmpty() && QFile::exists(rc)) {
-            if (!QFile::remove(rc)) {
-                QMessageBox::warning(nullptr, QObject::tr("Reset language"), QObject::tr("Failed to remove %1").arg(rc));
-                return;
-            }
-        }
-        settings.setValue("language", "en");
-
-        MultiRowTabWidget* oldTab = mainWindow.findChild<MultiRowTabWidget*>();
-        int curIndex = oldTab ? oldTab->currentIndex() : -1;
-        applyLanguage("en", curIndex);
-
-        Q_UNUSED(settings);
-        QMessageBox::information(nullptr, QObject::tr("Reset language"), QObject::tr("Saved language selection removed. The application is now using English."));
-    });
-
+    // Place Language button, then stretches around title, then About button on the right
+    titleLayout->addWidget(langBtn);
+    titleLayout->addStretch();
     // Create tab widget
     MultiRowTabWidget* tabWidget = new MultiRowTabWidget();
     mainLayout->addWidget(tabWidget);
