@@ -174,6 +174,12 @@ set(CPACK_RPM_PACKAGE_RELEASE "1")
 # Let CPack attempt to detect library dependencies for Debian packages
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
+# Explicit dependencies for Debian packages
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libasound2t64 (>= 1.0.16), libqt6core6t64, libqt6widgets6, libqt6network6, libqt6multimedia6")
+
+# Explicit dependencies for RPM packages
+set(CPACK_RPM_PACKAGE_REQUIRES "alsa-lib >= 1.0.16, qt6-qtbase, qt6-qtmultimedia")
+
 # Include package maintainer scripts (postinst/postrm) for DEB and RPM
 # If the scripts exist in cmake/packaging, instruct CPack to embed them so the
 # package manager will run them on install/remove. Paths are absolute so CPack
