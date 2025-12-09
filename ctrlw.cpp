@@ -165,14 +165,18 @@ bool CtrlWHandler::showQuitDialog()
     iconLabel->setAlignment(Qt::AlignCenter);
     lay->addWidget(iconLabel, 0, Qt::AlignHCenter);
 
-    QDialogButtonBox *box = new QDialogButtonBox(QDialogButtonBox::Yes | QDialogButtonBox::No, &dlg);
-    QPushButton *yesBtn = box->button(QDialogButtonBox::Yes);
-    QPushButton *noBtn = box->button(QDialogButtonBox::No);
-    if (noBtn) noBtn->setDefault(true);
-    lay->addWidget(box);
+    // Custom buttons with translated text
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    QPushButton *noBtn = new QPushButton(tr("No"), &dlg);
+    QPushButton *yesBtn = new QPushButton(tr("Yes"), &dlg);
+    noBtn->setDefault(true);
+    buttonLayout->addStretch();
+    buttonLayout->addWidget(noBtn);
+    buttonLayout->addWidget(yesBtn);
+    lay->addLayout(buttonLayout);
 
-    QObject::connect(box, &QDialogButtonBox::accepted, &dlg, &QDialog::accept);
-    QObject::connect(box, &QDialogButtonBox::rejected, &dlg, &QDialog::reject);
+    QObject::connect(yesBtn, &QPushButton::clicked, &dlg, &QDialog::accept);
+    QObject::connect(noBtn, &QPushButton::clicked, &dlg, &QDialog::reject);
 
     int res = dlg.exec();
     if (res == QDialog::Accepted) {
