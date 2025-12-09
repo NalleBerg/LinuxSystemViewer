@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTranslator>
 #include <QSettings>
+#include <QLibraryInfo>
 #include <QInputDialog>
 #include <QVBoxLayout>
 #include <sys/stat.h>
@@ -210,6 +211,35 @@ static QStringList discoverShippedLanguageCodes()
     QStringList out = set.values();
     out.sort();
     return out;
+}
+
+// Load Qt's base translations for standard widgets (Cancel, OK, etc.)
+static bool tryLoadQtBaseTranslator(const QString &code, QApplication &app, QTranslator *qtTranslator)
+{
+    if (code == "en") return false; // English = default, no translator needed
+    
+    // Qt translations are usually installed in QLibraryInfo::TranslationsPath
+    QString qtTranslationsPath = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
+    
+    // Try loading qtbase translations for this language
+    QStringList candidates;
+    candidates << QString("%1/qtbase_%2.qm").arg(qtTranslationsPath, code);
+    // Also try without country code (e.g., "nb" instead of "nb_NO")
+    if (code.contains('_')) {
+        QString shortCode = code.section('_', 0, 0);
+        candidates << QString("%1/qtbase_%2.qm").arg(qtTranslationsPath, shortCode);
+    }
+    
+    for (const QString &p : candidates) {
+        if (QFile::exists(p) && qtTranslator->load(p)) {
+            app.installTranslator(qtTranslator);
+            appendLog(QString("i18n: Loaded Qt base translator for '%1' from %2").arg(code, p));
+            return true;
+        }
+    }
+    
+    appendLog(QString("i18n: No Qt base translator found for '%1' (tried %2)").arg(code, qtTranslationsPath));
+    return false;
 }
 
 static bool tryLoadTranslatorForCode(const QString &code, QApplication &app, QTranslator *translator)
@@ -851,6 +881,7 @@ int main(int argc, char *argv[])
     // lives in the same directory as the application binary. No other
     // paths (user config, parent dirs, etc.) are consulted.
     QTranslator translator;
+    QTranslator qtTranslator;  // For Qt's built-in widgets (Cancel, OK, etc.)
     QSettings settings("LinuxSystemViewer", "LSV");
     QString savedLang;
 
@@ -915,6 +946,8 @@ int main(int argc, char *argv[])
                 // Record the actual code used in settings so the UI indicator
                 // and future runs reflect the translator that was loaded.
                 settings.setValue("language", actual);
+                // Also load Qt's base translations for standard widgets
+                tryLoadQtBaseTranslator(actual, app, &qtTranslator);
             }
         } else {
             appendLog(QString("i18n: No available translator for requested language '%1', trying system locale").arg(effectiveLang));
@@ -925,6 +958,8 @@ int main(int argc, char *argv[])
                 if (tryLoadTranslatorForCode(sysActual, app, &translator)) {
                     appendLog(QString("i18n: Loaded system locale translator '%1'").arg(sysActual));
                     settings.setValue("language", sysActual);
+                    // Also load Qt's base translations
+                    tryLoadQtBaseTranslator(sysActual, app, &qtTranslator);
                 }
             }
         }
@@ -1284,8 +1319,32 @@ int main(int argc, char *argv[])
         for (int i = 0; i < codes.size(); ++i) {
             if (codes.at(i) == "en" || codes.at(i) == "en_GB") { defaultIndex = i; break; }
         }
-        bool ok = false;
-        QString pick = QInputDialog::getItem(nullptr, QObject::tr("Choose language"), QObject::tr("Language:"), choices, defaultIndex, false, &ok);
+        // Custom dialog with translated buttons (Cancel/OK)
+        QDialog dialog(nullptr);
+        dialog.setWindowTitle(QObject::tr("Choose language"));
+        QVBoxLayout* layout = new QVBoxLayout(&dialog);
+        
+        QLabel* label = new QLabel(QObject::tr("Language:"));
+        layout->addWidget(label);
+        
+        QComboBox* comboBox = new QComboBox();
+        comboBox->addItems(choices);
+        comboBox->setCurrentIndex(defaultIndex);
+        layout->addWidget(comboBox);
+        
+        QHBoxLayout* buttonLayout = new QHBoxLayout();
+        QPushButton* okButton = new QPushButton(QObject::tr("OK"));
+        QPushButton* cancelButton = new QPushButton(QObject::tr("Cancel"));
+        buttonLayout->addStretch();
+        buttonLayout->addWidget(cancelButton);
+        buttonLayout->addWidget(okButton);
+        layout->addLayout(buttonLayout);
+        
+        QObject::connect(okButton, &QPushButton::clicked, &dialog, &QDialog::accept);
+        QObject::connect(cancelButton, &QPushButton::clicked, &dialog, &QDialog::reject);
+        
+        bool ok = (dialog.exec() == QDialog::Accepted);
+        QString pick = ok ? comboBox->currentText() : QString();
         if (ok && !pick.isEmpty()) {
             int idx = choices.indexOf(pick);
             QString code = (idx >= 0 && idx < codes.size()) ? codes.at(idx) : pick;
@@ -1396,15 +1455,18 @@ int main(int argc, char *argv[])
     // Helper: apply a language code, reload translator and recreate tabs so
     // the whole UI updates immediately. preserveIndex indicates which tab
     // index should be selected after recreation (use -1 to ignore).
-    auto applyLanguage = [&mainWindow, &app, &translator, &settings, &titleLabel, &aboutBtn, &langBtn](const QString &code, int preserveIndex = -1) {
+    auto applyLanguage = [&mainWindow, &app, &translator, &qtTranslator, &settings, &titleLabel, &aboutBtn, &langBtn](const QString &code, int preserveIndex = -1) {
         // Remove any installed translator then load the requested one. Use
         // a normalized code so region variants fall back to available
         // translator files (is_IS -> is).
         QString actual = normalizeLanguageCodeToAvailable(code);
         app.removeTranslator(&translator);
+        app.removeTranslator(&qtTranslator);
         if (!actual.isEmpty()) {
             if (tryLoadTranslatorForCode(actual, app, &translator)) {
                 settings.setValue("language", actual);
+                // Also load Qt's base translations
+                tryLoadQtBaseTranslator(actual, app, &qtTranslator);
             }
         } else {
             // No translator: use English and record that choice
@@ -1472,9 +1534,32 @@ int main(int argc, char *argv[])
         int defaultIndex = codes.indexOf(curLang);
         if (defaultIndex < 0) defaultIndex = codes.indexOf("en_GB");
 
-        bool ok = false;
-        QString labelText = QObject::tr("Language:");
-        QString pick = QInputDialog::getItem(nullptr, QObject::tr("Choose language"), labelText, choices, defaultIndex, false, &ok);
+        // Custom dialog with translated buttons (Cancel/OK)
+        QDialog dialog(nullptr);
+        dialog.setWindowTitle(QObject::tr("Choose language"));
+        QVBoxLayout* dlgLayout = new QVBoxLayout(&dialog);
+        
+        QLabel* dlgLabel = new QLabel(QObject::tr("Language:"));
+        dlgLayout->addWidget(dlgLabel);
+        
+        QComboBox* dlgComboBox = new QComboBox();
+        dlgComboBox->addItems(choices);
+        dlgComboBox->setCurrentIndex(defaultIndex);
+        dlgLayout->addWidget(dlgComboBox);
+        
+        QHBoxLayout* dlgButtonLayout = new QHBoxLayout();
+        QPushButton* dlgOkButton = new QPushButton(QObject::tr("OK"));
+        QPushButton* dlgCancelButton = new QPushButton(QObject::tr("Cancel"));
+        dlgButtonLayout->addStretch();
+        dlgButtonLayout->addWidget(dlgCancelButton);
+        dlgButtonLayout->addWidget(dlgOkButton);
+        dlgLayout->addLayout(dlgButtonLayout);
+        
+        QObject::connect(dlgOkButton, &QPushButton::clicked, &dialog, &QDialog::accept);
+        QObject::connect(dlgCancelButton, &QPushButton::clicked, &dialog, &QDialog::reject);
+        
+        bool ok = (dialog.exec() == QDialog::Accepted);
+        QString pick = ok ? dlgComboBox->currentText() : QString();
         if (!ok || pick.isEmpty()) return;
         int idx = choices.indexOf(pick);
         QString code = (idx >= 0 && idx < codes.size()) ? codes.at(idx) : pick;
@@ -1497,6 +1582,11 @@ int main(int argc, char *argv[])
     // Place Language button, then stretches around title, then About button on the right
     titleLayout->addWidget(langBtn);
     titleLayout->addStretch();
+    titleLayout->addWidget(titleLabel);
+    titleLayout->addStretch();
+    titleLayout->addWidget(aboutBtn);
+    mainLayout->addLayout(titleLayout);
+    
     // Create tab widget
     MultiRowTabWidget* tabWidget = new MultiRowTabWidget();
     mainLayout->addWidget(tabWidget);
