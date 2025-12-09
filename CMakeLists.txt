@@ -174,8 +174,8 @@ set(CPACK_RPM_PACKAGE_RELEASE "1")
 # Let CPack attempt to detect library dependencies for Debian packages
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
-# Explicit dependencies for Debian packages
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libasound2t64 (>= 1.0.16), libqt6core6t64, libqt6widgets6, libqt6network6, libqt6multimedia6")
+# Explicit dependencies for Debian packages (compatible with both old and new naming)
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libasound2 (>= 1.0.16) | libasound2t64 (>= 1.0.16)")
 
 # Explicit dependencies for RPM packages
 set(CPACK_RPM_PACKAGE_REQUIRES "alsa-lib >= 1.0.16, qt6-qtbase, qt6-qtmultimedia")
