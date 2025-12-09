@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(LSV VERSION 0.30.0)
+project(LSV VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 17)
 

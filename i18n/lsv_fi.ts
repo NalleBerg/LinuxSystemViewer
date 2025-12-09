@@ -1830,7 +1830,7 @@ leikepöydälle.</translation>
     <message>
         <location filename="../lsv.cpp" line="127" />
         <source>OS</source>
-        <translation>Käyttöjärjestelmä</translation>
+        <translation>Käyttöjärj.</translation>
     </message>
     <message>
         <location filename="../os_tab.cpp" line="41" />

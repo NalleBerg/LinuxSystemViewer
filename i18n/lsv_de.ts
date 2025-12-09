@@ -1995,7 +1995,7 @@ Zwischenablage kopiert.</translation>
         <location filename="../lsv.cpp" line="136" />
         <location filename="../peripherals_tab.cpp" line="44" />
         <source>Peripherals</source>
-        <translation>Peripheriegeräte</translation>
+        <translation>Geräte</translation>
     </message>
     <message>
         <location filename="../peripherals_tab.cpp" line="49" />
@@ -2678,7 +2678,7 @@ Bitte starten Sie die Anwendung als Root.</translation>
         <location filename="../lsv.cpp" line="126" />
         <location filename="../summary_tab.cpp" line="21" />
         <source>Summary</source>
-        <translation>Zusammenfassung</translation>
+        <translation>Übersicht</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="33" />

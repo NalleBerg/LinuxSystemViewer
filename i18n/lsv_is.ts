@@ -1931,7 +1931,7 @@ to the clipboard.</source>
         <location filename="../lsv.cpp" line="141" />
         <location filename="../pc_tab.cpp" line="28" />
         <source>PC Info</source>
-        <translation>Tölvu upplýsingar</translation>
+        <translation>Tölva</translation>
     </message>
     <message>
         <location filename="../pc_tab.cpp" line="39" />

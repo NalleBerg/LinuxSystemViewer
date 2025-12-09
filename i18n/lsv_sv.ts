@@ -2681,7 +2681,7 @@ Kör programmet som root.</translation>
         <location filename="../lsv.cpp" line="126" />
         <location filename="../summary_tab.cpp" line="21" />
         <source>Summary</source>
-        <translation>Sammanfattning</translation>
+        <translation>Översikt</translation>
     </message>
     <message>
         <location filename="../summary_tab.cpp" line="33" />

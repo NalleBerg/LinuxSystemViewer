@@ -3,7 +3,7 @@
 
 Official project home & binaries: https://lsv.nalle.no/
 
-**Current version: 0.30.0**
+**Current version: 1.0.0**
 
 Linux System Viewer (LSV) is a lightweight, focused Qt6-based GUI tool that presents
 detailed system hardware and software information on Linux. It provides both a
@@ -20,14 +20,12 @@ memory, storage, network, graphics, audio, and more.
 - Sound testing: built-in audio hardware testing using ALSA with immediate cancellation
 - Developer-friendly: optional debug logger for safe troubleshooting (disabled by default)
 
-**Recent changes (v0.30.0):**
-- Added comprehensive search functionality to all geek mode tabs (Audio, Peripherals, OS, Memory, Desktop, CPU, Motherboard, Graphics, Storage, Screen, PC Info, Ports, Network)
-- Implemented "Search in Results" mode for progressive data filtering and refined discovery
-- Real-time table filtering with automatic reset on empty search for intuitive "show all" functionality
-- Smart auto-refresh management: timers automatically pause during search and resume on dialog close
-- Restructured Peripherals tab data from text blobs to individual parsed rows for better searchability
-- Consistent button layout across all geek mode dialogs: Search (left) - stretch - Copy/Save/Close (right)
-- Bold Property column formatting preserved throughout all search operations and resets
+**Recent changes (v1.0.0):**
+- Complete internationalization: 12 languages (Danish, German, Greek, English UK, Spanish, Basque, Finnish, French, Icelandic, Italian, Norwegian Bokmål, Swedish) with 540 translated strings each
+- UI refinement: Shortened tab labels in 7 languages for optimal button display
+- Full translation of Language and About buttons
+- Geek Mode button translated across all languages
+- Professional native language support for 300+ million speakers worldwide
 
 **Configuration:**
 - Language selection is stored in `~/.config/LSV/lsv_lang.rc`

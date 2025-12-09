@@ -1986,7 +1986,7 @@ al portapapeles.</translation>
         <location filename="../lsv.cpp" line="141" />
         <location filename="../pc_tab.cpp" line="28" />
         <source>PC Info</source>
-        <translation>Información de PC</translation>
+        <translation>Info PC</translation>
     </message>
 </context>
 <context>
@@ -2627,7 +2627,7 @@ Por favor, ejecute la aplicación como root.</translation>
         <location filename="../storage_tab.cpp" line="38" />
         <location filename="../storage_tab.cpp" line="63" />
         <source>Storage</source>
-        <translation>Almacenamiento</translation>
+        <translation>Discos</translation>
     </message>
     <message>
         <location filename="../storage_tab.cpp" line="91" />
