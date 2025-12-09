@@ -1774,8 +1774,55 @@ to the clipboard.</source>
     <name>NetworkTab</name>
     <message>
         <location filename="../lsv.cpp" line="143" />
+        <location filename="../network_tab.h" line="37" />
+        <location filename="../network_tab.h" line="73" />
         <source>Network</source>
         <translation>Δίκτυο</translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="149" />
+        <source>Property</source>
+        <translation type="unfinished">Ιδιότητα</translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="149" />
+        <source>Value</source>
+        <translation type="unfinished">Τιμή</translation>
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="396" />
+        <source>Interface Name</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="401" />
+        <source>MAC Address</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="409" />
+        <source>IPv4 Address</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="411" />
+        <source>IPv6 Address</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="418" />
+        <source>MTU</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="418" />
+        <source>%1 bytes</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../network_tab.h" line="431" />
+        <source>Default Gateway</source>
+        <translation type="unfinished" />
     </message>
 </context>
 <context>
@@ -2328,6 +2375,201 @@ Please run the application as root.</source>
         <source>MultiRowTabWidget: Tab area height set to:</source>
         <translation>MultiRowTabWidget: Tab area height set to:</translation>
     </message>
+    <message>
+        <location filename="../cpu.h" line="26" />
+        <location filename="../graphics.h" line="27" />
+        <source>Property</source>
+        <translation type="unfinished">Ιδιότητα</translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="26" />
+        <location filename="../graphics.h" line="27" />
+        <source>Value</source>
+        <translation type="unfinished">Τιμή</translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="76" />
+        <source>Error</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../cpu.h" line="76" />
+        <source>Could not read /proc/cpuinfo</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../cpu.h" line="116" />
+        <source>Total number of processors</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../cpu.h" line="120" />
+        <source>Number of processor (Physical)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../cpu.h" line="123" />
+        <location filename="../graphics.h" line="159" />
+        <source>Vendor</source>
+        <translation type="unfinished">Κατασκευαστής</translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="123" />
+        <location filename="../cpu.h" line="124" />
+        <location filename="../cpu.h" line="127" />
+        <location filename="../cpu.h" line="154" />
+        <location filename="../cpu.h" line="155" />
+        <location filename="../cpu.h" line="158" />
+        <location filename="../cpu.h" line="169" />
+        <location filename="../cpu.h" line="179" />
+        <source>Unknown</source>
+        <translation type="unfinished">Άγνωστο</translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="124" />
+        <source>Model</source>
+        <translation type="unfinished">Μοντέλο</translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="151" />
+        <source>Temperature</source>
+        <translation type="unfinished">Θερμοκρασία</translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="154" />
+        <source>Cache size</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../cpu.h" line="155" />
+        <source>Bogomips</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../cpu.h" line="159" />
+        <source>Current freq (GHz)</source>
+        <translation type="unfinished">Τρέχουσα συχνότητα (GHz)</translation>
+    </message>
+    <message>
+        <location filename="../cpu.h" line="167" />
+        <location filename="../cpu.h" line="169" />
+        <source>Max freq (GHz)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../cpu.h" line="177" />
+        <location filename="../cpu.h" line="179" />
+        <source>Min Freq (GHz)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../cpu.h" line="188" />
+        <source>Error reading CPU information</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../cpu.h" line="208" />
+        <source>Unknown CPU</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../graphics.h" line="163" />
+        <source>Graphics Card</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../graphics.h" line="165" />
+        <source>Device ID</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../graphics.h" line="169" />
+        <source>Driver</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../graphics.h" line="178" />
+        <source>DRI Device</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../graphics.h" line="195" />
+        <source>Framebuffer Mode</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../graphics.h" line="205" />
+        <source>Virtual Resolution</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../graphics.h" line="227" />
+        <location filename="../graphics.h" line="229" />
+        <source>Video Memory</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../graphics.h" line="235" />
+        <source>Status</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../graphics.h" line="235" />
+        <source>No graphics card detected</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../gui_helpers.h" line="560" />
+        <source>Copy</source>
+        <translation type="unfinished">Αντιγραφή</translation>
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="117" />
+        <location filename="../mainboard.h" line="119" />
+        <source>Manufacturer</source>
+        <translation type="unfinished">Κατασκευαστής</translation>
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="123" />
+        <location filename="../mainboard.h" line="125" />
+        <source>Name</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="129" />
+        <source>Type</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="133" />
+        <source>Version</source>
+        <translation type="unfinished">Έκδοση</translation>
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="137" />
+        <source>Serial Number</source>
+        <translation type="unfinished">Σειριακός αριθμός</translation>
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="161" />
+        <source>BIOS Vendor</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="164" />
+        <source>BIOS Version</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="167" />
+        <source>BIOS Date</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../mainboard.h" line="183" />
+        <source>Chipset</source>
+        <translation type="unfinished" />
+    </message>
 </context>
 <context>
     <name>ScreenTab</name>
@@ -2676,6 +2918,14 @@ to the clipboard.</source>
         <location filename="../windowing_tab.cpp" line="239" />
         <source>Display Scaling</source>
         <translation>Κλιμάκωση οθόνης</translation>
+    </message>
+</context>
+<context>
+    <name>gui_helpers</name>
+    <message>
+        <location filename="../gui_helpers.h" line="478" />
+        <source>Geek Mode</source>
+        <translation>Λειτουργία Geek</translation>
     </message>
 </context>
 </TS>
