@@ -186,6 +186,7 @@ QVariantMap StorageTab::parseStorageData(const QString& output) {
     // Parse lsblk output (first part before df)
     QRegularExpression rx("(\\w+)=\"([^\"]*)\"");
     QMap<QString, QVariantMap> deviceMap;
+    QSet<QString> mountedDevices;  // Track which devices have mount info from df
     
     for (const QString& line : lines) {
         if (line.startsWith("NAME=")) {
@@ -236,7 +237,7 @@ QVariantMap StorageTab::parseStorageData(const QString& output) {
             }
         }
         else if (line.startsWith("/dev/")) {
-            // Parse df output
+            // Parse df output (mounted filesystems)
             QStringList fields = line.split(QRegularExpression("\\s+"));
             if (fields.size() >= 6) {
                 QString device = fields[0];
@@ -268,9 +269,39 @@ QVariantMap StorageTab::parseStorageData(const QString& output) {
                 partition["use_percent"] = usePercent;
                 partition["mount_point"] = mountPoint;
                 partition["filesystem"] = filesystem;
+                partition["mounted"] = true;
                 
                 partitions.append(partition);
+                mountedDevices.insert(deviceName);
             }
+        }
+    }
+    
+    // Add unmounted partitions from lsblk data
+    for (auto it = deviceMap.constBegin(); it != deviceMap.constEnd(); ++it) {
+        QString deviceName = it.key();
+        QVariantMap device = it.value();
+        QString type = device["type"].toString();
+        
+        // Only process partitions that weren't already added from df output
+        if (type == "part" && !mountedDevices.contains(deviceName)) {
+            QString size = device["size"].toString();
+            QString filesystem = device["fstype"].toString();
+            if (filesystem.isEmpty()) {
+                filesystem = "Unknown";
+            }
+            
+            QVariantMap partition;
+            partition["device"] = "/dev/" + deviceName;
+            partition["size"] = formatSizeLocale(size);
+            partition["used"] = "-";
+            partition["available"] = "-";
+            partition["use_percent"] = "-";
+            partition["mount_point"] = tr("(unmounted)");
+            partition["filesystem"] = filesystem;
+            partition["mounted"] = false;
+            
+            partitions.append(partition);
         }
     }
     
@@ -367,10 +398,19 @@ void StorageTab::applyParsedPartitions(const QVariantMap& data) {
             int columnWidth = diskTable->columnWidth(0);
             QFont tableFont = diskTable->font();
             
+            // Count actual rows needed (unmounted partitions don't need progress bar rows)
+            int totalRows = 0;
+            for (const QVariant& partVar : diskPartitions) {
+                bool isMounted = partVar.toMap()["mounted"].toBool();
+                totalRows += isMounted ? 2 : 1;  // 2 rows for mounted (data + progress), 1 for unmounted
+            }
+            diskTable->setRowCount(totalRows);
+            
+            int currentRow = 0;
             for (int i = 0; i < diskPartitions.size(); ++i) {
                 QVariantMap partition = diskPartitions[i].toMap();
-                int dataRow = i * 2;
-                int progressRow = dataRow + 1;
+                bool isMounted = partition["mounted"].toBool();
+                int dataRow = currentRow;
                 
                 // Create items with truncation detection and HTML formatting
                 QString deviceText = formatTextWithTruncation(partition["device"].toString(), columnWidth, tableFont);
@@ -398,43 +438,58 @@ void StorageTab::applyParsedPartitions(const QVariantMap& data) {
                 
                 QString mountText = formatTextWithTruncation(partition["mount_point"].toString(), columnWidth, tableFont);
                 QTableWidgetItem* mountItem = createColoredTextItem(mountText);
+                // Style unmounted partitions differently
+                if (!isMounted) {
+                    QFont italicFont = mountItem->font();
+                    italicFont.setItalic(true);
+                    mountItem->setFont(italicFont);
+                    mountItem->setForeground(QBrush(QColor("#666666")));
+                }
                 diskTable->setItem(dataRow, 5, mountItem);
                 
                 QString filesystemText = formatTextWithTruncation(partition["filesystem"].toString(), columnWidth, tableFont);
                 QTableWidgetItem* filesystemItem = createColoredTextItem(filesystemText);
                 diskTable->setItem(dataRow, 6, filesystemItem);
                 
-                // Add progress bar row below partition data
-                diskTable->setSpan(progressRow, 0, 1, 7); // Merge all columns
+                currentRow++;
                 
-                // Parse the percentage
-                QString percentStr = partition["use_percent"].toString();
-                percentStr.remove('%'); // Remove % sign
-                int percent = percentStr.toInt();
-                
-                // Create widget container for centered progress bar
-                QWidget* progressWidget = new QWidget();
-                QHBoxLayout* progressLayout = new QHBoxLayout(progressWidget);
-                progressLayout->setContentsMargins(0, 4, 0, 4);
-                
-                // Add left spacer (15%)
-                progressLayout->addStretch(15);
-                
-                // Create progress bar (70% width)
-                QProgressBar* progressBar = new QProgressBar();
-                progressBar->setMinimum(0);
-                progressBar->setMaximum(100);
-                progressBar->setValue(percent);
-                progressBar->setFixedHeight(10);
-                progressBar->setFormat(QString("%1%").arg(percent));
-                progressBar->setAlignment(Qt::AlignCenter);
-                setBarColor(progressBar, percent);
-                progressLayout->addWidget(progressBar, 70); // 70% stretch
-                
-                // Add right spacer (15%)
-                progressLayout->addStretch(15);
-                
-                diskTable->setCellWidget(progressRow, 0, progressWidget);
+                // Only add progress bar for mounted partitions
+                if (isMounted) {
+                    int progressRow = currentRow;
+                    
+                    // Add progress bar row below partition data
+                    diskTable->setSpan(progressRow, 0, 1, 7); // Merge all columns
+                    
+                    // Parse the percentage
+                    QString percentStr = partition["use_percent"].toString();
+                    percentStr.remove('%'); // Remove % sign
+                    int percent = percentStr.toInt();
+                    
+                    // Create widget container for centered progress bar
+                    QWidget* progressWidget = new QWidget();
+                    QHBoxLayout* progressLayout = new QHBoxLayout(progressWidget);
+                    progressLayout->setContentsMargins(0, 4, 0, 4);
+                    
+                    // Add left spacer (15%)
+                    progressLayout->addStretch(15);
+                    
+                    // Create progress bar (70% width)
+                    QProgressBar* progressBar = new QProgressBar();
+                    progressBar->setMinimum(0);
+                    progressBar->setMaximum(100);
+                    progressBar->setValue(percent);
+                    progressBar->setFixedHeight(10);
+                    progressBar->setFormat(QString("%1%").arg(percent));
+                    progressBar->setAlignment(Qt::AlignCenter);
+                    setBarColor(progressBar, percent);
+                    progressLayout->addWidget(progressBar, 70); // 70% stretch
+                    
+                    // Add right spacer (15%)
+                    progressLayout->addStretch(15);
+                    
+                    diskTable->setCellWidget(progressRow, 0, progressWidget);
+                    currentRow++;
+                }
             }
             
             // Resize table to fit content with proper row heights for multiline text
@@ -453,7 +508,7 @@ void StorageTab::applyParsedPartitions(const QVariantMap& data) {
             enableTableCopy(diskTable, refreshTimer);
         } else {
             // No partitions, just show a message or skip the table entirely
-            QLabel* noPartitionsLabel = new QLabel("No mounted partitions found for this disk yet.");
+            QLabel* noPartitionsLabel = new QLabel(tr("No partitions found for this disk."));
             noPartitionsLabel->setAlignment(Qt::AlignCenter);
             noPartitionsLabel->setStyleSheet("color: #666; font-style: italic; padding: 10px;");
             diskInfoLayout->addWidget(noPartitionsLabel);

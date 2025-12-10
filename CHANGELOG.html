@@ -1,3 +1,42 @@
+<h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 1.0.2 &mdash; 2025-12-10</strong></span></h2>
+<h3>Storage Tab Enhancement</h3>
+<ul>
+<li><strong>Unmounted Drive Detection</strong>: Storage tab now shows all drives and partitions regardless of mount status, essential for dual-boot systems with Windows/Linux</li>
+<li><strong>Visual Indicators</strong>: Unmounted partitions display "(unmounted)" in italic gray text in Mount Point column with "-" for usage statistics</li>
+<li><strong>Progress Bar Logic</strong>: Only mounted partitions show usage progress bars; unmounted partitions display without progress indicators</li>
+<li><strong>Dual-Boot Support</strong>: Windows NTFS partitions now visible even when not mounted, showing device name, size, and filesystem type</li>
+<li><strong>Enhanced Detection</strong>: Parse lsblk output independently from df to capture all block devices, then enrich with mount/usage data where available</li>
+</ul>
+<h3>Package Dependencies</h3>
+<ul>
+<li><strong>Cross-Version Compatibility</strong>: Fixed DEB package dependencies with OR dependency for ALSA library: libasound2 (>= 1.0.16) | libasound2t64 (>= 1.0.16)</li>
+<li><strong>Linux Mint 21.3 Support</strong>: Compatible with kernel 5.15 and older package naming conventions (libasound2)</li>
+<li><strong>Ubuntu 24.04+ Support</strong>: Compatible with new package naming (libasound2t64) introduced in Ubuntu 24.04</li>
+<li><strong>Debian 12+ Support</strong>: Works with Debian Bookworm and newer releases</li>
+<li><strong>Explicit Qt6 Dependencies</strong>: Added explicit dependencies for libqt6core6t64, libqt6widgets6, libqt6network6, libqt6multimedia6</li>
+</ul>
+<h3>Technical Changes</h3>
+<ul>
+<li><code>storage_tab.cpp</code> &mdash; Enhanced parseOutput() to process all partitions from lsblk, added mountedDevices tracking, implemented unmounted partition display logic</li>
+<li><code>storage_tab.cpp</code> &mdash; Modified applyParsedPartitions() to calculate row counts dynamically (mounted: 2 rows with progress bar, unmounted: 1 row)</li>
+<li><code>storage_tab.cpp</code> &mdash; Added italic gray styling for unmounted partition mount points</li>
+<li><code>CMakeLists.txt</code> &mdash; Updated CPACK_DEBIAN_PACKAGE_DEPENDS with OR dependency for backward compatibility</li>
+<li><code>version.cpp</code> &mdash; Version bumped to 1.0.2</li>
+<li><code>CMakeLists.txt</code> &mdash; Project version updated to 1.0.2</li>
+</ul>
+<h3>Bug Fixes</h3>
+<ul>
+<li><strong>Missing ALSA Dependency</strong>: Fixed installation failure on Linux Mint 21.3 caused by missing libasound2t64 package (not available on older systems)</li>
+<li><strong>Unmounted Drive Visibility</strong>: Fixed Storage tab only showing mounted filesystems by parsing lsblk output independently from df</li>
+<li><strong>Dual-Boot Detection</strong>: Fixed Windows partitions not appearing in Storage tab when unmounted, common scenario in dual-boot setups</li>
+<li><strong>Package Naming Conflicts</strong>: Fixed incompatibility between Ubuntu 22.04 (libasound2) and Ubuntu 24.04+ (libasound2t64) package names</li>
+</ul>
+<h3>Translation Updates</h3>
+<ul>
+<li><strong>Unmounted Label</strong>: Added tr("(unmounted)") for internationalization support in all 12 languages</li>
+<li><strong>No Partitions Message</strong>: Updated "No mounted partitions found" to "No partitions found for this disk" with tr() support</li>
+</ul>
+<hr />
 <h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 1.0.0 &mdash; 2025-12-09</strong></span></h2>
 <h3>Complete Internationalization</h3>
 <ul>

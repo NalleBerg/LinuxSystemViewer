@@ -3,7 +3,7 @@
 
 Official project home & binaries: https://lsv.nalle.no/
 
-**Current version: 1.0.0**
+**Current version: 1.0.2**
 
 Linux System Viewer (LSV) is a lightweight, focused Qt6-based GUI tool that presents
 detailed system hardware and software information on Linux. It provides both a
@@ -20,12 +20,12 @@ memory, storage, network, graphics, audio, and more.
 - Sound testing: built-in audio hardware testing using ALSA with immediate cancellation
 - Developer-friendly: optional debug logger for safe troubleshooting (disabled by default)
 
-**Recent changes (v1.0.0):**
-- Complete internationalization: 12 languages (Danish, German, Greek, English UK, Spanish, Basque, Finnish, French, Icelandic, Italian, Norwegian Bokmål, Swedish) with 540 translated strings each
-- UI refinement: Shortened tab labels in 7 languages for optimal button display
-- Full translation of Language and About buttons
-- Geek Mode button translated across all languages
-- Professional native language support for 300+ million speakers worldwide
+**Recent changes (v1.0.2):**
+- Storage tab now shows all drives and partitions including unmounted ones (essential for dual-boot setups)
+- Unmounted partitions display with "(unmounted)" indicator in italic gray text
+- Fixed DEB package dependencies for compatibility with Linux Mint 21.3, Ubuntu 22.04+, and Debian 12+
+- Added OR dependency for ALSA library (libasound2 | libasound2t64) for cross-version compatibility
+- Enhanced dual-boot support: Windows NTFS partitions now visible even when unmounted
 
 **Configuration:**
 - Language selection is stored in `~/.config/LSV/lsv_lang.rc`
