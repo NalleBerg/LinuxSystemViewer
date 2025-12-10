@@ -6,6 +6,8 @@
 <li><strong>Progress Bar Logic</strong>: Only mounted partitions show usage progress bars; unmounted partitions display without progress indicators</li>
 <li><strong>Dual-Boot Support</strong>: Windows NTFS partitions now visible even when not mounted, showing device name, size, and filesystem type</li>
 <li><strong>Enhanced Detection</strong>: Parse lsblk output independently from df to capture all block devices, then enrich with mount/usage data where available</li>
+<li><strong>Optimized Column Layout</strong>: Device column uses ResizeToContents for automatic sizing, Mount Point column stretches to accommodate long paths, improved spacing for all columns</li>
+<li><strong>Natural Text Wrapping</strong>: Mount point paths wrap naturally without forced line breaks, short text like "(unmounted)" stays on single line</li>
 </ul>
 <h3>Package Dependencies</h3>
 <ul>
@@ -20,6 +22,8 @@
 <li><code>storage_tab.cpp</code> &mdash; Enhanced parseOutput() to process all partitions from lsblk, added mountedDevices tracking, implemented unmounted partition display logic</li>
 <li><code>storage_tab.cpp</code> &mdash; Modified applyParsedPartitions() to calculate row counts dynamically (mounted: 2 rows with progress bar, unmounted: 1 row)</li>
 <li><code>storage_tab.cpp</code> &mdash; Added italic gray styling for unmounted partition mount points</li>
+<li><code>storage_tab.cpp</code> &mdash; Optimized column resize modes: Device uses ResizeToContents, Mount Point uses Stretch, other columns use Interactive mode</li>
+<li><code>storage_tab.cpp</code> &mdash; Mount point display uses plain QTableWidgetItem for natural word wrapping without HTML formatting</li>
 <li><code>CMakeLists.txt</code> &mdash; Updated CPACK_DEBIAN_PACKAGE_DEPENDS with OR dependency for backward compatibility</li>
 <li><code>version.cpp</code> &mdash; Version bumped to 1.0.2</li>
 <li><code>CMakeLists.txt</code> &mdash; Project version updated to 1.0.2</li>
@@ -30,6 +34,8 @@
 <li><strong>Unmounted Drive Visibility</strong>: Fixed Storage tab only showing mounted filesystems by parsing lsblk output independently from df</li>
 <li><strong>Dual-Boot Detection</strong>: Fixed Windows partitions not appearing in Storage tab when unmounted, common scenario in dual-boot setups</li>
 <li><strong>Package Naming Conflicts</strong>: Fixed incompatibility between Ubuntu 22.04 (libasound2) and Ubuntu 24.04+ (libasound2t64) package names</li>
+<li><strong>Mount Point Truncation</strong>: Fixed long mount paths being cut off by implementing stretch mode for Mount Point column with natural word wrapping</li>
+<li><strong>Column Width Issues</strong>: Fixed Device column not adapting to content length by using ResizeToContents mode</li>
 </ul>
 <h3>Translation Updates</h3>
 <ul>

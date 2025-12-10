@@ -102,15 +102,20 @@ QTableWidget* StorageTab::createDiskTable() {
         "}"
     );
     
-    // Set all columns to equal width
-    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    // Set column resize modes for optimal display
+    // Device and Mount Point get stretch mode for long paths
+    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
+    table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents); // Device
+    table->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Stretch); // Mount Point gets remaining space
     
-    // Calculate equal column width
-    int totalWidth = 800; // Default table width
-    int columnWidth = totalWidth / 7;
-    for (int i = 0; i < 7; ++i) {
-        table->setColumnWidth(i, columnWidth);
-    }
+    // Set minimum widths for better display
+    table->setColumnWidth(0, 140); // Device - fits /dev/nvme0n1p3
+    table->setColumnWidth(1, 90);  // Size
+    table->setColumnWidth(2, 90);  // Used
+    table->setColumnWidth(3, 100); // Available
+    table->setColumnWidth(4, 70);  // Use%
+    // Column 5 (Mount Point) will stretch to fill remaining space
+    table->setColumnWidth(6, 90);  // Filesystem
     
     table->setAlternatingRowColors(true);
     table->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -436,8 +441,10 @@ void StorageTab::applyParsedPartitions(const QVariantMap& data) {
                 QTableWidgetItem* usePercentItem = createColoredTextItem(usePercentText);
                 diskTable->setItem(dataRow, 4, usePercentItem);
                 
-                QString mountText = formatTextWithTruncation(partition["mount_point"].toString(), columnWidth, tableFont);
-                QTableWidgetItem* mountItem = createColoredTextItem(mountText);
+                // Mount point: use plain text without HTML formatting to allow natural word wrap
+                QString mountText = partition["mount_point"].toString();
+                QTableWidgetItem* mountItem = new QTableWidgetItem(mountText);
+                mountItem->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
                 // Style unmounted partitions differently
                 if (!isMounted) {
                     QFont italicFont = mountItem->font();
