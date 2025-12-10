@@ -164,6 +164,7 @@ static QMap<QString, QString> shippedLanguageDisplayNames()
     m.insert("is", "Íslenska");
     m.insert("it", "Italiano");
     m.insert("sv", "Svenska");
+    m.insert("zh_CN", "简体中文");
     return m;
 }
 
@@ -1524,9 +1525,9 @@ int main(int argc, char *argv[])
     QObject::connect(langBtn, &QPushButton::clicked, [&mainWindow, &settings, &applyLanguage]() {
         QMap<QString, QString> names = shippedLanguageDisplayNames();
         // All supported languages sorted alphabetically by display name:
-        // Dansk, Deutsch, Ελληνικά, English (UK), Español, Euskara, Français, Íslenska, Italiano, Norsk (Bokmål), Suomi, Svenska
+        // Dansk, Deutsch, Ελληνικά, English (UK), Español, Euskara, Français, Íslenska, Italiano, Norsk (Bokmål), Suomi, Svenska, 简体中文
         QStringList codes;
-        codes << "da" << "de" << "el" << "en_GB" << "es" << "eu" << "fi" << "fr" << "is" << "it" << "nb" << "sv";
+        codes << "da" << "de" << "el" << "en_GB" << "es" << "eu" << "fi" << "fr" << "is" << "it" << "nb" << "sv" << "zh_CN";
         QStringList choices;
         for (const QString &c : codes) choices << names.value(c, c);
 

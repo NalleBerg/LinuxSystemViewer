@@ -888,59 +888,59 @@ to the clipboard.</source>
 <context>
     <name>GeekOsDialog</name>
     <message>
-        <location filename="../os_tab.cpp" line="239" />
+        <location filename="../os_tab.cpp" line="241" />
         <source>OS - Geek Mode</source>
         <translation>Styrikerfi - Tæknihamur</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="244" />
+        <location filename="../os_tab.cpp" line="246" />
         <source>OS Technical Details</source>
         <translation>Tæknilegar upplýsingar stýrikerfis</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="250" />
+        <location filename="../os_tab.cpp" line="252" />
         <source>Property</source>
         <translation>Eiginleiki</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="250" />
+        <location filename="../os_tab.cpp" line="252" />
         <source>Value</source>
         <translation>Gildi</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="275" />
+        <location filename="../os_tab.cpp" line="277" />
         <source>Copy</source>
         <translation>Afrita</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="276" />
+        <location filename="../os_tab.cpp" line="278" />
         <source>Save...</source>
         <translation>Vista...</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="287" />
+        <location filename="../os_tab.cpp" line="289" />
         <source>Close</source>
         <translation>Loka</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="305" />
+        <location filename="../os_tab.cpp" line="307" />
         <source>Copied</source>
         <translation>Afritað</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="306" />
+        <location filename="../os_tab.cpp" line="308" />
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Upplýsingarnar hafa verið afritaðar
 á klippispjöld.</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="314" />
+        <location filename="../os_tab.cpp" line="316" />
         <source>Save OS Info</source>
         <translation>Vista upplýsingar um stýrikerfi</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="314" />
+        <location filename="../os_tab.cpp" line="316" />
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV skjöl (*.csv);;Öll skjöl (*)</translation>
     </message>
@@ -1570,59 +1570,59 @@ Samhengi: %5</translation>
 <context>
     <name>GeekStorageDialog</name>
     <message>
-        <location filename="../storage_tab.cpp" line="589" />
+        <location filename="../storage_tab.cpp" line="651" />
         <source>Storage - Geek Mode</source>
         <translation>Geymsla - Tæknihamur</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="594" />
+        <location filename="../storage_tab.cpp" line="656" />
         <source>Storage Technical Details</source>
         <translation>Tæknilegar upplýsingar geymslu</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="600" />
+        <location filename="../storage_tab.cpp" line="662" />
         <source>Property</source>
         <translation>Eiginleiki</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="600" />
+        <location filename="../storage_tab.cpp" line="662" />
         <source>Value</source>
         <translation>Gildi</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="617" />
+        <location filename="../storage_tab.cpp" line="679" />
         <source>Copy</source>
         <translation>Afrita</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="618" />
+        <location filename="../storage_tab.cpp" line="680" />
         <source>Save...</source>
         <translation>Vista...</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="619" />
+        <location filename="../storage_tab.cpp" line="681" />
         <source>Close</source>
         <translation>Loka</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="643" />
+        <location filename="../storage_tab.cpp" line="705" />
         <source>Copied</source>
         <translation>Afritað</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="644" />
+        <location filename="../storage_tab.cpp" line="706" />
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Upplýsingarnar hafa verið afritaðar
 á klippispjöld.</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="652" />
+        <location filename="../storage_tab.cpp" line="714" />
         <source>Save Storage Info</source>
         <translation>Vista upplýsingar um geymslu</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="652" />
+        <location filename="../storage_tab.cpp" line="714" />
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV skjöl (*.csv);;Öll skjöl (*)</translation>
     </message>
@@ -1864,61 +1864,66 @@ to the clipboard.</source>
     </message>
     <message>
         <location filename="../os_tab.cpp" line="111" />
+        <source>ID_LIKE</source>
+        <translation>ID_LÍKT</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="113" />
         <source>Version ID</source>
         <translation>Útgáfukóði</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="113" />
+        <location filename="../os_tab.cpp" line="115" />
         <source>Full Name</source>
         <translation>Fullt nafn</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="115" />
+        <location filename="../os_tab.cpp" line="117" />
         <source>Version Codename</source>
         <translation>Útgáfunafn</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="117" />
+        <location filename="../os_tab.cpp" line="119" />
         <source>Ubuntu Codename</source>
         <translation>Ubuntu nöfn</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="119" />
+        <location filename="../os_tab.cpp" line="121" />
         <source>Home Page</source>
         <translation>Heimasíða</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="121" />
+        <location filename="../os_tab.cpp" line="123" />
         <source>Support Page</source>
         <translation>Stuðningssíða</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="123" />
+        <location filename="../os_tab.cpp" line="125" />
         <source>Bug Report Page</source>
         <translation>Villuskýrslasíða</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="125" />
+        <location filename="../os_tab.cpp" line="127" />
         <source>Privacy Policy</source>
         <translation>Persónuverndarstefna</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="127" />
+        <location filename="../os_tab.cpp" line="129" />
         <source>Build ID</source>
         <translation>Smíðakóði</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="129" />
+        <location filename="../os_tab.cpp" line="131" />
         <source>Variant</source>
         <translation>Afbrigði</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="131" />
+        <location filename="../os_tab.cpp" line="133" />
         <source>Variant ID</source>
         <translation>Afbrigðakóði</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="168" />
+        <location filename="../os_tab.cpp" line="170" />
         <source>uname: %1
 </source>
         <translation>uname: %1
@@ -2353,123 +2358,123 @@ to the clipboard.</source>
         <translation>Please install a polkit authentication agent for your desktop (policykit-1-gnome, mate-polkit, polkit-kde) and log out/in.</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="646" />
+        <location filename="../lsv.cpp" line="649" />
         <source>Cleaning up</source>
         <translation>Cleaning up</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="648" />
+        <location filename="../lsv.cpp" line="651" />
         <source>Cleaning up temporary files...</source>
         <translation>Þrifa tímabundnar skrár...</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1112" />
+        <location filename="../lsv.cpp" line="1115" />
         <source>Cannot elevate</source>
         <translation>Get ekki hækkað réttindi</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1112" />
+        <location filename="../lsv.cpp" line="1115" />
         <source>No terminal emulator found to prompt for a password.
 Please run the application as root.</source>
         <translation>Enginn skjáhermir fannst til að biðja um lykilorð.
 Vinsamlegast keyrðu forritið sem kerfisstjóri.</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1118" />
+        <location filename="../lsv.cpp" line="1121" />
         <source>Please enter password to run Linux System Viewer as root</source>
         <translation>Vinsamlegast sláðu inn lykilorð til að keyra Linux System Viewer sem stjórnandi</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1190" />
+        <location filename="../lsv.cpp" line="1193" />
         <source>Linux System Viewer %1</source>
         <translation>Linux System Viewer %1</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1247" />
+        <location filename="../lsv.cpp" line="1250" />
         <source>Authentication failed (%1/3)</source>
         <translation>Auðkenning mistókst (%1/3)</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1281" />
+        <location filename="../lsv.cpp" line="1284" />
         <source>Elevation failed</source>
         <translation>Hækkun réttinda mistókst</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1281" />
+        <location filename="../lsv.cpp" line="1284" />
         <source>Failed to start a terminal to request sudo password. Please run the application as root.</source>
         <translation>Mistókst að ræsa skjáhermi til að biðja um sudo lykilorð. Vinsamlegast keyrðu forritið sem kerfisstjóri.</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1324" />
-        <location filename="../lsv.cpp" line="1539" />
+        <location filename="../lsv.cpp" line="1327" />
+        <location filename="../lsv.cpp" line="1542" />
         <source>Choose language</source>
         <translation>Veldu tungumál</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1327" />
-        <location filename="../lsv.cpp" line="1542" />
+        <location filename="../lsv.cpp" line="1330" />
+        <location filename="../lsv.cpp" line="1545" />
         <source>Language:</source>
         <translation>Tungumál:</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1336" />
-        <location filename="../lsv.cpp" line="1551" />
+        <location filename="../lsv.cpp" line="1339" />
+        <location filename="../lsv.cpp" line="1554" />
         <source>OK</source>
         <translation>Í lagi</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1337" />
-        <location filename="../lsv.cpp" line="1552" />
+        <location filename="../lsv.cpp" line="1340" />
+        <location filename="../lsv.cpp" line="1555" />
         <source>Cancel</source>
         <translation>Hætta við</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1358" />
-        <location filename="../lsv.cpp" line="1570" />
+        <location filename="../lsv.cpp" line="1361" />
+        <location filename="../lsv.cpp" line="1573" />
         <source>Language selection</source>
         <translation>Val tungumáls</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1358" />
+        <location filename="../lsv.cpp" line="1361" />
         <source>Failed to write language selection to %1</source>
         <translation>Mistókst að skrifa val tungumáls í %1</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1371" />
-        <location filename="../lsv.cpp" line="1477" />
+        <location filename="../lsv.cpp" line="1374" />
+        <location filename="../lsv.cpp" line="1480" />
         <source>Linux System Viewer V. %1</source>
         <translation>Linux System Viewer útg. %1</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1416" />
-        <location filename="../lsv.cpp" line="1478" />
+        <location filename="../lsv.cpp" line="1419" />
+        <location filename="../lsv.cpp" line="1481" />
         <source>Linux System Viewer</source>
         <translation>Linux System Viewer</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1435" />
-        <location filename="../lsv.cpp" line="1479" />
+        <location filename="../lsv.cpp" line="1438" />
+        <location filename="../lsv.cpp" line="1482" />
         <source>About Linux System Viewer</source>
         <translation>Um Linux System Viewer</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1447" />
-        <location filename="../lsv.cpp" line="1480" />
+        <location filename="../lsv.cpp" line="1450" />
+        <location filename="../lsv.cpp" line="1483" />
         <source>Language</source>
         <translation>Tungumál</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1570" />
+        <location filename="../lsv.cpp" line="1573" />
         <source>Failed to write language selection to configuration directory</source>
         <translation>Mistókst að skrifa val tungumáls í stillingamöppu</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1579" />
+        <location filename="../lsv.cpp" line="1582" />
         <source>Language changed</source>
         <translation>Tungumáli breytt</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1579" />
+        <location filename="../lsv.cpp" line="1582" />
         <source>Language saved. UI updated to the selected language.</source>
         <translation>Tungumál vistað. Viðmót uppfært í valið tungumál.</translation>
     </message>
@@ -2665,14 +2670,24 @@ Vinsamlegast keyrðu forritið sem kerfisstjóri.</translation>
         <translation>Skráarkerfi</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="309" />
+        <location filename="../storage_tab.cpp" line="305" />
+        <source>(unmounted)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../storage_tab.cpp" line="345" />
         <source>Disk: %1 - Type: %2 - Total size: %3</source>
         <translation>Diskur: %1 - Gerð: %2 - Heildarstærð: %3</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="315" />
+        <location filename="../storage_tab.cpp" line="351" />
         <source>Name: %1</source>
         <translation>Nafn: %1</translation>
+    </message>
+    <message>
+        <location filename="../storage_tab.cpp" line="518" />
+        <source>No partitions found for this disk.</source>
+        <translation type="unfinished" />
     </message>
 </context>
 <context>

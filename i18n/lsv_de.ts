@@ -888,59 +888,59 @@ Zwischenablage kopiert.</translation>
 <context>
     <name>GeekOsDialog</name>
     <message>
-        <location filename="../os_tab.cpp" line="239" />
+        <location filename="../os_tab.cpp" line="241" />
         <source>OS - Geek Mode</source>
         <translation>Betriebssystem - Geek-Modus</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="244" />
+        <location filename="../os_tab.cpp" line="246" />
         <source>OS Technical Details</source>
         <translation>Betriebssystem Technische Details</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="250" />
+        <location filename="../os_tab.cpp" line="252" />
         <source>Property</source>
         <translation>Eigenschaft</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="250" />
+        <location filename="../os_tab.cpp" line="252" />
         <source>Value</source>
         <translation>Wert</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="275" />
+        <location filename="../os_tab.cpp" line="277" />
         <source>Copy</source>
         <translation>Kopieren</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="276" />
+        <location filename="../os_tab.cpp" line="278" />
         <source>Save...</source>
         <translation>Speichern...</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="287" />
+        <location filename="../os_tab.cpp" line="289" />
         <source>Close</source>
         <translation>Schließen</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="305" />
+        <location filename="../os_tab.cpp" line="307" />
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="306" />
+        <location filename="../os_tab.cpp" line="308" />
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Die Informationen wurden in die
 Zwischenablage kopiert.</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="314" />
+        <location filename="../os_tab.cpp" line="316" />
         <source>Save OS Info</source>
         <translation>Betriebssystem-Info speichern</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="314" />
+        <location filename="../os_tab.cpp" line="316" />
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-Dateien (*.csv);;Alle Dateien (*)</translation>
     </message>
@@ -1570,59 +1570,59 @@ Kontext: %5</translation>
 <context>
     <name>GeekStorageDialog</name>
     <message>
-        <location filename="../storage_tab.cpp" line="589" />
+        <location filename="../storage_tab.cpp" line="651" />
         <source>Storage - Geek Mode</source>
         <translation>Speicher - Geek-Modus</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="594" />
+        <location filename="../storage_tab.cpp" line="656" />
         <source>Storage Technical Details</source>
         <translation>Speicher Technische Details</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="600" />
+        <location filename="../storage_tab.cpp" line="662" />
         <source>Property</source>
         <translation>Eigenschaft</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="600" />
+        <location filename="../storage_tab.cpp" line="662" />
         <source>Value</source>
         <translation>Wert</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="617" />
+        <location filename="../storage_tab.cpp" line="679" />
         <source>Copy</source>
         <translation>Kopieren</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="618" />
+        <location filename="../storage_tab.cpp" line="680" />
         <source>Save...</source>
         <translation>Speichern...</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="619" />
+        <location filename="../storage_tab.cpp" line="681" />
         <source>Close</source>
         <translation>Schließen</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="643" />
+        <location filename="../storage_tab.cpp" line="705" />
         <source>Copied</source>
         <translation>Kopiert</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="644" />
+        <location filename="../storage_tab.cpp" line="706" />
         <source>The information has been copied
 to the clipboard.</source>
         <translation>Die Informationen wurden in die
 Zwischenablage kopiert.</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="652" />
+        <location filename="../storage_tab.cpp" line="714" />
         <source>Save Storage Info</source>
         <translation>Speicher-Info speichern</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="652" />
+        <location filename="../storage_tab.cpp" line="714" />
         <source>CSV Files (*.csv);;All Files (*)</source>
         <translation>CSV-Dateien (*.csv);;Alle Dateien (*)</translation>
     </message>
@@ -1864,61 +1864,66 @@ Zwischenablage kopiert.</translation>
     </message>
     <message>
         <location filename="../os_tab.cpp" line="111" />
+        <source>ID_LIKE</source>
+        <translation>ID_ÄHNLICH</translation>
+    </message>
+    <message>
+        <location filename="../os_tab.cpp" line="113" />
         <source>Version ID</source>
         <translation>Versions-ID</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="113" />
+        <location filename="../os_tab.cpp" line="115" />
         <source>Full Name</source>
         <translation>Vollständiger Name</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="115" />
+        <location filename="../os_tab.cpp" line="117" />
         <source>Version Codename</source>
         <translation>Versions-Codename</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="117" />
+        <location filename="../os_tab.cpp" line="119" />
         <source>Ubuntu Codename</source>
         <translation>Ubuntu-Codename</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="119" />
+        <location filename="../os_tab.cpp" line="121" />
         <source>Home Page</source>
         <translation>Homepage</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="121" />
+        <location filename="../os_tab.cpp" line="123" />
         <source>Support Page</source>
         <translation>Support-Seite</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="123" />
+        <location filename="../os_tab.cpp" line="125" />
         <source>Bug Report Page</source>
         <translation>Fehlerberichts-Seite</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="125" />
+        <location filename="../os_tab.cpp" line="127" />
         <source>Privacy Policy</source>
         <translation>Datenschutzrichtlinie</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="127" />
+        <location filename="../os_tab.cpp" line="129" />
         <source>Build ID</source>
         <translation>Build-ID</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="129" />
+        <location filename="../os_tab.cpp" line="131" />
         <source>Variant</source>
         <translation>Variante</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="131" />
+        <location filename="../os_tab.cpp" line="133" />
         <source>Variant ID</source>
         <translation>Varianten-ID</translation>
     </message>
     <message>
-        <location filename="../os_tab.cpp" line="168" />
+        <location filename="../os_tab.cpp" line="170" />
         <source>uname: %1
 </source>
         <translation>uname: %1
@@ -2188,123 +2193,123 @@ Zwischenablage kopiert.</translation>
         <translation>Bitte installieren Sie einen polkit-Authentifizierungsagenten für Ihren Desktop (policykit-1-gnome, mate-polkit, polkit-kde) und melden Sie sich ab/an.</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="646" />
+        <location filename="../lsv.cpp" line="649" />
         <source>Cleaning up</source>
         <translation>Aufräumen</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="648" />
+        <location filename="../lsv.cpp" line="651" />
         <source>Cleaning up temporary files...</source>
         <translation>Temporäre Dateien werden aufgeräumt...</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1112" />
+        <location filename="../lsv.cpp" line="1115" />
         <source>Cannot elevate</source>
         <translation>Kann Rechte nicht erhöhen</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1112" />
+        <location filename="../lsv.cpp" line="1115" />
         <source>No terminal emulator found to prompt for a password.
 Please run the application as root.</source>
         <translation>Kein Terminal-Emulator gefunden, um nach Passwort zu fragen.
 Bitte starten Sie die Anwendung als Root.</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1118" />
+        <location filename="../lsv.cpp" line="1121" />
         <source>Please enter password to run Linux System Viewer as root</source>
         <translation>Bitte geben Sie das Passwort ein, um Linux System Viewer als Root auszuführen</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1190" />
+        <location filename="../lsv.cpp" line="1193" />
         <source>Linux System Viewer %1</source>
         <translation>Linux System Viewer %1</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1247" />
+        <location filename="../lsv.cpp" line="1250" />
         <source>Authentication failed (%1/3)</source>
         <translation>Authentifizierung fehlgeschlagen (%1/3)</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1281" />
+        <location filename="../lsv.cpp" line="1284" />
         <source>Elevation failed</source>
         <translation>Rechteerhöhung fehlgeschlagen</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1281" />
+        <location filename="../lsv.cpp" line="1284" />
         <source>Failed to start a terminal to request sudo password. Please run the application as root.</source>
         <translation>Terminal konnte nicht gestartet werden, um sudo-Passwort anzufordern. Bitte starten Sie die Anwendung als Root.</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1324" />
-        <location filename="../lsv.cpp" line="1539" />
+        <location filename="../lsv.cpp" line="1327" />
+        <location filename="../lsv.cpp" line="1542" />
         <source>Choose language</source>
         <translation>Sprache wählen</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1327" />
-        <location filename="../lsv.cpp" line="1542" />
+        <location filename="../lsv.cpp" line="1330" />
+        <location filename="../lsv.cpp" line="1545" />
         <source>Language:</source>
         <translation>Sprache:</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1336" />
-        <location filename="../lsv.cpp" line="1551" />
+        <location filename="../lsv.cpp" line="1339" />
+        <location filename="../lsv.cpp" line="1554" />
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1337" />
-        <location filename="../lsv.cpp" line="1552" />
+        <location filename="../lsv.cpp" line="1340" />
+        <location filename="../lsv.cpp" line="1555" />
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1358" />
-        <location filename="../lsv.cpp" line="1570" />
+        <location filename="../lsv.cpp" line="1361" />
+        <location filename="../lsv.cpp" line="1573" />
         <source>Language selection</source>
         <translation>Sprachauswahl</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1358" />
+        <location filename="../lsv.cpp" line="1361" />
         <source>Failed to write language selection to %1</source>
         <translation>Fehler beim Schreiben der Sprachauswahl nach %1</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1371" />
-        <location filename="../lsv.cpp" line="1477" />
+        <location filename="../lsv.cpp" line="1374" />
+        <location filename="../lsv.cpp" line="1480" />
         <source>Linux System Viewer V. %1</source>
         <translation>Linux System Viewer V. %1</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1416" />
-        <location filename="../lsv.cpp" line="1478" />
+        <location filename="../lsv.cpp" line="1419" />
+        <location filename="../lsv.cpp" line="1481" />
         <source>Linux System Viewer</source>
         <translation>Linux System Viewer</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1435" />
-        <location filename="../lsv.cpp" line="1479" />
+        <location filename="../lsv.cpp" line="1438" />
+        <location filename="../lsv.cpp" line="1482" />
         <source>About Linux System Viewer</source>
         <translation>Über Linux System Viewer</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1447" />
-        <location filename="../lsv.cpp" line="1480" />
+        <location filename="../lsv.cpp" line="1450" />
+        <location filename="../lsv.cpp" line="1483" />
         <source>Language</source>
         <translation>Sprache</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1570" />
+        <location filename="../lsv.cpp" line="1573" />
         <source>Failed to write language selection to configuration directory</source>
         <translation>Fehler beim Schreiben der Sprachauswahl ins Konfigurationsverzeichnis</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1579" />
+        <location filename="../lsv.cpp" line="1582" />
         <source>Language changed</source>
         <translation>Sprache geändert</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1579" />
+        <location filename="../lsv.cpp" line="1582" />
         <source>Language saved. UI updated to the selected language.</source>
         <translation>Sprache gespeichert. Benutzeroberfläche auf gewählte Sprache aktualisiert.</translation>
     </message>
@@ -2662,14 +2667,24 @@ Bitte starten Sie die Anwendung als Root.</translation>
         <translation>Dateisystem</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="309" />
+        <location filename="../storage_tab.cpp" line="305" />
+        <source>(unmounted)</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../storage_tab.cpp" line="345" />
         <source>Disk: %1 - Type: %2 - Total size: %3</source>
         <translation>Festplatte: %1 - Typ: %2 - Gesamtgröße: %3</translation>
     </message>
     <message>
-        <location filename="../storage_tab.cpp" line="315" />
+        <location filename="../storage_tab.cpp" line="351" />
         <source>Name: %1</source>
         <translation>Name: %1</translation>
+    </message>
+    <message>
+        <location filename="../storage_tab.cpp" line="518" />
+        <source>No partitions found for this disk.</source>
+        <translation type="unfinished" />
     </message>
 </context>
 <context>

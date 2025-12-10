@@ -107,6 +107,8 @@ OSTab::OSTab(const QString& tabName, const QString& command, bool showHeader, co
                     translatedKey = tr("Distribution Version");
                 } else if (k == "ID") {
                     translatedKey = tr("Distribution ID");
+                } else if (k == "ID_LIKE") {
+                    translatedKey = tr("ID_LIKE");
                 } else if (k == "VERSION_ID") {
                     translatedKey = tr("Version ID");
                 } else if (k == "PRETTY_NAME") {
