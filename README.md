@@ -15,7 +15,7 @@ memory, storage, network, graphics, audio, and more.
 - Two presentation modes: user-friendly summaries and detailed technical views
 - Universal search functionality: comprehensive search across all geek mode tabs with regex support
 - Instant loading: no external process spawning for data collection
-- Packaging: DEB and RPM packages via CPack for easy distribution
+- Packaging: DEB package via CPack for easy distribution
 - Internationalization: supports multiple languages with built-in translations
 - Sound testing: built-in audio hardware testing using ALSA with immediate cancellation
 - Developer-friendly: optional debug logger for safe troubleshooting (disabled by default)
