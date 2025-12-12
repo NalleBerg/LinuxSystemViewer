@@ -317,104 +317,25 @@ static QString normalizeLanguageCodeToAvailable(const QString &code)
 
 // Path and helper for persistent language-choice "rc" file. We store a
 // simple file containing the chosen language code in the user's config
-// location (usually ~/.config/lsv_lang_rc). If the file exists its
-// content will be used as the default language.
-static QString langRcFilePath()
-{
-    // Primary RC now lives in the user's config directory per request.
-    // Use ~/.config/LSV/lsv_lang.rc (QStandardPaths::ConfigLocation) and
-    // ensure the path is returned; callers that write should create the
-    // directory first.
-    // When elevated (running as root), use the original user's config path
-    // from LSV_USER_CONFIG environment variable so both elevated and
-    // non-elevated instances share the same RC file.
-    QString cfg;
+
+// Unified language config: always use ~/.config/LinuxSystemViewer/LSV.conf and QSettings
+static QString userConfigPath() {
     QString envUserConfig = QString::fromLocal8Bit(qgetenv("LSV_USER_CONFIG"));
     if (!envUserConfig.isEmpty()) {
-        cfg = envUserConfig;
-    } else {
-        cfg = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/LinuxSystemViewer";
+        return envUserConfig;
     }
-    if (cfg.endsWith(".conf")) {
-        // If cfg is a file (e.g. .../LSV.conf), use its parent directory
-        QFileInfo fi(cfg);
-        cfg = fi.dir().absolutePath();
-    }
-    if (cfg.isEmpty()) return QString();
-    QDir d(cfg);
-    return d.filePath("lsv_lang.rc");
+    return QDir::homePath() + "/.config/LinuxSystemViewer/LSV.conf";
 }
 
-// Return the primary RC path that lives next to the application binary.
-// This intentionally does NOT fall back to the user config location: it's
-// used to decide whether a portable `lsv_lang.rc` exists next to the
-// binary and whether the language-chooser should be shown. The wrapper may
-// set LSV_ORIG_APPDIR so an elevated instance can still locate the
-// original application directory.
-static QString langRcPrimaryPath()
-{
-    // The application MUST consult only the per-user config path.
-    // No fallbacks are allowed — the rc file MUST live in
-    // ~/.config/LSV/lsv_lang.rc to be considered.
-    return langRcFilePath();
+static QString readLanguageFromConfig() {
+    QSettings settings(userConfigPath(), QSettings::IniFormat);
+    return settings.value("language", QString()).toString();
 }
 
-// Read only the primary (AppImage) RC file. Returns empty string if not
-// present or unreadable. This intentionally does not consult the fallback
-// config location.
-static QString readLangRcPrimary()
-{
-    QString p = langRcPrimaryPath();
-    if (p.isEmpty()) return QString();
-    QFile f(p);
-    if (f.exists() && f.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QString s = QString::fromLocal8Bit(f.readAll()).trimmed();
-        f.close();
-        return s;
-    }
-    return QString();
-}
-
-static QString readLangRc()
-{
-    // Read only the per-user config RC. No fallbacks allowed.
-    QString user = langRcFilePath();
-    if (user.isEmpty()) return QString();
-    QFile fu(user);
-    if (fu.exists() && fu.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QString s = QString::fromLocal8Bit(fu.readAll()).trimmed();
-        fu.close();
-        return s;
-    }
-    return QString();
-}
-
-static bool writeLangRc(const QString &code)
-{
-    // Write the RC into the user's config directory (~/.config/LSV/lsv_lang.rc).
-    QString user = langRcFilePath();
-    if (user.isEmpty()) {
-        appendLog(QString("i18n: cannot determine user lang rc path"));
-        return false;
-    }
-    QFileInfo fi(user);
-    QDir dir = fi.dir();
-    if (!dir.exists()) {
-        if (!QDir().mkpath(dir.absolutePath())) {
-            appendLog(QString("i18n: failed to create dir %1").arg(dir.absolutePath()));
-            return false;
-        }
-    }
-    QFile fa(user);
-    if (fa.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
-        QTextStream ts(&fa);
-        ts << code << '\n';
-        fa.close();
-        appendLog(QString("i18n: wrote lang rc to %1").arg(user));
-        return true;
-    }
-    appendLog(QString("i18n: failed to write lang rc to %1").arg(user));
-    return false;
+static void writeLanguageToConfig(const QString &lang) {
+    QSettings settings(userConfigPath(), QSettings::IniFormat);
+    settings.setValue("language", lang);
+    settings.sync();
 }
 
 // ---------------------- end i18n helpers ----------------------
@@ -900,14 +821,6 @@ int main(int argc, char *argv[])
     QSettings settings(userConfig, QSettings::IniFormat);
     QString savedLang = settings.value("language", QString()).toString();
 
-    // Debug: Log QSettings location and language value
-    appendLog(QString("i18n: QSettings file: %1").arg(settings.fileName()));
-    appendLog(QString("i18n: Read language from QSettings: '%1'").arg(savedLang.isEmpty() ? "(empty)" : savedLang));
-    appendLog(QString("i18n: HOME=%1 USER=%2 UID=%3")
-              .arg(QString::fromLocal8Bit(qgetenv("HOME")))
-              .arg(QString::fromLocal8Bit(qgetenv("USER")))
-              .arg(QString::number(getuid())));
-
     // Discover shipped languages and build a CLI-friendly list
     QStringList shipped = discoverShippedLanguageCodes();
 
@@ -993,50 +906,7 @@ int main(int argc, char *argv[])
     qDebug() << "Application starting..."; // will be routed to appendLog
     appendLog(QString("Application starting. CWD: %1, log-file: %2").arg(QDir::currentPath(), QDir::currentPath()+"/lsv-cli.log"));
 
-    // Quick diagnostic flag: print the primary RC path (where the app
-    // WILL look for lsv_lang.rc for this invocation) and exit. This is
-    // intentionally handled before auto-elevation so you can inspect the
-    // path without triggering sudo relaunches.
-    QStringList earlyArgs = QCoreApplication::arguments();
-    if (earlyArgs.contains("--rc-path")) {
-        QString p = langRcPrimaryPath();
-        QTextStream out(stdout);
-        out << p << '\n';
-        // Also indicate whether the file exists and print its contents for convenience
-        if (!p.isEmpty() && QFile::exists(p)) {
-            QFile f(p);
-            if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
-                out << "EXISTS\n";
-                out << f.readAll() << '\n';
-                f.close();
-            }
-        } else {
-            out << "MISSING\n";
-        }
-        return 0;
-    }
-
-    // Handle reset-lang CLI flag: remove the per-user language RC and exit
-    if (resetLang) {
-        QString p = langRcFilePath();
-        QTextStream out(stdout);
-        if (p.isEmpty()) {
-            out << "ERROR: no config path\n";
-            return 1;
-        }
-        QFile f(p);
-        if (!f.exists()) {
-            out << "MISSING\n";
-            return 0;
-        }
-        if (QFile::remove(p)) {
-            out << "OK\n";
-            return 0;
-        } else {
-            out << "FAILED\n";
-            return 1;
-        }
-    }
+    // Remove obsolete --rc-path and reset-lang CLI logic
 
     // Auto-elevation: if not running as root, show custom elevation dialog
     // This provides a consistent graphical authentication experience across
@@ -1091,15 +961,9 @@ int main(int argc, char *argv[])
     // check the primary path so the chooser reappears when `lsv_lang.rc`
     // is not present next to the binary, even if a fallback user config
     // file exists.
-    QString primaryRc = langRcPrimaryPath();
-    appendLog(QString("i18n: LSV_ORIG_APPDIR='%1', applicationDirPath='%2', primaryRc='%3'")
-              .arg(QString::fromLocal8Bit(qgetenv("LSV_ORIG_APPDIR")), QCoreApplication::applicationDirPath(), primaryRc));
-    appendLog(QString("i18n: primaryRc exists=%1 chooseLang=%2 geteuid=%3").arg(QString::number(QFile::exists(primaryRc)), chooseLang ? "true" : "false", QString::number(geteuid())));
-
-    // Show language selector if elevated and (explicitly requested OR RC file missing OR config file exists but language is missing)
+    // Show language selector ONLY if config file does not exist (not if language is missing)
     bool configExists = QFile::exists(userConfig);
-    bool langMissing = savedLang.isEmpty();
-    if (geteuid() == 0 && (chooseLang || !QFile::exists(primaryRc) || (configExists && langMissing))) {
+    if (geteuid() == 0 && (chooseLang || !configExists)) {
         QMap<QString, QString> names = shippedLanguageDisplayNames();
         QStringList choices;
         QStringList codes = discoverShippedLanguageCodes();
@@ -1142,16 +1006,11 @@ int main(int argc, char *argv[])
         if (ok && !pick.isEmpty()) {
             int idx = choices.indexOf(pick);
             QString code = (idx >= 0 && idx < codes.size()) ? codes.at(idx) : pick;
-            // Persist the selection to the rc file so it becomes the default
-            // for future runs. Also store in QSettings for internal consistency.
-            // Normalize the requested code to an available translator
-            // (e.g. is_IS -> is) before persisting and loading.
+            // Persist the selection to QSettings only
             QString actual = normalizeLanguageCodeToAvailable(code);
             QString toWrite = actual.isEmpty() ? QString("en") : actual;
-            if (!writeLangRc(toWrite)) {
-                QMessageBox::warning(nullptr, QObject::tr("Language selection"), QObject::tr("Failed to write language selection to %1").arg(primaryRc));
-            }
             settings.setValue("language", toWrite);
+            settings.sync();
             // Reload translator if needed
             app.removeTranslator(&translator);
             if (toWrite != "en") {
@@ -1364,9 +1223,6 @@ int main(int argc, char *argv[])
         // Normalize to an available translator before persisting/loading
         QString actual = normalizeLanguageCodeToAvailable(code);
         QString toWrite = actual.isEmpty() ? QString("en") : actual;
-        if (!writeLangRc(toWrite)) {
-            QMessageBox::warning(nullptr, QObject::tr("Language selection"), QObject::tr("Failed to write language selection to configuration directory"));
-        }
         settings.setValue("language", toWrite);
         settings.sync();  // Force write to disk
         appendLog(QString("i18n: Saved language '%1' to QSettings file: %2").arg(toWrite, settings.fileName()));

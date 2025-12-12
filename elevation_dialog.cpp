@@ -12,6 +12,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QTranslator>
+#include <QSettings>
 #include <QFile>
 #include <QTextStream>
 #include <unistd.h>
@@ -215,14 +216,14 @@ bool ElevationDialog::restartAsRoot(const QString &password)
     if (!userHome.isEmpty())
         out << "HOME='" << userHome.replace("'", "'\\''") << "' ";  // Keep user's HOME, not root's
 
-    // Set LSV_ELEVATED flag and export user config path
+    // Set LSV_ELEVATED flag and export user config directory (not .conf file)
     QString lsvUserConfig = QDir::homePath() + "/.config/LinuxSystemViewer/LSV.conf";
     // Debug: log environment and command to a file in /home/nalle/Dokumenter/c++/lshwgui/logs/
     out << "mkdir -p '/home/nalle/Dokumenter/c++/lshwgui/logs'\n";
     out << "env > '/home/nalle/Dokumenter/c++/lshwgui/logs/lsv_elevated_env.log'\n";
-    out << "echo 'Launching: ' 'echo <password> | sudo -S env LSV_ELEVATED=1 LSV_USER_CONFIG=<config> setsid <exe>' > '/home/nalle/Dokumenter/c++/lshwgui/logs/lsv_elevated_cmd.log'\n";
+    out << "echo 'Launching: echo <password> | sudo -S env LSV_ELEVATED=1 LSV_USER_CONFIG='" << lsvUserConfig.replace("'", "'\\''") << "' setsid '" << exe.replace("'", "'\\''") << "' HOME='" << userHome.replace("'", "'\\''") << "'' > '/home/nalle/Dokumenter/c++/lshwgui/logs/lsv_elevated_cmd.log'\n";
     // Start the application in the background with setsid, preserving environment, and non-interactive sudo
-    out << "echo '" << escapedPassword << "' | sudo -S env LSV_ELEVATED=1 LSV_USER_CONFIG='" << lsvUserConfig.replace("'", "'\\''") << "' setsid '" << exe.replace("'", "'\\''") << "' > '/home/nalle/Dokumenter/c++/lshwgui/logs/lsv_elevated_out.log' 2>&1 &\n";
+    out << "echo '" << escapedPassword << "' | sudo -S env LSV_ELEVATED=1 LSV_USER_CONFIG='" << lsvUserConfig.replace("'", "'\\''") << "' HOME='" << userHome.replace("'", "'\\''") << "' setsid '" << exe.replace("'", "'\\''") << "' > '/home/nalle/Dokumenter/c++/lshwgui/logs/lsv_elevated_out.log' 2>&1 &\n";
 
     script.close();
 
@@ -293,21 +294,19 @@ void ElevationDialog::onAuthenticateClicked()
 
 bool ElevationDialog::elevateAndRestart(const QString &executablePath)
 {
-    // Use the same language RC file as the main app
-    QString langRcPath = QDir::homePath() + "/.config/LinuxSystemViewer/lsv_lang.rc";
+    // Use unified config file for language
+    QString configPath = QDir::homePath() + "/.config/LinuxSystemViewer/LSV.conf";
     QByteArray envConfig = qgetenv("LSV_USER_CONFIG");
     if (!envConfig.isEmpty()) {
-        // If running elevated, use the original user's config dir
-        langRcPath = QString::fromLocal8Bit(envConfig);
-        // If envConfig is a file (LSV.conf), replace with lsv_lang.rc in the same dir
-        QFileInfo fi(langRcPath);
-        langRcPath = fi.dir().filePath("lsv_lang.rc");
+        configPath = QString::fromLocal8Bit(envConfig);
     }
-    QString lang;
-    QFile rcFile(langRcPath);
-    if (rcFile.exists() && rcFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        lang = QString::fromLocal8Bit(rcFile.readAll()).trimmed();
-        rcFile.close();
+    QSettings settings(configPath, QSettings::IniFormat);
+    QString lang = settings.value("language", QString()).toString();
+    QFile logFile("./logs/lsv_login_debug.log");
+    if (logFile.open(QIODevice::Append | QIODevice::Text)) {
+        QTextStream ts(&logFile);
+        ts << QDateTime::currentDateTime().toString(Qt::ISODate) << ": ElevationDialog configPath: " << configPath << ", lang: '" << lang << "'\n";
+        logFile.close();
     }
 
     // Load translator for dialog
