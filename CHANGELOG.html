@@ -1,3 +1,14 @@
+<h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 1.3.0 &mdash; 2025-12-12</strong></span></h2>
+<h3>Fedora & RPM Fixes, Universal Logging</h3>
+<ul>
+<li><strong>Fedora/RPM Logging Fix:</strong> Elevated/root processes now log to <code>/tmp/lsv_debug.log</code> to avoid permission issues on Fedora and other distros.</li>
+<li><strong>Unified Language Config:</strong> Both main app and elevation dialog always use <code>~/.config/LinuxSystemViewer/LSV.conf</code> for language, never <code>/root/.config</code>.</li>
+<li><strong>Language Selector Logic:</strong> Selector only appears if config file is missing, never for missing/empty language value.</li>
+<li><strong>Debug Logging Cleanup:</strong> Debug logger is now disabled by default for release builds.</li>
+<li><strong>Packaging:</strong> RPM and DEB packaging confirmed working on Fedora, Ubuntu, Mint, and openSUSE.</li>
+<li><strong>Bugfixes:</strong> Fixed elevation, config, and language persistence issues across all supported distros.</li>
+</ul>
+<hr />
 <h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 1.3.0 &mdash; 2025-12-11</strong></span></h2>
 <h3>Custom Elevation Dialog - Major UX Improvement</h3>
 <ul>

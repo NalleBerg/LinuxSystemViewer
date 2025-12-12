@@ -1,6 +1,5 @@
 # Linux System Viewer
 
-
 Official project home & binaries: https://lsv.nalle.no/
 
 **Current version: 1.3.0**
@@ -22,14 +21,12 @@ memory, storage, network, graphics, audio, and more.
 - Developer-friendly: optional debug logger for safe troubleshooting (disabled by default)
 
 **Recent changes (v1.3.0):**
-- **Custom Elevation Dialog**: Replaced terminal sudo with native Qt dialog using PAM authentication - works from app menus without terminal
-- **User Config Preservation**: Elevated instances use original user's ~/.config/LSV/ directory for consistent language settings
-- **RPM Package Support**: Added RPM packaging for Fedora, RHEL, and openSUSE distributions
-- **Complete Chinese Translation**: Added Simplified Chinese (简体中文) with 519 translated strings
-- **13 Languages**: Chinese, Danish, German, Greek, English (UK), Spanish, Basque, Finnish, French, Icelandic, Italian, Norwegian, and Swedish
-- **Fully Localized Elevation**: Authentication dialog supports all 13 languages
-- **Technical Terms Localized**: BIOS, USB, UUID, MTU, MAC appropriately translated
-- **ID_LIKE Support**: Added os-release field translation across all languages
+- Fedora/RPM logging fix: root/elevated logs go to <code>/tmp/lsv_debug.log</code>
+- Unified language config: always uses <code>~/.config/LinuxSystemViewer/LSV.conf</code>
+- Language selector only appears if config file is missing
+- Debug logger disabled by default for release
+- RPM/DEB packaging confirmed on Fedora, Ubuntu, Mint, openSUSE
+- Bugfixes for elevation, config, and language persistence
 
 **Configuration:**
 - Language selection is stored in `~/.config/LSV/LSV.conf`
