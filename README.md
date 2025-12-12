@@ -21,11 +21,10 @@ memory, storage, network, graphics, audio, and more.
 - Developer-friendly: optional debug logger for safe troubleshooting (disabled by default)
 
 **Recent changes (v1.3.0):**
-- Fedora/RPM logging fix: root/elevated logs go to <code>/tmp/lsv_debug.log</code>
 - Unified language config: always uses <code>~/.config/LinuxSystemViewer/LSV.conf</code>
 - Language selector only appears if config file is missing
 - Debug logger disabled by default for release
-- RPM/DEB packaging confirmed on Fedora, Ubuntu, Mint, openSUSE
+- DEB packaging confirmed on Ubuntu, Mint
 - Bugfixes for elevation, config, and language persistence
 
 **Configuration:**
@@ -37,7 +36,6 @@ memory, storage, network, graphics, audio, and more.
 **Downloads:**
 - Official releases and packages: https://lsv.nalle.no/
 - DEB packages for Debian, Ubuntu, and Linux Mint
-- RPM packages for Fedora, RHEL, and openSUSE
 
 Quickstart — build & run (developer)
 ----------------------------------
