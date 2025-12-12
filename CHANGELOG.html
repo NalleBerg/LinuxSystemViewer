@@ -1,7 +1,17 @@
-<h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 1.1.2 &mdash; 2025-12-10</strong></span></h2>
+<h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 1.3.0 &mdash; 2025-12-11</strong></span></h2>
+<h3>Custom Elevation Dialog - Major UX Improvement</h3>
+<ul>
+<li><strong>PAM-Based Authentication</strong>: Replaced terminal sudo approach with native Qt elevation dialog using PAM authentication</li>
+<li><strong>No Terminal Dependency</strong>: Works from application menus without requiring terminal emulator - solves "No terminal emulator found" errors</li>
+<li><strong>User Config Preservation</strong>: Elevated instances use original user's ~/.config/LSV/ directory, not root's - fixes language persistence issues</li>
+<li><strong>Fully Internationalized</strong>: Elevation dialog supports all 13 languages with translated prompts, buttons, and error messages</li>
+<li><strong>Secure Password Handling</strong>: PAM conversation mechanism with automatic password memory clearing after authentication</li>
+<li><strong>Clean Process Management</strong>: Detached elevated process launch with environment preservation (DISPLAY, HOME, XAUTHORITY, etc.)</li>
+<li><strong>Universal Compatibility</strong>: Works on all distributions with PAM (standard on all modern Linux systems)</li>
+</ul>
 <h3>Simplified Chinese Translation - Complete</h3>
 <ul>
-<li><strong>Full Simplified Chinese Support</strong>: Added complete 简体中文 (zh_CN) translation with 515 translated strings</li>
+<li><strong>Full Simplified Chinese Support</strong>: Added complete 简体中文 (zh_CN) translation with 519 translated strings</li>
 <li><strong>13 Languages Total</strong>: Chinese joins Danish, German, Greek, English (UK), Spanish, Basque, Finnish, French, Icelandic, Italian, Norwegian, and Swedish</li>
 <li><strong>100% Chinese Property Names</strong>: All property names in normal mode tabs display fully in Chinese for native users</li>
 <li><strong>Technical Term Localization</strong>: Translated technical abbreviations appropriately: BIOS→基本输入输出系统, USB→通用串行总线, UUID→通用唯一识别码, MTU→最大传输单元, MAC→物理地址</li>
@@ -9,19 +19,30 @@
 <li><strong>Product Name Protection</strong>: "Linux System Viewer" and "LSV" correctly remain in English across all translations</li>
 <li><strong>ID_LIKE Property</strong>: Added translation support for ID_LIKE os-release field across all 13 languages</li>
 </ul>
+<h3>RPM Package Support</h3>
+<ul>
+<li><strong>Fedora/RHEL/openSUSE Support</strong>: Added RPM packaging via CPack alongside existing DEB packages</li>
+<li><strong>Directory Ownership Fix</strong>: RPM excludes standard system directories (/usr/share/applications, /usr/share/icons/*) to prevent conflicts with filesystem packages</li>
+<li><strong>Multi-Distribution Testing</strong>: Verified on Fedora 43, works alongside DEB packages for Debian/Ubuntu/Mint</li>
+</ul>
 <h3>Technical Changes</h3>
 <ul>
-<li><code>lsv.cpp</code> &mdash; Added "zh_CN" → "简体中文" to language menu at lines 149-167 and 1529</li>
-<li><code>i18n/lsv_zh_CN.ts</code> &mdash; Created complete Simplified Chinese translation file with 515/543 strings translated</li>
+<li><code>elevation_dialog.h</code> &mdash; New custom authentication dialog class with PAM integration</li>
+<li><code>elevation_dialog.cpp</code> &mdash; PAM authentication implementation with environment preservation and detached process management</li>
+<li><code>lsv.cpp</code> &mdash; Replaced 256 lines of terminal sudo code with 38-line elevation dialog invocation</li>
+<li><code>lsv.cpp</code> &mdash; Added "zh_CN" → "简体中文" to language menu</li>
+<li><code>i18n/lsv_zh_CN.ts</code> &mdash; Complete Simplified Chinese translation file with 519/549 strings translated</li>
+<li><code>i18n/lsv_*.ts</code> &mdash; All 13 language files updated with elevation dialog strings (549 total strings)</li>
 <li><code>os_tab.cpp</code> &mdash; Added ID_LIKE translation support for os-release field display</li>
-<li><code>i18n/lsv_*.ts</code> &mdash; Updated all 13 language files with ID_LIKE translations</li>
-<li><code>version.cpp</code> &mdash; Version bumped to 1.1.2</li>
+<li><code>CMakeLists.txt</code> &mdash; Added elevation_dialog.cpp and PAM library linkage, RPM packaging with directory exclusions</li>
+<li><code>version.cpp</code> &mdash; Version bumped to 1.3.0</li>
 </ul>
 <h3>Translation Quality</h3>
 <ul>
 <li><strong>No Mixed Language</strong>: Eliminated all mixed Chinese/English text like "Computer 名称"</li>
 <li><strong>Consistent Terminology</strong>: Applied consistent Chinese translations for all technical terms throughout the application</li>
 <li><strong>Native User Experience</strong>: Chinese users see completely localized interface with natural Chinese terminology</li>
+<li><strong>Elevation Dialog Localized</strong>: Authentication prompts, button labels, and error messages translated in all 13 languages</li>
 </ul>
 <hr />
 <h2><span style="color: #ff0000; font-size: 14pt;"><strong>v 1.0.2 &mdash; 2025-12-10</strong></span></h2>

@@ -97,7 +97,7 @@ Hala ere, egin klik behean https://lsv.nalle.no/ URLa arbelera kopiatzeko.</tran
         <translation>GNU GPL v2</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="142" />
+        <location filename="../lsv.cpp" line="143" />
         <source>About</source>
         <translation>Honi buruz</translation>
     </message>
@@ -176,7 +176,7 @@ kopiatu da.</translation>
     <name>AudioTab</name>
     <message>
         <location filename="../audio_tab.cpp" line="58" />
-        <location filename="../lsv.cpp" line="132" />
+        <location filename="../lsv.cpp" line="133" />
         <source>Audio</source>
         <translation>Audioa</translation>
     </message>
@@ -250,7 +250,7 @@ kopiatu da.</translation>
     <name>CPUTab</name>
     <message>
         <location filename="../cpu_tab.cpp" line="31" />
-        <location filename="../lsv.cpp" line="138" />
+        <location filename="../lsv.cpp" line="139" />
         <source>CPU</source>
         <translation>CPU</translation>
     </message>
@@ -297,6 +297,65 @@ kopiatu da.</translation>
         <location filename="../ctrlw.cpp" line="171" />
         <source>Yes</source>
         <translation>Bai</translation>
+    </message>
+</context>
+<context>
+    <name>ElevationDialog</name>
+    <message>
+        <location filename="../elevation_dialog.cpp" line="46" />
+        <source>Authentication Required</source>
+        <translation>Autentifikazioa Beharrezkoa</translation>
+    </message>
+    <message>
+        <location filename="../elevation_dialog.cpp" line="65" />
+        <source>&lt;b&gt;Authentication is required to run Linux System Viewer&lt;/b&gt;&lt;br&gt;&lt;br&gt;Linux System Viewer requires administrative privileges to access hardware information. Please enter your password to continue.</source>
+        <translation>&lt;b&gt;Autentifikazioa behar da Linux System Viewer exekutatzeko&lt;/b&gt;&lt;br&gt;&lt;br&gt;Linux System Viewer-ek administratzaile pribilegioak behar ditu hardware informaziora sartzeko. Mesedez, sartu zure pasahitza jarraitzeko.</translation>
+    </message>
+    <message>
+        <location filename="../elevation_dialog.cpp" line="77" />
+        <source>User: &lt;b&gt;%1&lt;/b&gt;</source>
+        <translation>Erabiltzailea: &lt;b&gt;%1&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../elevation_dialog.cpp" line="81" />
+        <source>Password:</source>
+        <translation>Pasahitza:</translation>
+    </message>
+    <message>
+        <location filename="../elevation_dialog.cpp" line="86" />
+        <source>Enter your password</source>
+        <translation>Sartu zure pasahitza</translation>
+    </message>
+    <message>
+        <location filename="../elevation_dialog.cpp" line="101" />
+        <source>Cancel</source>
+        <translation>Utzi</translation>
+    </message>
+    <message>
+        <location filename="../elevation_dialog.cpp" line="105" />
+        <location filename="../elevation_dialog.cpp" line="277" />
+        <source>Authenticate</source>
+        <translation>Autentifikatu</translation>
+    </message>
+    <message>
+        <location filename="../elevation_dialog.cpp" line="238" />
+        <source>Password cannot be empty</source>
+        <translation>Pasahitza ezin da hutsik egon</translation>
+    </message>
+    <message>
+        <location filename="../elevation_dialog.cpp" line="247" />
+        <source>Authenticating...</source>
+        <translation>Autentifikatzen...</translation>
+    </message>
+    <message>
+        <location filename="../elevation_dialog.cpp" line="261" />
+        <source>Failed to restart with elevated privileges</source>
+        <translation>Huts egin du pribilegio handituarekin berrabiaraztean</translation>
+    </message>
+    <message>
+        <location filename="../elevation_dialog.cpp" line="265" />
+        <source>Authentication failed. Incorrect password.</source>
+        <translation>Autentifikazioak huts egin du. Pasahitz okerra.</translation>
     </message>
 </context>
 <context>
@@ -1631,7 +1690,7 @@ kopiatu da.</translation>
     <name>GraphicsTab</name>
     <message>
         <location filename="../graphics_tab.cpp" line="31" />
-        <location filename="../lsv.cpp" line="133" />
+        <location filename="../lsv.cpp" line="134" />
         <source>Graphics</source>
         <translation>Grafikoak</translation>
     </message>
@@ -1649,7 +1708,7 @@ kopiatu da.</translation>
 <context>
     <name>MemoryTab</name>
     <message>
-        <location filename="../lsv.cpp" line="137" />
+        <location filename="../lsv.cpp" line="138" />
         <location filename="../memory_tab.cpp" line="23" />
         <source>Memory</source>
         <translation>Memoria</translation>
@@ -1694,7 +1753,7 @@ kopiatu da.</translation>
 <context>
     <name>MotherboardTab</name>
     <message>
-        <location filename="../lsv.cpp" line="139" />
+        <location filename="../lsv.cpp" line="140" />
         <location filename="../motherboard_tab.cpp" line="31" />
         <source>Motherboard</source>
         <translation>Plaka nagusia</translation>
@@ -1773,7 +1832,7 @@ kopiatu da.</translation>
 <context>
     <name>NetworkTab</name>
     <message>
-        <location filename="../lsv.cpp" line="143" />
+        <location filename="../lsv.cpp" line="144" />
         <location filename="../network_tab.h" line="37" />
         <location filename="../network_tab.h" line="73" />
         <source>Network</source>
@@ -1828,7 +1887,7 @@ kopiatu da.</translation>
 <context>
     <name>OSTab</name>
     <message>
-        <location filename="../lsv.cpp" line="127" />
+        <location filename="../lsv.cpp" line="128" />
         <source>OS</source>
         <translation>SE</translation>
     </message>
@@ -1933,7 +1992,7 @@ kopiatu da.</translation>
 <context>
     <name>PCTab</name>
     <message>
-        <location filename="../lsv.cpp" line="141" />
+        <location filename="../lsv.cpp" line="142" />
         <location filename="../pc_tab.cpp" line="28" />
         <source>PC Info</source>
         <translation>PC informazioa</translation>
@@ -1997,7 +2056,7 @@ kopiatu da.</translation>
 <context>
     <name>PeripheralsTab</name>
     <message>
-        <location filename="../lsv.cpp" line="136" />
+        <location filename="../lsv.cpp" line="137" />
         <location filename="../peripherals_tab.cpp" line="44" />
         <source>Peripherals</source>
         <translation>Periferikoak</translation>
@@ -2116,7 +2175,7 @@ kopiatu da.</translation>
 <context>
     <name>PortsTab</name>
     <message>
-        <location filename="../lsv.cpp" line="135" />
+        <location filename="../lsv.cpp" line="136" />
         <location filename="../ports_tab.cpp" line="25" />
         <source>Ports</source>
         <translation>Atakak</translation>
@@ -2194,149 +2253,154 @@ kopiatu da.</translation>
 %2</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="70" />
+        <location filename="../lsv.cpp" line="71" />
         <source>sudo apt update &amp;&amp; sudo apt install policykit-1-gnome
 # then log out and back in (or run: /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &amp;)</source>
         <translation>sudo apt update &amp;&amp; sudo apt install policykit-1-gnome
 # ondoren atera eta sartu berriro saioa (edo exekutatu: /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &amp;)</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="72" />
+        <location filename="../lsv.cpp" line="73" />
         <source>sudo dnf install polkit-gnome -y
 # then log out and back in (or run: /usr/libexec/polkit-gnome-authentication-agent-1 &amp;)</source>
         <translation>sudo dnf install polkit-gnome -y
 # ondoren atera eta sartu berriro saioa (edo exekutatu: /usr/libexec/polkit-gnome-authentication-agent-1 &amp;)</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="74" />
+        <location filename="../lsv.cpp" line="75" />
         <source>sudo pacman -S polkit-gnome
 # then log out and back in (or run: /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &amp;)</source>
         <translation>sudo pacman -S polkit-gnome
 # ondoren atera eta sartu berriro saioa (edo exekutatu: /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &amp;)</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="76" />
+        <location filename="../lsv.cpp" line="77" />
         <source>Please install a polkit authentication agent for your desktop (policykit-1-gnome, mate-polkit, polkit-kde) and log out/in.</source>
         <translation>Instalatu polkit autentifikazio agente bat zure mahaigainerako (policykit-1-gnome, mate-polkit, polkit-kde) eta atera/sartu saioa.</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="649" />
+        <location filename="../lsv.cpp" line="650" />
         <source>Cleaning up</source>
         <translation>Garbitzen</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="651" />
+        <location filename="../lsv.cpp" line="652" />
         <source>Cleaning up temporary files...</source>
         <translation>Aldi baterako fitxategiak garbitzen...</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1115" />
         <source>Cannot elevate</source>
-        <translation>Ezin da baimenak igo</translation>
+        <translation type="vanished">Ezin da baimenak igo</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1115" />
         <source>No terminal emulator found to prompt for a password.
 Please run the application as root.</source>
-        <translation>Ez da terminal emulatzailerik aurkitu pasahitza eskatzeko.
+        <translation type="vanished">Ez da terminal emulatzailerik aurkitu pasahitza eskatzeko.
 Exekutatu aplikazioa root gisa.</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1121" />
         <source>Please enter password to run Linux System Viewer as root</source>
-        <translation>Sartu pasahitza Linux System Viewer root gisa exekutatzeko</translation>
+        <translation type="vanished">Sartu pasahitza Linux System Viewer root gisa exekutatzeko</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1193" />
         <source>Linux System Viewer %1</source>
-        <translation>Linux System Viewer %1</translation>
+        <translation type="vanished">Linux System Viewer %1</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1250" />
         <source>Authentication failed (%1/3)</source>
-        <translation>Autentifikazioak huts egin du (%1/3)</translation>
+        <translation type="vanished">Autentifikazioak huts egin du (%1/3)</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1284" />
         <source>Elevation failed</source>
-        <translation>Baimen igotzeak huts egin du</translation>
+        <translation type="vanished">Baimen igotzeak huts egin du</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1284" />
         <source>Failed to start a terminal to request sudo password. Please run the application as root.</source>
-        <translation>Huts egin du terminal bat abiaraztean sudo pasahitza eskatzeko. Exekutatu aplikazioa root gisa.</translation>
+        <translation type="vanished">Huts egin du terminal bat abiaraztean sudo pasahitza eskatzeko. Exekutatu aplikazioa root gisa.</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1327" />
-        <location filename="../lsv.cpp" line="1542" />
+        <location filename="../lsv.cpp" line="1062" />
+        <source>Authentication Required</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../lsv.cpp" line="1063" />
+        <source>Linux System Viewer requires root privileges to access hardware information.
+
+You can also run it from terminal with: sudo lsv</source>
+        <translation type="unfinished" />
+    </message>
+    <message>
+        <location filename="../lsv.cpp" line="1107" />
+        <location filename="../lsv.cpp" line="1322" />
         <source>Choose language</source>
         <translation>Aukeratu hizkuntza</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1330" />
-        <location filename="../lsv.cpp" line="1545" />
+        <location filename="../lsv.cpp" line="1110" />
+        <location filename="../lsv.cpp" line="1325" />
         <source>Language:</source>
         <translation>Hizkuntza:</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1339" />
-        <location filename="../lsv.cpp" line="1554" />
+        <location filename="../lsv.cpp" line="1119" />
+        <location filename="../lsv.cpp" line="1334" />
         <source>OK</source>
         <translation>Ados</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1340" />
-        <location filename="../lsv.cpp" line="1555" />
+        <location filename="../lsv.cpp" line="1120" />
+        <location filename="../lsv.cpp" line="1335" />
         <source>Cancel</source>
         <translation>Utzi</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1361" />
-        <location filename="../lsv.cpp" line="1573" />
+        <location filename="../lsv.cpp" line="1141" />
+        <location filename="../lsv.cpp" line="1353" />
         <source>Language selection</source>
         <translation>Hizkuntza hautapena</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1361" />
+        <location filename="../lsv.cpp" line="1141" />
         <source>Failed to write language selection to %1</source>
         <translation>Huts egin du hizkuntza hautapena %1(e)n idaztean</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1374" />
-        <location filename="../lsv.cpp" line="1480" />
+        <location filename="../lsv.cpp" line="1154" />
+        <location filename="../lsv.cpp" line="1260" />
         <source>Linux System Viewer V. %1</source>
         <translation>Linux System Viewer b. %1</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1419" />
-        <location filename="../lsv.cpp" line="1481" />
+        <location filename="../lsv.cpp" line="1199" />
+        <location filename="../lsv.cpp" line="1261" />
         <source>Linux System Viewer</source>
         <translation>Linux System Viewer</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1438" />
-        <location filename="../lsv.cpp" line="1482" />
+        <location filename="../lsv.cpp" line="1218" />
+        <location filename="../lsv.cpp" line="1262" />
         <source>About Linux System Viewer</source>
         <translation>Linux System Viewer-i buruz</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1450" />
-        <location filename="../lsv.cpp" line="1483" />
+        <location filename="../lsv.cpp" line="1230" />
+        <location filename="../lsv.cpp" line="1263" />
         <source>Language</source>
         <translation>Hizkuntza</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1573" />
+        <location filename="../lsv.cpp" line="1353" />
         <source>Failed to write language selection to configuration directory</source>
         <translation>Huts egin du hizkuntza hautapena konfigurazio direktorioan idaztean</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1582" />
+        <location filename="../lsv.cpp" line="1362" />
         <source>Language changed</source>
         <translation>Hizkuntza aldatuta</translation>
     </message>
     <message>
-        <location filename="../lsv.cpp" line="1582" />
+        <location filename="../lsv.cpp" line="1362" />
         <source>Language saved. UI updated to the selected language.</source>
         <translation>Hizkuntza gordeta. Interfazea hautatutako hizkuntzara eguneratua.</translation>
     </message>
@@ -2579,7 +2643,7 @@ Exekutatu aplikazioa root gisa.</translation>
 <context>
     <name>ScreenTab</name>
     <message>
-        <location filename="../lsv.cpp" line="134" />
+        <location filename="../lsv.cpp" line="135" />
         <location filename="../screen_tab.cpp" line="27" />
         <source>Screen</source>
         <translation>Pantaila</translation>
@@ -2628,7 +2692,7 @@ Exekutatu aplikazioa root gisa.</translation>
 <context>
     <name>StorageTab</name>
     <message>
-        <location filename="../lsv.cpp" line="140" />
+        <location filename="../lsv.cpp" line="141" />
         <location filename="../storage_tab.cpp" line="38" />
         <location filename="../storage_tab.cpp" line="63" />
         <source>Storage</source>
@@ -2693,7 +2757,7 @@ Exekutatu aplikazioa root gisa.</translation>
 <context>
     <name>SummaryTab</name>
     <message>
-        <location filename="../lsv.cpp" line="126" />
+        <location filename="../lsv.cpp" line="127" />
         <location filename="../summary_tab.cpp" line="21" />
         <source>Summary</source>
         <translation>Laburpena</translation>
@@ -2876,7 +2940,7 @@ kopiatu da.</translation>
 <context>
     <name>WindowingTab</name>
     <message>
-        <location filename="../lsv.cpp" line="131" />
+        <location filename="../lsv.cpp" line="132" />
         <source>Desktop</source>
         <translation>Mahaigaina</translation>
     </message>

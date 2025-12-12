@@ -17,18 +17,18 @@
 
 inline void appendLog(const QString& msg)
 {
-    // Enable runtime logging by setting the environment variable LSV_DEBUG=1.
-    const char* env = std::getenv("LSV_DEBUG");
-    static const bool enabled = (env && (std::strcmp(env, "1") == 0 || std::strcmp(env, "true") == 0));
+    // Unconditional logging for debugging - will be conditional again after issue is resolved
+    static const bool enabled = true;
     if (!enabled) {
         return; // no-op when debugging is not explicitly enabled
     }
 
-    // When enabled, write to the system temp directory to avoid creating
-    // persistent files inside packaged artifacts or user folders.
+    // Write to home directory for easy access
     static bool firstCall = true;
-    QString tmp = QDir::tempPath() + QDir::separator() + "lsv-debug.log";
-    QFile f(tmp);
+    QString home = QString::fromLocal8Bit(qgetenv("HOME"));
+    if (home.isEmpty()) home = QDir::tempPath();
+    QString logPath = home + QDir::separator() + "lsv-debug.log";
+    QFile f(logPath);
     if (firstCall) {
         if (f.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
             QTextStream out(&f);

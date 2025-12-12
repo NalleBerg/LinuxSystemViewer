@@ -1,0 +1,25 @@
+#!/bin/bash
+set -e
+
+# Script to build LinuxSystemViewer in the current directory
+# Usage: ./comp
+
+BUILD_DIR="build"
+
+# Remove old build directory if it exists
+if [ -d "$BUILD_DIR" ]; then
+    echo "Removing old build directory..."
+    rm -rf "$BUILD_DIR"
+fi
+
+# Create build directory
+mkdir "$BUILD_DIR"
+cd "$BUILD_DIR"
+
+echo "Configuring with CMake..."
+cmake ..
+
+echo "Building with make..."
+make -j$(nproc)
+
+echo "Build complete."

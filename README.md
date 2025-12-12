@@ -3,7 +3,7 @@
 
 Official project home & binaries: https://lsv.nalle.no/
 
-**Current version: 1.1.2**
+**Current version: 1.3.0**
 
 Linux System Viewer (LSV) is a lightweight, focused Qt6-based GUI tool that presents
 detailed system hardware and software information on Linux. It provides both a
@@ -15,26 +15,32 @@ memory, storage, network, graphics, audio, and more.
 - Two presentation modes: user-friendly summaries and detailed technical views
 - Universal search functionality: comprehensive search across all geek mode tabs with regex support
 - Instant loading: no external process spawning for data collection
-- Packaging: DEB package via CPack for easy distribution
-- Internationalization: supports multiple languages with built-in translations
+- Packaging: DEB and RPM packages via CPack for easy distribution
+- Internationalization: supports 13 languages with built-in translations
+- Custom elevation dialog: PAM-based authentication without terminal dependency
 - Sound testing: built-in audio hardware testing using ALSA with immediate cancellation
 - Developer-friendly: optional debug logger for safe troubleshooting (disabled by default)
 
-**Recent changes (v1.1.2):**
-- Added complete Simplified Chinese (简体中文) translation with 515 strings
-- Now supporting 13 languages: Chinese, Danish, German, Greek, English (UK), Spanish, Basque, Finnish, French, Icelandic, Italian, Norwegian, and Swedish
-- All property names in normal mode display 100% in Chinese for native Chinese users
-- Technical terms appropriately localized (BIOS, USB, UUID, MTU, MAC, etc.)
-- Added ID_LIKE os-release field translation support across all languages
+**Recent changes (v1.3.0):**
+- **Custom Elevation Dialog**: Replaced terminal sudo with native Qt dialog using PAM authentication - works from app menus without terminal
+- **User Config Preservation**: Elevated instances use original user's ~/.config/LSV/ directory for consistent language settings
+- **RPM Package Support**: Added RPM packaging for Fedora, RHEL, and openSUSE distributions
+- **Complete Chinese Translation**: Added Simplified Chinese (简体中文) with 519 translated strings
+- **13 Languages**: Chinese, Danish, German, Greek, English (UK), Spanish, Basque, Finnish, French, Icelandic, Italian, Norwegian, and Swedish
+- **Fully Localized Elevation**: Authentication dialog supports all 13 languages
+- **Technical Terms Localized**: BIOS, USB, UUID, MTU, MAC appropriately translated
+- **ID_LIKE Support**: Added os-release field translation across all languages
 
 **Configuration:**
-- Language selection is stored in `~/.config/LSV/lsv_lang.rc`
+- Language selection is stored in `~/.config/LSV/LSV.conf`
 - "Change language" dropdown in the app title bar
 - "Reset language" button reverts UI to English
+- Config persists correctly even when running with elevated privileges
 
 **Downloads:**
 - Official releases and packages: https://lsv.nalle.no/
-- DEB and RPM packages available for Debian/Ubuntu and Fedora/openSUSE
+- DEB packages for Debian, Ubuntu, and Linux Mint
+- RPM packages for Fedora, RHEL, and openSUSE
 
 Quickstart — build & run (developer)
 ----------------------------------

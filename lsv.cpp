@@ -28,6 +28,7 @@
 #include <QFileInfo>
 #include <QProgressBar>
 #include <QFuture>
+#include "elevation_dialog.h"
 #include <QFutureWatcher>
 #include <QtConcurrent/QtConcurrent>
 
@@ -332,12 +333,16 @@ static QString langRcFilePath()
     if (!envUserConfig.isEmpty()) {
         cfg = envUserConfig;
     } else {
-        cfg = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+        cfg = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/LinuxSystemViewer";
+    }
+    if (cfg.endsWith(".conf")) {
+        // If cfg is a file (e.g. .../LSV.conf), use its parent directory
+        QFileInfo fi(cfg);
+        cfg = fi.dir().absolutePath();
     }
     if (cfg.isEmpty()) return QString();
     QDir d(cfg);
-    QDir lsvDir(d.filePath("LSV"));
-    return lsvDir.filePath("lsv_lang.rc");
+    return d.filePath("lsv_lang.rc");
 }
 
 // Return the primary RC path that lives next to the application binary.
@@ -883,21 +888,25 @@ int main(int argc, char *argv[])
     // the application will ONLY consult a file named `lsv_lang.rc` that
     // lives in the same directory as the application binary. No other
     // paths (user config, parent dirs, etc.) are consulted.
+
     QTranslator translator;
     QTranslator qtTranslator;  // For Qt's built-in widgets (Cancel, OK, etc.)
-    QSettings settings("LinuxSystemViewer", "LSV");
-    QString savedLang;
-
-    // Read primary RC (next to the application binary). If present it is
-    // the authoritative language choice for this run/location. Do not
-    // fall back to any other location.
-    QString rcPrimary = readLangRcPrimary();
-    if (!rcPrimary.isEmpty()) {
-        savedLang = rcPrimary;
-    } else {
-        // If no primary RC, check user settings
-        savedLang = settings.value("language", QString()).toString();
+    // Always use explicit config path in user's home for settings, allow override from environment
+    QString userConfig = QDir::homePath() + "/.config/LinuxSystemViewer/LSV.conf";
+    QByteArray envConfig = qgetenv("LSV_USER_CONFIG");
+    if (!envConfig.isEmpty()) {
+        userConfig = QString::fromLocal8Bit(envConfig);
     }
+    QSettings settings(userConfig, QSettings::IniFormat);
+    QString savedLang = settings.value("language", QString()).toString();
+
+    // Debug: Log QSettings location and language value
+    appendLog(QString("i18n: QSettings file: %1").arg(settings.fileName()));
+    appendLog(QString("i18n: Read language from QSettings: '%1'").arg(savedLang.isEmpty() ? "(empty)" : savedLang));
+    appendLog(QString("i18n: HOME=%1 USER=%2 UID=%3")
+              .arg(QString::fromLocal8Bit(qgetenv("HOME")))
+              .arg(QString::fromLocal8Bit(qgetenv("USER")))
+              .arg(QString::number(getuid())));
 
     // Discover shipped languages and build a CLI-friendly list
     QStringList shipped = discoverShippedLanguageCodes();
@@ -1029,263 +1038,42 @@ int main(int argc, char *argv[])
         }
     }
 
-    // Auto-elevation: always relaunch via a terminal sudo prompt and exit the
-    // unprivileged instance. This ensures the user always authenticates in a
-    // terminal window with a clear custom message and the GUI runs as root.
-    // Auto-elevation: always relaunch via a terminal sudo prompt and exit the
-    // unprivileged instance. This ensures the user always authenticates in a
-    // terminal window with a clear custom message and the GUI runs as root.
+    // Auto-elevation: if not running as root, show custom elevation dialog
+    // This provides a consistent graphical authentication experience across
+    // all Linux distributions without depending on pkexec or terminal emulators.
     if (geteuid() != 0 && qgetenv("LSV_ELEVATED").isEmpty()) {
-        // Cleanup old temp files to avoid clutter.
-        QDir tmpDir(QDir::tempPath());
-        QDateTime now = QDateTime::currentDateTime();
-        const int MAX_AGE_SECS = 60 * 60; // 1 hour
-        QStringList stalePatterns = {"lsv-elevated-*"};
-        for (const QString &pat : stalePatterns) {
-            QFileInfoList entries = tmpDir.entryInfoList(QStringList(pat), QDir::Files);
-            for (const QFileInfo &fi : entries) {
-                if (fi.lastModified().secsTo(now) > MAX_AGE_SECS) QFile::remove(fi.absoluteFilePath());
-            }
-        }
-
+        // Get current executable path
         QString exe = QCoreApplication::applicationFilePath();
-        QString preCopiedExe;
-    // If running from a transient mount, try to pre-copy the binary so
-    // root can execute it even if the transient mount becomes inaccessible.
+        
+        // Handle transient mounts (e.g., AppImage)
+        QString targetExe = exe;
         if (exe.contains("/tmp/.mount_")) {
-            preCopiedExe = QDir::tempPath() + QDir::separator() + QString("lsv-elevated-%1").arg(QCoreApplication::applicationPid());
-            QFile::remove(preCopiedExe);
-            bool copied = QFile::copy(exe, preCopiedExe);
-            if (!copied) {
-                QFile in("/proc/self/exe");
-                if (in.open(QIODevice::ReadOnly)) {
-                    QFile out(preCopiedExe);
-                    if (out.open(QIODevice::WriteOnly)) {
-                        const qint64 bufSize = 32768;
-                        while (!in.atEnd()) out.write(in.read(bufSize));
-                        out.close();
-                        copied = true;
-                    }
-                    in.close();
-                }
-            }
-            if (!copied) {
-                QProcess cpProc;
-                cpProc.start("sh", QStringList() << "-c" << QString("cat /proc/self/exe > '%1' && chmod 0755 '%1'").arg(preCopiedExe));
-                if (cpProc.waitForFinished(5000)) {
-                    if (QFile::exists(preCopiedExe) && QFile(preCopiedExe).size() > 0) copied = true;
-                }
-            }
-            if (copied) {
-                QFile::setPermissions(preCopiedExe, QFile::ExeOwner | QFile::ReadOwner | QFile::WriteOwner
-                                                   | QFile::ExeGroup | QFile::ReadGroup
-                                                   | QFile::ExeOther | QFile::ReadOther);
+            QString preCopiedExe = QDir::tempPath() + QDir::separator() + 
+                                   QString("lsv-elevated-%1").arg(QCoreApplication::applicationPid());
+            if (QFile::copy(exe, preCopiedExe)) {
+                QFile::setPermissions(preCopiedExe, 
+                                     QFile::ExeOwner | QFile::ReadOwner | QFile::WriteOwner |
+                                     QFile::ExeGroup | QFile::ReadGroup |
+                                     QFile::ExeOther | QFile::ReadOther);
+                targetExe = preCopiedExe;
                 appendLog(QString("Auto-elevation: Copied mounted exe to %1").arg(preCopiedExe));
-            } else {
-                appendLog(QString("Auto-elevation: Failed to copy mounted exe %1 -> %2").arg(exe, preCopiedExe));
-                preCopiedExe.clear();
             }
         }
 
-        QString targetExe = preCopiedExe.isEmpty() ? exe : preCopiedExe;
-
-        // Prefer using pkexec (Polkit GUI) first so users get a native
-        // privilege prompt. If pkexec is not available or fails, fall back
-        // to the terminal-based sudo wrapper used previously.
-        // Note: pkexec may strip environment; we pass minimal display
-        // environment variables explicitly.
-        // For reliable behavior when launched from the desktop/file-manager
-        // we prefer the terminal-based elevation flow. Historically we used
-        // pkexec (Polkit) which can fail silently if no GUI authentication
-        // agent is running in the user's session. To avoid the "Request
-        // dismissed" cases where the user can't start the app from the menu
-        // we always use the terminal sudo wrapper here.
-        appendLog("Auto-elevation: pkexec disabled by policy; using terminal sudo fallback for menu launches.");
-
-        // Find a terminal emulator to run sudo
-        QStringList terms = {"x-terminal-emulator", "gnome-terminal", "konsole", "xfce4-terminal", "mate-terminal", "lxterminal", "xterm", "alacritty", "terminator"};
-        QString termPath;
-        for (const QString &t : terms) {
-            QString p = QStandardPaths::findExecutable(t);
-            if (!p.isEmpty()) { termPath = p; break; }
-        }
-        if (termPath.isEmpty()) {
-            // Can't prompt in a terminal; inform the user and exit.
-            appendLog("Auto-elevation: No terminal emulator found to prompt for password. Exiting.");
-            QMessageBox::critical(nullptr, QObject::tr("Cannot elevate"), QObject::tr("No terminal emulator found to prompt for a password.\nPlease run the application as root."));
+        // Show custom elevation dialog
+        appendLog("Auto-elevation: Showing custom elevation dialog");
+        
+        if (!ElevationDialog::elevateAndRestart(targetExe)) {
+            // User cancelled or authentication failed
+            appendLog("Auto-elevation: User cancelled or authentication failed");
+            QMessageBox::information(nullptr, 
+                                    QObject::tr("Authentication Required"),
+                                    QObject::tr("Linux System Viewer requires root privileges to access hardware information.\n\n"
+                                              "You can also run it from terminal with: sudo lsv"));
             return 0;
         }
-
-        // Build the sudo command that authenticates and then starts the GUI
-        // as a detached process so the terminal can close after auth.
-        QString sudoPrompt = QCoreApplication::translate("QObject", "Please enter password to run Linux System Viewer as root");
-        QString escTarget = targetExe;
-        escTarget.replace('\'', "'" "'" "'");
-        QString inner = QString("setsid '%1' > /dev/null 2>&1 &").arg(escTarget);
-        // Create a temporary wrapper script to run sudo. This reduces quoting
-        // issues when passing complex commands to terminal emulators.
-        QString wrapperPath = QDir::tempPath() + QDir::separator() + QString("lsv-sudo-%1.sh").arg(getpid());
-        // preferredCols is used later when deciding terminal geometry;
-        // declare it here so it stays in scope outside the writer block.
-        int preferredCols = 80;
-        QFile wf(wrapperPath);
-            if (wf.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)) {
-            QTextStream ts(&wf);
-            ts << "#!/bin/bash\n";
-            // Ensure the wrapper removes itself and its temporary log on exit
-            ts << "trap \"rm -f '" << wrapperPath.replace('\'', "'\"'\"'") << "' /tmp/lsv-relaunch-" << getpid() << ".log\" EXIT\n";
-            ts << "echo 'LSV wrapper starting at ' $(date) > /tmp/lsv-relaunch-" << getpid() << ".log\n";
-            ts << "echo 'Running sudo to start LSV as root' >> /tmp/lsv-relaunch-" << getpid() << ".log\n";
-            // Prompt and allow up to 3 attempts. Use read -s so Enter works
-            // normally and let sudo validate. On success exit; after 3 bad
-            // attempts give up.
-            // Export important X/Wayland/display env so the elevated process
-            // can connect to the user's display. We capture current values
-            // and write them into the wrapper script.
-            QString envDisplay = QString::fromLocal8Bit(qgetenv("DISPLAY"));
-            QString envXAuth = QString::fromLocal8Bit(qgetenv("XAUTHORITY"));
-            QString envXdg = QString::fromLocal8Bit(qgetenv("XDG_RUNTIME_DIR"));
-            if (!envDisplay.isEmpty()) ts << "export DISPLAY='" << envDisplay.replace('\'', "'\"'\"'") << "'\n";
-            if (!envXAuth.isEmpty()) ts << "export XAUTHORITY='" << envXAuth.replace('\'', "'\"'\"'") << "'\n";
-            if (!envXdg.isEmpty()) ts << "export XDG_RUNTIME_DIR='" << envXdg.replace('\'', "'\"'\"'") << "'\n";
-            
-            // Export the original user's home directory so the elevated instance
-            // can access the same language RC file as the non-elevated instance.
-            QString userHome = QDir::homePath();
-            QString userConfig = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
-            if (!userHome.isEmpty()) ts << "export LSV_USER_HOME='" << userHome.replace('\'', "'\"'\"'") << "'\n";
-            if (!userConfig.isEmpty()) ts << "export LSV_USER_CONFIG='" << userConfig.replace('\'', "'\"'\"'") << "'\n";
-
-            // Export the original application directory so an elevated
-            // instance can still locate the original binary directory and
-            // any portable RC file next to it. Prefer an existing
-            // LSV_ORIG_APPDIR value (if present), otherwise export the
-            // directory containing the current executable.
-            QString origEnv = QString::fromLocal8Bit(qgetenv("LSV_ORIG_APPDIR"));
-            QString origAppDir;
-            if (!origEnv.isEmpty()) origAppDir = origEnv;
-            else origAppDir = QFileInfo(exe).absolutePath();
-            if (!origAppDir.isEmpty()) ts << "export LSV_ORIG_APPDIR='" << origAppDir.replace('\'', "'\"'\"'\"") << "'\n";
-
-            QString promptEsc = sudoPrompt;
-            // Escape any double-quotes so we can emit the prompt inside a
-            // double-quoted printf without breaking the wrapper script.
-            promptEsc.replace('"', "\\\"");
-            // Compute preferred terminal width (columns) based on prompt
-            // length so the window is just wide enough. Keep a sensible
-            // minimum to avoid cramped terminals and a maximum for very
-            // long prompts.
-            preferredCols = promptEsc.size() + 6; // padding
-            if (preferredCols < 40) preferredCols = 40;
-            if (preferredCols > 100) preferredCols = 100;
-            int pad = (preferredCols - (int)promptEsc.size()) / 2;
-            if (pad < 0) pad = 0;
-            int padRight = preferredCols - pad - (int)promptEsc.size();
-            if (padRight < 0) padRight = 0;
-            QString padStr(pad, ' ');
-            QString padRightStr(padRight, ' ');
-            // Try to set terminal colors where supported. Note: not all
-            // terminals apply these to the titlebar; OSC 10/11 set text/bg.
-            ts << "printf '\033]10;#000000\\007'\n"; // foreground black
-            ts << "printf '\033]11;#F3F3F4\\007'\n"; // background light gray
-            // Set the terminal window title to include the application
-            // version so users can confirm which release they're elevating.
-            QString termTitle = QCoreApplication::translate("QObject", "Linux System Viewer %1").arg(LSVVersionQString());
-            QString termTitleEsc = termTitle;
-            termTitleEsc.replace('\'', "'\"'\"'");
-            ts << "printf '\\033]0;" << termTitleEsc << "\\007'\n";
-            ts << "attempts=0\n";
-            ts << "while [ $attempts -lt 3 ]; do\n";
-            ts << "  attempts=$((attempts+1))\n";
-            // Print centered prompt on the first line. Leave the second
-            // line with the same left padding and immediately read the
-            // password there (so the typed characters are aligned under
-            // the prompt). Leave the third line blank for error messages.
-            // Line 1: left padding + prompt + right padding (equal space both sides)
-            // Print the full centered prompt line in a single printf so
-            // shells receive one well-formed command. Use ANSI SGR to set
-            // the prompt text color to #001675 and reset afterwards.
-            ts << "printf '%s\\033[38;2;0;22;117m%s\\033[0m%s\\n' \"" << padStr << "\" \"" << promptEsc << "\" \"" << padRightStr << "\"\n";
-            // Line 2: print left padding, a centered marker (colored #B10000),
-            // then right padding WITHOUT emitting a newline so we can
-            // reposition the cursor back to the marker column and read
-            // input there. The read is silent so the marker remains visible
-            // while the user types. This preserves the third line for error
-            // messages.
-            // Compute marker padding so the marker is exactly centered in
-            // the terminal frame regardless of the prompt width.
-            int markerPadLeft = (preferredCols - 1) / 2;
-            if (markerPadLeft < 0) markerPadLeft = 0;
-            int markerPadRight = preferredCols - markerPadLeft - 1;
-            if (markerPadRight < 0) markerPadRight = 0;
-            QString markerLeft(markerPadLeft, ' ');
-            QString markerRight(markerPadRight, ' ');
-            ts << "printf '%s\\033[38;2;177;0;0m%s\\033[0m%s' \"" << markerLeft << "\" \"" << ">" << "\" \"" << markerRight << "\"\n";
-            // Move cursor to start of line then print left padding so the
-            // user's input begins centered under the marker. Use the
-            // marker's left padding (markerLeft) so the cursor aligns with
-            // the visual center instead of the prompt's left padding.
-            ts << "printf '\r'\n";
-            ts << "printf '%s' \"" << markerLeft << "\"\n";
-            ts << "read -s PASS\n";
-            // Line 3: empty line reserved for error messages
-            ts << "echo\n";
-            QString innerEsc = inner;
-            innerEsc.replace('"', "\\\"");
-            // Pass through important environment variables via sudo.
-            // sudo resets the environment, so we must explicitly preserve
-            // DISPLAY, XAUTHORITY, XDG_RUNTIME_DIR, LSV_USER_CONFIG, etc.
-            ts << "  printf '%s\\n' \"$PASS\" | sudo -S -p '' \\\n";
-            ts << "    DISPLAY=\"$DISPLAY\" \\\n";
-            ts << "    XAUTHORITY=\"$XAUTHORITY\" \\\n";
-            ts << "    XDG_RUNTIME_DIR=\"$XDG_RUNTIME_DIR\" \\\n";
-            ts << "    LSV_USER_HOME=\"$LSV_USER_HOME\" \\\n";
-            ts << "    LSV_USER_CONFIG=\"$LSV_USER_CONFIG\" \\\n";
-            ts << "    LSV_ORIG_APPDIR=\"$LSV_ORIG_APPDIR\" \\\n";
-            ts << "    LSV_ELEVATED=1 \\\n";
-            ts << "    sh -c \"" << innerEsc << "\"\n";
-            ts << "  rc=$?\n";
-            ts << "  echo 'sudo finished with exitcode:' $rc >> /tmp/lsv-relaunch-" << getpid() << ".log\n";
-            ts << "  if [ $rc -eq 0 ]; then exit 0; fi\n";
-            QString authFailedMsg = QCoreApplication::translate("QObject", "Authentication failed (%1/3)");
-            authFailedMsg.replace('"', "\\\"");
-            ts << "  printf '" << authFailedMsg.replace("%1", "'$attempts'") << "\\n' >&2\n";
-            ts << "done\n";
-            ts << "echo 'Giving up after 3 failed attempts' >> /tmp/lsv-relaunch-" << getpid() << ".log\n";
-            ts << "exit 1\n";
-            wf.close();
-            QFile::setPermissions(wrapperPath, QFile::ExeOwner | QFile::ReadOwner | QFile::WriteOwner);
-        } else {
-            appendLog(QString("Auto-elevation: Failed to write wrapper script %1").arg(wrapperPath));
-        }
-
-    QStringList args;
-    // Use a geometry matching the preferred columns computed earlier
-    // so the terminal width matches the prompt. Height remains 3 rows
-    // (prompt, input, and spare line for errors).
-    QString base = QFileInfo(termPath).fileName();
-    QString geom = QString("%1x3").arg(preferredCols); // width x height
-        if (base.contains("gnome-terminal")) {
-            args << QString("--geometry=%1").arg(geom) << "--" << "bash" << "-c" << QString("bash '%1'").arg(wrapperPath);
-        } else if (base.contains("konsole")) {
-            args << QString("--geometry") << geom << "-e" << "bash" << "-c" << QString("bash '%1'").arg(wrapperPath);
-        } else if (base.contains("xterm") || base.contains("x-terminal-emulator")) {
-            args << "-geometry" << geom << "-e" << QString("bash -c '%1'").arg(wrapperPath);
-        } else {
-            // Generic terminals: attempt -e without geometry
-            args << "-e" << QString("bash -c '%1'").arg(wrapperPath);
-        }
-
-        bool ok = QProcess::startDetached(termPath, args);
-        if (ok) {
-            appendLog(QString("Auto-elevation: Launched terminal '%1' to prompt for sudo (wrapper: %2)").arg(termPath, wrapperPath));
-        } else {
-            appendLog(QString("Auto-elevation: Failed to launch terminal '%1' for sudo prompt (wrapper: %2)").arg(termPath, wrapperPath));
-            QMessageBox::critical(nullptr, QObject::tr("Elevation failed"), QObject::tr("Failed to start a terminal to request sudo password. Please run the application as root."));
-        }
-
-        // Exit the unprivileged instance immediately; the elevated GUI will
-        // be started from the terminal after authentication.
+        
+        // If we get here, the elevated instance was started and we should exit
         return 0;
     }
 
@@ -1308,7 +1096,10 @@ int main(int argc, char *argv[])
               .arg(QString::fromLocal8Bit(qgetenv("LSV_ORIG_APPDIR")), QCoreApplication::applicationDirPath(), primaryRc));
     appendLog(QString("i18n: primaryRc exists=%1 chooseLang=%2 geteuid=%3").arg(QString::number(QFile::exists(primaryRc)), chooseLang ? "true" : "false", QString::number(geteuid())));
 
-    if (geteuid() == 0 && (chooseLang || !QFile::exists(primaryRc))) {
+    // Show language selector if elevated and (explicitly requested OR RC file missing OR config file exists but language is missing)
+    bool configExists = QFile::exists(userConfig);
+    bool langMissing = savedLang.isEmpty();
+    if (geteuid() == 0 && (chooseLang || !QFile::exists(primaryRc) || (configExists && langMissing))) {
         QMap<QString, QString> names = shippedLanguageDisplayNames();
         QStringList choices;
         QStringList codes = discoverShippedLanguageCodes();
@@ -1468,12 +1259,16 @@ int main(int argc, char *argv[])
         if (!actual.isEmpty()) {
             if (tryLoadTranslatorForCode(actual, app, &translator)) {
                 settings.setValue("language", actual);
+                settings.sync();  // Force write to disk
+                appendLog(QString("i18n: applyLanguage saved '%1' to QSettings: %2").arg(actual, settings.fileName()));
                 // Also load Qt's base translations
                 tryLoadQtBaseTranslator(actual, app, &qtTranslator);
             }
         } else {
             // No translator: use English and record that choice
             settings.setValue("language", "en");
+            settings.sync();  // Force write to disk
+            appendLog(QString("i18n: applyLanguage saved 'en' to QSettings: %1").arg(settings.fileName()));
         }
 
         // Update small UI bits
@@ -1573,6 +1368,9 @@ int main(int argc, char *argv[])
             QMessageBox::warning(nullptr, QObject::tr("Language selection"), QObject::tr("Failed to write language selection to configuration directory"));
         }
         settings.setValue("language", toWrite);
+        settings.sync();  // Force write to disk
+        appendLog(QString("i18n: Saved language '%1' to QSettings file: %2").arg(toWrite, settings.fileName()));
+        appendLog(QString("i18n: QSettings status after save: %1").arg(settings.status() == QSettings::NoError ? "OK" : "ERROR"));
 
         // Apply the language change and preserve current tab selection.
         MultiRowTabWidget* oldTab = mainWindow.findChild<MultiRowTabWidget*>();

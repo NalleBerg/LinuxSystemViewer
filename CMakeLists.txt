@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(LSV VERSION 1.1.2)
+project(LSV VERSION 1.3.0)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -46,6 +46,7 @@ qt6_add_executable(LSV
     memory_tab.cpp
     geek_search.cpp
     geek_search_integration.cpp
+    elevation_dialog.cpp
 )
 
 # Link Qt libraries using keyword signature to match Qt6's internal usage
@@ -55,6 +56,7 @@ target_link_libraries(LSV PRIVATE
     Qt6::Network
     Qt6::Multimedia
     ${ALSA_LIBRARIES}
+    pam
 )
 
 # Resources: always include the embedded license and GNU icon so packaged
